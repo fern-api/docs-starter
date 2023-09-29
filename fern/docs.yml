@@ -21,15 +21,17 @@ navigation:
   # Generates your API Reference from your API definition.
   - api: API Reference
 
+# Choose colors that match your brand.
 colors:
   accentPrimary:
     dark: "#1FBAB4"
-    light: "#63DFDA"
+    light: "#126d69"
 
 # The logo that appears in the top left of the navbar. Specify a different logo for dark and light mode.
 logo:
   dark: ./docs/assets/fern_logo.png
   light: ./docs/assets/fern_logo.png
+  height: 40
 
 favicon: ./docs/assets/fern_favicon.ico
 
