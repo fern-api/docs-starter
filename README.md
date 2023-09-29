@@ -2,6 +2,8 @@
 
 Want beautiful API documentation? Take a look at what this repo produces: [helloworld.docs.buildwithfern.com](helloworld.docs.buildwithfern.com)
 
+![Hello World Docs](fern/docs/assets/helloworld.png)
+
 ## Quick start 
 
 ### Step 1: Fork this repo 
