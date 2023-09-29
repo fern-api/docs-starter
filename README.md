@@ -2,11 +2,11 @@
 
 ### Step 1: Fork this repo 
 
-[Here are instructions for how to fork a repo](https://docs.github.com/en/get-started/quickstart/fork-a-repo#forking-a-repository)
+If needed, here are [instructions](https://docs.github.com/en/get-started/quickstart/fork-a-repo#forking-a-repository)
 
 ### Step 2: Clone your fork 
 
-[Here are instructions for how to clone a fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo#cloning-your-forked-repository)
+If needed, here are [instructions](https://docs.github.com/en/get-started/quickstart/fork-a-repo#cloning-your-forked-repository)
 
 ### Step 3: Generating "Hello World" docs
 
