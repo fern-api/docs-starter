@@ -1,6 +1,41 @@
-title: dannysheridan
+instances:
+  - url: helloworld.docs.buildwithfern.com
+  # - url: {your-organization}.docs.buildwithfern.com
+  #   custom-domain: docs.{your-organization}.com
+
+# The title that appears in the browser tab. 
+title: Hello World | Docs
+
+# The left sidebar navigation.
 navigation:
+  - section: Getting started
+    # Add custom pages using Markdown or MDX.
+    contents: 
+      - page: Welcome 
+        path: ./docs/content/welcome.mdx
+      - page: Support
+        path: ./docs/content/support.mdx
+      - page: SDKs
+        path: ./docs/content/sdks.mdx
+
+  # Generates your API Reference from your API definition.
   - api: API Reference
+
 colors:
-  accentPrimary: '#ffffff'
-logo: ./logo.png
+  accentPrimary:
+    dark: "#1FBAB4"
+    light: "#63DFDA"
+
+# The logo that appears in the top left of the navbar. Specify a different logo for dark and light mode.
+logo:
+  dark: ./docs/assets/fern_logo.png
+  light: ./docs/assets/fern_logo.png
+
+# Links in the top right of the navbar.
+navbar-links:
+  - type: secondary
+    text: Contact us
+    url: "mailto:support@buildwithfern.com"
+  - type: primary
+    text: Join the Discord
+    url: https://discord.com/invite/JkkXumPzcG
