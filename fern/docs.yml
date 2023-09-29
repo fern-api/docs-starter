@@ -31,6 +31,8 @@ logo:
   dark: ./docs/assets/fern_logo.png
   light: ./docs/assets/fern_logo.png
 
+favicon: ./docs/assets/fern_favicon.ico
+
 # Links in the top right of the navbar.
 navbar-links:
   - type: secondary
