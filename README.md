@@ -1,4 +1,8 @@
-# Quick start 
+# Fern Docs Starter Repo
+
+Want beautiful API documentation? Take a look at what this repo produces: [helloworld.docs.buildwithfern.com](helloworld.docs.buildwithfern.com)
+
+## Quick start 
 
 ### Step 1: Fork this repo 
 
