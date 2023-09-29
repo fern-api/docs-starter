@@ -1,7 +1,6 @@
 instances:
+  # Change the url to {your-organization}.docs.buildwithfern.com
   - url: helloworld.docs.buildwithfern.com
-  # - url: {your-organization}.docs.buildwithfern.com
-  #   custom-domain: docs.{your-organization}.com
 
 # The title that appears in the browser tab. 
 title: Hello World | Docs
