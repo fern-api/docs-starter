@@ -1,6 +1,4 @@
-# Starter repo for Fern Docs
-
-Quick start 
+# Quick start 
 
 ### Step 1: Fork this repo 
 
