@@ -8,11 +8,17 @@ navigation:
     contents: 
       - page: Welcome 
         path: ./docs/content/welcome.mdx
-      - page: Support
-        path: ./docs/content/support.mdx
       - page: SDKs
         path: ./docs/content/sdks.mdx
   - api: API Reference
+
+navbar-links: 
+  - type: secondary
+    text: Contact us
+    url: "mailto:support@buildwithfern.com"
+  - type: primary
+    text: Join the Discord
+    url: https://discord.com/invite/JkkXumPzcG
 
 colors:
   accentPrimary:
@@ -22,14 +28,3 @@ colors:
 logo:
   dark: ./docs/assets/fern_logo.png
   light: ./docs/assets/fern_logo.png
-  height: 40
-
-favicon: ./docs/assets/fern_favicon.ico
-
-navbar-links:
-  - type: secondary
-    text: Contact us
-    url: "mailto:support@buildwithfern.com"
-  - type: primary
-    text: Join the Discord
-    url: https://discord.com/invite/JkkXumPzcG
