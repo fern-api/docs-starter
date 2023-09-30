@@ -4,6 +4,7 @@ Want beautiful API documentation? Take a look at what this repo produces: [hello
 
 ![Hello World Docs](fern/docs/assets/helloworld.png)
 
+*Looking to use advanced features? Check out the [Fern Docs Advanced Repo](https://github.com/fern-api/docs-advanced).*
 ## Quick start 
 
 ### Step 1: Fork this repo 
