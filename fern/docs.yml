@@ -1,14 +1,10 @@
 instances:
-  # Change the url to {your-organization}.docs.buildwithfern.com
   - url: helloworld.docs.buildwithfern.com
 
-# The title that appears in the browser tab. 
 title: Hello World | Docs
 
-# The left sidebar navigation.
 navigation:
   - section: Getting started
-    # Add custom pages using Markdown or MDX.
     contents: 
       - page: Welcome 
         path: ./docs/content/welcome.mdx
@@ -16,17 +12,13 @@ navigation:
         path: ./docs/content/support.mdx
       - page: SDKs
         path: ./docs/content/sdks.mdx
-
-  # Generates your API Reference from your API definition.
   - api: API Reference
 
-# Choose colors that match your brand.
 colors:
   accentPrimary:
     dark: "#1FBAB4"
     light: "#126d69"
 
-# The logo that appears in the top left of the navbar. Specify a different logo for dark and light mode.
 logo:
   dark: ./docs/assets/fern_logo.png
   light: ./docs/assets/fern_logo.png
@@ -34,7 +26,6 @@ logo:
 
 favicon: ./docs/assets/fern_favicon.ico
 
-# Links in the top right of the navbar.
 navbar-links:
   - type: secondary
     text: Contact us
