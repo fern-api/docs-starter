@@ -12,13 +12,28 @@ paths:
       parameters: []
       responses:
         '200':
-          description: ''
+          description: Successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PlantOwner'
+          examples:
+            Example1:
+              value:
+                name: Danny
+                age: adult
+                plants:
+                  - id: 309e5e64-7c5b-4433-a645-effa0683228e
+                    category:
+                      id: 2c1e5e33-6633-400f-8d87-bf4e81506dff
+                      name: Fiddle Leaf Fig
+                    name: Quadi
+                    photoUrls:
+                      growing: >-
+                        https://i.ibb.co/vk5N4C4/EDAA47-FF-6921-41-EE-ABA1-13-DE3-FCDB4-C0-1-105-c.jpg
+                    status: available
         '400':
-          description: ''
+          description: Error
           content:
             application/json:
               schema:
@@ -80,7 +95,7 @@ paths:
             $ref: '#/components/schemas/OwnerId'
       responses:
         '204':
-          description: ''
+          description: Successful operation
       summary: Delete an owner
       security: *ref_0
   /plant:
@@ -92,9 +107,9 @@ paths:
       parameters: []
       responses:
         '204':
-          description: ''
+          description: Successful operation
         '405':
-          description: ''
+          description: Invalid input
           content:
             application/json:
               schema:
@@ -162,7 +177,7 @@ paths:
               value: 309e5e64-7c5b-4433-a645-effa0683228e
       responses:
         '200':
-          description: ''
+          description: Successful operation
           content:
             application/json:
               schema:
@@ -180,7 +195,7 @@ paths:
                         https://i.ibb.co/vk5N4C4/EDAA47-FF-6921-41-EE-ABA1-13-DE3-FCDB4-C0-1-105-c.jpg
                     status: available
         '400':
-          description: ''
+          description: Bad request
           content:
             application/json:
               schema:
@@ -199,7 +214,7 @@ paths:
                     id: 309e5b94-7a5b-4433-a645-effa0699928a
                     message: This PlantID doesn't match any ID in our system.
         '404':
-          description: ''
+          description: Plant not found
           content:
             application/json:
               schema:
@@ -227,9 +242,9 @@ paths:
               value: 309e5e64-7c5b-4433-a645-effa0683228e
       responses:
         '204':
-          description: ''
+          description: Successful operation
         '400':
-          description: ''
+          description: Bad request
           content:
             application/json:
               schema:
@@ -243,7 +258,7 @@ paths:
                       content:
                         $ref: '#/components/schemas/InvalidId'
         '404':
-          description: ''
+          description: Plant not found
           content:
             application/json:
               schema:
@@ -320,7 +335,7 @@ components:
     EmployeeId:
       type: string
       format: uuid
-      description: a unique identified for each store employee
+      description: a unique identifier for each store employee
     PlantId:
       type: string
       format: uuid

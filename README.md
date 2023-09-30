@@ -4,7 +4,7 @@
 Start building beautiful documentation in under 5 minutes.
 ```
 
-What this repo produces: [helloworld.docs.buildwithfern.com](helloworld.docs.buildwithfern.com)
+What this repo produces: [helloworld.docs.buildwithfern.com](https://helloworld.docs.buildwithfern.com)
 
 ![Hello World Docs](fern/docs/assets/helloworld.png)
 
