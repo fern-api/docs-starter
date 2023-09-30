@@ -1,347 +1,158 @@
-openapi: 3.0.1
+openapi: 3.0.3
 info:
-  title: Plant Store
-  version: 0.0.19
+  title: Plant Store API
+  version: 1.0.0
+  description: An API for managing plant store operations.
 paths:
-  /owner:
+  /owners:
     post:
-      description: Add a new owner as a customer of the store.
-      operationId: ownerService.add
+      summary: Add a new owner as a customer of the store.
+      operationId: addOwner
       tags:
         - Owner
-      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlantOwnerInput'
       responses:
-        '200':
-          description: Successful operation
+        '201':
+          description: Owner added successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PlantOwner'
-          examples:
-            Example1:
-              value:
-                name: Danny
-                age: adult
-                plants:
-                  - id: 309e5e64-7c5b-4433-a645-effa0683228e
-                    category:
-                      id: 2c1e5e33-6633-400f-8d87-bf4e81506dff
-                      name: Fiddle Leaf Fig
-                    name: Quadi
-                    photoUrls:
-                      growing: >-
-                        https://i.ibb.co/vk5N4C4/EDAA47-FF-6921-41-EE-ABA1-13-DE3-FCDB4-C0-1-105-c.jpg
-                    status: available
         '400':
-          description: Error
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      error:
-                        type: string
-                        enum:
-                          - OwnerNotFoundError
-      summary: Add an owner
-      security: &ref_0
-        - BearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  example: Danny
-                age:
-                  $ref: '#/components/schemas/OwnerAge'
-                plants:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/Plant'
-              required:
-                - name
-                - age
-                - plants
-            examples:
-              Example1:
-                value:
-                  name: Danny
-                  age: adult
-                  plants:
-                    - id: 309e5e64-7c5b-4433-a645-effa0683228e
-                      category:
-                        id: 2c1e5e33-6633-400f-8d87-bf4e81506dff
-                        name: Fiddle Leaf Fig
-                      name: Quadi
-                      photoUrls:
-                        growing: >-
-                          https://i.ibb.co/vk5N4C4/EDAA47-FF-6921-41-EE-ABA1-13-DE3-FCDB4-C0-1-105-c.jpg
-                      status: available
-  /owner/{ownerId}:
+          $ref: '#/components/responses/BadRequest'
+  /owners/{ownerId}:
     delete:
-      operationId: ownerService.delete
+      summary: Delete an owner by ID
+      operationId: deleteOwner
       tags:
         - Owner
       parameters:
-        - name: ownerId
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/OwnerId'
+        - $ref: '#/components/parameters/OwnerId'
       responses:
         '204':
-          description: Successful operation
-      summary: Delete an owner
-      security: *ref_0
-  /plant:
+          description: Owner deleted successfully
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /plants:
     post:
-      description: Add a new plant to the store.
-      operationId: plantService.add
+      summary: Add a new plant to the store.
+      operationId: addPlant
       tags:
         - Plant
-      parameters: []
-      responses:
-        '204':
-          description: Successful operation
-        '405':
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      error:
-                        type: string
-                        enum:
-                          - InvalidResponseError
-      summary: Add a plant
-      security: *ref_0
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                id:
-                  $ref: '#/components/schemas/PlantId'
-                category:
-                  $ref: '#/components/schemas/PlantCategory'
-                name:
-                  type: string
-                  example: Quadi
-                photoUrls:
-                  type: object
-                  additionalProperties:
-                    type: string
-                status:
-                  $ref: '#/components/schemas/PlantStatus'
-              required:
-                - name
-                - photoUrls
-            examples:
-              Example1:
-                value:
-                  id: 309e5e64-7c5b-4433-a645-effa0683228e
-                  category:
-                    id: 2c1e5e33-6633-400f-8d87-bf4e81506dff
-                    name: Fiddle Leaf Fig
-                  name: Quadi
-                  photoUrls:
-                    growing: >-
-                      https://fern-image-hosting.s3.amazonaws.com/three-plants.jpeg
-                  status: available
-  /plant/{plantId}:
+              $ref: '#/components/schemas/PlantInput'
+      responses:
+        '201':
+          description: Plant added successfully
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /plants/{plantId}:
     get:
-      operationId: plantService.find
+      summary: Get a plant by ID
+      operationId: getPlantById
       tags:
         - Plant
       parameters:
-        - name: plantId
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/PlantId'
-          examples:
-            Example1:
-              value: 309e5e64-7c5b-4433-a645-effa0683228e
-            Example2:
-              value: 971e5e64-7c5b-0033-a645-bcfe0683000b
-            Example3:
-              value: 309e5e64-7c5b-4433-a645-effa0683228e
+        - $ref: '#/components/parameters/PlantId'
       responses:
         '200':
-          description: Successful operation
+          description: Plant retrieved successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Plant'
-              examples:
-                Example1:
-                  value:
-                    id: 309e5e64-7c5b-4433-a645-effa0683228e
-                    category:
-                      id: 2c1e5e33-6633-400f-8d87-bf4e81506dff
-                      name: Fiddle Leaf Fig
-                    name: Quadi
-                    photoUrls:
-                      growing: >-
-                        https://i.ibb.co/vk5N4C4/EDAA47-FF-6921-41-EE-ABA1-13-DE3-FCDB4-C0-1-105-c.jpg
-                    status: available
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      error:
-                        type: string
-                        enum:
-                          - InvalidIdSuppliedError
-                      content:
-                        $ref: '#/components/schemas/InvalidId'
-              examples:
-                Example1:
-                  value:
-                    id: 309e5b94-7a5b-4433-a645-effa0699928a
-                    message: This PlantID doesn't match any ID in our system.
         '404':
-          description: Plant not found
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      error:
-                        type: string
-                        enum:
-                          - PlantNotFoundError
-      summary: Find plant by ID
-      security: *ref_0
+          $ref: '#/components/responses/NotFound'
     delete:
-      operationId: plantService.delete
+      summary: Delete a plant by ID
+      operationId: deletePlantById
       tags:
         - Plant
       parameters:
-        - name: plantId
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/PlantId'
-          examples:
-            Example1:
-              value: 309e5e64-7c5b-4433-a645-effa0683228e
+        - $ref: '#/components/parameters/PlantId'
       responses:
         '204':
-          description: Successful operation
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      error:
-                        type: string
-                        enum:
-                          - InvalidIdSuppliedError
-                      content:
-                        $ref: '#/components/schemas/InvalidId'
+          description: Plant deleted successfully
         '404':
-          description: Plant not found
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      error:
-                        type: string
-                        enum:
-                          - PlantNotFoundError
-      summary: Delete plant by ID
-      security: *ref_0
+          $ref: '#/components/responses/NotFound'
 components:
   schemas:
     OwnerId:
       type: string
       format: uuid
+      description: Unique identifier for an owner.
+    PlantOwner:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/PlantOwnerId'
+        age:
+          $ref: '#/components/schemas/OwnerAge'
+        plants:
+          type: array
+          items:
+            $ref: '#/components/schemas/Plant'
     OwnerAge:
       type: string
       enum:
         - child
         - adult
         - senior
-    PlantOwner:
-      oneOf:
-        - type: object
-          allOf:
-            - $ref: '#/components/schemas/StoreCustomer'
-            - type: object
-              properties:
-                type:
-                  type: string
-                  enum:
-                    - customer
-        - type: object
-          allOf:
-            - $ref: '#/components/schemas/StoreEmployee'
-            - type: object
-              properties:
-                type:
-                  type: string
-                  enum:
-                    - employee
-    StoreCustomer:
+      description: Age category of an owner.
+    PlantOwnerId:
+      allOf:
+        - $ref: '#/components/schemas/OwnerId'
+      description: Identifier for a plant owner.
+    PlantOwnerInput:
       type: object
       properties:
         name:
           type: string
         age:
-          type: integer
+          $ref: '#/components/schemas/OwnerAge'
         plants:
           type: array
           items:
-            $ref: '#/components/schemas/Plant'
-        lifetime_spend:
-          type: number
-          format: double
-        id:
-          $ref: '#/components/schemas/OwnerId'
+            $ref: '#/components/schemas/PlantInput'
       required:
         - name
+        - age
         - plants
-        - lifetime_spend
-        - id
-    StoreEmployee:
+      description: Input for adding a new owner.
+    PlantInput:
       type: object
       properties:
-        employeeId:
-          $ref: '#/components/schemas/EmployeeId'
+        name:
+          type: string
+        category:
+          $ref: '#/components/schemas/PlantCategory'
+        photoUrls:
+          type: object
+          additionalProperties:
+            type: string
+        status:
+          $ref: '#/components/schemas/PlantStatus'
       required:
-        - employeeId
-      allOf:
-        - $ref: '#/components/schemas/StoreCustomer'
-    EmployeeId:
-      type: string
-      format: uuid
-      description: a unique identifier for each store employee
+        - name
+        - photoUrls
+      description: Input for adding a new plant.
     PlantId:
       type: string
       format: uuid
+      description: Unique identifier for a plant.
     CategoryId:
       type: string
       format: uuid
+      description: Unique identifier for a plant category.      
     PlantCategory:
       type: object
       properties:
@@ -352,12 +163,14 @@ components:
       required:
         - id
         - name
+      description: Category information for a plant.
     PlantStatus:
       type: string
       enum:
         - available
         - pending
         - sold
+      description: Status of a plant.
     Plant:
       type: object
       properties:
@@ -367,32 +180,54 @@ components:
           $ref: '#/components/schemas/PlantCategory'
         name:
           type: string
-          example: Quadi
         photoUrls:
           type: object
           additionalProperties:
             type: string
         status:
           $ref: '#/components/schemas/PlantStatus'
-      required:
-        - name
-        - photoUrls
-    InvalidId:
+      description: Information about a plant.
+    Error:
       type: object
       properties:
-        id:
-          $ref: '#/components/schemas/PlantId'
         message:
           type: string
       required:
-        - id
         - message
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    OwnerId:
+      name: ownerId
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/OwnerId'
+      description: Identifier for an owner.
+    PlantId:
+      name: plantId
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/PlantId'
+      description: Identifier for a plant.
   securitySchemes:
     BearerAuth:
       type: http
       scheme: bearer
 servers:
   - url: https://api.plantstore.com
-    description: Production
+    description: Production Server
   - url: https://sandbox.plantstore.com
-    description: Sandbox
+    description: Sandbox Server

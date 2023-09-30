@@ -1,0 +1,34 @@
+name: ci
+
+on: push
+
+jobs:
+  fern-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Fern
+        run: npm install -g fern-api
+
+      - name: Check API Definition is valid
+        run: fern check
+
+  fern-generate-docs:
+    needs: fern-check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+
+      - name: Install Fern
+        run: npm install -g fern-api
+
+      - name: Generate and Publish Docs
+        env:
+          FERN_TOKEN: ${{ secrets.FERN_TOKEN }}
+        run: fern generate --docs
