@@ -1,10 +1,11 @@
 # Fern Docs Starter Repo
 
-Want beautiful API documentation? Take a look at what this repo produces: [helloworld.docs.buildwithfern.com](helloworld.docs.buildwithfern.com)
+Start building beautiful documentation in under 5 minutes.
+
+What this repo produces: [helloworld.docs.buildwithfern.com](helloworld.docs.buildwithfern.com)
 
 ![Hello World Docs](fern/docs/assets/helloworld.png)
 
-*Looking to use advanced features? Check out the [Fern Docs Advanced Repo](https://github.com/fern-api/docs-advanced).*
 ## Quick start 
 
 ### Step 1: Fork this repo 
@@ -52,3 +53,13 @@ To set up a subdomain like `docs.your-website.com` or a subdirectory like `your-
  - url: {your-organization}.docs.buildwithfern.com
    custom-domain: docs.{your-organization}.com
 ```
+
+### Step 6: You've advanced!
+Looking to use **advanced features**? Head to the [Fern Docs Advanced Repo](https://github.com/fern-api/docs-advanced).
+
+**Advanced features** include:
+- Versioning 
+- Changelog
+- Multiple APIs
+- Custom background
+- Bring your own fonts
