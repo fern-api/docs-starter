@@ -23,13 +23,13 @@ If needed, here are [instructions](https://docs.github.com/en/get-started/quicks
 Install the Fern CLI by running:
 
 ```bash
-$ npm install -g fern-api
+npm install -g fern-api
 ```
 
 Now that the CLI is installed, generate docs:
 
 ```bash
-$ fern generate --docs
+fern generate --docs
 ```
 
 You'll be asked to login. Enter `y` which will walk you through connecting your GitHub account.
