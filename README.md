@@ -1,12 +1,10 @@
-# Fern Docs Starter Repo
+# Quickstart
 
 ```text
 Start building beautiful documentation in under 5 minutes.
 ```
 
 What this repo produces: [helloworld.docs.buildwithfern.com](https://helloworld.docs.buildwithfern.com)
-
-## Quick start 
 
 ### Step 1: Use this template
 
