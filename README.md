@@ -8,7 +8,7 @@
 
 # Fern Docs Starter
 
-Welcome to the Fern Docs Quickstart, your one-stop solution for building beautiful and user-friendly documentation for your API. With Fern, you can create beautiful documentation in under 5 minutes.
+Create beautiful documentation in under 5 minutes.
 
 [![Discord](https://img.shields.io/badge/Join%20Our%20Community-black?logo=discord)](https://discord.com/invite/JkkXumPzcG)
 
