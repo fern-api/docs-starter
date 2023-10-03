@@ -12,9 +12,9 @@ Create beautiful documentation in under 5 minutes.
 
 [![Discord](https://img.shields.io/badge/Join%20Our%20Community-black?logo=discord)](https://discord.com/invite/JkkXumPzcG)
 
-</div>
+Example of Fern Docs: [https://helloworld.docs.buildwithfern.com](https://helloworld.docs.buildwithfern.com)
 
-Docs published from this Starter repo: [https://helloworld.docs.buildwithfern.com](https://helloworld.docs.buildwithfern.com)
+</div>
 
 ---
 
