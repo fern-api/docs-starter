@@ -1,5 +1,5 @@
 instances:
-  - url: helloworld.docs.buildwithfern.com
+  - url: {your-organization}.docs.buildwithfern.com
 
 title: Hello World | Docs
 
