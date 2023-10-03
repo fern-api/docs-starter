@@ -6,90 +6,86 @@
   
   <br/>
 
-# Quickstart
+# Fern Docs Starter
 
-[![Contributors](https://img.shields.io/github/contributors/fern-api/starter-docs.svg)](https://GitHub.com/dotnet/docs/graphs/contributors/)
-[![Pulls-opened](https://img.shields.io/github/issues-pr/fern-api/starter-docs.svg)](https://GitHub.com/starter-docs/docs/pulls?q=is%3Aissue+is%3Aopened)
-[![Pulls-merged](https://img.shields.io/github/issues-search/fern-api/starter-docs?label=merged%20pull%20requests&query=is%3Apr%20is%3Aclosed%20is%3Amerged&color=darkviolet)](https://github.com/starter-docs/docs/pulls?q=is%3Apr+is%3Aclosed+is%3Amerged)
+Welcome to the Fern Docs Quickstart, your one-stop solution for building beautiful and user-friendly documentation for your API. With Fern, you can create beautiful documentation in under 5 minutes.
 
 [![Discord](https://img.shields.io/badge/Join%20Our%20Community-black?logo=discord)](https://discord.com/invite/JkkXumPzcG)
 
 </div>
 
-```text
-Start building beautiful documentation in under 5 minutes.
-```
-
-**See the Docs this repo generates**  ->  [https://helloworld.docs.buildwithfern.com](https://helloworld.docs.buildwithfern.com)
+Docs published from this Starter repo: [https://helloworld.docs.buildwithfern.com](https://helloworld.docs.buildwithfern.com)
 
 ---
 
-### Step 1: Use this template
+### Step 1: Use This Template
 
-Select "Use this template" and then "Create a new repository." Choose the appropriate organization and then name the repo. It is common to name the repo `docs`.
+1. Click on the "Use this template" button.
+2. Create a new repository. Name it anything you like, `docs` is a common naming choice.
 
-### Step 2: Open in VS Code
+### Step 2: Open in Your Preferred IDE
 
-Or your IDE of choice.
+Clone your newly created repository and open it in your favorite integrated development environment (IDE) or code editor.
 
-### Step 3: Add your organization name
+### Step 3: Customize Organization Name
 
-In the file `fern.config.json` change the **organization name**. For example:
+In the fern.config.json file, replace the placeholder organization name with your actual organization name. For example:
 
 ```json
 {
-    "organization": "HelloWorld",
+    "organization": "YourOrganization",
     "version": "0.15.0"
 }
 ```
 
-In the file `docs.yml` change the **docs url**. For example:
+Also, in the docs.yml file, update the docs URL to match your organization's naming convention. For example:
 
 ```yml
 instances:
-  - url: helloworld.docs.buildwithfern.com
+  - url: your-organization.docs.buildwithfern.com
 ```
 
-### Step 4: Generate your docs
+### Step 4: Generate Your Documentation
 
-Install the Fern CLI by running:
+1. Install the Fern CLI by running:
 
 ```bash
 npm install -g fern-api
 ```
 
-Generate docs:
+2. Generate your documentation with the following command:
 
 ```bash
 fern generate --docs
 ```
 
-You'll be asked to login and connect your GitHub account.
+You will be prompted to log in and connect your GitHub account.
 
-
-Once the docs are generated, you'll see the URL your docs published to. For example:
+Once the documentation is generated, you will receive a URL where your documentation is published. For example:
 
 ```text
 ┌─
-│ ✓  helloworld.docs.buildwithfern.com
+│ ✓  your-organization.docs.buildwithfern.com
 └─
 ```
 
-### Step 5: Customize your docs 
+### Step 5: Customize Your Documentation 
 
-To start, swap the OpenAPI spec for your own. Then revise the markdown pages in the [content](fern/docs/content/) directory. You'll find additional configurations in [docs.yml](fern/docs.yml) that allow you to tailor your docs to fit your brand.
+To get started, replace the provided OpenAPI specification with your own. Then, modify the markdown pages located in the [content](fern/docs/content/) directory. You can further tailor your documentation to match your brand by adjusting settings in the [docs.yml](fern/docs.yml) file.
 
-### Step 6: Setup a custom domain 
 
-To set up a subdomain like `docs.your-website.com` or a subdirectory like `your-website.com/docs`, subscribe to the Fern [Starter plan](https://buildwithfern.com/pricing). Once subscribed, update your `docs.yml` to add:
+### Step 6: Set Up a Custom Domain 
+
+If you wish to use a custom domain like `docs.your-organization.com` or a subdirectory like `your-organization.com/docs`, you can subscribe to the [Starter plan](https://buildwithfern.com/pricing). Once subscribed, update [docs.yml](fern/docs.yml) with the custom domain configuration:
 
 ``` yaml
- - url: {your-organization}.docs.buildwithfern.com
-   custom-domain: docs.{your-organization}.com
+ - url: your-organization.docs.buildwithfern.com
+   custom-domain: docs.your-organization.com
 ```
 
-### Step 7: You've advanced!
-Looking to use **advanced features**? Head to the [Fern Docs Advanced Repo](https://github.com/fern-api/docs-advanced).
+### Step 7: Explore Advanced Features
+
+For advanced documentation features and options, visit the [Fern Docs Advanced Repo](https://github.com/fern-api/docs-advanced).
 
 **Advanced features** include:
 - Versioning 
@@ -97,3 +93,5 @@ Looking to use **advanced features**? Head to the [Fern Docs Advanced Repo](http
 - Multiple APIs
 - Custom background
 - Bring your own fonts
+
+Good luck creating beautiful and functional documentation! 🌿
