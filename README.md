@@ -10,9 +10,33 @@ What this repo produces: [helloworld.docs.buildwithfern.com](https://helloworld.
 
 ## Quick start 
 
-### Step 1: Use this template.
+### Step 1: Use this template
 
-### Step 2: Generating "Hello World" docs
+Select "Use this template" and then "Create a new repository." Choose the appropriate organization and then name the repo. It is common to name the repo `docs`.
+
+### Step 2: Open in VS Code
+
+Or your IDE of choice.
+
+### Step 3: Add your organization name
+
+In the file `fern.config.json` change the **organization name**. For example:
+
+```json
+{
+    "organization": "HelloWorld",
+    "version": "0.15.0"
+}
+```
+
+In the file `docs.yml` change the **docs url**. For example:
+
+```yml
+instances:
+  - url: helloworld.docs.buildwithfern.com
+```
+
+### Step 4: Generate your docs
 
 Install the Fern CLI by running:
 
@@ -20,16 +44,16 @@ Install the Fern CLI by running:
 npm install -g fern-api
 ```
 
-Now that the CLI is installed, generate docs:
+Generate docs:
 
 ```bash
 fern generate --docs
 ```
 
-You'll be asked to login. Enter `y` which will walk you through connecting your GitHub account.
+You'll be asked to login and connect your GitHub account.
 
 
-When the docs are generated, Fern automatically publishes them to the domain configured in `docs.yml`. After successfully generating docs, you'll see:
+Once the docs are generated, you'll see the URL your docs published to. For example:
 
 ```text
 ┌─
