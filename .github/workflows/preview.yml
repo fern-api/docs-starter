@@ -38,7 +38,7 @@ jobs:
         if: ${{ steps.generate_docs.outputs.preview_url }}
         with:
           script: |
-            const preview_url = '${{ steps.generate_docs.outputs.preview_url }';
+            const preview_url = '${{ steps.generate_docs.outputs.preview_url }}';
             const issue_number = context.issue.number;
             github.issues.createComment({
               ...context.repo,
