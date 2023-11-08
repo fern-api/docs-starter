@@ -28,14 +28,14 @@ jobs:
         run: |
           output=$(fern generate --docs --preview)
           echo "$output"
-          echo "::set-output name=preview_url::$(echo "$output" | grep -o 'https://fern-preview-[0-9a-z\-]*.docs.buildwithfern.com')"
+          echo "preview_url=$(echo "$output" | grep -o 'https://fern-preview-[0-9a-z\-]*.docs.buildwithfern.com')" >> $GITHUB_ENV
 
       - name: Comment PR with URL using github-actions bot
         uses: actions/github-script@v4
         if: ${{ steps.generate_docs.outputs.preview_url }}
         with:
           script: |
-            const preview_url = '${{ steps.generate_docs.outputs.preview_url }}';
+            const preview_url = '${{ env.preview_url }}';
             const issue_number = context.issue.number;
             github.issues.createComment({
               ...context.repo,
