@@ -28,14 +28,9 @@ jobs:
         run: |
           output=$(fern generate --docs --preview)
           echo "$output"
-          # Use a grep pattern that matches any subdomain before "-preview-"
-          preview_url=$(echo "$output" | grep -o 'https://[a-zA-Z0-9\-]*-preview-[0-9a-fA-F\-]*.docs.buildwithfern.com')
-          if [ -z "$preview_url" ]; then
-            echo "No URL found in the output."
-            exit 1 # Fail the step if no URL is found
-          else
-            echo "preview_url=$preview_url" >> $GITHUB_ENV
-          fi
+          # Extract the URL and append it to GITHUB_ENV
+          echo "preview_url=$(echo "$output" | grep -oP '(?<=Published docs to )https://[^\s]*')" >> $GITHUB_ENV
+          
       - name: Comment PR with URL using github-actions bot
         uses: actions/github-script@v4
         if: ${{ steps.generate_docs.outputs.preview_url }}
