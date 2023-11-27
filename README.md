@@ -8,7 +8,7 @@
 
 # Fern Docs Starter
 
-Create beautiful documentation in under 5 minutes. Here's [an example!](https://helloworld.docs.buildwithfern.com)
+Create beautiful documentation in under 5 minutes. Here's [an example!](https://your-organization.docs.buildwithfern.com)
 
 [![Discord](https://img.shields.io/badge/Join%20Our%20Community-black?logo=discord)](https://discord.com/invite/JkkXumPzcG)
 
