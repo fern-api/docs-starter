@@ -1,7 +1,7 @@
 <br/>
 <div align="center">
   <a href="https://www.buildwithfern.com/?utm_source=github&utm_medium=readme&utm_campaign=docs-starter&utm_content=logo">
-    <img src="/fern/docs/assets/fern_logo.png" height="120" align="center" alt="header" />
+    <img src="/fern/docs/assets/icon.png" height="120" align="center" alt="header" />
   </a>
   
   <br/>
