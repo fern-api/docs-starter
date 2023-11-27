@@ -29,3 +29,5 @@ logo:
   dark: ./docs/assets/logo_white.png
   light: ./docs/assets/logo_black.png
   height: 25
+
+favicon: ./docs/assets/favicon.png
