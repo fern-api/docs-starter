@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fern-api/fern/main/fern.schema.json
+
+imports:
+  root: __package__.yml
+
+service:
+  auth: false
+  base-path: ""
+  endpoints:
+    addPlant:
+      path: /plants
+      method: POST
+      auth: false
+      display-name: Add a new plant
+      request:
+        body:
+          type: root.PlantInput
+          docs: Input for adding a new plant.
+      errors:
+        - root.BadRequestError
+
+    getPlantById:
+      path: /plants/{plantId}
+      method: GET
+      auth: false
+      path-parameters:
+        plantId:
+          docs: Identifier for a plant.
+          type: root.PlantId
+      display-name: Get a plant
+      response:
+        docs: Plant retrieved successfully
+        type: root.Plant
+      errors:
+        - root.NotFoundError
+      examples:
+        - path-parameters:
+            plantId: plant-id
+          response:
+            body:
+              status: available
+
+    deletePlantById:
+      path: /plants/{plantId}
+      method: DELETE
+      auth: false
+      path-parameters:
+        plantId:
+          docs: Identifier for a plant.
+          type: root.PlantId
+      display-name: Delete a plant
+      errors:
+        - root.NotFoundError
+      examples:
+        - path-parameters:
+            plantId: plant-id

@@ -48,13 +48,13 @@ instances:
 1. Install the Fern CLI by running:
 
 ```bash
-npm install -g fern-api
+$ npm install -g fern-api
 ```
 
 2. Generate your documentation with the following command:
 
 ```bash
-fern generate --docs
+$ fern generate --docs
 ```
 
 You will be prompted to log in and connect your GitHub account.
@@ -67,12 +67,19 @@ Once the documentation is generated, you will receive a URL where your documenta
 └─
 ```
 
-### Step 5: Customize Your Documentation 
+### Step 5: Choose an API definition format
 
-To get started, replace the provided OpenAPI specification with your own. Then, modify the markdown pages located in the [content](fern/docs/content/) directory. You can further tailor your documentation to match your brand by adjusting settings in the [docs.yml](fern/docs.yml) file.
+If you're using a [Fern Definition](https://docs.buildwithfern.com/api-definition/fern-definition/overview), you can edit the files within the [`definition`](/fern/definition/) folder.
 
+If you're using an [OpenAPI Specification](https://docs.buildwithfern.com/api-definition/openapi/extensions), then run the command: `$ fern generate`. You'll see a new folder created called `openapi` that contains your spec. You can edit this spec to make it your own OR copy and paste a spec you already have. Then, delete the `definition` folder.
 
-### Step 6: Set Up a Custom Domain 
+### Step 6: Customize Your Documentation
+
+Next, modify the markdown pages located in the [pages](fern/docs/pages/) directory. You can further tailor your documentation to match your brand by adjusting settings in the [docs.yml](fern/docs.yml) file.
+
+Fern has a built-in component library for you to use. [Explore the components.](https://docs.buildwithfern.com/generate-docs/component-library/)
+
+### Step 6: Set Up a Custom Domain
 
 If you wish to use a custom domain like `docs.your-organization.com` or a subdirectory like `your-organization.com/docs`, you can subscribe to the [Starter plan](https://buildwithfern.com/pricing). Once subscribed, update [docs.yml](fern/docs.yml) with the custom domain configuration:
 
@@ -83,9 +90,10 @@ If you wish to use a custom domain like `docs.your-organization.com` or a subdir
 
 ### Step 7: Explore Advanced Features
 
-For advanced documentation features and options, visit the [Fern Docs Advanced Repo](https://github.com/fern-api/docs-advanced).
+For advanced documentation features and options, visit the [Fern Docs](https://docs.buildwithfern.com/generate-docs).
 
 **Advanced features** include:
+
 - Versioning 
 - Changelog
 - Multiple APIs

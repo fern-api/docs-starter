@@ -22,9 +22,12 @@ navbar-links:
 
 colors:
   accentPrimary:
-    dark: "#1FBAB4"
-    light: "#126d69"
+    dark: "#18ed9d"
+    light: "#13A06C"
 
 logo:
-  dark: ./docs/assets/fern_logo.png
-  light: ./docs/assets/fern_logo.png
+  dark: ./docs/assets/logo_white.png
+  light: ./docs/assets/logo_black.png
+  height: 25
+
+favicon: ./docs/assets/favicon.png

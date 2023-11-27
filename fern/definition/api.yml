@@ -1,0 +1,7 @@
+imports:
+  root: __package__.yml
+name: api
+display-name: Plant Store API
+error-discrimination:
+  strategy: status-code
+auth: bearer

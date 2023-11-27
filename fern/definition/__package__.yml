@@ -1,0 +1,92 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fern-api/fern/main/fern.schema.json
+
+types:
+  PlantInput:
+    docs: Input for adding a new plant.
+    properties:
+      name: string
+      category:
+        type: optional<PlantCategory>
+      photoUrls:
+        type: map<string, string>
+      status:
+        type: optional<PlantStatus>
+
+  OwnerId:
+    type: string
+    docs: Unique identifier for an owner.
+
+  PlantOwner:
+    properties:
+      id:
+        type: optional<PlantOwnerId>
+      age:
+        type: optional<OwnerAge>
+      plants:
+        type: optional<list<Plant>>
+
+  OwnerAge:
+    docs: Age category of an owner.
+    enum:
+      - name: child
+        value: child
+      - name: adult
+        value: adult
+      - name: senior
+        value: senior
+
+  PlantOwnerId:
+    type: OwnerId
+    docs: Identifier for a plant owner.
+
+  PlantId:
+    type: string
+    docs: Unique identifier for a plant.
+
+  CategoryId:
+    type: string
+    docs: Unique identifier for a plant category.
+
+  PlantCategory:
+    docs: Category information for a plant.
+    properties:
+      id:
+        type: CategoryId
+      name: string
+
+  PlantStatus:
+    docs: Status of a plant.
+    enum:
+      - name: available
+        value: available
+      - name: pending
+        value: pending
+      - name: sold
+        value: sold
+
+  Plant:
+    docs: Information about a plant.
+    properties:
+      id:
+        type: optional<PlantId>
+      category:
+        type: optional<PlantCategory>
+      name:
+        type: optional<string>
+      photoUrls:
+        type: optional<map<string, string>>
+      status:
+        type: optional<PlantStatus>
+
+  Error:
+    properties:
+      message: string
+
+errors:
+  BadRequestError:
+    status-code: 400
+    type: Error
+
+  NotFoundError:
+    status-code: 404
+    type: Error
