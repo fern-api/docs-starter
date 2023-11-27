@@ -32,7 +32,7 @@ In the fern.config.json file, replace the placeholder organization name with you
 ```json
 {
     "organization": "YourOrganization",
-    "version": "0.15.0"
+    "version": "0.15.4"
 }
 ```
 
