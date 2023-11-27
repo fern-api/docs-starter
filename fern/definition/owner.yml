@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fern-api/fern/main/fern.schema.json
+
+imports:
+  root: __package__.yml
+
+service:
+  auth: false
+  base-path: ""
+  endpoints:
+    addOwner:
+      path: /owners
+      method: POST
+      auth: false
+      display-name: Add a new owner
+      request:
+        name: PlantOwnerInput
+        body:
+          properties:
+            name: string
+            age:
+              type: root.OwnerAge
+            plants:
+              type: list<root.PlantInput>
+      response:
+        docs: Owner added successfully
+        type: root.PlantOwner
+      errors:
+        - root.BadRequestError
+
+    deleteOwner:
+      path: /owners/{ownerId}
+      method: DELETE
+      auth: false
+      path-parameters:
+        ownerId:
+          docs: Identifier for an owner.
+          type: root.OwnerId
+      display-name: Delete an owner
+      errors:
+        - root.NotFoundError
+      examples:
+        - path-parameters:
+            ownerId: owner-id
