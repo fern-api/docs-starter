@@ -26,7 +26,7 @@ Your docs can look this good:
 
 ---
 
-Let's get started!
+## Let's Get Started
 
 ### Step 1: Use This Template
 
@@ -60,20 +60,20 @@ instances:
 1. Install the Fern CLI by running:
 
 ```bash
-$ npm install -g fern-api
+npm install -g fern-api
 ```
 
-2. Generate your documentation with the following command:
+1. Generate your documentation with the following command:
 
 ```bash
-$ fern generate --docs
+fern generate --docs
 ```
 
 You will be prompted to log in and connect your GitHub account.
 
 Once the documentation is generated, you will receive a URL where your documentation is published. For example:
 
-```text
+```shell
 ┌─
 │ ✓  your-organization.docs.buildwithfern.com
 └─
@@ -106,7 +106,7 @@ For advanced documentation features and options, visit the [Fern Docs](https://d
 
 **Advanced features** include:
 
-- Versioning 
+- Versioning
 - Changelog
 - Multiple APIs
 - Custom background
