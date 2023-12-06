@@ -18,9 +18,15 @@ Create beautiful documentation in under 5 minutes. Here's [an example!](https://
 
 ## Customer Showcase
 
+Your docs can look this good:
+
 - [Flatfile's API Reference](https://reference.flatfile.com/api-reference/events/create-an-event)
 - [Sugeragent's Docs](https://docs.superagent.sh/)
 - [Credal's Docs](https://docs.credal.ai/)
+
+---
+
+Let's get started!
 
 ### Step 1: Use This Template
 
