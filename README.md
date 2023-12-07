@@ -83,7 +83,7 @@ Once the documentation is generated, you will receive a URL where your documenta
 
 If you're using a [Fern Definition](https://docs.buildwithfern.com/api-definition/fern-definition/overview), you can edit the files within the [`definition`](/fern/definition/) folder.
 
-If you're using an [OpenAPI Specification](https://docs.buildwithfern.com/api-definition/openapi/extensions), then run the command: `$ fern generate`. You'll see a new folder created called `openapi` that contains your spec. You can edit this spec to make it your own OR copy and paste a spec you already have. Then, delete the `definition` folder.
+If you're using an [OpenAPI Specification](https://docs.buildwithfern.com/api-definition/openapi/extensions), then run the command: `fern generate`. You'll see a new folder created called `openapi` that contains your spec. You can edit this spec to make it your own OR copy and paste a spec you already have. Then, delete the `definition` folder.
 
 ### Step 6: Customize Your Documentation
 
