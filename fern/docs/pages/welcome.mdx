@@ -45,9 +45,11 @@ To get started, customize the links, content, and theme to match your brand!
 In addition to documentation, Fern can generate SDKs (client libraries) in popular programming languages. That way, you can offer users an experience such as:
 
 <CodeBlocks>
-  <CodeBlock title="TypeScript">
+  <CodeBlock title="Node">
   ```bash
   npm install your-organization
+  # or
+  yarn add your-organization
   ```
   </CodeBlock>
   <CodeBlock title="Python">
@@ -57,21 +59,28 @@ In addition to documentation, Fern can generate SDKs (client libraries) in popul
   </CodeBlock>
   <CodeBlock title="Go">
   ```bash
-  go get -u github.com/your-organization
+  go get -u github.com/your-organization/go
   ```
   </CodeBlock>
-  <CodeBlock title="Java">
-  ```bash
-  go get -u github.com/your-organization
-  ```
-  </CodeBlock>
-  <CodeBlock title="Java">
+  <CodeBlock title="Java/Kotlin/JVM">
   ```bash
   <dependency>
-  <groupId>com.workos</groupId>
-  <artifactId>workos</artifactId>
-  <version>{version}</version>
+    <groupId>com.your-organization</groupId>
+    <artifactId>your-organization</artifactId>
+    <version>2.0.0</version>
   </dependency>
+  # or
+  implementation("com.your-organization.java:sdk:2.0.0")
+  ```
+  </CodeBlock>
+  <CodeBlock title="Ruby">
+  ```bash
+  gem install your-organization
+  ```
+  </CodeBlock>
+  <CodeBlock title="C#">
+  ```bash
+  nuget install your-organization.net
   ```
   </CodeBlock>
 </CodeBlocks>
