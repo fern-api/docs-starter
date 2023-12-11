@@ -6,10 +6,18 @@ default-group: local
 groups:
   local:
     generators: 
+      # Generates an OpenAPI spec from your Fern Definition
       - name: fernapi/fern-openapi
         version: 0.0.28
         config:
           format: yaml
         output:
           location: local-file-system
-          path: ../openapi
+          path: ../../generated/openapi
+      
+      # Generates a Node.js client SDK from your Fern Definition
+      - name: fernapi/fern-typescript-node-sdk
+        version: 0.8.13
+        output:
+          location: local-file-system
+          path: ../../generated/sdk/node
