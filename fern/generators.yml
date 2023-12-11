@@ -1,6 +1,6 @@
-# To run the code generator
-# 1. `$ npm i -g fern-api`
-# 2. `$ fern generate`
+# To invoke the code generators
+# 1. Install Fern: `npm i -g fern-api`
+# 2. Run: `fern generate`
 
 default-group: local
 groups:
@@ -13,11 +13,11 @@ groups:
           format: yaml
         output:
           location: local-file-system
-          path: ../../generated/openapi
+          path: ../generated/openapi
       
       # Generates a Node.js client SDK from your Fern Definition
       - name: fernapi/fern-typescript-node-sdk
         version: 0.8.13
         output:
           location: local-file-system
-          path: ../../generated/sdk/node
+          path: ../generated/sdk/node
