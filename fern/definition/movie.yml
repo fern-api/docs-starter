@@ -38,6 +38,7 @@ service:
               id: tt9398640
               title: "Between Two Ferns: The Movie"
               rating: 6.1
+              year: "2019"
         # Error response
         - path-parameters:
             id: tt1234
@@ -57,6 +58,7 @@ types:
       rating:
         type: double
         docs: The rating scale out of ten stars
+      year: string
 
   CreateMovieRequest:
     properties:

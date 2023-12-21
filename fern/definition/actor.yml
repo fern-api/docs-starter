@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fern-api/fern/main/fern.schema.json
+
+imports:
+  movie: movie.yml
+
+service:
+  auth: false
+  base-path: /actors
+  endpoints:
+    listMovies:
+      display-name: List Movies for an Actor
+      docs: This endpoint will return a list of movies that Morgan Freeman (Actor ID `nm0000151`) has acted in. We'll list just 5 movies, because he's acted in over 153!
+      method: GET
+      path: /list-movies/{actorId}
+      path-parameters:
+        actorId: ActorId
+      response: list<string>
+      examples:
+        - name: Morgan Freeman
+          path-parameters:
+            actorId: nm0000151
+          response:
+            body:
+              - "The Shawshank Redemption"
+              - "The Power of One"
+              - "Unforgiven"
+              - "Outbreak"
+              - "Se7en"
+
+types:
+  ActorId: 
+    type: string
+    docs: The unique identifier for an actor in the database
+
+errors:
+  ActorDoesNotExistError:
+    status-code: 404
+    type: ActorId
