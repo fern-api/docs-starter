@@ -52,6 +52,9 @@ service:
       path: /{id}
       path-parameters:
         id: MovieId
+      examples:
+        - path-parameters:
+            id: tt2294629
       errors:
         - MovieDoesNotExistError
 
@@ -62,7 +65,11 @@ service:
       path-parameters:
         id: MovieId
       request: UpdateMovieRequest
-      response: MovieId
+      examples:
+        - path-parameters:
+            id: tt2294629
+          request: 
+            year: "2019"
       errors:
         - MovieDoesNotExistError
 types:
