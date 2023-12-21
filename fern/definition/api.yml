@@ -1,7 +1,7 @@
-imports:
-  root: __package__.yml
-name: api
-display-name: Plant Store API
+name: imdb-api
 error-discrimination:
   strategy: status-code
 auth: bearer
+environments:
+  Sandbox: https://sandbox-api.example.com
+default-environment: Sandbox
