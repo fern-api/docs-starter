@@ -4,7 +4,7 @@ service:
   auth: false
   base-path: /movies
   endpoints:
-    createMovie:
+    create:
       docs: Add a movie to the database
       method: POST
       path: /create-movie
@@ -18,7 +18,7 @@ service:
           response:
             body: tt0111161
 
-    getMovie:
+    get:
       docs: Retrieve a movie from the database based on the ID
       method: GET
       path: /{id}
@@ -30,12 +30,12 @@ service:
       examples:
         # Success response
         - path-parameters:
-            id: tt0111161
+            id: tt9398640
           response:
             body:
-              id: tt0111161
-              title: The Shawshank Redemption
-              rating: 9.3
+              id: tt9398640
+              title: "Between Two Ferns: The Movie"
+              rating: 6.1
         # Error response
         - path-parameters:
             id: tt1234
@@ -46,7 +46,7 @@ service:
 types:
   MovieId:
     type: string
-    docs: The unique identifier for a Movie in the database
+    docs: The unique identifier for a movie in the database
 
   Movie:
     properties:
