@@ -1,24 +1,39 @@
-name: ci
+name: fern
 
-on: 
-  push: 
-    branches: 
-      - main 
+on:
+  push:
+    paths:
+      - "fern/**"
 
 jobs:
-  publish-docs:
+  check:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup node
-        uses: actions/setup-node@v3
-
-      - name: Download Fern
+      - name: Install Fern
         run: npm install -g fern-api
 
-      - name: Generate and Publish Docs
+      - name: Check that API is valid
+        run: fern check
+
+  publish-docs:
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install Fern
+        run: npm install -g fern-api
+
+      - name: Publish Docs
         env:
           FERN_TOKEN: ${{ secrets.FERN_TOKEN }}
         run: fern generate --docs --log-level debug

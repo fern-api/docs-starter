@@ -1,4 +1,4 @@
-name: ci
+name: fern
 
 on:
   pull_request:
@@ -6,7 +6,20 @@ on:
       - main
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Fern
+        run: npm install -g fern-api
+
+      - name: Check that API is valid
+        run: fern check
+        
   preview-docs:
+    needs: check
     runs-on: ubuntu-latest
 
     steps:
