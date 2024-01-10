@@ -1,12 +1,12 @@
 <br/>
 <div align="center">
   <a href="https://www.buildwithfern.com/?utm_source=github&utm_medium=readme&utm_campaign=docs-starter&utm_content=logo">
-    <img src="/fern/docs/assets/logo_light_mode.png" height="120" align="center" alt="header" />
+    <img src="/fern/docs/assets/logo_light_mode.png" height="50" align="center" alt="header" />
   </a>
   
   <br/>
 
-# Fern Docs Starter
+# Docs Starter
 
 Create beautiful documentation in under 5 minutes. Here's [an example!](https://your-organization.docs.buildwithfern.com)
 
