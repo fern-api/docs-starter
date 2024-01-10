@@ -26,8 +26,8 @@ colors:
     light: "#13A06C"
 
 logo:
-  dark: ./docs/assets/logo_white.png
-  light: ./docs/assets/logo_black.png
-  height: 25
+  dark: ./docs/assets/logo_dark_mode.png
+  light: ./docs/assets/logo_light_mode.png
+  height: 30
 
-favicon: ./docs/assets/favicon.png
+favicon: ./docs/assets/favicon.ico
