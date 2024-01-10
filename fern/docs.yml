@@ -23,7 +23,7 @@ navbar-links:
 colors:
   accentPrimary:
     dark: "#adff8c"
-    light: "#49932a"
+    light: "#2a5418"
 
 logo:
   dark: ./docs/assets/logo_dark_mode.png
