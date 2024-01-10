@@ -6,11 +6,16 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup Node.js 
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
       - name: Install Fern
-        run:  npm install -g fern-api
+        run: npm install -g fern-api
 
       - name: Validate API configuration
         run: fern check
