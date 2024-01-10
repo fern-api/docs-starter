@@ -6,7 +6,7 @@ on:
       - main 
 
 jobs:
-  fern-check:
+  check:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo

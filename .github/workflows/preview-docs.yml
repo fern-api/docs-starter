@@ -3,7 +3,7 @@ name: fern
 on: pull_request
 
 jobs:
-  fern-check:
+  check:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -15,8 +15,8 @@ jobs:
       - name: Validate API configuration
         run: fern check
         
-  preview-url:
-    needs: fern-check
+  preview-docs:
+    needs: check
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
