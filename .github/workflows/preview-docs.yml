@@ -1,13 +1,12 @@
-name: ci
+name: preview-docs
 
-on:
-  pull_request:
-    branches:
-      - main
+on: pull_request
 
 jobs:
-  preview-docs:
+  preview-url:
     runs-on: ubuntu-latest
+
+    permissions: write-all
 
     steps:
       - name: Checkout repository
@@ -20,27 +19,19 @@ jobs:
 
       - name: Install Fern
         run: npm install -g fern-api
-
-      - name: Generate Documentation Preview with Fern
-        id: generate_docs
+        
+      - name: Generate preview URL
+        id: generate-docs
         env:
           FERN_TOKEN: ${{ secrets.FERN_TOKEN }}
         run: |
-          output=$(fern generate --docs --preview)
-          echo "$output"
-          # Extract the URL
-          preview_url=$(echo "$output" | grep -oP '(?<=Published docs to )https://[^\s]*')
-          # Set the output for the step
-          echo "::set-output name=preview_url::$preview_url"
-      - name: Comment PR with URL using github-actions bot
-        uses: actions/github-script@v4
-        if: ${{ steps.generate_docs.outputs.preview_url }}
+          OUTPUT="$(fern generate --docs --preview)"
+          echo "Command Output: $OUTPUT"
+          URL=$(echo "$OUTPUT" | grep -oP 'Published docs to \K.*(?= \()')
+          echo "Preview URL: $URL"
+          echo "$URL" > preview_url.txt
+
+      - name: Comment URL in PR
+        uses: thollander/actions-comment-pull-request@v2.4.3
         with:
-          script: |
-            const preview_url = '${{ steps.generate_docs.outputs.preview_url }}';
-            const issue_number = context.issue.number;
-            github.issues.createComment({
-              ...context.repo,
-              issue_number: issue_number,
-              body: `Published docs preview URL: ${preview_url}`
-            })
+          filePath: preview_url.txt 
