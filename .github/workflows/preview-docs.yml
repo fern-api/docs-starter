@@ -39,8 +39,7 @@ jobs:
           OUTPUT="$(fern generate --docs --preview)"
           echo "Command Output: $OUTPUT"
           URL=$(echo "$OUTPUT" | grep -oP 'Published docs to \K.*(?= \()')
-          echo "Preview URL: $URL"
-          echo "$URL" > preview_url.txt
+          echo "Preview your docs: $URL" > preview_url.txt
 
       - name: Comment URL in PR
         uses: thollander/actions-comment-pull-request@v2.4.3
