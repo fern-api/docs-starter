@@ -1,13 +1,24 @@
-name: preview-docs
+name: fern
 
 on: pull_request
 
 jobs:
-  preview-url:
+  fern-check:
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
+      - name: Install Fern
+        run:  npm install -g fern-api
+
+      - name: Validate API configuration
+        run: fern check
+        
+  preview-url:
+    needs: fern-check
+    runs-on: ubuntu-latest
     permissions: write-all
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
