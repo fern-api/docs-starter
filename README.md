@@ -110,7 +110,7 @@ Once the documentation is generated, you will receive a URL where your documenta
 
 To update your API definitions:
 - For [Fern Definitions](https://docs.buildwithfern.com/api-definition/fern-definition/overview), update the files in the `definition` folder.
-- For OpenAPI definitions, update the file in the `openapi` folder. 
+- For OpenAPI Specification, update the file in the `openapi` folder. YAML and JSON file formats are supported.
 
 Next, modify the markdown pages located in the `docs/pages` folder, such as the Welcome page.
 
