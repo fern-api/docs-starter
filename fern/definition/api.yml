@@ -1,7 +1,0 @@
-name: imdb-api
-error-discrimination:
-  strategy: status-code
-auth: bearer
-environments:
-  Sandbox: https://sandbox.example.com
-default-environment: Sandbox
