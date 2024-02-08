@@ -10,6 +10,9 @@ navigation:
         path: ./docs/pages/sdks.mdx
         slug: sdks
   - api: API Reference
+    snippets:
+      python: petstore
+      typescript: petstore-sdk
 
 navbar-links: 
   - type: secondary
