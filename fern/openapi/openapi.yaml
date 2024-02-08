@@ -1,6 +1,7 @@
 openapi: 3.0.2
 servers:
-  - url: /v3
+  - url: https://www.petstore-openapi.com/v3
+    description: Demo server
 info:
   description: |-
     This is a sample Pet Store Server based on the OpenAPI 3.0 specification.  You can find out more about
@@ -112,7 +113,7 @@ paths:
     get:
       tags:
         - pet
-      summary: Finds Pets by status
+      summary:  by status
       description: Multiple status values can be provided with comma separated strings
       operationId: findPetsByStatus
       parameters:
@@ -152,7 +153,7 @@ paths:
     get:
       tags:
         - pet
-      summary: Finds Pets by tags
+      summary: Finds pets by tags
       description: >-
         Multiple tags can be provided with comma separated strings. Use tag1,
         tag2, tag3 for testing.
@@ -255,7 +256,7 @@ paths:
     delete:
       tags:
         - pet
-      summary: Deletes a pet
+      summary: Delete a pet
       description: ''
       operationId: deletePet
       parameters:
@@ -283,7 +284,7 @@ paths:
     post:
       tags:
         - pet
-      summary: uploads an image
+      summary: Upload an image
       description: ''
       operationId: uploadFile
       parameters:
@@ -574,7 +575,7 @@ paths:
         default:
           description: successful operation
       requestBody:
-        description: Update an existent user in the store
+        description: Update an existing user in the store
         content:
           application/json:
             schema:
