@@ -5,11 +5,11 @@ groups:
         version: 0.9.5
         output:
           location: npm
-          package-name: petstore-sdk
+          package-name: petstore-sdk #
           token: ${NPM_TOKEN}
       - name: fernapi/fern-python-sdk
         version: 0.8.0
         output:
           location: pypi
-          package-name: petstore
+          package-name: petstore #https://pypi.org/project/petstore/
           token: ${PYPI_TOKEN}
