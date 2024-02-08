@@ -28,7 +28,9 @@ Your docs can look this good:
 
 ## Let's get started
 
-The OpenAPI specification is a language for defining a REST API. OpenAPI (3.x) was previously known as Swagger (2.x) and is a widely used standard for defining RESTful APIs. Fern supports both OpenAPI 3.x and Swagger 2.x.
+### About OpenAPI/Swagger
+
+The OpenAPI specification is a format for describing REST APIs. The specification consists of a single JSON or YAML file. OpenAPI was previously known as Swagger. Fern supports both OpenAPI (3.x) and Swagger (2.x). We'll refer to the specification as OpenAPI throughout this guide.
 
 ### Step 1: Use this template
 
@@ -69,7 +71,7 @@ npm install -g fern-api
 
 As this is a global command, you can run it from any location. The CLI commands in the following steps must be run from within your repository.
 
-### Step 5: (Optional) Use your OpenAPI/Swagger specification
+### Step 5: (Optional) Use your OpenAPI specification
 
 If you'd like to use the an example OpenAPI specificaton file, run:
 
@@ -97,13 +99,13 @@ Confirm that you see a new folder named `openapi` and that it contains the OAS f
 
 ### Step 6: Check that your OpenAPI specification is valid
 
-Run the following command to check that your OpenAPI/Swagger specification is valid:
+Run the following command to check that your OpenAPI specification is valid:
 
 ```bash
 fern check
 ```
 
-If you see errors, resolve them in your OpenAPI/Swagger specification file. If you need help, reach out in [Discord](https://discord.com/invite/JkkXumPzcG) or [via email](mailto:support@buildwithfern.com). We're here to help!
+If you see errors, resolve them in your OpenAPI specification file. If you need help, reach out in [Discord](https://discord.com/invite/JkkXumPzcG) or [via email](mailto:support@buildwithfern.com). We're here to help!
 
 ### Step 7: Generate your documentation
 
