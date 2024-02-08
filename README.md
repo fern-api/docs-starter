@@ -8,7 +8,7 @@
 
 # Docs Starter
 
-Create beautiful documentation in under 5 minutes. Here's [an example!](https://your-organization.docs.buildwithfern.com)
+Create beautiful documentation in under 5 minutes. Here's [an example!](https://petstore-openapi.docs.buildwithfern.com)
 
 [![Discord](https://img.shields.io/badge/Join%20Our%20Community-black?logo=discord)](https://discord.com/invite/JkkXumPzcG)
 
@@ -45,8 +45,8 @@ In the `fern.config.json` file, replace the placeholder organization name with y
 
 ```json
 {
-    "organization": "YourOrganization",
-    "version": "0.16.25"
+    "organization": "Petstore",
+    "version": "0.17.2"
 }
 ```
 
@@ -54,7 +54,7 @@ In the `docs.yml` file, update the docs URL to match your organization's naming 
 
 ```yml
 instances:
-  - url: your-organization.docs.buildwithfern.com
+  - url: petstore-openapi.docs.buildwithfern.com
 ```
 
 
@@ -103,7 +103,7 @@ Once the documentation is generated, you will receive a URL where your documenta
 
 ```shell
 ┌─
-│ ✓  your-organization.docs.buildwithfern.com
+│ ✓  petstore-openapi.docs.buildwithfern.com
 └─
 ```
 ### Step 7: Customize your documentation
@@ -124,11 +124,11 @@ Fern has a built-in component library for you to use. [Explore the components.](
 
 ### Step 8: Set up a custom domain
 
-If you wish to use a custom subdomain like `https://docs.your-organization.com` or a subpath like `https://your-organization.com/docs`, you can subscribe to the [Starter plan](https://buildwithfern.com/pricing). Once subscribed, update `docs.yml` with the custom domain configuration:
+If you wish to use a custom subdomain like `https://docs.YOUR_ORGANIZATION.com` or a subpath like `https://YOUR_ORGANIZATION.com/docs`, you can subscribe to the [Starter plan](https://buildwithfern.com/pricing). Once subscribed, update `docs.yml` with the custom domain configuration:
 
 ``` yaml
- - url: your-organization.docs.buildwithfern.com
-   custom-domain: docs.your-organization.com
+ - url: petstore-openapi.docs.buildwithfern.com
+   custom-domain: docs.petstore-openapi.com
 ```
 
 ### Step 9: Explore advanced features
