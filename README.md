@@ -93,6 +93,8 @@ Examples:
 
 Confirm that you see a new folder named `openapi` and that it contains the OAS file you specified, in YAML format.
 
+*Note: Don't have an OpenAPI spec? Use Fern's simpler format to define your API.* [*Learn more*](https://github.com/fern-api/docs-starter-fern-definition)
+
 ### Step 6: Check that your OpenAPI specification is valid
 
 Run the following command to check that your OpenAPI/Swagger specification is valid:
