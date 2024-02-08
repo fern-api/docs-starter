@@ -1,6 +1,6 @@
 <br/>
 <div align="center">
-  <a href="https://www.buildwithfern.com/?utm_source=github&utm_medium=readme&utm_campaign=docs-starter&utm_content=logo">
+  <a href="https://www.buildwithfern.com/?utm_source=github&utm_medium=readme&utm_campaign=docs-starter-openapi&utm_content=logo">
     <img src="/fern/docs/assets/logo_light_mode.png" height="50" align="center" alt="header" />
   </a>
   
@@ -8,7 +8,7 @@
 
 # Docs Starter
 
-Create beautiful documentation in under 5 minutes. Here's [an example!](https://your-organization.docs.buildwithfern.com)
+Create beautiful documentation in under 5 minutes using an OpenAPI/Swagger specification. Here's [an example!](https://your-organization.docs.buildwithfern.com)
 
 [![Discord](https://img.shields.io/badge/Join%20Our%20Community-black?logo=discord)](https://discord.com/invite/JkkXumPzcG)
 
@@ -27,6 +27,8 @@ Your docs can look this good:
 ---
 
 ## Let's get started
+
+The OpenAPI specification is a language for defining a REST API. OpenAPI (3.x) was previously known as Swagger (2.x) and is a widely used standard for defining RESTful APIs. Fern supports both OpenAPI 3.x and Swagger 2.x.
 
 ### Step 1: Use this template
 
@@ -57,7 +59,6 @@ instances:
   - url: your-organization.docs.buildwithfern.com
 ```
 
-
 ### Step 4: Install the Fern CLI
 
 Install the Fern CLI globally by running:
@@ -65,19 +66,24 @@ Install the Fern CLI globally by running:
 ```bash
 npm install -g fern-api
 ```
+
 As this is a global command, you can run it from any location. The CLI commands in the following steps must be run from within your repository.
 
-### Step 5 (Optional): Use an OpenAPI Specification
+### Step 5: (Optional) Use your OpenAPI/Swagger specification
 
-If you will be using [Fern Definitions](https://docs.buildwithfern.com/api-definition/fern-definition/overview) to describe your API, skip to [Step 6](#step-6-generate-your-documentation).
+If you'd like to use the an example OpenAPI specificaton file, run:
 
-If you will be using the [OpenAPI Specification](https://chat.openai.com/share/47bcc007-17d8-483a-ab5a-91c10c4a73e1) (OAS), follow these steps:
-1. Delete the `definition` folder.
-2. Run:
+```bash
+fern init --openapi https://petstore3.swagger.io/api/v3/openapi.json
+```
+
+If you'd like to use your own OpenAPI specification file, run:
 
 ```bash
 fern init --openapi URL_OR_PATH_TO_YOUR_OPENAPI_SPEC
 ```
+
+You can use a URL to an OAS file online, or you can use a local path. The file must be formatted as JSON or YAML. 
 
 Examples:
 
@@ -85,11 +91,19 @@ Examples:
 
 ```fern init --openapi ../apis/openapi.yml```
 
-You can use a URL to an OAS file online, or you can use a local path. The file must be formatted as JSON or YAML. 
-
 Confirm that you see a new folder named `openapi` and that it contains the OAS file you specified, in YAML format.
 
-### Step 6: Generate your documentation
+### Step 6: Check that your OpenAPI specification is valid
+
+Run the following command to check that your OpenAPI/Swagger specification is valid:
+
+```bash
+fern check
+```
+
+If you see errors, resolve them in your OpenAPI/Swagger specification file. If you need help, reach out in [Discord](https://discord.com/invite/JkkXumPzcG) or [via email](mailto:support@buildwithfern.com). We're here to help!
+
+### Step 7: Generate your documentation
 
 Generate and publish your documentation with the following command:
 
@@ -106,11 +120,8 @@ Once the documentation is generated, you will receive a URL where your documenta
 │ ✓  your-organization.docs.buildwithfern.com
 └─
 ```
-### Step 7: Customize your documentation
 
-To update your API definitions:
-- For [Fern Definitions](https://docs.buildwithfern.com/api-definition/fern-definition/overview), update the files in the `definition` folder.
-- For OpenAPI Specification, update the file in the `openapi` folder. YAML and JSON file formats are supported.
+### Step 8: Customize your documentation
 
 Next, modify the markdown pages located in the `docs/pages` folder, such as the Welcome page.
 
@@ -122,7 +133,7 @@ To preview updates to your documentation before publishing changes, run `fern ge
 
 Fern has a built-in component library for you to use. [Explore the components.](https://docs.buildwithfern.com/generate-docs/component-library/)
 
-### Step 8: Set up a custom domain
+### Step 9: Set up a custom domain
 
 If you wish to use a custom subdomain like `https://docs.your-organization.com` or a subpath like `https://your-organization.com/docs`, you can subscribe to the [Starter plan](https://buildwithfern.com/pricing). Once subscribed, update `docs.yml` with the custom domain configuration:
 
@@ -131,7 +142,7 @@ If you wish to use a custom subdomain like `https://docs.your-organization.com` 
    custom-domain: docs.your-organization.com
 ```
 
-### Step 9: Explore advanced features
+### Step 10: Explore advanced features
 
 For advanced documentation features and options, view the full [configuration docs](https://docs.buildwithfern.com/generate-docs/overview/configuration).
 
