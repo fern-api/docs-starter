@@ -1,15 +1,14 @@
 instances:
   - url: your-organization.docs.buildwithfern.com
 
-title: Your Organization | Docs
-
 navigation:
-  - section: Getting started
+  - section: Get Started
     contents: 
       - page: Welcome 
         path: ./docs/pages/welcome.mdx
       - page: SDKs
         path: ./docs/pages/sdks.mdx
+        slug: sdks
   - api: API Reference
 
 navbar-links: 
