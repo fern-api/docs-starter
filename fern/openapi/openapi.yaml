@@ -313,10 +313,9 @@ paths:
             - 'read:pets'
       requestBody:
         content:
-          application/octet-stream:
+          application/plain:
             schema:
-              type: string
-              format: binary
+              type: string              
   /store/inventory:
     get:
       tags:
