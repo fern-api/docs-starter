@@ -1,5 +1,5 @@
 instances:
-  - url: your-organization.docs.buildwithfern.com
+  - url: petstore-openapi.docs.buildwithfern.com
 
 navigation:
   - section: Get Started
