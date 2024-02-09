@@ -21,12 +21,12 @@ navbar-links:
 
 colors:
   accentPrimary:
-    dark: "#adff8c"
-    light: "#376d20"
+    dark: "#f0c193"
+    light: "#af5f1b."
 
 logo:
-  dark: ./docs/assets/logo_dark_mode.png
-  light: ./docs/assets/logo_light_mode.png
-  height: 30
+  dark: ./docs/assets/logo-dark-mode.png
+  light: ./docs/assets/logo-light-mode.png
+  height: 100
 
-favicon: ./docs/assets/favicon.ico
+favicon: ./docs/assets/favicon.png
