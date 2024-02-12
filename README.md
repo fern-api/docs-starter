@@ -8,8 +8,7 @@
 
 # Docs Starter
 
-Create beautiful documentation in under 5 minutes using an OpenAPI/Swagger specification. Here's [an example!](https://petstore-openapi.docs.buildwithfern.com)
-
+In this tutorial, you will learn how to create beautiful documentation in under 5 minutes using an OpenAPI/Swagger specification.
 </div>
 
 ---
@@ -17,11 +16,11 @@ Create beautiful documentation in under 5 minutes using an OpenAPI/Swagger speci
 ### Step 1: Use this template
 
 1. Click on the "Use this template" button. You must be logged into GitHub.
-2. Create a new repository. Name it anything you like; `docs` is a common naming choice.
+2. Create a new repository. Name is something like `fern-docs`.
 
 ### Step 2: Clone and open in your preferred code editor
 
-Clone your newly created repository and open it in your favorite integrated development environment (IDE) or code editor.
+Clone your newly created repository and open it in your favorite code editor (e.g., VS Code).
 
 The files and folders discussed in the following steps will be inside a `fern` folder in your repository.
 
@@ -29,18 +28,20 @@ The files and folders discussed in the following steps will be inside a `fern` f
 
 In the `fern.config.json` file, replace the placeholder organization name with your actual organization name. For example:
 
-```json
+```diff
 {
-    "organization": "Petstore",
+-   "organization": "Petstore",
++   "organization": "MY_ORGANIZATION_NAME",
     "version": "0.17.8"
 }
 ```
 
 In the `docs.yml` file, update the docs URL to match your organization's naming convention. For example:
 
-```yml
+```diff
 instances:
-  - url: petstore-openapi.docs.buildwithfern.com
+-  - url: petstore-openapi.docs.buildwithfern.com
++  - url: MY_ORGANIZATION_NAME.docs.buildwithfern.com
 ```
 
 ### Step 4: Install the Fern CLI
@@ -51,7 +52,7 @@ Install the Fern CLI globally by running:
 npm install -g fern-api
 ```
 
-As this is a global command, you can run it from any location. The CLI commands in the following steps must be run from within your repository.
+The CLI commands in the following steps must be run from within the root of your repository.
 
 ### Step 5: Check that your OpenAPI specification is valid
 
@@ -76,6 +77,12 @@ Once the documentation is generated, you will receive a URL where your documenta
 ```shell
 ┌─
 │ ✓  petstore-openapi.docs.buildwithfern.com
+└─
+
+# OR
+
+┌─
+│ ✓  MY_ORGANIZTION_NAME.docs.buildwithfern.com
 └─
 ```
 
