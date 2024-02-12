@@ -32,7 +32,7 @@ In the `fern.config.json` file, replace the placeholder organization name with y
 ```json
 {
     "organization": "Petstore",
-    "version": "0.17.2"
+    "version": "0.17.8"
 }
 ```
 
