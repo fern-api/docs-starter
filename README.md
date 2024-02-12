@@ -10,27 +10,9 @@
 
 Create beautiful documentation in under 5 minutes using an OpenAPI/Swagger specification. Here's [an example!](https://petstore-openapi.docs.buildwithfern.com)
 
-[![Discord](https://img.shields.io/badge/Join%20Our%20Community-black?logo=discord)](https://discord.com/invite/JkkXumPzcG)
-
 </div>
 
 ---
-
-## Customer Showcase
-
-Your docs can look this good:
-
-- [Flatfile's API Reference](https://reference.flatfile.com/api-reference/events/create-an-event)
-- [Sugeragent's Docs](https://docs.superagent.sh/)
-- [Credal's Docs](https://docs.credal.ai/)
-
----
-
-## Let's get started
-
-### About OpenAPI/Swagger
-
-The OpenAPI specification is a format for describing REST APIs. The specification consists of a single JSON or YAML file. OpenAPI was previously known as Swagger. Fern supports both OpenAPI (3.x) and Swagger (2.x). We'll refer to the specification as OpenAPI throughout this guide.
 
 ### Step 1: Use this template
 
@@ -50,7 +32,7 @@ In the `fern.config.json` file, replace the placeholder organization name with y
 ```json
 {
     "organization": "Petstore",
-    "version": "0.17.2"
+    "version": "0.17.8"
 }
 ```
 
@@ -71,33 +53,7 @@ npm install -g fern-api
 
 As this is a global command, you can run it from any location. The CLI commands in the following steps must be run from within your repository.
 
-### Step 5: (Optional) Use your OpenAPI specification
-
-If you'd like to use the an example OpenAPI specificaton file, run:
-
-```bash
-fern init --openapi https://petstore3.swagger.io/api/v3/openapi.json
-```
-
-If you'd like to use your own OpenAPI specification file, run:
-
-```bash
-fern init --openapi URL_OR_PATH_TO_YOUR_OPENAPI_SPEC
-```
-
-You can use a URL to an OAS file online, or you can use a local path. The file must be formatted as JSON or YAML. 
-
-Examples:
-
-```fern init --openapi https://petstore3.swagger.io/api/v3/openapi.json```
-
-```fern init --openapi ../apis/openapi.yml```
-
-Confirm that you see a new folder named `openapi` and that it contains the OAS file you specified, in YAML format.
-
-*Note: Don't have an OpenAPI spec? Use Fern's simpler format to define your API.* [*Learn more*](https://github.com/fern-api/docs-starter-fern-definition)
-
-### Step 6: Check that your OpenAPI specification is valid
+### Step 5: Check that your OpenAPI specification is valid
 
 Run the following command to check that your OpenAPI specification is valid:
 
@@ -105,11 +61,9 @@ Run the following command to check that your OpenAPI specification is valid:
 fern check
 ```
 
-If you see errors, resolve them in your OpenAPI specification file. If you need help, reach out in [Discord](https://discord.com/invite/JkkXumPzcG) or [via email](mailto:support@buildwithfern.com). We're here to help!
+### Step 6: Generate your documentation
 
-### Step 7: Generate your documentation
-
-Generate and publish your documentation with the following command:
+Run the following command:
 
 ```bash
 fern generate --docs
@@ -124,6 +78,32 @@ Once the documentation is generated, you will receive a URL where your documenta
 │ ✓  petstore-openapi.docs.buildwithfern.com
 └─
 ```
+
+### Step 7: (Optional) Add your own OpenAPI specification file
+
+If you'd like to use your own OpenAPI file, run:
+
+```bash
+fern init --openapi URL_TO_YOUR_OPENAPI
+
+# OR
+
+fern init --openapi PATH_TO_YOUR_OPENAPI
+```
+
+Examples:
+
+```bash
+fern init --openapi https://raw.githubusercontent.com/fern-api/docs-starter-openapi/main/fern/openapi/openapi.yaml
+
+# OR
+
+fern init --openapi ../apis/openapi.yml
+```
+
+Confirm that you see a folder named `openapi` which contains the OpenAPI file you specified, in YAML format.
+
+*Note: Don't have an OpenAPI spec? Use Fern's simpler format to define your API.* [*Learn more*](https://github.com/fern-api/docs-starter-fern-definition)
 
 ### Step 8: Customize your documentation
 
@@ -151,3 +131,21 @@ If you wish to use a custom subdomain like `https://docs.YOUR_ORGANIZATION.com` 
 For advanced documentation features and options, view the full [configuration docs](https://docs.buildwithfern.com/generate-docs/overview/configuration).
 
 Good luck creating beautiful and functional documentation! 🌿
+
+---
+
+### Support
+
+Need help? Email us at (support@buildwithfern.com)[mailto:support@buildwithfern.com] or join our [Discord community](https://discord.com/invite/JkkXumPzcG).
+
+### Customer Showcase
+
+Your docs can look this good:
+
+- [Flatfile's API Reference](https://reference.flatfile.com/api-reference/events/create-an-event)
+- [Sugeragent's Docs](https://docs.superagent.sh/)
+- [Credal's Docs](https://docs.credal.ai/)
+
+### About OpenAPI (formerly Swagger)
+
+The OpenAPI specification is a format for describing REST APIs. The specification consists of a single JSON or YAML file. OpenAPI was previously known as Swagger. Fern supports both OpenAPI (3.x) and Swagger (2.x). We'll refer to the specification as OpenAPI throughout this guide.
