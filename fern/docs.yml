@@ -6,6 +6,8 @@ navigation:
     contents: 
       - page: Welcome 
         path: ./docs/pages/welcome.mdx
+      - page: Concepts
+        path: ./docs/pages/concepts.mdx
       - page: SDKs
         path: ./docs/pages/sdks.mdx
         slug: sdks
@@ -13,20 +15,20 @@ navigation:
 
 navbar-links: 
   - type: secondary
-    text: Contact us
+    text: Get support
     url: "mailto:support@buildwithfern.com"
   - type: primary
-    text: Join the Discord
-    url: https://discord.com/invite/JkkXumPzcG
+    text: Get a Demo
+    url: https://buildwithfern.com/contact
 
 colors:
   accentPrimary:
     dark: "#f0c193"
-    light: "#af5f1b."
+    light: "#af5f1b"
 
 logo:
   dark: ./docs/assets/logo-dark-mode.png
   light: ./docs/assets/logo-light-mode.png
-  height: 100
+  height: 180
 
 favicon: ./docs/assets/favicon.png
