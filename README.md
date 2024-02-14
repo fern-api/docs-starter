@@ -20,7 +20,7 @@ Learn how to create beautiful documentation in under 5 minutes using an OpenAPI/
 
 ### Step 1: Use this template
 
-1. Click on the "Use this template" button. You must be logged into GitHub.
+1. Click on the **Use this template** button. You must be logged into GitHub.
 2. Choose the option to **create a new repository**. Name it `fern-docs`.
 
 ### Step 2: Clone and open the repo in your preferred code editor
@@ -31,25 +31,25 @@ The files and folders discussed in the following steps will be inside the `fern/
 
 ### Step 3: Customize organization name
 
-In the `fern.config.json` file, replace the placeholder organization name with your actual organization name. For example:
+Open the `fern.config.json` file, which looks like this:
 
-```diff
+```json
 {
--   "organization": "Petstore",
-+   "organization": "MY_ORGANIZATION_NAME",
+    "organization": "Petstore",
     "version": "0.17.8"
 }
 ```
+Replace `"Petstore"` with your own organization name within the quotes. Spaces are permitted. Leave the `version` number unchanged.
 
-In the `docs.yml` file, update the docs URL to match your organization's naming convention. For example:
+Open the `docs.yml` file and locate the `url`, which looks like this:
 
-```diff
+```json
 instances:
--  - url: petstore-openapi.docs.buildwithfern.com
-+  - url: MY_ORGANIZATION_NAME.docs.buildwithfern.com
+  - url: petstore-openapi.docs.buildwithfern.com
 ```
 
-Leave the `version` number unchanged.
+Replace `petstore-openapi` with your own organization's name. Use only alphanumeric characters, hyphens, and underscores. Do not use spaces, and leave the rest of the URL (`docs.buildwithfern.com`) unchanged.
+
 
 ### Step 4: Install the Fern CLI
 
@@ -102,8 +102,8 @@ To modify site styles and navigation, or to add new pages:
 - See [Writing Content](/generate-docs/overview/writing-content).
 
 To learn about Fern's built-in component library you can use in Markdown:
-- See the [Component Library](/generate-docs/component-library/)
-- 
+- See the [Component Library](/generate-docs/component-library/).
+  
 ### Step 7: Set up a custom domain
 
 If you wish to use a custom subdomain like `https://docs.YOUR_ORGANIZATION.com` or a subpath like `https://YOUR_ORGANIZATION.com/docs`, you can subscribe to the [Starter plan](https://buildwithfern.com/pricing). Once subscribed, update `docs.yml` with the custom domain configuration:
