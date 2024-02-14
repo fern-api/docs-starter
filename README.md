@@ -43,7 +43,7 @@ Replace `"Petstore"` with your own organization name within the quotes. Spaces a
 
 Open the `docs.yml` file and locate the `url`, which looks like this:
 
-```json
+```yml
 instances:
   - url: petstore-openapi.docs.buildwithfern.com
 ```
