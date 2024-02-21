@@ -8,7 +8,7 @@
 
 # Docs Starter
 
-Learn how to create beautiful documentation in under 5 minutes using an OpenAPI/Swagger specification.
+Learn how to create beautiful documentation in under 5 minutes using an OpenAPI specification (formerly Swagger).
 </div>
 
 ## Requirements
