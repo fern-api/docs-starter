@@ -99,10 +99,10 @@ To modify the other docs pages:
 - Update the Markdown files located in the `docs/pages/` folder, such as `welcome.mdx`.
 
 To modify site styles and navigation, or to add new pages:
-- See [Writing Content](/generate-docs/overview/writing-content).
+- See [Writing Content](https://docs.buildwithfern.com/generate-docs/overview/writing-content).
 
 To learn about Fern's built-in component library you can use in Markdown:
-- See the [Component Library](/generate-docs/component-library/).
+- See the [Component Library](https://docs.buildwithfern.com/generate-docs/component-library/cards).
   
 ### Step 7: Set up a custom domain
 
