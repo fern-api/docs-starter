@@ -29,6 +29,6 @@ colors:
 logo:
   dark: ./docs/assets/logo-dark-mode.png
   light: ./docs/assets/logo-light-mode.png
-  height: 160
+  height: 40
 
 favicon: ./docs/assets/favicon.png
