@@ -11,13 +11,17 @@
 Learn how to create beautiful documentation in under 5 minutes using an OpenAPI specification (formerly Swagger).
 </div>
 
+## Customer Showcase
+
+Gett inspired by API documentation built with Fern: [Hume](https://dev.hume.ai) | [MultiOn](https://docs.multion.ai) | [Flagright](https://docs.flagright.com) | [Traceloop](https://fern.traceloop.com/docs) | [ElevenLabs](https://elevenlabs.docs.buildwithfern.com/docs/developers)
+
+---
+
 ## Requirements
 
 -   Node 18 or higher
 -   A [GitHub](https://github.com) account
-
----
-
+  
 ### Step 1: Use this template
 
 1. Click on the **Use this template** button (found at the top right of this page). You must be logged into GitHub.
@@ -99,10 +103,10 @@ To modify the other docs pages:
 - Update the Markdown files located in the `docs/pages/` folder, such as `welcome.mdx`.
 
 To modify site styles and navigation, or to add new pages:
-- See [Writing Content](https://docs.buildwithfern.com/generate-docs/overview/writing-content).
+- See [Writing Content](https://buildwithfern.com/learn/docs/content/write-markdown).
 
 To learn about Fern's built-in component library you can use in Markdown:
-- See the [Component Library](https://docs.buildwithfern.com/generate-docs/component-library/cards).
+- See the [Component Library](https://buildwithfern.com/learn/docs/components/).
   
 ### Step 7: Set up a custom domain
 
@@ -115,24 +119,16 @@ If you wish to use a custom subdomain like `https://docs.YOUR_ORGANIZATION.com` 
 
 ### Step 8: Explore advanced features
 
-For advanced documentation features and options, view the full [configuration docs](https://docs.buildwithfern.com/generate-docs/overview/configuration).
+For advanced documentation features and options, view the full [configuration docs](https://buildwithfern.com/learn/docs/config/overview).
 
 Good luck creating beautiful and functional documentation! 🌿
 
 ---
 
-### Support
+## Support
 
-Need help? Email us at (support@buildwithfern.com)[mailto:support@buildwithfern.com] or join our [Discord community](https://discord.com/invite/JkkXumPzcG).
+Need help? [Set up a call](https://buildwithfern.com/contact) with an expert or email us at [support@buildwithfern.com](mailto:support@buildwithfern.com). 
 
-### Customer showcase
-
-Your docs can look this good:
-
-- [Flatfile's API Reference](https://reference.flatfile.com/api-reference/events/create-an-event)
-- [Sugeragent's Docs](https://docs.superagent.sh/)
-- [Credal's Docs](https://docs.credal.ai/)
-
-### About OpenAPI (formerly Swagger)
+## About OpenAPI (formerly Swagger)
 
 The OpenAPI specification is a format for describing REST APIs. The specification consists of a single JSON or YAML file. OpenAPI was previously known as Swagger. Fern supports both OpenAPI (3.x) and Swagger (2.x). We refer to the specification as OpenAPI throughout our documentation.
