@@ -18,7 +18,7 @@ navbar-links:
     text: Get support
     url: "mailto:support@buildwithfern.com"
   - type: primary
-    text: Get a Demo
+    text: Get a demo
     url: https://buildwithfern.com/contact
 
 colors:
