@@ -33,7 +33,7 @@ Clone your newly created repository and open it in your favorite code editor (e.
 
 The files and folders discussed in the following steps will be inside the `fern/` folder in your repository.
 
-### Step 3: Customize organization name
+### Step 3: Customize your organization name
 
 Open the `fern.config.json` file, which looks like this:
 
@@ -105,8 +105,8 @@ To modify the other docs pages:
 To modify site styles and navigation, or to add new pages:
 - See [Writing Content](https://buildwithfern.com/learn/docs/content/write-markdown).
 
-To learn about Fern's built-in component library you can use in Markdown:
-- See the [Component Library](https://buildwithfern.com/learn/docs/components/).
+To learn about Fern's built-in component library you can use within MDX files:
+- See the [Component Library](https://buildwithfern.com/learn/docs/components/overview).
   
 ### Step 7: Set up a custom domain
 
@@ -119,7 +119,7 @@ If you wish to use a custom subdomain like `https://docs.YOUR_ORGANIZATION.com` 
 
 ### Step 8: Explore advanced features
 
-For advanced documentation features and options, view the full [configuration docs](https://buildwithfern.com/learn/docs/config/overview).
+For advanced documentation features and options, view the full [project structure](https://buildwithfern.com/learn/docs/getting-started/project-structure).
 
 Good luck creating beautiful and functional documentation! 🌿
 
