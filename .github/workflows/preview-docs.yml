@@ -10,7 +10,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Fern
+      - name: Install Fern CLI tool
         run: npm install -g fern-api
 
       - name: Generate preview URL

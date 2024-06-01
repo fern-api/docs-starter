@@ -33,7 +33,7 @@ Clone your newly created repository and open it in your favorite code editor (e.
 
 The files and folders discussed in the following steps will be inside the `fern/` folder in your repository.
 
-### Step 3: Customize organization name
+### Step 3: Customize your organization name
 
 Open the `fern.config.json` file, which looks like this:
 
@@ -89,7 +89,11 @@ Once the documentation is generated, you will receive the URL where your documen
 └─
 ```
 
-### Step 6: Customize your documentation
+### Step 6: Try local development
+
+Preview your documentation locally. Run ​`fern docs dev`​ to access your docs on your local server at port 3000, hot-reloading as you edit your markdown and OpenAPI files. [Learn more](https://buildwithfern.com/learn/docs/building-your-docs/local-development) or [watch a 10-second demo](https://www.loom.com/share/0a4658bd78cb45d5a9519277852c7a24?sid=3ce69ad0-bfdb-4fa1-9abf-2f4366d084b9).
+
+### Step 7: Customize your documentation
 
 You must run `fern generate --docs` after any modifications to re-generate and publish your documentation site.
 
@@ -105,10 +109,10 @@ To modify the other docs pages:
 To modify site styles and navigation, or to add new pages:
 - See [Writing Content](https://buildwithfern.com/learn/docs/content/write-markdown).
 
-To learn about Fern's built-in component library you can use in Markdown:
-- See the [Component Library](https://buildwithfern.com/learn/docs/components/).
+To learn about Fern's built-in component library you can use within MDX files:
+- See the [Component Library](https://buildwithfern.com/learn/docs/components/overview).
   
-### Step 7: Set up a custom domain
+### Step 8: Set up a custom domain
 
 If you wish to use a custom subdomain like `https://docs.YOUR_ORGANIZATION.com` or a subpath like `https://YOUR_ORGANIZATION.com/docs`, you can subscribe to the [Starter plan](https://buildwithfern.com/pricing). Once subscribed, update `docs.yml` with the custom domain configuration:
 
@@ -117,9 +121,9 @@ If you wish to use a custom subdomain like `https://docs.YOUR_ORGANIZATION.com` 
    custom-domain: docs.petstore-openapi.com
 ```
 
-### Step 8: Explore advanced features
+### Step 9: Explore advanced features
 
-For advanced documentation features and options, view the full [configuration docs](https://buildwithfern.com/learn/docs/config/overview).
+For advanced documentation features and options, view the full [project structure](https://buildwithfern.com/learn/docs/getting-started/project-structure).
 
 Good luck creating beautiful and functional documentation! 🌿
 
