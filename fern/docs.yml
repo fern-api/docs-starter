@@ -1,34 +1,46 @@
 instances:
-  - url: petstore-openapi.docs.buildwithfern.com
+  - url: plantstore.docs.buildwithfern.com
+    custom-domain: plantstore.dev
+    edit-this-page:
+      github:
+        owner: fern-api
+        repo: docs-starter
+        branch: main
+
+title: Plant Store
+
+layout:
+  searchbar-placement: header
+  page-width: full
 
 navigation:
   - section: Get Started
-    contents: 
+    contents:
       - page: Welcome
-        path: ./docs/pages/welcome.mdx
+        path: docs/pages/welcome.mdx
       - page: Concepts
-        path: ./docs/pages/concepts.mdx
+        path: docs/pages/concepts.mdx
       - page: SDKs
-        path: ./docs/pages/sdks.mdx
+        path: docs/pages/sdks.mdx
         slug: sdks
   - api: API Reference
 
-navbar-links: 
+navbar-links:
   - type: secondary
-    text: Get support
-    url: "mailto:support@buildwithfern.com"
+    text: Fork this repo
+    url: https://github.com/fern-api/docs-starter
   - type: primary
     text: Get a demo
     url: https://buildwithfern.com/contact
 
 colors:
   accentPrimary:
-    dark: "#f0c193"
-    light: "#af5f1b"
+    dark: "#4CAF50"
+    light: "#4CAF50"
 
 logo:
-  dark: ./docs/assets/logo-dark-mode.png
-  light: ./docs/assets/logo-light-mode.png
-  height: 40
+  dark: docs/assets/logo-dark.svg
+  light: docs/assets/logo-light.svg
+  height: 20
 
-favicon: ./docs/assets/favicon.png
+favicon: docs/assets/favicon.svg

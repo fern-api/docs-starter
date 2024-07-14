@@ -9,6 +9,7 @@
 # Docs Starter
 
 Learn how to create beautiful documentation in under 5 minutes using an OpenAPI specification (formerly Swagger).
+
 </div>
 
 ## Customer Showcase
@@ -19,9 +20,9 @@ Get inspired by API documentation built with Fern: [Hume](https://dev.hume.ai) |
 
 ## Requirements
 
--   Node 18 or higher
--   A [GitHub](https://github.com) account
-  
+- Node 18 or higher
+- A [GitHub](https://github.com) account
+
 ### Step 1: Use this template
 
 1. Click on the **Use this template** button (found at the top right of this page). You must be logged into GitHub.
@@ -39,21 +40,21 @@ Open the `fern.config.json` file, which looks like this:
 
 ```json
 {
-    "organization": "Petstore",
-    "version": "0.17.8"
+  "organization": "Plantstore",
+  "version": "0.17.8"
 }
 ```
-Replace `"Petstore"` with your own organization name within the quotes. Spaces are permitted. Leave the `version` number unchanged.
+
+Replace `"Plantstore"` with your own organization name within the quotes. Spaces are permitted. Leave the `version` number unchanged.
 
 Open the `docs.yml` file and locate the `url`, which looks like this:
 
 ```yml
 instances:
-  - url: petstore-openapi.docs.buildwithfern.com
+  - url: plantstore.docs.buildwithfern.com
 ```
 
-Replace `petstore-openapi` with your own organization's name. Use only alphanumeric characters, hyphens, and underscores. Do not use spaces, and leave the rest of the URL (`docs.buildwithfern.com`) unchanged.
-
+Replace `plantstore` with your own organization's name. Use only alphanumeric characters, hyphens, and underscores. Do not use spaces, and leave the rest of the URL (`docs.buildwithfern.com`) unchanged.
 
 ### Step 4: Install the Fern CLI
 
@@ -79,7 +80,7 @@ Once the documentation is generated, you will receive the URL where your documen
 
 ```shell
 ┌─
-│ ✓  petstore-openapi.docs.buildwithfern.com
+│ ✓  plantstore.docs.buildwithfern.com
 └─
 
 # OR
@@ -100,25 +101,29 @@ You must run `fern generate --docs` after any modifications to re-generate and p
 To preview updates to your documentation before publishing changes, run `fern generate --docs --preview`.
 
 To use your own OpenAPI specification file or to update the existing one:
+
 - Update or replace the OpenAPI specification file in the `openapi/` folder.
-- *Note: Don't have an OpenAPI spec? Use Fern's simpler format to define your API.* [*Learn more*](https://github.com/fern-api/docs-starter-fern-definition).
+- _Note: Don't have an OpenAPI spec? Use Fern's simpler format to define your API._ [_Learn more_](https://github.com/fern-api/docs-starter-fern-definition).
 
 To modify the other docs pages:
+
 - Update the Markdown files located in the `docs/pages/` folder, such as `welcome.mdx`.
 
 To modify site styles and navigation, or to add new pages:
+
 - See [Writing Content](https://buildwithfern.com/learn/docs/content/write-markdown).
 
 To learn about Fern's built-in component library you can use within MDX files:
+
 - See the [Component Library](https://buildwithfern.com/learn/docs/components/overview).
-  
+
 ### Step 8: Set up a custom domain
 
 If you wish to use a custom subdomain like `https://docs.YOUR_ORGANIZATION.com` or a subpath like `https://YOUR_ORGANIZATION.com/docs`, you can subscribe to the [Starter plan](https://buildwithfern.com/pricing). Once subscribed, update `docs.yml` with the custom domain configuration:
 
-``` yaml
- - url: petstore-openapi.docs.buildwithfern.com
-   custom-domain: docs.petstore-openapi.com
+```yaml
+- url: plantstore.docs.buildwithfern.com
+  custom-domain: plantstore.dev
 ```
 
 ### Step 9: Explore advanced features
@@ -131,7 +136,7 @@ Good luck creating beautiful and functional documentation! 🌿
 
 ## Support
 
-Need help? [Set up a call](https://buildwithfern.com/contact) with an expert or email us at [support@buildwithfern.com](mailto:support@buildwithfern.com). 
+Need help? [Set up a call](https://buildwithfern.com/contact) with an expert or email us at [support@buildwithfern.com](mailto:support@buildwithfern.com).
 
 ## About OpenAPI (formerly Swagger)
 
