@@ -31,7 +31,7 @@ navbar-links:
     url: https://github.com/fern-api/docs-starter
   - type: primary
     text: Get a demo
-    url: https://buildwithfern.com/contact
+    url: https://buildwithfern.com/contact?utm_campaign=demo&utm_medium=plantstore&utm_source=navbar
 
 colors:
   accentPrimary:
@@ -42,5 +42,6 @@ logo:
   dark: docs/assets/logo-dark.svg
   light: docs/assets/logo-light.svg
   height: 20
+  href: https://buildwithfern.com/?utm_campaign=demo&utm_medium=plantstore&utm_source=logo
 
 favicon: docs/assets/favicon.svg

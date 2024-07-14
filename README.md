@@ -92,7 +92,7 @@ Once the documentation is generated, you will receive the URL where your documen
 
 ### Step 6: Try local development
 
-Preview your documentation locally. Run ​`fern docs dev`​ to access your docs on your local server at port 3000, hot-reloading as you edit your markdown and OpenAPI files. [Learn more](https://buildwithfern.com/learn/docs/building-your-docs/local-development) or [watch a 10-second demo](https://www.loom.com/share/0a4658bd78cb45d5a9519277852c7a24?sid=3ce69ad0-bfdb-4fa1-9abf-2f4366d084b9).
+Preview your documentation locally. Run ​`fern docs dev`​ to access your docs on your local server at port 3000, hot-reloading as you edit your markdown and OpenAPI files. [Learn more](https://buildwithfern.com/learn/docs/building-your-docs/local-development?utm_source=github&utm_medium=readme&utm_campaign=docs-starter-openapi&utm_content=step6) or [watch a 10-second demo](https://www.loom.com/share/0a4658bd78cb45d5a9519277852c7a24?sid=3ce69ad0-bfdb-4fa1-9abf-2f4366d084b9).
 
 ### Step 7: Customize your documentation
 
@@ -103,7 +103,7 @@ To preview updates to your documentation before publishing changes, run `fern ge
 To use your own OpenAPI specification file or to update the existing one:
 
 - Update or replace the OpenAPI specification file in the `openapi/` folder.
-- _Note: Don't have an OpenAPI spec? Use Fern's simpler format to define your API._ [_Learn more_](https://github.com/fern-api/docs-starter-fern-definition).
+- _Note: Don't have an OpenAPI spec? Use Fern's simpler format to define your API._ [_Learn more_](https://github.com/fern-api/docs-starter-fern-definition?utm_source=github&utm_medium=readme&utm_campaign=docs-starter-openapi&utm_content=step7).
 
 To modify the other docs pages:
 
@@ -111,15 +111,15 @@ To modify the other docs pages:
 
 To modify site styles and navigation, or to add new pages:
 
-- See [Writing Content](https://buildwithfern.com/learn/docs/content/write-markdown).
+- See [Writing Content](https://buildwithfern.com/learn/docs/content/write-markdown?utm_source=github&utm_medium=readme&utm_campaign=docs-starter-openapi&utm_content=step7).
 
 To learn about Fern's built-in component library you can use within MDX files:
 
-- See the [Component Library](https://buildwithfern.com/learn/docs/components/overview).
+- See the [Component Library](https://buildwithfern.com/learn/docs/components/overview?utm_source=github&utm_medium=readme&utm_campaign=docs-starter-openapi&utm_content=step7).
 
 ### Step 8: Set up a custom domain
 
-If you wish to use a custom subdomain like `https://docs.YOUR_ORGANIZATION.com` or a subpath like `https://YOUR_ORGANIZATION.com/docs`, you can subscribe to the [Starter plan](https://buildwithfern.com/pricing). Once subscribed, update `docs.yml` with the custom domain configuration:
+If you wish to use a custom subdomain like `https://docs.YOUR_ORGANIZATION.com` or a subpath like `https://YOUR_ORGANIZATION.com/docs`, you can subscribe to the [Starter plan](https://buildwithfern.com/pricing?utm_source=github&utm_medium=readme&utm_campaign=docs-starter-openapi&utm_content=step8). Once subscribed, update `docs.yml` with the custom domain configuration:
 
 ```yaml
 - url: plantstore.docs.buildwithfern.com
@@ -128,7 +128,7 @@ If you wish to use a custom subdomain like `https://docs.YOUR_ORGANIZATION.com` 
 
 ### Step 9: Explore advanced features
 
-For advanced documentation features and options, view the full [project structure](https://buildwithfern.com/learn/docs/getting-started/project-structure).
+For advanced documentation features and options, view the full [project structure](https://buildwithfern.com/learn/docs/getting-started/project-structure?utm_source=github&utm_medium=readme&utm_campaign=docs-starter-openapi&utm_content=step9).
 
 Good luck creating beautiful and functional documentation! 🌿
 
@@ -136,7 +136,7 @@ Good luck creating beautiful and functional documentation! 🌿
 
 ## Support
 
-Need help? [Set up a call](https://buildwithfern.com/contact) with an expert or email us at [support@buildwithfern.com](mailto:support@buildwithfern.com).
+Need help? [Set up a call](https://buildwithfern.com/contact?utm_source=github&utm_medium=readme&utm_campaign=docs-starter-openapi&utm_content=support) with an expert or email us at [support@buildwithfern.com](mailto:support@buildwithfern.com).
 
 ## About OpenAPI (formerly Swagger)
 
