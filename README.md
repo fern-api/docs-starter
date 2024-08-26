@@ -8,7 +8,7 @@
 
 # Docs Starter
 
-Learn how to create beautiful documentation in under 5 minutes using an OpenAPI specification (formerly Swagger).
+Learn how to create beautiful documentation in under 5 minutes using an OpenAPI Specification (formerly Swagger).
 
 </div>
 
@@ -100,10 +100,10 @@ You must run `fern generate --docs` after any modifications to re-generate and p
 
 To preview updates to your documentation before publishing changes, run `fern generate --docs --preview`.
 
-To use your own OpenAPI specification file or to update the existing one:
+To use your own OpenAPI Specification file or to update the existing one:
 
-- Update or replace the OpenAPI specification file in the `openapi/` folder.
-- _Note: Don't have an OpenAPI spec? Use Fern's simpler format to define your API._ [_Learn more_](https://github.com/fern-api/docs-starter-fern-definition?utm_source=github&utm_medium=readme&utm_campaign=docs-starter-openapi&utm_content=step7).
+- Update or replace the OpenAPI Specification file in the `openapi/` folder.
+- _Note: Don't have an OpenAPI Specification? Use Fern's simpler format to define your API._ [_Learn more_](https://github.com/fern-api/docs-starter-fern-definition?utm_source=github&utm_medium=readme&utm_campaign=docs-starter-openapi&utm_content=step7).
 
 To modify the other docs pages:
 
@@ -140,4 +140,4 @@ Need help? [Set up a call](https://buildwithfern.com/contact?utm_source=github&u
 
 ## About OpenAPI (formerly Swagger)
 
-The OpenAPI specification is a format for describing REST APIs. The specification consists of a single JSON or YAML file. OpenAPI was previously known as Swagger. Fern supports both OpenAPI (3.x) and Swagger (2.x). We refer to the specification as OpenAPI throughout our documentation.
+The OpenAPI Specification is a format for describing REST APIs. The specification consists of a single JSON or YAML file. OpenAPI was previously known as Swagger. Fern supports both OpenAPI (3.x) and Swagger (2.x). We refer to the specification as OpenAPI throughout our documentation.
