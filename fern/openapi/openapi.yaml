@@ -4,19 +4,12 @@ servers:
     description: Demo server
 info:
   description: |-
-    This is a sample Plant Store Server based on the OpenAPI 3.0 specification.  You can find out more about
-    Swagger at [http://swagger.io](http://swagger.io). In the third iteration of the plant store, we've switched to the design first approach!
-    You can now help us improve the API whether it's by making changes to the definition itself or to the code.
-    That way, with time, we can improve the API in general, and expose some of the new features in OAS3.
-
-    Some useful links:
-    - [The Plant Store repository](https://github.com/swagger-api/swagger-plantstore)
-    - [The source API definition for the Plant Store](https://github.com/swagger-api/swagger-plantstore/blob/master/src/main/resources/openapi.yaml)
+    This is a sample Plant Store Server based on the OpenAPI 3.0 specification.
   version: 1.0.17
-  title: Swagger Plantstore - OpenAPI 3.0
-  termsOfService: "http://swagger.io/terms/"
+  title: Swagger Plant Store - OpenAPI 3.0
+  termsOfService: "http://buildwithfern.com/tos/"
   contact:
-    email: apiteam@swagger.io
+    email: support@buildwithfern.com
   license:
     name: Apache 2.0
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
