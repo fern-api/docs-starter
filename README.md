@@ -92,7 +92,7 @@ Once the documentation is generated, you will receive the URL where your documen
 
 ### Step 6: Try local development
 
-Preview your documentation locally. Run ​`fern docs dev`​ to access your docs on your local server at port 3000, hot-reloading as you edit your markdown and OpenAPI files. [Learn more](https://buildwithfern.com/learn/docs/building-your-docs/local-development?utm_source=github&utm_medium=readme&utm_campaign=docs-starter-openapi&utm_content=step6) or [watch a 10-second demo](https://www.loom.com/share/0a4658bd78cb45d5a9519277852c7a24?sid=3ce69ad0-bfdb-4fa1-9abf-2f4366d084b9).
+Preview your documentation locally. Run ​`fern docs dev`​ to access your docs on your local server at port 3000, hot-reloading as you edit your markdown and OpenAPI files. [Learn more](https://buildwithfern.com/learn/docs/getting-started/development?utm_source=github&utm_medium=readme&utm_campaign=docs-starter-openapi&utm_content=step6) or [watch a 10-second demo](https://www.loom.com/share/0a4658bd78cb45d5a9519277852c7a24?sid=3ce69ad0-bfdb-4fa1-9abf-2f4366d084b9).
 
 ### Step 7: Customize your documentation
 
@@ -115,7 +115,7 @@ To modify site styles and navigation, or to add new pages:
 
 To learn about Fern's built-in component library you can use within MDX files:
 
-- See the [Component Library](https://buildwithfern.com/learn/docs/components/overview?utm_source=github&utm_medium=readme&utm_campaign=docs-starter-openapi&utm_content=step7).
+- See the [Component Library](https://buildwithfern.com/learn/docs/content/components/overview?utm_source=github&utm_medium=readme&utm_campaign=docs-starter-openapi&utm_content=step7).
 
 ### Step 8: Set up a custom domain
 
