@@ -23,6 +23,9 @@ navigation:
       - page: SDKs
         path: docs/pages/sdks.mdx
         slug: sdks
+      - page: Snippet Templates
+        path: docs/pages/snippet-templates.mdx
+        hidden: true
   - api: API Reference
 
 navbar-links:
@@ -45,3 +48,7 @@ logo:
   href: https://buildwithfern.com/?utm_campaign=demo&utm_medium=plantstore&utm_source=logo
 
 favicon: docs/assets/favicon.svg
+
+experimental:
+  mdx-components:
+    - ./docs/snippets
