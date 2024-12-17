@@ -1,2 +1,4 @@
+# yaml-language-server: $schema=https://schema.buildwithfern.dev/generators-yml.json
+
 api:
-  path: openapi/openapi.yaml
+  path: openapi.yaml
