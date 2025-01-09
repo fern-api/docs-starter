@@ -1,5 +1,4 @@
 instances:
-   
   - url: plantstore.docs.buildwithfern.com # update this to {yourorg}.docs.buildwithfern.com
     # custom-domain: plantstore.dev # specify your custom domain when you are ready to go live
 
