@@ -1,11 +1,7 @@
 instances:
-  - url: plantstore.docs.buildwithfern.com
-    custom-domain: plantstore.dev
-    edit-this-page:
-      github:
-        owner: fern-api
-        repo: docs-starter
-        branch: main
+   
+  - url: plantstore.docs.buildwithfern.com # update this to {yourorg}.docs.buildwithfern.com
+    # custom-domain: plantstore.dev # specify your custom domain when you are ready to go live
 
 title: Plant Store
 
