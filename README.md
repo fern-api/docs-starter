@@ -14,7 +14,7 @@ Learn how to create beautiful documentation in under 5 minutes using an OpenAPI 
 
 ## Customer Showcase
 
-Get inspired by API documentation built with Fern: [Hume](https://dev.hume.ai) | [MultiOn](https://docs.multion.ai) | [Flagright](https://docs.flagright.com) | [Traceloop](https://fern.traceloop.com/docs) | [ElevenLabs](https://elevenlabs.docs.buildwithfern.com/docs/developers)
+Get inspired by API documentation built with Fern: [Hume](https://dev.hume.ai) | [Webflow](https://developers.webflow.com) | [Cartesia](https://docs.cartesia.com) | [Cohere](https://docs.cohere.com) | [ElevenLabs](https://elevenlabs.io/docs)
 
 ---
 
