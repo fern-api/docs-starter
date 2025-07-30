@@ -16,7 +16,7 @@ tabs:
   guides:
     display-name: Guides
     icon: book
-  reference:
+  API Reference:
     display-name: API Reference
     icon: puzzle
 
