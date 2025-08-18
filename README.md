@@ -40,12 +40,12 @@ Open the `fern.config.json` file, which looks like this:
 
 ```json
 {
-  "organization": "Plantstore",
+  "organization": "plantstore",
   "version": "0.17.8"
 }
 ```
 
-Replace `"Plantstore"` with your own organization name within the quotes. Spaces are permitted. Leave the `version` number unchanged.
+Replace `"Plantstore"` with your own organization name within the quotes. Spaces are permitted. Leave the `version` number unchanged. Make sure your new organization name is all lower case!
 
 Open the `docs.yml` file and locate the `url`, which looks like this:
 
