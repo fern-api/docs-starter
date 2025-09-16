@@ -41,7 +41,7 @@ Open the `fern.config.json` file, which looks like this:
 ```json
 {
   "organization": "plantstore",
-  "version": "0.17.8"
+  "version": "0.77.3"
 }
 ```
 
