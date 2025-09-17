@@ -8,7 +8,7 @@
 
 # Docs Starter
 
-Create beautiful documentation in under 5 minutes using an OpenAPI specification.
+Create beautiful documentation in under 5 minutes using your OpenAPI specification.
 
 </div>
 
@@ -22,12 +22,17 @@ Get inspired by API documentation built with Fern: [Webflow](https://developers.
 
 - Node 18 or higher
 - A [GitHub](https://github.com) account
+- Knowledge of the command line
 
 ### Step 1: Use this template
 
 1. Click on the **Use this template** button (found at the top right of this page). You must be logged into GitHub.
 2. Choose the option to **create a new repository**. Name it `fern-docs`.
-3. Install the Fern CLI by running:
+3. Install the Fern Command Line Interface (CLI) by running:
+
+```bash
+npm install -g fern-api
+```
 
 ### Step 2: Clone and open the repo in your preferred code editor
 
@@ -44,7 +49,7 @@ Open the `fern.config.json` file and change the organization name:
 
 ```json
 {
-  "organization": "your-organization-name",
+  "organization": "your-company-name",
   "version": "0.77.4"
 }
 ```
@@ -55,12 +60,13 @@ Run the following command to ensure you are using the latest version of Fern:
 fern upgrade
 ```
 
-**2. Update `docs.yml`:**
-Open the `docs.yml` file and update the URL:
+Replace `plantstore` with your own organization's name. Use only alphanumeric characters, hyphens, and underscores. Do not use spaces and leave the rest of the URL (`docs.buildwithfern.com`) unchanged. 
+
+It should now read:
 
 ```yml
 instances:
-  - url: your-organization-name.docs.buildwithfern.com
+  - url: your-company-name.docs.buildwithfern.com
 ```
 
 ### Step 4: Generate your documentation
@@ -77,7 +83,7 @@ Once the documentation is generated, you will receive the URL where your documen
 
 ```shell
 ┌─
-│ ✓  your-organization-name.docs.buildwithfern.com
+│ ✓  your-company-name.docs.buildwithfern.com
 └─
 ```
 
