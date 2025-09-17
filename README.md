@@ -29,10 +29,6 @@ Get inspired by API documentation built with Fern: [Webflow](https://developers.
 2. Choose the option to **create a new repository**. Name it `fern-docs`.
 3. Install the Fern CLI by running:
 
-```bash
-npm install -g fern-api
-```
-
 ### Step 2: Clone and open the repo in your preferred code editor
 
 Clone your newly created repository and open it in your favorite code editor (e.g., Cursor, VS Code).
@@ -49,8 +45,14 @@ Open the `fern.config.json` file and change the organization name:
 ```json
 {
   "organization": "your-organization-name",
-  "version": "0.77.3"
+  "version": "0.77.4"
 }
+```
+
+Run the following command to ensure you are using the latest version of Fern:
+
+```bash
+fern upgrade
 ```
 
 **2. Update `docs.yml`:**
