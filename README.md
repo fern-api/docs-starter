@@ -14,7 +14,7 @@ Create beautiful documentation in under 5 minutes using your OpenAPI specificati
 
 ## Customer Showcase
 
-Get inspired by API documentation built with Fern: [Hume](https://dev.hume.ai) | [Webflow](https://developers.webflow.com) | [Cartesia](https://docs.cartesia.ai) | [Cohere](https://docs.cohere.com) | [ElevenLabs](https://elevenlabs.io/docs)
+Get inspired by API documentation built with Fern: [Webflow](https://developers.webflow.com) | [Cartesia](https://docs.cartesia.ai) | [Cohere](https://docs.cohere.com) | [ElevenLabs](https://elevenlabs.io/docs)
 
 ---
 
@@ -42,42 +42,31 @@ The files and folders discussed in the following steps will be inside the `fern/
 
 ### Step 3: Customize your organization name
 
-Open the `fern.config.json` file, which looks like this:
+You need to replace `"plantstore"` with your own organization name in two files:
+
+**1. Update `fern.config.json`:**
+Open the `fern.config.json` file and change the organization name:
 
 ```json
 {
-  "organization": "plantstore",
+  "organization": "your-company-name",
   "version": "0.77.4"
 }
 ```
 
-Replace `"plantstore"` with your own organization name within the quotes. It should now read:
-
-```json
-{
-  "organization": "your-organization-name",
-  "version": "0.77.4"
-}
-```
-
-Upgrade the version of Fern to the latest version by running:
+Run the following command to ensure you are using the latest version of Fern:
 
 ```bash
 fern upgrade
 ```
 
-Open the `docs.yml` file and locate the `url`, which looks like this:
+Replace `plantstore` with your own organization's name. Use only alphanumeric characters, hyphens, and underscores. Do not use spaces and leave the rest of the URL (`docs.buildwithfern.com`) unchanged. 
+
+It should now read:
 
 ```yml
 instances:
-  - url: plantstore.docs.buildwithfern.com
-```
-
-Replace `plantstore` with your own organization's name. Use only alphanumeric characters, hyphens, and underscores. Do not use spaces, and leave the rest of the URL (`docs.buildwithfern.com`) unchanged. It should now read:
-
-```yml
-instances:
-  - url: your-organization-name.docs.buildwithfern.com
+  - url: your-company-name.docs.buildwithfern.com
 ```
 
 ### Step 4: Generate your documentation
@@ -94,7 +83,7 @@ Once the documentation is generated, you will receive the URL where your documen
 
 ```shell
 ┌─
-│ ✓  your-organization-name.docs.buildwithfern.com
+│ ✓  your-company-name.docs.buildwithfern.com
 └─
 ```
 
