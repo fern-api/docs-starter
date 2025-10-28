@@ -15,37 +15,6 @@ layout:
   page-width: full
   tabs-placement: header
 
-tabs:
-  home:
-    display-name: Home
-    icon: home
-  guides:
-    display-name: Guides
-    icon: book
-  API Reference:
-    display-name: API Reference
-    icon: puzzle
-
-navigation:
-  - tab: home
-    layout:
-      - section: Get Started
-        contents:
-          - page: Welcome
-            path: docs/pages/welcome.mdx
-  - tab: guides
-    layout:
-      - section: Learn
-        contents:
-          - page: Concepts
-            path: docs/pages/concepts.mdx
-          - page: SDKs
-            path: docs/pages/sdks.mdx
-            slug: sdks
-  - tab: API Reference
-    layout:
-      - api: API Reference
-
 navbar-links:
   - type: minimal
     text: Fork this repo
@@ -68,3 +37,11 @@ logo:
   href: https://buildwithfern.com/?utm_campaign=demo&utm_medium=plantstore&utm_source=logo
 
 favicon: docs/assets/favicon.svg
+
+products:
+  - display-name: Developers
+    path: ./products/developers/product-developers.yml
+    icon: fa-solid fa-code
+  - display-name: Learning
+    path: ./products/learning/product-learning.yml
+    icon: fa-solid fa-graduation-cap

@@ -1,0 +1,22 @@
+tabs:
+  home:
+    display-name: Home
+    icon: home
+
+navigation:
+  - tab: home
+    layout:
+      - section: Getting started
+        contents:
+          - page: Welcome
+            path: ./pages/welcome.mdx
+      - section: Essential care topics
+        contents:
+          - page: Watering basics
+            path: ./pages/watering.mdx
+          - page: Light requirements
+            path: ./pages/light.mdx
+          - page: Soil & fertilizer
+            path: ./pages/soil-fertilizer.mdx
+          - page: Common problems
+            path: ./pages/common-problems.mdx

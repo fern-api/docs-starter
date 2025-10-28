@@ -1,0 +1,30 @@
+tabs:
+  home:
+    display-name: Home
+    icon: home
+  guides:
+    display-name: Guides
+    icon: book
+  API Reference:
+    display-name: API Reference
+    icon: puzzle
+
+navigation:
+  - tab: home
+    layout:
+      - section: Get Started
+        contents:
+          - page: Welcome
+            path: ./pages/welcome.mdx
+  - tab: guides
+    layout:
+      - section: Learn
+        contents:
+          - page: Concepts
+            path: ./pages/concepts.mdx
+          - page: SDKs
+            path: ./pages/sdks.mdx
+            slug: sdks
+  - tab: API Reference
+    layout:
+      - api: API Reference
