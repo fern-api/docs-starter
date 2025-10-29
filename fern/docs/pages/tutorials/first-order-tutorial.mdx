@@ -1,0 +1,298 @@
+---
+title: Creating your first order
+subtitle: Learn how to create and process an order end-to-end
+slug: first-order-tutorial
+---
+
+This guide shows you how to create a complete order workflow, from customer creation through order fulfillment.
+
+## Creating and processing an order
+
+<Steps>
+<Step title="Get your API key">
+
+[Create an API key in your dashboard](https://plantstore.com/settings/api-keys), which you'll use to authenticate your requests.
+
+Store the key securely and pass it to the SDK either as an environment variable via a `.env` file, or directly in your app's configuration.
+
+```bash title=".env"
+PLANT_STORE_API_KEY=your_api_key_here
+```
+
+</Step>
+
+<Step title="Install the SDK">
+
+We'll also use the `dotenv` library to load our API key from an environment variable.
+
+<CodeBlocks>
+```bash Python
+pip install plantstore-sdk
+pip install python-dotenv
+```
+
+```bash TypeScript
+npm install @plantstore/sdk
+npm install dotenv
+```
+
+```bash Go
+go get github.com/plantstore/plantstore-go
+```
+</CodeBlocks>
+
+</Step>
+
+<Step title="Create a complete order flow">
+
+Create a new file named `create_order.py`, `create_order.ts`, or `main.go` and add the following code:
+
+<CodeBlocks>
+```python Python
+# create_order.py
+import os
+from dotenv import load_dotenv
+from plantstore import PlantStoreClient
+
+load_dotenv()
+
+client = PlantStoreClient(
+    api_key=os.getenv("PLANT_STORE_API_KEY")
+)
+
+# Create a customer
+customer = client.customers.create(
+    email="gardener@example.com",
+    name="Jane Smith",
+    phone="+1-555-0123"
+)
+
+print(f"Created customer: {customer.id}")
+
+# Browse available plants
+plants = client.plants.search(status="available")
+selected_plant = plants[0]
+
+print(f"Selected plant: {selected_plant.name}")
+
+# Create the order
+order = client.orders.create(
+    customer_id=customer.id,
+    items=[
+        {
+            "plant_id": selected_plant.id,
+            "quantity": 2,
+            "price": selected_plant.price
+        }
+    ],
+    shipping_address={
+        "street": "123 Garden Ave",
+        "city": "Portland",
+        "state": "OR",
+        "zip": "97201"
+    }
+)
+
+print(f"Created order: {order.id}")
+
+# Process payment
+payment = client.orders.process_payment(
+    order_id=order.id,
+    payment_method="card",
+    amount=order.total
+)
+
+print(f"Payment processed: {payment.status}")
+
+# Update order status to processing
+updated_order = client.orders.update(
+    order_id=order.id,
+    status="processing"
+)
+
+print(f"Order status: {updated_order.status}")
+print(f"Order complete! ID: {order.id}")
+```
+
+```typescript TypeScript
+// create_order.ts
+import { PlantStoreClient } from '@plantstore/sdk';
+import 'dotenv/config';
+
+const client = new PlantStoreClient({
+  apiKey: process.env.PLANT_STORE_API_KEY
+});
+
+async function createOrder() {
+  // Create a customer
+  const customer = await client.customers.create({
+    email: 'gardener@example.com',
+    name: 'Jane Smith',
+    phone: '+1-555-0123'
+  });
+
+  console.log(`Created customer: ${customer.id}`);
+
+  // Browse available plants
+  const plants = await client.plants.search({ status: 'available' });
+  const selectedPlant = plants[0];
+
+  console.log(`Selected plant: ${selectedPlant.name}`);
+
+  // Create the order
+  const order = await client.orders.create({
+    customerId: customer.id,
+    items: [
+      {
+        plantId: selectedPlant.id,
+        quantity: 2,
+        price: selectedPlant.price
+      }
+    ],
+    shippingAddress: {
+      street: '123 Garden Ave',
+      city: 'Portland',
+      state: 'OR',
+      zip: '97201'
+    }
+  });
+
+  console.log(`Created order: ${order.id}`);
+
+  // Process payment
+  const payment = await client.orders.processPayment({
+    orderId: order.id,
+    paymentMethod: 'card',
+    amount: order.total
+  });
+
+  console.log(`Payment processed: ${payment.status}`);
+
+  // Update order status to processing
+  const updatedOrder = await client.orders.update({
+    orderId: order.id,
+    status: 'processing'
+  });
+
+  console.log(`Order status: ${updatedOrder.status}`);
+  console.log(`Order complete! ID: ${order.id}`);
+}
+
+createOrder();
+```
+
+```go Go
+// main.go
+package main
+
+import (
+    "fmt"
+    "log"
+    "os"
+
+    "github.com/joho/godotenv"
+    "github.com/plantstore/plantstore-go"
+)
+
+func main() {
+    godotenv.Load()
+
+    client := plantstore.NewClient(
+        plantstore.WithAPIKey(os.Getenv("PLANT_STORE_API_KEY")),
+    )
+
+    // Create a customer
+    customer, err := client.Customers.Create(&plantstore.CustomerCreateRequest{
+        Email: "gardener@example.com",
+        Name:  "Jane Smith",
+        Phone: "+1-555-0123",
+    })
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Created customer: %s\n", customer.ID)
+
+    // Browse available plants
+    plants, err := client.Plants.Search(&plantstore.PlantSearchRequest{
+        Status: "available",
+    })
+    if err != nil {
+        log.Fatal(err)
+    }
+    selectedPlant := plants[0]
+
+    fmt.Printf("Selected plant: %s\n", selectedPlant.Name)
+
+    // Create the order
+    order, err := client.Orders.Create(&plantstore.OrderCreateRequest{
+        CustomerID: customer.ID,
+        Items: []plantstore.OrderItem{
+            {
+                PlantID:  selectedPlant.ID,
+                Quantity: 2,
+                Price:    selectedPlant.Price,
+            },
+        },
+        ShippingAddress: plantstore.Address{
+            Street: "123 Garden Ave",
+            City:   "Portland",
+            State:  "OR",
+            Zip:    "97201",
+        },
+    })
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Created order: %s\n", order.ID)
+
+    // Process payment
+    payment, err := client.Orders.ProcessPayment(&plantstore.PaymentRequest{
+        OrderID:       order.ID,
+        PaymentMethod: "card",
+        Amount:        order.Total,
+    })
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Payment processed: %s\n", payment.Status)
+
+    // Update order status
+    updatedOrder, err := client.Orders.Update(&plantstore.OrderUpdateRequest{
+        OrderID: order.ID,
+        Status:  "processing",
+    })
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Order status: %s\n", updatedOrder.Status)
+    fmt.Printf("Order complete! ID: %s\n", order.ID)
+}
+```
+</CodeBlocks>
+
+</Step>
+
+<Step title="Execute the code">
+
+<CodeBlocks>
+```bash Python
+python create_order.py
+```
+
+```bash TypeScript
+npx tsx create_order.ts
+```
+
+```bash Go
+go run main.go
+```
+</CodeBlocks>
+
+You should see output showing each step of the order creation process, ending with the completed order ID.
+
+</Step>
+</Steps>

@@ -1,0 +1,93 @@
+---
+title: Inventory tracking
+subtitle: Track plant stock levels in real-time with automated alerts and reservations
+slug: inventory-tracking
+---
+
+## Overview
+
+The Plant Store API's inventory tracking capabilities help you maintain accurate stock levels and prevent overselling. Use it to track on-hand, reserved, and available quantities, reserve inventory when orders are placed, set up automatic low-stock alerts, view inventory history and audit trails, and manage stock across multiple locations.
+
+<CardGroup cols={2}>
+  <Card
+    title="Managing plant inventory"
+    icon="duotone book-sparkles"
+    href="/inventory-tutorial"
+  >
+    Learn how to track and update your plant stock.
+  </Card>
+  <Card
+    title="API reference"
+    icon="duotone code"
+    href="/api-reference"
+  >
+    Explore inventory endpoints and schemas.
+  </Card>
+</CardGroup>
+
+## Inventory states
+
+Inventory isn't just a single number. Plants exist in different states throughout the order and fulfillment process.
+
+| State | Definition | Formula |
+|-------|------------|---------|
+| **On-hand** | Physical count in your possession | Actual count from warehouse |
+| **Reserved** | Committed to pending orders | Sum of active order reservations |
+| **Available** | Stock available for new orders | On-hand - Reserved - Damaged |
+| **In-transit** | Ordered from suppliers, not yet received | Active purchase orders |
+
+<Warning>
+Update inventory in real-time, not in batches. Delays between order creation and inventory updates cause overselling.
+</Warning>
+
+## Reservation strategy
+
+Reserve inventory when an order is created (not just when paid) to prevent two customers from buying the last plant simultaneously. Set expiration times for unpaid orders—typically 15-30 minutes—and release reservations automatically if payment fails or times out. Convert reservations to permanent deductions when the order ships.
+
+<Tip>
+Most payment processors complete checkout within 15 minutes. Setting reservation expiration to 15-30 minutes balances preventing overselling with not holding stock unnecessarily.
+</Tip>
+
+## Low-stock alerts
+
+Set reorder points based on supplier lead time and sales velocity to ensure you never run out of popular plants.
+
+**Reorder point formula:** `(Lead time in days × Daily sales) + Safety stock`
+
+| Component | Example | Purpose |
+|-----------|---------|---------|
+| Lead time | 7 days | How long to get new stock from supplier |
+| Daily sales | 2 plants/day | Average sales velocity |
+| Safety stock | 5 plants | Buffer for demand spikes or delays |
+| **Reorder point** | **19 plants** | Alert when inventory drops below this |
+
+Automate reorder notifications via email or webhook when inventory drops below the reorder point. Track supplier lead times over time and adjust reorder points accordingly to account for seasonal variations or supply chain changes.
+
+## Accuracy and auditing
+
+Maintain inventory accuracy through regular physical counts and comprehensive audit trails. Use cycle counting—counting a different section each week rather than everything at once. High-value or fast-moving items should be counted weekly, while slow-movers can be quarterly.
+
+Log all inventory changes with timestamps, reasons, and the user who made the change. This creates an audit trail for troubleshooting discrepancies and preventing fraud.
+
+| Change type | Reason code | Approval required |
+|-------------|-------------|-------------------|
+| Stock received | `shipment_received` | No |
+| Order shipped | `order_fulfilled` | No |
+| Damaged goods | `shrinkage_damaged` | Manager approval |
+| Manual adjustment | `count_correction` | Manager approval |
+
+<Note>
+Plants are trickier than most inventory due to perishability, growth, and quality variance. Regular physical counts catch issues before they impact customers.
+</Note>
+
+## Multi-location inventory
+
+For operations with multiple greenhouses, warehouses, or stores, choose a strategy that balances complexity with delivery speed.
+
+| Strategy | Best for | Trade-offs |
+|----------|----------|------------|
+| **Centralized** | Small operations, specialty items | Simpler to manage, slower/costlier shipping |
+| **Distributed** | Large operations, fast delivery needs | Faster delivery, more complex management |
+| **Hybrid** | Most operations | Popular items everywhere, specialty items central | Balanced approach |
+
+Route orders to the optimal location based on proximity to customer, current stock availability, and shipping costs. Allow transfers between locations for balancing inventory across facilities.

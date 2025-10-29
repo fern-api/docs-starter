@@ -1,0 +1,77 @@
+---
+title: Customer management
+subtitle: Build lasting customer relationships with comprehensive profile and preference tracking
+slug: customer-management
+---
+
+## Overview
+
+The Plant Store API's customer management capabilities help you build and maintain customer relationships through detailed profiles, preferences, and purchase history. Use it to create and manage customer profiles, track order history, manage multiple shipping addresses, store communication preferences, and build loyalty programs.
+
+<CardGroup cols={2}>
+  <Card
+    title="Creating your first order"
+    icon="duotone book-sparkles"
+    href="/first-order-tutorial"
+  >
+    Learn how to create customers as part of the order flow.
+  </Card>
+  <Card
+    title="API reference"
+    icon="duotone code"
+    href="/api-reference"
+  >
+    Explore customer endpoints and schemas.
+  </Card>
+</CardGroup>
+
+## Customer data types
+
+Different types of customer data serve different purposes in your system.
+
+| Data type | What it includes | Primary use |
+|-----------|------------------|-------------|
+| **Identity** | Name, email, phone, customer ID | Order fulfillment, authentication |
+| **Preferences** | Email/SMS settings, language, timezone | Marketing, communication |
+| **Transactional** | Order history, total spend, returns | Loyalty programs, segmentation |
+| **Addresses** | Multiple shipping addresses, labels | Faster checkout, gift shipping |
+
+<Note>
+Only collect data you'll actually use. More data means more liability and compliance requirements. Keep it minimal and purposeful.
+</Note>
+
+## Address management
+
+Customers often ship to multiple locations like home, office, or gift recipients. Support multiple saved addresses with labels like "Home" or "Mom's house" for easy selection. Validate addresses at entry to reduce shipping errors and allow customers to set a default shipping address for faster checkout.
+
+<Tip>
+Address validation during input prevents expensive shipping errors. Most shipping carriers provide free address validation APIs.
+</Tip>
+
+## Privacy and compliance
+
+Customer data requires careful handling to maintain trust and meet legal requirements. Encrypt sensitive data at rest and in transit, support GDPR data export and deletion requests, and implement secure password requirements. Log all access to customer data for audit trails.
+
+| Regulation | Applies to | Key requirement |
+|------------|------------|-----------------|
+| GDPR | EU customers | Right to access, export, and delete data |
+| CCPA | California customers | Right to know what data is collected |
+| CAN-SPAM | Email marketing | Easy unsubscribe, accurate sender info |
+
+Retain customer data only as long as it's useful and compliant. Active customers can be kept indefinitely, inactive customers for 3-7 years, and deleted accounts only what's legally required for tax and transaction records.
+
+<Warning>
+Never commit customer data or API keys to version control. Use environment variables and secrets management instead.
+</Warning>
+
+## Customer segmentation
+
+Group customers for targeted engagement and personalized experiences.
+
+| Segment by | Example groups | Use case |
+|------------|----------------|----------|
+| **Purchase behavior** | High-value, frequent, one-time, at-risk | Loyalty rewards, win-back campaigns |
+| **Product preference** | Indoor enthusiasts, succulent collectors | Product recommendations |
+| **Engagement** | Highly engaged, moderate, dormant | Email frequency, re-engagement |
+
+Segmentation enables more effective marketing by tailoring messages to customer interests and behavior patterns.
