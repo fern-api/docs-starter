@@ -1,0 +1,182 @@
+---
+title: Quickstart
+subtitle: Get up and running with the Plant Store API in minutes
+slug: quickstart
+---
+
+This guide shows you how to make your first API request to the Plant Store API using our SDKs.
+
+## Making your first API request
+
+<Steps>
+<Step title="Get your API key">
+
+[Create an API key in your dashboard](https://plantstore.com/settings/api-keys), which you'll use to authenticate your requests.
+
+Store the key securely and pass it to the SDK either as an environment variable via a `.env` file, or directly in your app's configuration.
+
+```bash title=".env"
+PLANT_STORE_API_KEY=your_api_key_here
+```
+
+<Warning>
+Never commit API keys to version control. Use environment variables and rotate keys regularly for security.
+</Warning>
+
+</Step>
+
+<Step title="Install the SDK">
+
+Install the Plant Store SDK for your preferred language:
+
+<CodeBlocks>
+```bash Python
+pip install plantstore-sdk
+pip install python-dotenv
+```
+
+```bash TypeScript
+npm install @plantstore/sdk
+npm install dotenv
+```
+
+```bash Go
+go get github.com/plantstore/plantstore-go
+```
+</CodeBlocks>
+
+</Step>
+
+<Step title="Make your first request">
+
+Create a new file and add the following code to search for available plants:
+
+<CodeBlocks>
+```python Python
+# quickstart.py
+import os
+from dotenv import load_dotenv
+from plantstore import PlantStoreClient
+
+load_dotenv()
+
+client = PlantStoreClient(
+    api_key=os.getenv("PLANT_STORE_API_KEY")
+)
+
+# Search for available plants
+plants = client.plants.search(status="available")
+
+print(f"Found {len(plants)} available plants:")
+for plant in plants[:5]:
+    print(f"- {plant.name} (${plant.price})")
+```
+
+```typescript TypeScript
+// quickstart.ts
+import { PlantStoreClient } from '@plantstore/sdk';
+import 'dotenv/config';
+
+const client = new PlantStoreClient({
+  apiKey: process.env.PLANT_STORE_API_KEY
+});
+
+async function searchPlants() {
+  // Search for available plants
+  const plants = await client.plants.search({
+    status: 'available'
+  });
+
+  console.log(`Found ${plants.length} available plants:`);
+  plants.slice(0, 5).forEach(plant => {
+    console.log(`- ${plant.name} ($${plant.price})`);
+  });
+}
+
+searchPlants();
+```
+
+```go Go
+// main.go
+package main
+
+import (
+    "fmt"
+    "log"
+    "os"
+
+    "github.com/joho/godotenv"
+    "github.com/plantstore/plantstore-go"
+)
+
+func main() {
+    godotenv.Load()
+
+    client := plantstore.NewClient(
+        plantstore.WithAPIKey(os.Getenv("PLANT_STORE_API_KEY")),
+    )
+
+    // Search for available plants
+    plants, err := client.Plants.Search(&plantstore.PlantSearchRequest{
+        Status: "available",
+    })
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Found %d available plants:\n", len(plants))
+    for i := 0; i < 5 && i < len(plants); i++ {
+        fmt.Printf("- %s ($%.2f)\n", plants[i].Name, plants[i].Price)
+    }
+}
+```
+</CodeBlocks>
+
+</Step>
+
+<Step title="Execute the code">
+
+<CodeBlocks>
+```bash Python
+python quickstart.py
+```
+
+```bash TypeScript
+npx tsx quickstart.ts
+```
+
+```bash Go
+go run main.go
+```
+</CodeBlocks>
+
+You should see a list of available plants from your catalog.
+
+</Step>
+</Steps>
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card
+    title="Searching for plants"
+    icon="duotone magnifying-glass"
+    href="/searching-plants"
+  >
+    Learn how to search and filter your plant catalog
+  </Card>
+  <Card
+    title="Creating orders"
+    icon="duotone bag-shopping"
+    href="/first-order-tutorial"
+  >
+    Build a complete order workflow
+  </Card>
+  <Card
+    title="API Reference"
+    icon="duotone code"
+    href="/api-reference"
+  >
+    Explore all available endpoints
+  </Card>
+</CardGroup>

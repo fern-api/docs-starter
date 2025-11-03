@@ -1,0 +1,428 @@
+---
+title: Managing plant inventory
+subtitle: Learn how to track and manage your plant stock levels
+slug: inventory-tutorial
+---
+
+This guide shows you how to manage your plant inventory, from adding new stock to setting up automated reorder alerts.
+
+## Building an inventory management system
+
+<Steps>
+<Step title="Get your API key">
+
+[Create an API key in your dashboard](https://plantstore.com/settings/api-keys) to authenticate your requests.
+
+```bash title=".env"
+PLANT_STORE_API_KEY=your_api_key_here
+```
+
+</Step>
+
+<Step title="Install the SDK">
+
+<CodeBlocks>
+```bash Python
+pip install plantstore-sdk
+pip install python-dotenv
+```
+
+```bash TypeScript
+npm install @plantstore/sdk
+npm install dotenv
+```
+
+```bash Go
+go get github.com/plantstore/plantstore-go
+```
+</CodeBlocks>
+
+</Step>
+
+<Step title="Add a plant with inventory">
+
+Create a new file named `manage_inventory.py`, `manage_inventory.ts`, or `main.go` with the following code:
+
+<CodeBlocks>
+```python Python
+# manage_inventory.py
+import os
+from dotenv import load_dotenv
+from plantstore import PlantStoreClient
+
+load_dotenv()
+
+client = PlantStoreClient(api_key=os.getenv("PLANT_STORE_API_KEY"))
+
+# Add a new plant with initial stock
+plant = client.plants.create(
+    name="Snake Plant",
+    category="Indoor",
+    tags=["low-light", "beginner-friendly", "air-purifying"],
+    status="available",
+    stock=25,
+    price=29.99,
+    location="greenhouse_a"
+)
+
+print(f"Added plant: {plant.name} (ID: {plant.id})")
+print(f"Initial stock: {plant.stock}")
+```
+
+```typescript TypeScript
+// manage_inventory.ts
+import { PlantStoreClient } from '@plantstore/sdk';
+import 'dotenv/config';
+
+const client = new PlantStoreClient({
+  apiKey: process.env.PLANT_STORE_API_KEY
+});
+
+async function addPlant() {
+  // Add a new plant with initial stock
+  const plant = await client.plants.create({
+    name: 'Snake Plant',
+    category: 'Indoor',
+    tags: ['low-light', 'beginner-friendly', 'air-purifying'],
+    status: 'available',
+    stock: 25,
+    price: 29.99,
+    location: 'greenhouse_a'
+  });
+
+  console.log(`Added plant: ${plant.name} (ID: ${plant.id})`);
+  console.log(`Initial stock: ${plant.stock}`);
+}
+
+addPlant();
+```
+
+```go Go
+// main.go
+package main
+
+import (
+    "fmt"
+    "log"
+    "os"
+
+    "github.com/joho/godotenv"
+    "github.com/plantstore/plantstore-go"
+)
+
+func main() {
+    godotenv.Load()
+
+    client := plantstore.NewClient(
+        plantstore.WithAPIKey(os.Getenv("PLANT_STORE_API_KEY")),
+    )
+
+    // Add a new plant with initial stock
+    plant, err := client.Plants.Create(&plantstore.PlantCreateRequest{
+        Name:     "Snake Plant",
+        Category: "Indoor",
+        Tags:     []string{"low-light", "beginner-friendly", "air-purifying"},
+        Status:   "available",
+        Stock:    25,
+        Price:    29.99,
+        Location: "greenhouse_a",
+    })
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Added plant: %s (ID: %s)\n", plant.Name, plant.ID)
+    fmt.Printf("Initial stock: %d\n", plant.Stock)
+}
+```
+</CodeBlocks>
+
+</Step>
+
+<Step title="Check inventory levels">
+
+Add code to check the current inventory status:
+
+<CodeBlocks>
+```python Python
+# Check inventory for the plant
+inventory = client.inventory.get(plant_id=plant.id)
+
+print(f"\nInventory Status:")
+print(f"On-hand: {inventory.quantity}")
+print(f"Reserved: {inventory.reserved}")
+print(f"Available: {inventory.available}")
+print(f"Location: {inventory.location}")
+```
+
+```typescript TypeScript
+// Check inventory for the plant
+const inventory = await client.inventory.get({
+  plantId: plant.id
+});
+
+console.log('\nInventory Status:');
+console.log(`On-hand: ${inventory.quantity}`);
+console.log(`Reserved: ${inventory.reserved}`);
+console.log(`Available: ${inventory.available}`);
+console.log(`Location: ${inventory.location}`);
+```
+
+```go Go
+// Check inventory for the plant
+inventory, err := client.Inventory.Get(&plantstore.InventoryGetRequest{
+    PlantID: plant.ID,
+})
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Println("\nInventory Status:")
+fmt.Printf("On-hand: %d\n", inventory.Quantity)
+fmt.Printf("Reserved: %d\n", inventory.Reserved)
+fmt.Printf("Available: %d\n", inventory.Available)
+fmt.Printf("Location: %s\n", inventory.Location)
+```
+</CodeBlocks>
+
+</Step>
+
+<Step title="Update stock levels">
+
+Add functionality to update inventory when you receive shipments:
+
+<CodeBlocks>
+```python Python
+# Receive new shipment
+updated_inventory = client.inventory.update(
+    plant_id=plant.id,
+    quantity=40,
+    note="Received shipment from supplier"
+)
+
+print(f"\nStock updated to: {updated_inventory.quantity}")
+```
+
+```typescript TypeScript
+// Receive new shipment
+const updatedInventory = await client.inventory.update({
+  plantId: plant.id,
+  quantity: 40,
+  note: 'Received shipment from supplier'
+});
+
+console.log(`\nStock updated to: ${updatedInventory.quantity}`);
+```
+
+```go Go
+// Receive new shipment
+updatedInventory, err := client.Inventory.Update(&plantstore.InventoryUpdateRequest{
+    PlantID:  plant.ID,
+    Quantity: 40,
+    Note:     "Received shipment from supplier",
+})
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("\nStock updated to: %d\n", updatedInventory.Quantity)
+```
+</CodeBlocks>
+
+</Step>
+
+<Step title="Set up low-stock alerts">
+
+Configure automatic alerts when inventory runs low:
+
+<CodeBlocks>
+```python Python
+# Configure low-stock alert
+alert = client.inventory.set_alert(
+    plant_id=plant.id,
+    reorder_point=10,
+    notify_email="inventory@plantstore.com"
+)
+
+print(f"\nLow-stock alert set: {alert.reorder_point} units")
+```
+
+```typescript TypeScript
+// Configure low-stock alert
+const alert = await client.inventory.setAlert({
+  plantId: plant.id,
+  reorderPoint: 10,
+  notifyEmail: 'inventory@plantstore.com'
+});
+
+console.log(`\nLow-stock alert set: ${alert.reorderPoint} units`);
+```
+
+```go Go
+// Configure low-stock alert
+alert, err := client.Inventory.SetAlert(&plantstore.InventoryAlertRequest{
+    PlantID:      plant.ID,
+    ReorderPoint: 10,
+    NotifyEmail:  "inventory@plantstore.com",
+})
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("\nLow-stock alert set: %d units\n", alert.ReorderPoint)
+```
+</CodeBlocks>
+
+</Step>
+
+<Step title="Reserve inventory for orders">
+
+Demonstrate how to reserve stock when processing orders:
+
+<CodeBlocks>
+```python Python
+# Reserve stock for an order
+reservation = client.inventory.reserve(
+    plant_id=plant.id,
+    quantity=2,
+    order_id="order_123",
+    expires_at="2025-11-01T10:00:00Z"
+)
+
+print(f"\nReserved {reservation.quantity} units for order {reservation.order_id}")
+
+# Check updated inventory
+updated = client.inventory.get(plant_id=plant.id)
+print(f"Reserved: {updated.reserved}, Available: {updated.available}")
+```
+
+```typescript TypeScript
+// Reserve stock for an order
+const reservation = await client.inventory.reserve({
+  plantId: plant.id,
+  quantity: 2,
+  orderId: 'order_123',
+  expiresAt: '2025-11-01T10:00:00Z'
+});
+
+console.log(`\nReserved ${reservation.quantity} units for order ${reservation.orderId}`);
+
+// Check updated inventory
+const updated = await client.inventory.get({ plantId: plant.id });
+console.log(`Reserved: ${updated.reserved}, Available: ${updated.available}`);
+```
+
+```go Go
+// Reserve stock for an order
+reservation, err := client.Inventory.Reserve(&plantstore.InventoryReserveRequest{
+    PlantID:   plant.ID,
+    Quantity:  2,
+    OrderID:   "order_123",
+    ExpiresAt: "2025-11-01T10:00:00Z",
+})
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("\nReserved %d units for order %s\n", reservation.Quantity, reservation.OrderID)
+
+// Check updated inventory
+updated, err := client.Inventory.Get(&plantstore.InventoryGetRequest{
+    PlantID: plant.ID,
+})
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Printf("Reserved: %d, Available: %d\n", updated.Reserved, updated.Available)
+```
+</CodeBlocks>
+
+</Step>
+
+<Step title="Execute the code">
+
+<CodeBlocks>
+```bash Python
+python manage_inventory.py
+```
+
+```bash TypeScript
+npx tsx manage_inventory.ts
+```
+
+```bash Go
+go run main.go
+```
+</CodeBlocks>
+
+You should see output showing:
+- Plant creation with initial stock
+- Current inventory status
+- Stock updates from shipments
+- Alert configuration
+- Stock reservation for orders
+
+</Step>
+</Steps>
+
+<Accordion title="Advanced automation">
+
+### Batch inventory updates
+
+For processing large shipments, use batch updates:
+
+<CodeBlocks>
+```python Python
+# Update multiple plants at once
+batch_result = client.inventory.batch_update(
+    updates=[
+        {"plant_id": "plant_123", "quantity": 30},
+        {"plant_id": "plant_456", "quantity": 15},
+        {"plant_id": "plant_789", "quantity": 22}
+    ]
+)
+print(f"Updated {len(batch_result.updated)} plants")
+```
+
+```typescript TypeScript
+// Update multiple plants at once
+const batchResult = await client.inventory.batchUpdate({
+  updates: [
+    { plantId: 'plant_123', quantity: 30 },
+    { plantId: 'plant_456', quantity: 15 },
+    { plantId: 'plant_789', quantity: 22 }
+  ]
+});
+console.log(`Updated ${batchResult.updated.length} plants`);
+```
+</CodeBlocks>
+
+### Inventory history tracking
+
+View all changes to understand inventory patterns:
+
+<CodeBlocks>
+```python Python
+# Get inventory history
+history = client.inventory.get_history(
+    plant_id=plant.id,
+    limit=10
+)
+
+for event in history:
+    print(f"{event.timestamp}: {event.change:+d} units - {event.reason}")
+```
+
+```typescript TypeScript
+// Get inventory history
+const history = await client.inventory.getHistory({
+  plantId: plant.id,
+  limit: 10
+});
+
+history.forEach(event => {
+  console.log(`${event.timestamp}: ${event.change:+d} units - ${event.reason}`);
+});
+```
+</CodeBlocks>
+</Accordion>

@@ -1,0 +1,215 @@
+---
+title: Searching for plants
+subtitle: Learn how to search and filter your plant catalog
+slug: searching-plants
+---
+
+This guide shows you how to search for plants in your catalog using filters and tags to find exactly what you need.
+
+## Using the Plant Search API
+
+<Steps>
+<Step title="Get your API key">
+
+[Create an API key in your dashboard](https://plantstore.com/settings/api-keys), which you'll use to authenticate your requests.
+
+Store the key securely and pass it to the SDK either as an environment variable via a `.env` file, or directly in your app's configuration.
+
+```bash title=".env"
+PLANT_STORE_API_KEY=your_api_key_here
+```
+
+</Step>
+
+<Step title="Install the SDK">
+
+<CodeBlocks>
+```bash Python
+pip install plantstore-sdk
+pip install python-dotenv
+```
+
+```bash TypeScript
+npm install @plantstore/sdk
+npm install dotenv
+```
+
+```bash Go
+go get github.com/plantstore/plantstore-go
+```
+</CodeBlocks>
+
+</Step>
+
+<Step title="Search for plants">
+
+Create a new file named `search_plants.py`, `search_plants.ts`, or `main.go` and add the following code:
+
+<CodeBlocks>
+```python Python
+# search_plants.py
+import os
+from dotenv import load_dotenv
+from plantstore import PlantStoreClient
+
+load_dotenv()
+
+client = PlantStoreClient(
+    api_key=os.getenv("PLANT_STORE_API_KEY")
+)
+
+# Search for available plants
+plants = client.plants.search(status="available")
+
+print(f"Found {len(plants)} available plants:")
+for plant in plants[:5]:
+    print(f"- {plant.name} (${plant.price})")
+
+# Search by tags
+beginner_plants = client.plants.search(
+    tags=["beginner-friendly", "low-light"]
+)
+
+print(f"\nBeginner-friendly plants:")
+for plant in beginner_plants[:3]:
+    print(f"- {plant.name}: {', '.join(plant.tags)}")
+
+# Get a specific plant by ID
+plant = client.plants.get(plant_id=plants[0].id)
+print(f"\nPlant details:")
+print(f"Name: {plant.name}")
+print(f"Status: {plant.status}")
+print(f"Tags: {', '.join(plant.tags)}")
+```
+
+```typescript TypeScript
+// search_plants.ts
+import { PlantStoreClient } from '@plantstore/sdk';
+import 'dotenv/config';
+
+const client = new PlantStoreClient({
+  apiKey: process.env.PLANT_STORE_API_KEY
+});
+
+async function searchPlants() {
+  // Search for available plants
+  const plants = await client.plants.search({
+    status: 'available'
+  });
+
+  console.log(`Found ${plants.length} available plants:`);
+  plants.slice(0, 5).forEach(plant => {
+    console.log(`- ${plant.name} ($${plant.price})`);
+  });
+
+  // Search by tags
+  const beginnerPlants = await client.plants.search({
+    tags: ['beginner-friendly', 'low-light']
+  });
+
+  console.log('\nBeginner-friendly plants:');
+  beginnerPlants.slice(0, 3).forEach(plant => {
+    console.log(`- ${plant.name}: ${plant.tags.join(', ')}`);
+  });
+
+  // Get a specific plant by ID
+  const plant = await client.plants.get({
+    plantId: plants[0].id
+  });
+
+  console.log('\nPlant details:');
+  console.log(`Name: ${plant.name}`);
+  console.log(`Status: ${plant.status}`);
+  console.log(`Tags: ${plant.tags.join(', ')}`);
+}
+
+searchPlants();
+```
+
+```go Go
+// main.go
+package main
+
+import (
+    "fmt"
+    "log"
+    "os"
+    "strings"
+
+    "github.com/joho/godotenv"
+    "github.com/plantstore/plantstore-go"
+)
+
+func main() {
+    godotenv.Load()
+
+    client := plantstore.NewClient(
+        plantstore.WithAPIKey(os.Getenv("PLANT_STORE_API_KEY")),
+    )
+
+    // Search for available plants
+    plants, err := client.Plants.Search(&plantstore.PlantSearchRequest{
+        Status: "available",
+    })
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Found %d available plants:\n", len(plants))
+    for i := 0; i < 5 && i < len(plants); i++ {
+        fmt.Printf("- %s ($%.2f)\n", plants[i].Name, plants[i].Price)
+    }
+
+    // Search by tags
+    beginnerPlants, err := client.Plants.Search(&plantstore.PlantSearchRequest{
+        Tags: []string{"beginner-friendly", "low-light"},
+    })
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Println("\nBeginner-friendly plants:")
+    for i := 0; i < 3 && i < len(beginnerPlants); i++ {
+        fmt.Printf("- %s: %s\n",
+            beginnerPlants[i].Name,
+            strings.Join(beginnerPlants[i].Tags, ", "))
+    }
+
+    // Get a specific plant by ID
+    plant, err := client.Plants.Get(&plantstore.PlantGetRequest{
+        PlantID: plants[0].ID,
+    })
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Println("\nPlant details:")
+    fmt.Printf("Name: %s\n", plant.Name)
+    fmt.Printf("Status: %s\n", plant.Status)
+    fmt.Printf("Tags: %s\n", strings.Join(plant.Tags, ", "))
+}
+```
+</CodeBlocks>
+
+</Step>
+
+<Step title="Execute the code">
+
+<CodeBlocks>
+```bash Python
+python search_plants.py
+```
+
+```bash TypeScript
+npx tsx search_plants.ts
+```
+
+```bash Go
+go run main.go
+```
+</CodeBlocks>
+
+You should see a list of available plants, beginner-friendly options, and detailed information about a specific plant.
+
+</Step>
+</Steps>

@@ -17,7 +17,7 @@ layout:
 
 tabs:
   home:
-    display-name: Home
+    display-name: Docs
     icon: home
   guides:
     display-name: Guides
@@ -35,13 +35,42 @@ navigation:
             path: docs/pages/welcome.mdx
   - tab: guides
     layout:
-      - section: Learn
+      - section: Get started
         contents:
-          - page: Concepts
-            path: docs/pages/concepts.mdx
-          - page: SDKs
-            path: docs/pages/sdks.mdx
-            slug: sdks
+          - page: Overview
+            path: docs/pages/get-started/overview.mdx
+            icon: fa-duotone fa-book-open
+          - page: Quickstart
+            path: docs/pages/get-started/quickstart.mdx
+            icon: fa-duotone fa-rocket
+      - section: Capabilities
+        contents:
+          - page: Plant management
+            path: docs/pages/capabilities/plant-management.mdx
+            icon: fa-duotone fa-seedling
+          - page: Order processing
+            path: docs/pages/capabilities/order-processing.mdx
+            icon: fa-duotone fa-cart-shopping
+          - page: Customer management
+            path: docs/pages/capabilities/customer-management.mdx
+            icon: fa-duotone fa-users
+          - page: Inventory tracking
+            path: docs/pages/capabilities/inventory-tracking.mdx
+            icon: fa-duotone fa-boxes-stacked
+      - section: Tutorials
+        contents:
+          - page: Searching for plants
+            path: docs/pages/tutorials/searching-plants.mdx
+            icon: fa-duotone fa-magnifying-glass
+          - page: Creating your first order
+            path: docs/pages/tutorials/first-order-tutorial.mdx
+            icon: fa-duotone fa-bag-shopping
+          - page: Managing plant inventory
+            path: docs/pages/tutorials/inventory-tutorial.mdx
+            icon: fa-duotone fa-clipboard-list
+      - section: Changelog
+        contents:
+          - changelog: docs/changelog
   - tab: API Reference
     layout:
       - api: API Reference
