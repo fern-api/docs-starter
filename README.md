@@ -2,9 +2,9 @@
 <div align="center">
   <a href="https://www.buildwithfern.com/?utm_source=github&utm_medium=readme&utm_campaign=fern&utm_content=logo">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="/fern/docs/assets/logo-white.svg">
-      <source media="(prefers-color-scheme: light)" srcset="/fern/docs/assets/logo-primary.svg">
-      <img alt="logo" src="/fern/docs/assets/logo-primary.svg" height="80" align="center">
+      <source media="(prefers-color-scheme: dark)" srcset="/fern/docs/assets/fern-logo-white.svg">
+      <source media="(prefers-color-scheme: light)" srcset="/fern/docs/assets/fern-logo-primary.svg">
+      <img alt="logo" src="/fern/docs/assets/fern-logo-primary.svg" height="80" align="center">
     </picture>
   </a>
   
