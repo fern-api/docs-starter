@@ -4,7 +4,7 @@
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="/fern/docs/assets/fern-logo-white.svg">
       <source media="(prefers-color-scheme: light)" srcset="/fern/docs/assets/fern-logo-primary.svg">
-      <img alt="logo" src="/fern/docs/assets/fern-logo-primary.svg" height="80" align="center">
+      <img alt="logo" src="/fern/docs/assets/fern-logo-primary.svg" height="50" align="center">
     </picture>
   </a>
   
