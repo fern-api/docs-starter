@@ -84,7 +84,9 @@ Run the following command:
 fern generate --docs
 ```
 
-You will be prompted to log in and connect your GitHub account. You might also 
+You will be prompted to log in and connect your GitHub account. 
+
+You might also be prompted, `yes` or `no`, about if you want to proceed with generating docs and informed that you can choose between using the `--preview` flag or not. You can choose to use either `fern generate --docs` or `fern generate --docs --preview` at this time. This decision is important later, when you are making changes that might affect a production docs environment, but it won't impact your docs project now.
 
 Once the documentation is generated, you will receive the URL where your documentation is published. For example:
 
@@ -101,7 +103,7 @@ Preview your documentation locally. Run ​`fern docs dev`​ to access your doc
 ### Step 6: Preview your documentation
 You can generate documentation previews
 
-#### Genrate previews from CLI
+#### Generate previews from CLI
 
 To preview updates to your documentation before publishing changes, run `fern generate --docs --preview`.
 
