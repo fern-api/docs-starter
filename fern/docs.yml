@@ -90,6 +90,10 @@ colors:
     dark: "#81C784"
     light: "#1B5E20"
 
+theme:
+  page-actions: toolbar
+  footer-nav: minimal
+
 logo:
   dark: docs/assets/logo-dark.svg
   light: docs/assets/logo-light.svg
