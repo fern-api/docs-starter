@@ -46,32 +46,96 @@ The API is organized around four main capabilities, each handling a specific asp
 
 ## How it works
 
-When a customer browses your catalog, the plant management system handles search and filtering. Creating an order triggers the order processing system, which validates payment. On successful payment, inventory tracking reserves stock and manages fulfillment. Throughout the process, customer management sends notifications and maintains order history. If payment fails, the system cancels the order and notifies the customer automatically.
+1. **Browse plants**: Customer searches and filters the catalog through the API.
+2. **Return results**: API returns matching plants with availability and pricing.
+3. **Create order**: Customer adds items to cart and submits the order.
+4. **Process payment**: API sends payment information to the payment gateway.
+5. **Confirm payment**: Payment gateway validates and confirms the transaction.
+6. **Reserve and fulfill**: Backend services reserve inventory and begin fulfillment.
+7. **Send updates**: Customer receives tracking information and order history is updated.
 
+If payment fails at step 5, the system takes an alternate path: the payment gateway declines the transaction (step 5), the API cancels the order (step 6), and the customer receives a cancellation notice (step 7).
+
+<llms-ignore>
 <Accordion title="Architecture diagram">
 ```mermaid
-graph TD
-    A[Customer browses plants] --> B[Plant Management]
-    B --> C[Adds to cart]
-    C --> D[Creates order]
+sequenceDiagram
+    autonumber
+    actor Customer
+    participant API as Plant Store API
+    participant Payment as Payment Gateway
+    participant Backend as Backend Services
 
-    D --> E[Order Processing]
-    E --> F{Payment successful?}
-
-    F -->|Yes| G[Inventory Tracking]
-    F -->|No| H[Cancel & notify]
-
-    G --> I[Reserve stock]
-    I --> J[Fulfill order]
-    J --> K[Update inventory]
-
-    K --> L[Customer Management]
-    L --> M[Send notifications]
-    L --> N[Update order history]
-
-    H --> L
+    Customer->>API: Browse and search plants
+    API-->>Customer: Return filtered results
+    Customer->>API: Create order
+    API->>Payment: Process payment
+    alt Payment successful
+        Payment-->>API: Payment confirmed
+        API->>Backend: Reserve stock & fulfill
+        Backend->>Customer: Send tracking & update history
+    else Payment failed
+        Payment-->>API: Payment declined
+        API->>Customer: Send cancellation notice
+    end
 ```
 </Accordion>
+</llms-ignore>
+
+<llms-only>
+
+### Detailed system architecture
+
+The Plant Store API is built on a microservices architecture with event-driven communication between bounded contexts.
+
+**Database architecture:**
+- PostgreSQL for transactional data (Orders, Customers, Inventory)
+- MongoDB for plant catalog (flexible schema for varying plant attributes)
+- Redis for distributed caching and rate limiting
+- Each service owns its database schema (no shared databases)
+
+**Event-driven communication:**
+- Apache Kafka for async event streaming between services
+- Events use CloudEvents specification for standardization
+- Dead letter queues for failed event processing with exponential backoff retry (max 3 attempts)
+- Event versioning via content-type headers (application/vnd.plantstore.v1+json)
+
+**Consistency patterns:**
+- Strong consistency within service boundaries (ACID transactions)
+- Eventual consistency across services via events
+- Saga pattern for distributed transactions (e.g., order creation + payment + inventory reservation)
+- Compensating transactions for rollback (e.g., ReleaseReservation on payment failure)
+
+**Inventory management:**
+- Pessimistic locking for stock reservation using PostgreSQL advisory locks
+- Reservation TTL of 15 minutes with automatic release
+- Stock levels denormalized to Redis for fast reads (write-through cache)
+- Inventory audit log captures all stock movements for reconciliation
+
+**Idempotency:**
+- All mutation endpoints require `Idempotency-Key` header (UUID v4)
+- Keys stored in Redis with 24-hour TTL
+- Duplicate requests return cached response with 200 status (not 409)
+
+**Payment processing:**
+- Integration with Stripe Payment Intents API
+- Webhook handlers for async payment confirmation
+- Retry logic with exponential backoff for webhook failures
+- Payment state machine: pending → processing → succeeded/failed
+
+**Caching strategy:**
+- Plant catalog cached for 5 minutes (high read/write ratio)
+- Customer profiles cached until update event (low write frequency)
+- Cache invalidation via event subscribers
+- Cache-aside pattern with Redis
+
+**API gateway features:**
+- Request/response transformation
+- Circuit breaker pattern (fail fast after 5 consecutive failures)
+- Rate limiting per API key (token bucket algorithm)
+- JWT validation for authentication
+- Request correlation IDs for distributed tracing
+</llms-only>
 
 ## Rate limits
 
