@@ -57,6 +57,11 @@ The API is organized around four main capabilities, each handling a specific asp
 If payment fails at step 5, the system takes an alternate path: the payment gateway declines the transaction (step 5), the API cancels the order (step 6), and the customer receives a cancellation notice (step 7).
 
 <llms-ignore>
+<Callout intent="success">
+  Ready to get started? Follow our [Quickstart guide](/quickstart) to make your first API request in under 5 minutes, or explore the [API Reference](/api-reference) to see all available endpoints.
+</Callout>
+</llms-ignore>
+
 <Accordion title="Architecture diagram">
 ```mermaid
 sequenceDiagram
@@ -80,7 +85,6 @@ sequenceDiagram
     end
 ```
 </Accordion>
-</llms-ignore>
 
 <llms-only>
 
