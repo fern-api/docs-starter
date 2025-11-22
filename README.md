@@ -142,16 +142,24 @@ To learn about Fern's built-in component library you can use within MDX files:
 
 - See the [Component Library](https://buildwithfern.com/learn/docs/content/components/overview?utm_source=github&utm_medium=readme&utm_campaign=docs-starter-openapi&utm_content=step7).
 
-### Step 7: Set up a custom domain
+### Step 8: Set up a custom domain
 
-If you wish to use a custom subdomain like `https://docs.YOUR_ORGANIZATION.com` or a subpath like `https://YOUR_ORGANIZATION.com/docs`, you can subscribe to the [Starter plan](https://buildwithfern.com/pricing?utm_source=github&utm_medium=readme&utm_campaign=docs-starter-openapi&utm_content=step8). Once subscribed, update `docs.yml` with the custom domain configuration:
+If you wish to use a custom subdomain like `https://docs.YOUR_ORGANIZATION.com` or a subpath like `https://YOUR_ORGANIZATION.com/docs`, you can subscribe to the [Basic plan](https://buildwithfern.com/pricing?utm_source=github&utm_medium=readme&utm_campaign=docs-starter-openapi&utm_content=step8). Once subscribed, update `docs.yml` with the custom domain configuration:
 
 ```yaml
 - url: plantstore.docs.buildwithfern.com
   custom-domain: plantstore.dev
 ```
 
-### Step 8: Explore advanced features
+### Step 9: Use the Fern Dashboard
+
+Access the [Fern Dashboard](https://buildwithfern.com) to monitor your docs and edit content in the browser.
+
+**Analytics:** Track page views, search queries, user feedback, and API Explorer usage to understand how developers use your docs.
+
+**Fern Editor:** Edit Markdown files directly in the browser with a WYSIWYG web editor. Ideal for non-technical team members who want to contribute to your docs. Edits appear as pull requests in GitHub and follow the same Git-backed approval workflow as code editor contributions.
+
+### Step 10: Explore advanced features
 
 For advanced documentation features and options, view the full [project structure](https://buildwithfern.com/learn/docs/getting-started/project-structure?utm_source=github&utm_medium=readme&utm_campaign=docs-starter-openapi&utm_content=step9).
 
