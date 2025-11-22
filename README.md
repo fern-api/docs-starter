@@ -54,7 +54,7 @@ Open the `fern.config.json` file and change the organization name:
 ```json
 {
   "organization": "your-company-name",
-  "version": "0.84.1"
+  "version": "2.4.0"
 }
 ```
 
