@@ -8,7 +8,7 @@ ai-search:
   location:
     - docs
 
-title: Plant Store
+title: Fern Docs Starter
 
 layout:
   searchbar-placement: header
@@ -19,9 +19,6 @@ tabs:
   home:
     display-name: Docs
     icon: home
-  guides:
-    display-name: Guides
-    icon: book
   API Reference:
     display-name: API Reference
     icon: puzzle
@@ -29,51 +26,34 @@ tabs:
 navigation:
   - tab: home
     layout:
-      - section: Get Started
+      - section: Get started
         contents:
           - page: Welcome
             path: docs/pages/welcome.mdx
-  - tab: guides
-    layout:
-      - section: Get started
-        contents:
-          - page: Overview
-            path: docs/pages/get-started/overview.mdx
-            icon: fa-duotone fa-book-open
-          - page: Quickstart
-            path: docs/pages/get-started/quickstart.mdx
-            icon: fa-duotone fa-rocket
-      - section: Capabilities
-        contents:
-          - page: Plant management
-            path: docs/pages/capabilities/plant-management.mdx
-            icon: fa-duotone fa-seedling
-          - page: Order processing
-            path: docs/pages/capabilities/order-processing.mdx
-            icon: fa-duotone fa-cart-shopping
-          - page: Customer management
-            path: docs/pages/capabilities/customer-management.mdx
-            icon: fa-duotone fa-users
-          - page: Inventory tracking
-            path: docs/pages/capabilities/inventory-tracking.mdx
-            icon: fa-duotone fa-boxes-stacked
-      - section: Tutorials
-        contents:
-          - page: Searching for plants
-            path: docs/pages/tutorials/searching-plants.mdx
-            icon: fa-duotone fa-magnifying-glass
-          - page: Creating your first order
-            path: docs/pages/tutorials/first-order-tutorial.mdx
-            icon: fa-duotone fa-bag-shopping
-          - page: Managing plant inventory
-            path: docs/pages/tutorials/inventory-tutorial.mdx
-            icon: fa-duotone fa-clipboard-list
+            icon: fa-duotone fa-house
+          - page: Edit your docs
+            path: docs/pages/editing-your-docs.mdx
+            icon: fa-duotone fa-pen-to-square
+          - page: Set up navigation
+            path: docs/pages/navigation.mdx
+            icon: fa-duotone fa-sitemap
+          - page: Customize your docs
+            path: docs/pages/customization.mdx
+            icon: fa-duotone fa-palette
+          - page: Support
+            path: docs/pages/support.mdx
+            icon: fa-duotone fa-headset
       - section: Changelog
         contents:
           - changelog: docs/changelog
   - tab: API Reference
     layout:
-      - api: API Reference
+      - section: Overview
+        contents:
+          - page: API reference
+            path: docs/pages/api-reference-overview.mdx
+            icon: fa-duotone fa-book
+      - api: Plant Store API
 
 navbar-links:
   - type: minimal
