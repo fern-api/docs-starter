@@ -34,6 +34,9 @@ navigation:
           - page: Edit your docs
             path: docs/pages/editing-your-docs.mdx
             icon: fa-duotone fa-pen-to-square
+          - page: Write content
+            path: docs/pages/writing-content.mdx
+            icon: fa-duotone fa-file-lines
           - page: Set up navigation
             path: docs/pages/navigation.mdx
             icon: fa-duotone fa-sitemap

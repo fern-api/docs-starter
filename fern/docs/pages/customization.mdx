@@ -4,208 +4,70 @@ subtitle: Brand your documentation with colors, logos, and layouts
 slug: customization
 ---
 
-The `docs.yml` file controls the visual appearance of your documentation site. Customize colors, logos, typography, and layout to match your brand.
-
-## Colors
-
-Set your brand colors using the `colors` key. Define separate values for light and dark modes:
-
-```yaml title="docs.yml"
-colors:
-  accentPrimary:
-    dark: "#81C784"
-    light: "#1B5E20"
-```
-
-The accent color is used for links, buttons, and other interactive elements. Choose colors that provide good contrast in both light and dark modes.
-
-### Additional color options
-
-```yaml
-colors:
-  accentPrimary:
-    dark: "#81C784"
-    light: "#1B5E20"
-  background:
-    dark: "#111113"
-    light: "#FFFFFF"
-  border:
-    dark: "#393A40"
-    light: "#E0E1E6"
-```
-
-## Logo and favicon
-
-Add your logo and favicon to the `docs/assets/` directory, then reference them in `docs.yml`:
-
-```yaml title="docs.yml"
-logo:
-  dark: docs/assets/logo-dark.svg
-  light: docs/assets/logo-light.svg
-  height: 20
-  href: https://your-website.com
-
-favicon: docs/assets/favicon.svg
-```
-
-Provide separate logo files for light and dark modes to ensure visibility. SVG format is recommended for crisp rendering at any size.
-
-## Site title
-
-Set the title that appears in browser tabs and search results:
-
-```yaml title="docs.yml"
-title: Your Documentation
-```
-
-## Layout options
-
-Configure the overall layout of your documentation:
-
-```yaml title="docs.yml"
-layout:
-  searchbar-placement: header
-  page-width: full
-  tabs-placement: header
-```
-
-| Option | Values | Description |
-|--------|--------|-------------|
-| `searchbar-placement` | `header`, `sidebar` | Where the search bar appears |
-| `page-width` | `full`, `centered` | Content width |
-| `tabs-placement` | `header`, `sidebar` | Where tabs appear |
-
-## Navbar links
-
-Add links to your navigation bar for external resources:
-
-```yaml title="docs.yml"
-navbar-links:
-  - type: minimal
-    text: GitHub
-    url: https://github.com/your-org
-  - type: filled
-    text: Get started
-    url: https://your-website.com/signup
-  - type: github
-    value: https://github.com/your-org/your-repo
-```
-
-| Type | Description |
-|------|-------------|
-| `minimal` | Text link |
-| `secondary` | Outlined button |
-| `filled` | Solid button |
-| `github` | GitHub icon with star count |
-
-## Theme options
-
-Configure additional theme settings:
-
-```yaml title="docs.yml"
-theme:
-  page-actions: toolbar
-  footer-nav: minimal
-```
-
-## Typography
-
-Customize fonts by providing font files:
-
-```yaml title="docs.yml"
-typography:
-  bodyFont:
-    name: Inter
-    paths:
-      - path: docs/assets/Inter-Regular.woff2
-        weight: 400
-      - path: docs/assets/Inter-Medium.woff2
-        weight: 500
-  headingsFont:
-    name: Inter-Bold
-    path: docs/assets/Inter-Bold.woff2
-```
-
-## Custom CSS
-
-For advanced customization, add custom CSS:
-
-```yaml title="docs.yml"
-css: docs/assets/custom.css
-```
-
-```css title="docs/assets/custom.css"
-/* Override default styles */
-.fern-page-header {
-  border-bottom: 1px solid var(--border-color);
-}
-```
-
-<Note>
-For a complete list of CSS selectors and advanced customization options, see the [custom CSS documentation](https://buildwithfern.com/learn/docs/customization/custom-css-js).
-</Note>
-
-## Example configuration
-
-Here's a complete example showing common customization options:
-
-```yaml title="docs.yml"
-title: Your Documentation
-
-instances:
-  - url: your-org.docs.buildwithfern.com
-
-colors:
-  accentPrimary:
-    dark: "#81C784"
-    light: "#1B5E20"
-
-logo:
-  dark: docs/assets/logo-dark.svg
-  light: docs/assets/logo-light.svg
-  height: 20
-  href: https://your-website.com
-
-favicon: docs/assets/favicon.svg
-
-layout:
-  searchbar-placement: header
-  page-width: full
-  tabs-placement: header
-
-navbar-links:
-  - type: github
-    value: https://github.com/your-org/your-repo
-  - type: filled
-    text: Get started
-    url: https://your-website.com/signup
-
-navigation:
-  - section: Documentation
-    contents:
-      - page: Welcome
-        path: docs/pages/welcome.mdx
-```
-
-## Learn more
-
-For detailed documentation on all available configuration options, see the [site-level settings documentation](https://buildwithfern.com/learn/docs/configuration/site-level-settings).
-
-## Next steps
+The `docs.yml` file controls the visual appearance of your documentation site. Explore the customization options below and click through to the Fern documentation for detailed configuration guides.
 
 <CardGroup cols={2}>
   <Card
-    title="API reference"
-    icon="duotone code"
-    href="/api-reference"
+    title="Colors"
+    icon="duotone palette"
+    href="https://buildwithfern.com/learn/docs/configuration/site-level-settings#colors-configuration"
   >
-    Learn about API reference generation
+    Set brand colors for light and dark modes
   </Card>
   <Card
-    title="Get support"
-    icon="duotone headset"
-    href="/support"
+    title="Logo and favicon"
+    icon="duotone image"
+    href="https://buildwithfern.com/learn/docs/configuration/site-level-settings#logo-configuration"
   >
-    Contact the Fern team
+    Add your logo and favicon
+  </Card>
+  <Card
+    title="Typography"
+    icon="duotone font"
+    href="https://buildwithfern.com/learn/docs/configuration/site-level-settings#typography-configuration"
+  >
+    Customize fonts for headings and body text
+  </Card>
+  <Card
+    title="Layout"
+    icon="duotone table-layout"
+    href="https://buildwithfern.com/learn/docs/configuration/site-level-settings#layout-configuration"
+  >
+    Configure page width, tabs placement, and more
+  </Card>
+  <Card
+    title="Navbar links"
+    icon="duotone link"
+    href="https://buildwithfern.com/learn/docs/configuration/site-level-settings#navbar-links-configuration"
+  >
+    Add links and buttons to your navigation bar
+  </Card>
+  <Card
+    title="Custom CSS"
+    icon="duotone code"
+    href="https://buildwithfern.com/learn/docs/customization/custom-css-js"
+  >
+    Advanced styling with custom CSS and JavaScript
   </Card>
 </CardGroup>
+
+## Quick example
+
+Here's a minimal example showing common customization options in `docs.yml`:
+
+```yaml title="docs.yml"
+title: Your Documentation
+
+colors:
+  accentPrimary:
+    dark: "#81C784"
+    light: "#1B5E20"
+
+logo:
+  dark: docs/assets/logo-dark.svg
+  light: docs/assets/logo-light.svg
+
+favicon: docs/assets/favicon.svg
+```
+
+For complete configuration options, see the [site-level settings documentation](https://buildwithfern.com/learn/docs/configuration/site-level-settings).

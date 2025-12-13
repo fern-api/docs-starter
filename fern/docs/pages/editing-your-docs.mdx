@@ -6,19 +6,20 @@ slug: editing-your-docs
 
 Fern provides two ways to edit your documentation: the command-line interface (CLI) for developers, and Fern Editor for team members who prefer a visual interface.
 
-## Using the CLI
+<AccordionGroup>
+<Accordion title="Using the CLI">
 
 The Fern CLI lets you preview changes locally and publish updates from your terminal.
 
-### Install the CLI
+**Install the CLI**
 
 ```bash
 npm install -g fern-api
 ```
 
-### Preview locally
+**Preview locally**
 
-Start a local development server with hot-reloading. Your docs automatically update as you edit Markdown and OpenAPI files:
+Start a local development server with hot-reloading:
 
 ```bash
 fern docs dev
@@ -26,7 +27,7 @@ fern docs dev
 
 This serves your documentation at [http://localhost:3000](http://localhost:3000).
 
-### Generate a preview link
+**Generate a preview link**
 
 Create a shareable preview URL for your team to review changes before publishing:
 
@@ -34,9 +35,7 @@ Create a shareable preview URL for your team to review changes before publishing
 fern generate --docs --preview
 ```
 
-Preview links are temporary and useful for getting feedback on changes before they go live.
-
-### Publish to production
+**Publish to production**
 
 When you're ready for your docs to be publicly accessible:
 
@@ -46,19 +45,19 @@ fern generate --docs
 
 This builds and publishes your documentation to the URL configured in `docs.yml`.
 
-<Note>
 For detailed CLI documentation, see the [Fern CLI reference](https://buildwithfern.com/learn/cli-api-reference/cli-reference/overview).
-</Note>
 
-## Using Fern Editor
+</Accordion>
+
+<Accordion title="Using Fern Editor">
 
 Fern Editor is a visual editor that lets anyone on your team update documentation without learning Markdown or Git. It's ideal for content writers, product managers, and other non-technical contributors.
 
-### Key features
+**Key features**
 
 Fern Editor provides rich text editing similar to Notion or Google Docs, support for Fern components like Callouts and Cards, and a GitHub-backed workflow that creates pull requests for review.
 
-### Get started
+**Get started**
 
 1. Log in to the [Fern Dashboard](https://dashboard.buildwithfern.com/)
 2. Connect your GitHub repository
@@ -66,56 +65,21 @@ Fern Editor provides rich text editing similar to Notion or Google Docs, support
 
 Changes made in Fern Editor create pull requests automatically, maintaining your docs-as-code workflow with full Git history and review process.
 
-<Note>
 For more details on Fern Editor features and supported components, see the [Fern Editor documentation](https://buildwithfern.com/learn/docs/writing-content/fern-editor).
-</Note>
 
-## Writing content
-
-Documentation pages are written in MDX, which combines Markdown with React components. Create `.mdx` files in the `docs/pages/` directory and reference them in your `docs.yml` navigation.
-
-### Basic page structure
-
-```markdown title="docs/pages/my-page.mdx"
----
-title: Page title
-subtitle: Optional subtitle
-slug: my-page
----
-
-Your content here. Use standard Markdown formatting like **bold**, *italic*, and `code`.
-
-## Headings
-
-Use headings to organize your content.
-```
-
-### Using components
-
-Fern provides built-in components for common documentation patterns:
-
-```jsx
-<Note>
-Highlight important information with callouts.
-</Note>
-
-<CardGroup cols={2}>
-  <Card title="First card" href="/page-one">
-    Card description
-  </Card>
-  <Card title="Second card" href="/page-two">
-    Another description
-  </Card>
-</CardGroup>
-```
-
-<Note>
-For a complete list of available components, see the [component documentation](https://buildwithfern.com/learn/docs/writing-content/components/overview).
-</Note>
+</Accordion>
+</AccordionGroup>
 
 ## Next steps
 
 <CardGroup cols={2}>
+  <Card
+    title="Write content"
+    icon="duotone pen-to-square"
+    href="/writing-content"
+  >
+    Create pages using MDX and components
+  </Card>
   <Card
     title="Set up navigation"
     icon="duotone sitemap"

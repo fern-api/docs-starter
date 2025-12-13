@@ -4,11 +4,56 @@ subtitle: Configure tabs, sections, and pages in your docs.yml file
 slug: navigation
 ---
 
-The `docs.yml` file controls the navigation structure of your documentation site. Use it to organize content into tabs, sections, and pages.
+The `docs.yml` file controls the navigation structure of your documentation site. Explore the navigation options below and click through to the Fern documentation for detailed configuration guides.
 
-## Basic structure
+<CardGroup cols={2}>
+  <Card
+    title="Sections and pages"
+    icon="duotone list"
+    href="https://buildwithfern.com/learn/docs/configuration/navigation#sections-contents-pages-and-folders"
+  >
+    Organize content into sections with pages and folders
+  </Card>
+  <Card
+    title="Tabs"
+    icon="duotone folder-open"
+    href="https://buildwithfern.com/learn/docs/configuration/tabs"
+  >
+    Create top-level navigation groups
+  </Card>
+  <Card
+    title="Versions"
+    icon="duotone code-branch"
+    href="https://buildwithfern.com/learn/docs/configuration/versions"
+  >
+    Add version switching for your documentation
+  </Card>
+  <Card
+    title="Products"
+    icon="duotone boxes-stacked"
+    href="https://buildwithfern.com/learn/docs/configuration/products"
+  >
+    Support multiple products in one site
+  </Card>
+  <Card
+    title="API reference"
+    icon="duotone code"
+    href="https://buildwithfern.com/learn/docs/api-references/generate-api-ref"
+  >
+    Auto-generate API documentation from your spec
+  </Card>
+  <Card
+    title="Changelogs"
+    icon="duotone clock-rotate-left"
+    href="https://buildwithfern.com/learn/docs/configuration/changelogs"
+  >
+    Add a changelog section to your docs
+  </Card>
+</CardGroup>
 
-Navigation is defined in the `navigation` key of your `docs.yml` file:
+## Quick example
+
+Here's a minimal example showing navigation structure in `docs.yml`:
 
 ```yaml title="docs.yml"
 navigation:
@@ -18,165 +63,7 @@ navigation:
         path: docs/pages/intro.mdx
       - page: Quickstart
         path: docs/pages/quickstart.mdx
-  - section: Guides
-    contents:
-      - page: Authentication
-        path: docs/pages/guides/auth.mdx
-```
-
-## Sections and pages
-
-Sections group related pages in the sidebar. Each section has a name and a list of contents.
-
-```yaml
-navigation:
-  - section: Section name
-    contents:
-      - page: Page title
-        path: docs/pages/page-file.mdx
-```
-
-### Page properties
-
-| Property | Description |
-|----------|-------------|
-| `page` | Display name in the sidebar |
-| `path` | Path to the MDX file |
-| `slug` | Custom URL path (optional) |
-| `icon` | Sidebar icon (optional) |
-| `hidden` | Hide from navigation but keep accessible via URL (optional) |
-
-## Tabs
-
-Tabs create top-level navigation groups. Use them to separate different types of content, like guides and API reference.
-
-```yaml title="docs.yml"
-tabs:
-  docs:
-    display-name: Docs
-    icon: home
-  guides:
-    display-name: Guides
-    icon: book
-  api:
-    display-name: API Reference
-    icon: puzzle
-
-navigation:
-  - tab: docs
-    layout:
-      - section: Overview
-        contents:
-          - page: Welcome
-            path: docs/pages/welcome.mdx
-  - tab: guides
-    layout:
-      - section: Tutorials
-        contents:
-          - page: Getting started
-            path: docs/pages/tutorials/getting-started.mdx
-  - tab: api
-    layout:
-      - api: API Reference
-```
-
-## API reference section
-
-Add an automatically generated API reference section using the `api` key:
-
-```yaml
-navigation:
-  - section: Documentation
-    contents:
-      - page: Overview
-        path: docs/pages/overview.mdx
   - api: API Reference
 ```
 
-Fern generates the API reference from your OpenAPI specification file. For more control over the API reference layout, see the [API reference documentation](https://buildwithfern.com/learn/docs/api-references/generate-api-ref).
-
-## Sidebar icons
-
-Add icons to sections, pages, or folders using Font Awesome icons or custom SVGs:
-
-```yaml
-navigation:
-  - section: Getting started
-    icon: fa-regular fa-rocket
-    contents:
-      - page: Introduction
-        icon: fa-duotone fa-book-open
-        path: docs/pages/intro.mdx
-```
-
-Browse available icons at [Font Awesome](https://fontawesome.com/icons).
-
-## Nested sections
-
-Create hierarchical navigation by nesting sections:
-
-```yaml
-navigation:
-  - section: Guides
-    contents:
-      - section: Authentication
-        contents:
-          - page: OAuth
-            path: docs/pages/auth/oauth.mdx
-          - page: API keys
-            path: docs/pages/auth/api-keys.mdx
-      - section: Data
-        contents:
-          - page: Queries
-            path: docs/pages/data/queries.mdx
-```
-
-## Collapsed sections
-
-Set sections to be collapsed by default:
-
-```yaml
-navigation:
-  - section: Advanced topics
-    collapsed: true
-    contents:
-      - page: Custom CSS
-        path: docs/pages/advanced/css.mdx
-```
-
-## External links
-
-Add links to external pages in your navigation:
-
-```yaml
-navigation:
-  - section: Resources
-    contents:
-      - page: Documentation
-        path: docs/pages/docs.mdx
-      - link: GitHub
-        href: https://github.com/your-org/your-repo
-```
-
-## Learn more
-
-For advanced navigation features like versioning, products, and folder-based navigation, see the [Fern navigation documentation](https://buildwithfern.com/learn/docs/configuration/navigation).
-
-## Next steps
-
-<CardGroup cols={2}>
-  <Card
-    title="Customize your docs"
-    icon="duotone palette"
-    href="/customization"
-  >
-    Brand your documentation with colors and logos
-  </Card>
-  <Card
-    title="API reference"
-    icon="duotone code"
-    href="/api-reference"
-  >
-    Learn about API reference generation
-  </Card>
-</CardGroup>
+For complete navigation options, see the [navigation documentation](https://buildwithfern.com/learn/docs/configuration/navigation).
