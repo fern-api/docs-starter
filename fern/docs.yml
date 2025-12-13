@@ -63,8 +63,8 @@ navbar-links:
     text: Fork this repo
     url: https://github.com/fern-api/docs-starter
   - type: filled
-    text: Get a demo
-    url: https://buildwithfern.com/contact?utm_campaign=demo&utm_medium=plantstore&utm_source=navbar
+    text: Dashboard
+    url: https://dashboard.buildwithfern.com
   - type: github
     value: https://github.com/fern-api/fern
       
