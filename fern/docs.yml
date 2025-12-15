@@ -69,18 +69,21 @@ navbar-links:
     value: https://github.com/fern-api/fern
       
 colors:
-  accentPrimary:
-    dark: "#81C784"
-    light: "#1B5E20"
+  accent-primary:
+    dark: "#70E155"
+    light: "#008700"
+  background:
+    dark: "#111113"
+    light: "#FFFFFF"
 
 theme:
   page-actions: toolbar
   footer-nav: minimal
 
 logo:
-  dark: docs/assets/logo-dark.svg
-  light: docs/assets/logo-light.svg
+  dark: docs/assets/logo.svg
+  light: docs/assets/logo.svg
   height: 20
-  href: https://buildwithfern.com/?utm_campaign=demo&utm_medium=plantstore&utm_source=logo
+  href: https://buildwithfern.com
 
 favicon: docs/assets/favicon.svg
