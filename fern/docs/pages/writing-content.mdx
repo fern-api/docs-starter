@@ -1,0 +1,58 @@
+---
+title: Write content
+subtitle: Create documentation pages using MDX
+slug: writing-content
+---
+
+Documentation pages are written in MDX, which combines Markdown with React components. Create `.mdx` files in the `docs/pages/` directory and reference them in your `docs.yml` navigation.
+
+## Basic page structure
+
+```markdown title="docs/pages/my-page.mdx"
+---
+title: Page title
+subtitle: Optional subtitle
+slug: my-page
+---
+
+Your content here. Use standard Markdown formatting like **bold**, *italic*, and `code`.
+
+## Headings
+
+Use headings to organize your content.
+```
+
+## Using components
+
+Fern provides [built-in components](https://buildwithfern.com/learn/docs/writing-content/components/overview) for common documentation patterns:
+
+<div>
+<Note>
+Highlight important information with callouts.
+</Note>
+
+<CardGroup cols={2}>
+  <Card title="First card" href="/page-one">
+    Card description
+  </Card>
+  <Card title="Second card" href="/page-two">
+    Another description
+  </Card>
+</CardGroup>
+</div>
+
+```jsx Markdown
+<Note>
+Highlight important information with callouts.
+</Note>
+
+<CardGroup cols={2}>
+  <Card title="First card" href="/page-one">
+    Card description
+  </Card>
+  <Card title="Second card" href="/page-two">
+    Another description
+  </Card>
+</CardGroup>
+```
+

@@ -1,0 +1,107 @@
+---
+title: Edit your docs
+subtitle: Preview changes locally and publish updates using the CLI or Fern Editor
+slug: editing-your-docs
+---
+
+Fern provides two ways to edit your documentation: the command-line interface (CLI) for developers, and Fern Editor for team members who prefer a visual interface.
+
+<AccordionGroup>
+<Accordion title="Using the CLI" defaultOpen>
+
+The Fern CLI lets you preview changes locally and publish updates from your terminal.
+
+<Steps>
+<Step title="Install the CLI">
+
+```bash
+npm install -g fern-api
+```
+
+</Step>
+
+<Step title="Preview locally">
+
+Start a local development server with hot-reloading:
+
+```bash
+fern docs dev
+```
+
+This serves your documentation at [http://localhost:3000](http://localhost:3000).
+
+</Step>
+
+<Step title="Generate a preview link">
+
+Create a shareable preview URL for your team to review changes before publishing:
+
+```bash
+fern generate --docs --preview
+```
+
+</Step>
+
+<Step title="Publish to production">
+
+When you're ready for your docs to be publicly accessible:
+
+```bash
+fern generate --docs
+```
+
+This builds and publishes your documentation to the URL configured in `docs.yml`.
+
+</Step>
+</Steps>
+
+For detailed CLI documentation, see the [Fern CLI reference](https://buildwithfern.com/learn/cli-api-reference/cli-reference/overview).
+
+</Accordion>
+
+<Accordion title="Using Fern Editor">
+
+Fern Editor is a visual editor that lets anyone on your team update documentation without learning Markdown or Git. It's ideal for content writers, product managers, and other non-technical contributors.
+
+**Key features**
+
+Fern Editor provides rich text editing similar to Notion or Google Docs, support for Fern components like Callouts and Cards, and a GitHub-backed workflow that creates pull requests for review.
+
+**Get started**
+
+1. Log in to the [Fern Dashboard](https://dashboard.buildwithfern.com/)
+2. Connect your GitHub repository
+3. Open Fern Editor from the top navigation
+
+Changes made in Fern Editor create pull requests automatically, maintaining your docs-as-code workflow with full Git history and review process.
+
+For more details on Fern Editor features and supported components, see the [Fern Editor documentation](https://buildwithfern.com/learn/docs/writing-content/fern-editor).
+
+</Accordion>
+</AccordionGroup>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Write content"
+    icon="duotone pen-to-square"
+    href="/writing-content"
+  >
+    Create pages using MDX and components
+  </Card>
+  <Card
+    title="Set up navigation"
+    icon="duotone sitemap"
+    href="/navigation"
+  >
+    Configure tabs, sections, and pages
+  </Card>
+  <Card
+    title="Customize your docs"
+    icon="duotone palette"
+    href="/customization"
+  >
+    Brand your documentation
+  </Card>
+</CardGroup>

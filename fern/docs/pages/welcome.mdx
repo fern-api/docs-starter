@@ -1,74 +1,120 @@
 ---
-title: Welcome to Plant Store API
-subtitle: Everything you need to build plant retail experiences
+title: Welcome to Fern!
+subtitle: Everything you need to build the best developer experience
 slug: welcome
 ---
 
-The Plant Store API provides a complete platform for building plant retail applications. From catalog management and inventory tracking to order processing and customer relationships, our API handles the complexity so you can focus on creating great experiences.
+This repository is a starter template for building documentation with [Fern](https://buildwithfern.com). It includes a sample Plant Store API to demonstrate how Fern generates interactive API reference documentation from an OpenAPI specification.
 
-## Quick links
+Use this template to get started quickly, then replace the sample content with your own API and documentation.
+
+## What's included
+
+This starter template contains everything you need to publish documentation:
+
+<Files>
+  <File name="docs.yml" comment="Configures navigation, theme, and hosting" />
+  <File name="fern.config.json" comment="Sets your organization name and CLI version" />
+  <File name="openapi.yaml" comment="Sample Plant Store API specification" />
+  <Folder name="docs" defaultOpen>
+    <Folder name="pages" comment="Markdown content for your documentation" />
+    <Folder name="assets" comment="Logos, favicon, and other assets" />
+  </Folder>
+</Files>
+
+## Getting started
+
+<Steps>
+<Step title="Clone this repository">
+
+```bash
+git clone <your-template-repo.git>
+cd docs-starter
+```
+
+</Step>
+
+<Step title="Install the Fern CLI">
+
+```bash
+npm install -g fern-api
+```
+
+</Step>
+
+<Step title="Preview locally">
+
+Start a local development server with hot-reloading:
+
+```bash
+fern docs dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to see your docs.
+
+</Step>
+
+<Step title="Make it yours">
+
+Update `fern.config.json` with your organization name and `docs.yml` with your desired URL:
+
+```json title="fern.config.json"
+{
+  "organization": "your-org-name",
+  "version": "0.46.15"
+}
+```
+
+```yaml title="docs.yml"
+instances:
+  - url: your-org.docs.buildwithfern.com
+```
+
+</Step>
+
+<Step title="Publish">
+
+When you're ready to go live:
+
+```bash
+fern generate --docs
+```
+
+</Step>
+</Steps>
+
+## Next steps
+
+Replace the sample Plant Store API with your own OpenAPI specification, update the Markdown pages with your content, and customize the theme to match your brand. For detailed guidance, explore the pages in this documentation or visit the [Fern documentation](https://buildwithfern.com/learn).
 
 <CardGroup cols={2}>
   <Card
-    title="Overview"
-    icon="duotone book-open"
-    href="/overview"
+    title="Edit your docs"
+    icon="duotone pen-to-square"
+    href="/editing-your-docs"
   >
-    Understand what you can build with the Plant Store API
+    Learn how to preview and publish changes using the CLI or Fern Editor
   </Card>
   <Card
-    title="Quickstart"
-    icon="duotone rocket"
-    href="/quickstart"
+    title="Set up navigation"
+    icon="duotone sitemap"
+    href="/navigation"
   >
-    Make your first API request in minutes
+    Configure tabs, sections, and pages in your docs.yml file
   </Card>
   <Card
-    title="Tutorials"
-    icon="duotone book-sparkles"
-    href="/searching-plants"
+    title="Customize your docs"
+    icon="duotone palette"
+    href="/customization"
   >
-    Step-by-step guides for common workflows
+    Brand your documentation with colors, logos, and layouts
   </Card>
   <Card
-    title="API Reference"
+    title="API reference"
     icon="duotone code"
     href="/api-reference"
   >
-    Complete endpoint documentation and schemas
+    See how Fern generates interactive API documentation
   </Card>
 </CardGroup>
 
-## Core capabilities
-
-Build complete plant retail operations with these integrated capabilities:
-
-| Capability | What you can do |
-|------------|-----------------|
-| **Plant management** | Organize your catalog with categories, tags, and rich metadata |
-| **Order processing** | Handle the complete lifecycle from cart to delivery |
-| **Customer management** | Build relationships with profiles, preferences, and history |
-| **Inventory tracking** | Maintain accurate stock with real-time updates and alerts |
-
-<Tip>
-New to the Plant Store API? Start with the [Overview](/overview) to understand the platform, then follow the [Quickstart](/quickstart) to make your first API call.
-</Tip>
-
-## What you can build
-
-- **E-commerce websites** - Online storefronts with real-time inventory and checkout
-- **Mobile applications** - Native iOS and Android shopping experiences
-- **Inventory systems** - Multi-location stock tracking and management
-- **Admin dashboards** - Internal tools for catalog and order management
-
-## Get support
-
-Have questions or need help? We're here for you:
-
-- **Documentation issues** - [Open an issue on GitHub](https://github.com/fern-api/docs-starter-openapi/issues)
-- **General support** - [Email our team](mailto:support+plantstore@buildwithfern.com)
-- **Community** - [Join our Slack](https://join.slack.com/t/fern-community/shared_invite/zt-2q7ev4mki-mhO5anKslwRowp4oExWf4A)
-
----
-
-<Markdown src="/snippets/note.mdx" />
