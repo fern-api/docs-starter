@@ -7,17 +7,20 @@ slug: editing-your-docs
 Fern provides two ways to edit your documentation: the command-line interface (CLI) for developers, and Fern Editor for team members who prefer a visual interface.
 
 <AccordionGroup>
-<Accordion title="Using the CLI">
+<Accordion title="Using the CLI" defaultOpen>
 
 The Fern CLI lets you preview changes locally and publish updates from your terminal.
 
-**Install the CLI**
+<Steps>
+<Step title="Install the CLI">
 
 ```bash
 npm install -g fern-api
 ```
 
-**Preview locally**
+</Step>
+
+<Step title="Preview locally">
 
 Start a local development server with hot-reloading:
 
@@ -27,7 +30,9 @@ fern docs dev
 
 This serves your documentation at [http://localhost:3000](http://localhost:3000).
 
-**Generate a preview link**
+</Step>
+
+<Step title="Generate a preview link">
 
 Create a shareable preview URL for your team to review changes before publishing:
 
@@ -35,7 +40,9 @@ Create a shareable preview URL for your team to review changes before publishing
 fern generate --docs --preview
 ```
 
-**Publish to production**
+</Step>
+
+<Step title="Publish to production">
 
 When you're ready for your docs to be publicly accessible:
 
@@ -44,6 +51,9 @@ fern generate --docs
 ```
 
 This builds and publishes your documentation to the URL configured in `docs.yml`.
+
+</Step>
+</Steps>
 
 For detailed CLI documentation, see the [Fern CLI reference](https://buildwithfern.com/learn/cli-api-reference/cli-reference/overview).
 

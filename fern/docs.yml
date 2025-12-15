@@ -57,6 +57,15 @@ navigation:
             path: docs/pages/api-reference-overview.mdx
             icon: fa-duotone fa-book
       - api: Plant Store API
+        layout:
+          - section: Plants
+            referenced-packages:
+              - plant
+            contents: []
+          - section: Users
+            referenced-packages:
+              - user
+            contents: []
 
 navbar-links:
   - type: minimal

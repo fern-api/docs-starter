@@ -24,9 +24,24 @@ Use headings to organize your content.
 
 ## Using components
 
-Fern provides built-in components for common documentation patterns:
+Fern provides [built-in components](https://buildwithfern.com/learn/docs/writing-content/components/overview) for common documentation patterns:
 
-```jsx
+<div>
+<Note>
+Highlight important information with callouts.
+</Note>
+
+<CardGroup cols={2}>
+  <Card title="First card" href="/page-one">
+    Card description
+  </Card>
+  <Card title="Second card" href="/page-two">
+    Another description
+  </Card>
+</CardGroup>
+</div>
+
+```jsx Markdown
 <Note>
 Highlight important information with callouts.
 </Note>
@@ -41,6 +56,3 @@ Highlight important information with callouts.
 </CardGroup>
 ```
 
-<Note>
-For a complete list of available components, see the [component documentation](https://buildwithfern.com/learn/docs/writing-content/components/overview).
-</Note>
