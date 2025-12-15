@@ -10,16 +10,12 @@ Fern automatically generates interactive API reference documentation from your A
 
 Fern supports multiple API specification formats:
 
-| Format | Description |
-|--------|-------------|
-| **OpenAPI** | The most widely used REST API specification format (versions 3.0 and 3.1) |
-| **AsyncAPI** | For event-driven and message-based APIs |
-| **gRPC** | Protocol buffer definitions for gRPC services |
-| **Fern Definition** | Fern's native YAML-based API definition format |
-
-<Note>
-This starter template uses an OpenAPI specification. For documentation on other formats, see the [API definitions documentation](https://buildwithfern.com/learn/api-definitions/openapi/overview).
-</Note>
+| Format | Description | Documentation |
+|--------|-------------|---------------|
+| **OpenAPI** | The most widely used REST API specification format (versions 3.0 and 3.1) | [OpenAPI docs](https://buildwithfern.com/learn/api-definitions/openapi/overview) |
+| **AsyncAPI** | For event-driven and message-based APIs | [AsyncAPI docs](https://buildwithfern.com/learn/api-definitions/asyncapi) |
+| **gRPC** | Protocol buffer definitions for gRPC services | [gRPC docs](https://buildwithfern.com/learn/api-definitions/protobuf) |
+| **Fern Definition** | Fern's native YAML-based API definition format | [Fern Definition docs](https://buildwithfern.com/learn/api-definitions/fern-definition/overview) |
 
 ## How it works
 
@@ -84,31 +80,3 @@ groups:
 <Note>
 For more information on SDK generation, see the [SDK documentation](https://buildwithfern.com/learn/sdks/overview/introduction).
 </Note>
-
-## Explore the Plant Store API
-
-This starter template includes a sample Plant Store API with endpoints for managing plants, orders, and users. Browse the API reference below to see how Fern generates documentation from an OpenAPI specification.
-
-<CardGroup cols={3}>
-  <Card
-    title="Plant endpoints"
-    icon="duotone seedling"
-    href="/api-reference/plant/addPlant"
-  >
-    Add, update, and search plants
-  </Card>
-  <Card
-    title="Store endpoints"
-    icon="duotone store"
-    href="/api-reference/store/getInventory"
-  >
-    Manage inventory and orders
-  </Card>
-  <Card
-    title="User endpoints"
-    icon="duotone user"
-    href="/api-reference/user/loginUser"
-  >
-    Authentication and user management
-  </Card>
-</CardGroup>
