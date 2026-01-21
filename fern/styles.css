@@ -1,0 +1,6 @@
+/* Custom styles for Fern Docs Starter */
+
+/* Subtle linear gradient background for dark mode */
+:root[data-theme="dark"] .fern-background-image {
+  background-image: linear-gradient(180deg, rgba(112, 225, 85, 0.03) 0%, transparent 50%);
+}

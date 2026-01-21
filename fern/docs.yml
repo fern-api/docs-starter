@@ -90,9 +90,11 @@ theme:
   footer-nav: minimal
 
 logo:
-  dark: docs/assets/logo.svg
+  dark: docs/assets/logo-dark.svg
   light: docs/assets/logo.svg
   height: 20
   href: https://buildwithfern.com
 
 favicon: docs/assets/favicon.svg
+
+css: styles.css
