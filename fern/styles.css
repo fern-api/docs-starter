@@ -1,0 +1,10 @@
+/* Custom styles for Fern Docs Starter */
+
+/* Subtle linear gradient background */
+.fern-background-image {
+  background-image: linear-gradient(180deg, rgba(0, 135, 0, 0.03) 0%, transparent 50%);
+}
+
+:root.dark .fern-background-image {
+  background-image: linear-gradient(180deg, rgba(112, 225, 85, 0.03) 0%, transparent 50%);
+}
