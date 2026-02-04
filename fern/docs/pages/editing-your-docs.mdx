@@ -1,10 +1,10 @@
 ---
 title: Edit your docs
-subtitle: Preview changes locally and publish updates using the CLI or Fern Editor
+subtitle: Preview changes locally and publish updates using the CLI, Fern Editor, or Fern Writer
 slug: editing-your-docs
 ---
 
-Fern provides two ways to edit your documentation: the command-line interface (CLI) for developers, and Fern Editor for team members who prefer a visual interface.
+Fern provides three ways to edit your documentation: the command-line interface (CLI) for developers, Fern Editor for team members who prefer a visual interface, and Fern Writer for AI-assisted documentation updates via Slack.
 
 <AccordionGroup>
 <Accordion title="Using the CLI" defaultOpen>
@@ -76,6 +76,20 @@ Fern Editor provides rich text editing similar to Notion or Google Docs, support
 Changes made in Fern Editor create pull requests automatically, maintaining your docs-as-code workflow with full Git history and review process.
 
 For more details on Fern Editor features and supported components, see the [Fern Editor documentation](https://buildwithfern.com/learn/docs/writing-content/fern-editor).
+
+</Accordion>
+
+<Accordion title="Using Fern Writer">
+
+Fern Writer is a Slack-based technical writing agent that keeps your docs aligned as your product evolves. Tag `@Fern Writer` in Slack with a description of the change you need, and it will create a pull request for your review.
+
+**Get started**
+
+1. [Get a unique Slack installation link](https://buildwithfern.com/learn/docs/scribe-api/fern-writer-api/get-fern-writer-install-link) using your Fern token and GitHub repository
+2. Authorize Fern Writer in your Slack workspace (must be an admin)
+3. Add Fern Writer to channels where your team discusses documentation
+
+For setup details and usage examples, see the [Fern Writer documentation](https://buildwithfern.com/learn/docs/ai-features/fern-writer).
 
 </Accordion>
 </AccordionGroup>
