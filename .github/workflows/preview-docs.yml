@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install Fern CLI tool
         run: npm install -g fern-api
@@ -23,12 +25,50 @@ jobs:
           OUTPUT=$(fern generate --docs --preview 2>&1) || true
           echo "$OUTPUT"
           URL=$(echo "$OUTPUT" | grep -oP 'Published docs to \K.*(?= \()')
+          echo "preview_url=$URL" >> $GITHUB_OUTPUT
           echo "Preview URL: $URL"
-          echo "🌿 Preview your docs: $URL" > preview_url.txt
+
+      - name: Get page links for changed MDX files
+        id: page-links
+        env:
+          FERN_TOKEN: ${{ secrets.FERN_TOKEN }}
+        run: |
+          PREVIEW_URL="${{ steps.generate-docs.outputs.preview_url }}"
+          CHANGED_FILES=$(git diff --name-only origin/main...HEAD -- '*.mdx' 2>/dev/null || echo "")
+
+          if [ -z "$CHANGED_FILES" ] || [ -z "$PREVIEW_URL" ]; then
+            echo "page_links=" >> $GITHUB_OUTPUT; exit 0
+          fi
+
+          BASE_URL=$(echo "$PREVIEW_URL" | grep -oP 'https?://[^/]+')
+
+          FILES_PARAM=$(echo "$CHANGED_FILES" | tr '\n' ',' | sed 's/,$//')
+          RESPONSE=$(curl -sf -H "FERN_TOKEN: $FERN_TOKEN" "${PREVIEW_URL}/api/fern-docs/get-slug-for-file?files=${FILES_PARAM}" 2>/dev/null) || {
+            echo "page_links=" >> $GITHUB_OUTPUT; exit 0
+          }
+
+          PAGE_LINKS=$(echo "$RESPONSE" | jq -r --arg url "$BASE_URL" \
+            '.mappings[] | select(.slug != null) | "- [\(.slug)](\($url)/\(.slug))"')
+
+          if [ -n "$PAGE_LINKS" ]; then
+            { echo "page_links<<EOF"; echo "$PAGE_LINKS"; echo "EOF"; } >> $GITHUB_OUTPUT
+          else
+            echo "page_links=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create comment content
+        run: |
+          echo ":herb: **Preview your docs:** <${{ steps.generate-docs.outputs.preview_url }}>" > comment.md
+
+          if [ -n "${{ steps.page-links.outputs.page_links }}" ]; then
+            echo "" >> comment.md
+            echo "Here are the markdown pages you've updated:" >> comment.md
+            echo "${{ steps.page-links.outputs.page_links }}" >> comment.md
+          fi
 
       - name: Comment URL in PR
         uses: thollander/actions-comment-pull-request@v2.4.3
         with:
-          filePath: preview_url.txt
+          filePath: comment.md
           comment_tag: preview-docs
           mode: upsert
