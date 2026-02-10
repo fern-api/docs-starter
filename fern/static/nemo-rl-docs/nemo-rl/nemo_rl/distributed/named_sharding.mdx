@@ -1,0 +1,236 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/distributed/named_sharding
+title: nemo_rl.distributed.named_sharding
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`NamedSharding`](#nemo_rl-distributed-named_sharding-NamedSharding) | Represents an N-dimensional arrangement of ranks with named axes, facilitating data sharding, replication, and collection based on these axes. |
+
+### API
+
+<Anchor id="nemo_rl-distributed-named_sharding-NamedSharding">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.distributed.named_sharding.NamedSharding(
+    layout: typing.Sequence[typing.Any] | numpy.ndarray,
+    names: list[str]
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Represents an N-dimensional arrangement of ranks with named axes, facilitating data sharding, replication, and collection based on these axes.
+
+
+<ParamField path="_layout" type="ndarray[tuple[int, ...], dtype[int32]]">
+</ParamField>
+
+<ParamField path="_name_to_axis" type="= &#123;name: i for i, name in (enumerate(self._names))&#125;">
+</ParamField>
+
+<ParamField path="_names" type="= list(names)">
+</ParamField>
+
+<ParamField path="layout" type="ndarray[tuple[int, ...], dtype[int32]]">
+Returns the underlying NumPy array representing the layout.
+</ParamField>
+
+<ParamField path="names" type="list[str]">
+Returns the names of the axes.
+</ParamField>
+
+<ParamField path="ndim" type="int">
+Returns the number of dimensions.
+</ParamField>
+
+<ParamField path="shape" type="dict[str, int]">
+Returns the shape of the rank layout.
+</ParamField>
+
+<ParamField path="size" type="int">
+Returns the total number of ranks.
+</ParamField>
+<Anchor id="nemo_rl-distributed-named_sharding-NamedSharding-__eq__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.named_sharding.NamedSharding.__eq__(
+    other: object
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-distributed-named_sharding-NamedSharding-__repr__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.named_sharding.NamedSharding.__repr__() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-distributed-named_sharding-NamedSharding-get_axis_index">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.named_sharding.NamedSharding.get_axis_index(
+    name: str
+) -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Gets the numerical index of a named axis.
+
+
+</Indent>
+<Anchor id="nemo_rl-distributed-named_sharding-NamedSharding-get_axis_size">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.named_sharding.NamedSharding.get_axis_size(
+    name: str
+) -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Gets the size of a named axis.
+
+
+</Indent>
+<Anchor id="nemo_rl-distributed-named_sharding-NamedSharding-get_ranks">
+
+<CodeBlock links={{"nemo_rl.distributed.named_sharding.NamedSharding":"#nemo_rl-distributed-named_sharding-NamedSharding"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.named_sharding.NamedSharding.get_ranks(
+    kwargs: int = {}
+) -> typing.Union[nemo_rl.distributed.named_sharding.NamedSharding, int]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Gets the ranks corresponding to specific indices along named axes.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="int" default="&#123;&#125;">
+Keyword arguments where the key is the axis name (e.g., "dp", "tp")
+      and the value is the index along that axis.
+</ParamField>
+
+**Returns:** `Union[NamedSharding, int]`
+
+A new NamedSharding instance representing the subset of ranks.
+
+**Raises:**
+
+- `ValueError`: If an invalid axis name is provided or if an index is out of bounds.
+
+
+</Indent>
+<Anchor id="nemo_rl-distributed-named_sharding-NamedSharding-get_ranks_by_coord">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.named_sharding.NamedSharding.get_ranks_by_coord(
+    coords: int = {}
+) -> list[int]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Gets all ranks that match the specified coordinates for named axes.
+
+**Parameters:**
+
+<ParamField path="**coords" type="int" default="&#123;&#125;">
+Keyword arguments where the key is the axis name (e.g., "dp", "tp")
+      and the value is the integer coordinate along that axis.
+      Axes not specified will match all coordinates along that axis.
+</ParamField>
+
+**Returns:** `list[int]`
+
+A sorted list of unique rank integers that match the given coordinate criteria.
+
+**Raises:**
+
+- `ValueError`: If an invalid axis name is provided.
+
+
+</Indent>
+<Anchor id="nemo_rl-distributed-named_sharding-NamedSharding-get_worker_coords">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.named_sharding.NamedSharding.get_worker_coords(
+    worker_id: int
+) -> dict[str, int]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Gets the coordinates of a specific worker ID in the sharding layout.
+
+**Parameters:**
+
+<ParamField path="worker_id" type="int">
+The integer ID of the worker.
+</ParamField>
+
+**Returns:** `dict[str, int]`
+
+A dictionary mapping axis names to their integer coordinates for the given worker_id.
+
+**Raises:**
+
+- `ValueError`: If the worker_id is not found in the layout.
+
+
+</Indent>
+</Indent>

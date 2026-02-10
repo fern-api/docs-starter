@@ -1,0 +1,864 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/algorithms/grpo
+title: nemo_rl.algorithms.grpo
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`AdvEstimatorConfig`](#nemo_rl-algorithms-grpo-AdvEstimatorConfig) | Configuration for advantage estimator (GRPO or Reinforce++). |
+| [`AsyncGRPOConfig`](#nemo_rl-algorithms-grpo-AsyncGRPOConfig) | - |
+| [`GRPOConfig`](#nemo_rl-algorithms-grpo-GRPOConfig) | - |
+| [`GRPOLoggerConfig`](#nemo_rl-algorithms-grpo-GRPOLoggerConfig) | - |
+| [`GRPOSaveState`](#nemo_rl-algorithms-grpo-GRPOSaveState) | - |
+| [`MasterConfig`](#nemo_rl-algorithms-grpo-MasterConfig) | - |
+| [`RewardScalingConfig`](#nemo_rl-algorithms-grpo-RewardScalingConfig) | Configure linear reward scaling with clamping. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_create_advantage_estimator`](#nemo_rl-algorithms-grpo-_create_advantage_estimator) | Create and return an advantage estimator based on configuration. |
+| [`_default_grpo_save_state`](#nemo_rl-algorithms-grpo-_default_grpo_save_state) | - |
+| [`_extract_prompt_only_messages`](#nemo_rl-algorithms-grpo-_extract_prompt_only_messages) | Extract only prompt messages (user/system) from message logs. |
+| [`_log_mixed_rewards_and_advantages_information`](#nemo_rl-algorithms-grpo-_log_mixed_rewards_and_advantages_information) | - |
+| [`_should_log_nemo_gym_responses`](#nemo_rl-algorithms-grpo-_should_log_nemo_gym_responses) | - |
+| [`_should_use_async_rollouts`](#nemo_rl-algorithms-grpo-_should_use_async_rollouts) | Determine if async rollouts should be used based on the configuration. |
+| [`_should_use_nemo_gym`](#nemo_rl-algorithms-grpo-_should_use_nemo_gym) | Determine if NeMo-Gym should be used for rollouts and validation based on the configuration. |
+| [`async_grpo_train`](#nemo_rl-algorithms-grpo-async_grpo_train) | Run asynchronous GRPO training with replay buffer. |
+| [`dynamic_sampling`](#nemo_rl-algorithms-grpo-dynamic_sampling) | Implements the dynamic sampling algorithm to select prompts with non-zero standard deviation. |
+| [`grpo_train`](#nemo_rl-algorithms-grpo-grpo_train) | Run GRPO training algorithm. |
+| [`refit_policy_generation`](#nemo_rl-algorithms-grpo-refit_policy_generation) | Refit the policy generation interface with the latest policy weights. |
+| [`scale_rewards`](#nemo_rl-algorithms-grpo-scale_rewards) | Linearly scales rewards from a source range to a target range. |
+| [`setup`](#nemo_rl-algorithms-grpo-setup) | Main entry point for running GRPO algorithm. |
+| [`validate`](#nemo_rl-algorithms-grpo-validate) | Run validation on the validation dataset. |
+
+### Data
+
+[`TokenizerType`](#nemo_rl-algorithms-grpo-TokenizerType)
+
+### API
+
+<Anchor id="nemo_rl-algorithms-grpo-AdvEstimatorConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.algorithms.grpo.AdvEstimatorConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Configuration for advantage estimator (GRPO or Reinforce++).
+
+<ParamField path="minus_baseline" type="NotRequired[bool]">
+
+</ParamField>
+
+<ParamField path="name" type="str">
+
+</ParamField>
+
+<ParamField path="normalize_rewards" type="NotRequired[bool]">
+
+</ParamField>
+
+<ParamField path="use_leave_one_out_baseline" type="NotRequired[bool]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-grpo-AsyncGRPOConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.algorithms.grpo.AsyncGRPOConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="enabled" type="bool">
+
+</ParamField>
+
+<ParamField path="in_flight_weight_updates" type="NotRequired[bool]">
+
+</ParamField>
+
+<ParamField path="max_trajectory_age_steps" type="int">
+
+</ParamField>
+
+<ParamField path="recompute_kv_cache_after_weight_updates" type="NotRequired[bool]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-grpo-GRPOConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.algorithms.grpo.GRPOConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="adv_estimator" type="NotRequired[AdvEstimatorConfig]">
+
+</ParamField>
+
+<ParamField path="async_grpo" type="NotRequired[AsyncGRPOConfig]">
+
+</ParamField>
+
+<ParamField path="batch_multiplier" type="NotRequired[float]">
+
+</ParamField>
+
+<ParamField path="calculate_advantages_on_gpu" type="NotRequired[bool]">
+
+</ParamField>
+
+<ParamField path="dynamic_sampling_max_gen_batches" type="NotRequired[int]">
+
+</ParamField>
+
+<ParamField path="max_num_epochs" type="int">
+
+</ParamField>
+
+<ParamField path="max_num_steps" type="int">
+
+</ParamField>
+
+<ParamField path="max_rollout_turns" type="int">
+
+</ParamField>
+
+<ParamField path="max_val_samples" type="int">
+
+</ParamField>
+
+<ParamField path="normalize_rewards" type="bool">
+
+</ParamField>
+
+<ParamField path="num_generations_per_prompt" type="int">
+
+</ParamField>
+
+<ParamField path="num_prompts_per_step" type="int">
+
+</ParamField>
+
+<ParamField path="overlong_filtering" type="NotRequired[bool]">
+
+</ParamField>
+
+<ParamField path="reward_scaling" type="RewardScalingConfig">
+
+</ParamField>
+
+<ParamField path="reward_shaping" type="RewardShapingConfig">
+
+</ParamField>
+
+<ParamField path="seed" type="int">
+
+</ParamField>
+
+<ParamField path="skip_reference_policy_logprobs_calculation" type="NotRequired[bool]">
+
+</ParamField>
+
+<ParamField path="use_dynamic_sampling" type="bool">
+
+</ParamField>
+
+<ParamField path="use_leave_one_out_baseline" type="bool">
+
+</ParamField>
+
+<ParamField path="val_at_end" type="bool">
+
+</ParamField>
+
+<ParamField path="val_at_start" type="bool">
+
+</ParamField>
+
+<ParamField path="val_batch_size" type="int">
+
+</ParamField>
+
+<ParamField path="val_period" type="int">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-grpo-GRPOLoggerConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.algorithms.grpo.GRPOLoggerConfig()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [LoggerConfig](/nemo-rl/nemo_rl/utils/logger#nemo_rl-utils-logger-LoggerConfig)
+
+<ParamField path="num_val_samples_to_print" type="int">
+</ParamField>
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-grpo-GRPOSaveState">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.algorithms.grpo.GRPOSaveState
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="consumed_samples" type="int">
+
+</ParamField>
+
+<ParamField path="current_epoch" type="int">
+
+</ParamField>
+
+<ParamField path="current_step" type="int">
+
+</ParamField>
+
+<ParamField path="total_steps" type="int">
+
+</ParamField>
+
+<ParamField path="total_valid_tokens" type="int">
+
+</ParamField>
+
+<ParamField path="val_reward" type="NotRequired[float]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-grpo-MasterConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.algorithms.grpo.MasterConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="checkpointing" type="CheckpointingConfig">
+
+</ParamField>
+
+<ParamField path="cluster" type="ClusterConfig">
+
+</ParamField>
+
+<ParamField path="data" type="DataConfig">
+
+</ParamField>
+
+<ParamField path="env" type="dict[str, Any]">
+
+</ParamField>
+
+<ParamField path="grpo" type="GRPOConfig">
+
+</ParamField>
+
+<ParamField path="logger" type="GRPOLoggerConfig">
+
+</ParamField>
+
+<ParamField path="loss_fn" type="ClippedPGLossConfig">
+
+</ParamField>
+
+<ParamField path="policy" type="PolicyConfig">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-grpo-RewardScalingConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.algorithms.grpo.RewardScalingConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Configure linear reward scaling with clamping.
+
+When `enabled` is True, each reward is clamped to the source interval
+[source_min, source_max] and linearly mapped to the target interval
+[target_min, target_max]. Refer to the scale_rewards function for the implementation.
+
+<ParamField path="enabled" type="bool">
+
+</ParamField>
+
+<ParamField path="source_max" type="NotRequired[float]">
+
+</ParamField>
+
+<ParamField path="source_min" type="NotRequired[float]">
+
+</ParamField>
+
+<ParamField path="target_max" type="NotRequired[float]">
+
+</ParamField>
+
+<ParamField path="target_min" type="NotRequired[float]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-grpo-_create_advantage_estimator">
+
+<CodeBlock links={{"nemo_rl.algorithms.grpo.MasterConfig":"#nemo_rl-algorithms-grpo-MasterConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.grpo._create_advantage_estimator(
+    master_config: nemo_rl.algorithms.grpo.MasterConfig
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create and return an advantage estimator based on configuration.
+
+**Parameters:**
+
+<ParamField path="master_config" type="MasterConfig">
+The master configuration dictionary.
+</ParamField>
+
+**Returns:**
+
+An advantage estimator instance (GRPOAdvantageEstimator or ReinforcePlusPlusAdvantageEstimator).
+
+**Raises:**
+
+- `ValueError`: If the advantage estimator name is not recognized.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-grpo-_default_grpo_save_state">
+
+<CodeBlock links={{"nemo_rl.algorithms.grpo.GRPOSaveState":"#nemo_rl-algorithms-grpo-GRPOSaveState"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.grpo._default_grpo_save_state() -> nemo_rl.algorithms.grpo.GRPOSaveState
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-grpo-_extract_prompt_only_messages">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.grpo._extract_prompt_only_messages(
+    message_logs: list
+) -> list
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Extract only prompt messages (user/system) from message logs.
+
+This is used to get prompt IDs for advantage estimation, excluding
+any assistant responses.
+
+**Parameters:**
+
+<ParamField path="message_logs" type="list">
+List of message logs, where each log is a list of messages.
+</ParamField>
+
+**Returns:** `list`
+
+List of message logs containing only user and system messages.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-grpo-_log_mixed_rewards_and_advantages_information">
+
+<CodeBlock links={{"nemo_rl.utils.logger.Logger":"/nemo-rl/nemo_rl/utils/logger#nemo_rl-utils-logger-Logger"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.grpo._log_mixed_rewards_and_advantages_information(
+    logger: nemo_rl.utils.logger.Logger,
+    total_steps: int,
+    metrics: dict[str, typing.Any],
+    baseline: torch.Tensor,
+    advantages: torch.Tensor
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-grpo-_should_log_nemo_gym_responses">
+
+<CodeBlock links={{"nemo_rl.algorithms.grpo.MasterConfig":"#nemo_rl-algorithms-grpo-MasterConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.grpo._should_log_nemo_gym_responses(
+    master_config: nemo_rl.algorithms.grpo.MasterConfig
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-grpo-_should_use_async_rollouts">
+
+<CodeBlock links={{"nemo_rl.algorithms.grpo.MasterConfig":"#nemo_rl-algorithms-grpo-MasterConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.grpo._should_use_async_rollouts(
+    master_config: nemo_rl.algorithms.grpo.MasterConfig
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Determine if async rollouts should be used based on the configuration.
+
+Returns True if vLLM backend is used with async_engine enabled.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-grpo-_should_use_nemo_gym">
+
+<CodeBlock links={{"nemo_rl.algorithms.grpo.MasterConfig":"#nemo_rl-algorithms-grpo-MasterConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.grpo._should_use_nemo_gym(
+    master_config: nemo_rl.algorithms.grpo.MasterConfig
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Determine if NeMo-Gym should be used for rollouts and validation based on the configuration.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-grpo-async_grpo_train">
+
+<CodeBlock links={{"nemo_rl.models.policy.interfaces.ColocatablePolicyInterface":"/nemo-rl/nemo_rl/models/policy/interfaces#nemo_rl-models-policy-interfaces-ColocatablePolicyInterface","nemo_rl.models.generation.interfaces.GenerationInterface":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationInterface","nemo_rl.algorithms.grpo.TokenizerType":"#nemo_rl-algorithms-grpo-TokenizerType","nemo_rl.algorithms.interfaces.LossFunction":"/nemo-rl/nemo_rl/algorithms/interfaces#nemo_rl-algorithms-interfaces-LossFunction","nemo_rl.environments.interfaces.EnvironmentInterface":"/nemo-rl/nemo_rl/environments/interfaces#nemo_rl-environments-interfaces-EnvironmentInterface","nemo_rl.utils.logger.Logger":"/nemo-rl/nemo_rl/utils/logger#nemo_rl-utils-logger-Logger","nemo_rl.utils.checkpoint.CheckpointManager":"/nemo-rl/nemo_rl/utils/checkpoint#nemo_rl-utils-checkpoint-CheckpointManager","nemo_rl.algorithms.grpo.GRPOSaveState":"#nemo_rl-algorithms-grpo-GRPOSaveState","nemo_rl.algorithms.grpo.MasterConfig":"#nemo_rl-algorithms-grpo-MasterConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.grpo.async_grpo_train(
+    policy: nemo_rl.models.policy.interfaces.ColocatablePolicyInterface,
+    policy_generation: typing.Optional[nemo_rl.models.generation.interfaces.GenerationInterface],
+    dataloader: torchdata.stateful_dataloader.StatefulDataLoader,
+    val_dataloader: typing.Optional[torchdata.stateful_dataloader.StatefulDataLoader],
+    tokenizer: nemo_rl.algorithms.grpo.TokenizerType,
+    loss_fn: nemo_rl.algorithms.interfaces.LossFunction,
+    task_to_env: dict[str, nemo_rl.environments.interfaces.EnvironmentInterface],
+    val_task_to_env: typing.Optional[dict[str, nemo_rl.environments.interfaces.EnvironmentInterface]],
+    logger: nemo_rl.utils.logger.Logger,
+    checkpointer: nemo_rl.utils.checkpoint.CheckpointManager,
+    grpo_save_state: nemo_rl.algorithms.grpo.GRPOSaveState,
+    master_config: nemo_rl.algorithms.grpo.MasterConfig,
+    max_trajectory_age_steps: int = 1
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run asynchronous GRPO training with replay buffer.
+
+**Parameters:**
+
+<ParamField path="policy" type="ColocatablePolicyInterface">
+Training policy
+</ParamField>
+
+<ParamField path="policy_generation" type="Optional[GenerationInterface]">
+Generation interface
+</ParamField>
+
+<ParamField path="dataloader" type="StatefulDataLoader">
+Training data loader
+</ParamField>
+
+<ParamField path="val_dataloader" type="Optional[StatefulDataLoader]">
+Validation data loader
+</ParamField>
+
+<ParamField path="tokenizer" type="TokenizerType">
+Tokenizer
+</ParamField>
+
+<ParamField path="loss_fn" type="LossFunction">
+Loss function
+</ParamField>
+
+<ParamField path="task_to_env" type="dict[str, EnvironmentInterface]">
+Training environments
+</ParamField>
+
+<ParamField path="val_task_to_env" type="Optional[dict[str, EnvironmentInterface]]">
+Validation environments
+</ParamField>
+
+<ParamField path="logger" type="Logger">
+Logger
+</ParamField>
+
+<ParamField path="checkpointer" type="CheckpointManager">
+Checkpoint manager
+</ParamField>
+
+<ParamField path="grpo_save_state" type="GRPOSaveState">
+Training state
+</ParamField>
+
+<ParamField path="master_config" type="MasterConfig">
+Master configuration
+</ParamField>
+
+<ParamField path="max_trajectory_age_steps" type="int" default="1">
+Maximum age (in training steps) for trajectories to be used in training
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-grpo-dynamic_sampling">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.data.interfaces.DatumSpec":"/nemo-rl/nemo_rl/data/interfaces#nemo_rl-data-interfaces-DatumSpec","nemo_rl.algorithms.grpo.MasterConfig":"#nemo_rl-algorithms-grpo-MasterConfig","nemo_rl.utils.timer.Timer":"/nemo-rl/nemo_rl/utils/timer#nemo_rl-utils-timer-Timer"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.grpo.dynamic_sampling(
+    repeated_batch: nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.data.interfaces.DatumSpec],
+    std: torch.Tensor,
+    baseline: torch.Tensor,
+    dynamic_sampling_num_gen_batches: int,
+    master_config: nemo_rl.algorithms.grpo.MasterConfig,
+    timer: nemo_rl.utils.timer.Timer,
+    batch_cache: nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.data.interfaces.DatumSpec] = None
+) -> nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.data.interfaces.DatumSpec]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Implements the dynamic sampling algorithm to select prompts with non-zero standard deviation.
+
+This function filters the current batch to retain only those prompts that have a non-zero standard deviation.
+If the current batch has fewer number of prompts with non-zero standard deviation than the required batch size, defined as num_prompts_per_step * num_generations_per_prompt,
+we store it in the batch_cache to be used in later iterations.
+If the current batch has more number of prompts with non-zero standard deviation than the required batch size, defined as num_prompts_per_step * num_generations_per_prompt,
+the batch is sliced to ensure batch size is num_prompts_per_step * num_generations_per_prompt.
+is_batch_complete is set to False to indicate that the current batch is not enough to meet the required batch size. This is used as a signal in the GRPO training loop
+to continue sampling or proceed to training.
+This approach is based on the dynamic sampling algorithm from the DAPO paper:
+https://arxiv.org/pdf/2503.14476.
+
+**Parameters:**
+
+<ParamField path="repeated_batch" type="BatchedDataDict[DatumSpec]">
+The current batch of data containing prompts, responses, rewards, baselines, and std.
+</ParamField>
+
+<ParamField path="std" type="torch.Tensor">
+Tensor representing the standard deviation for each prompt group.
+</ParamField>
+
+<ParamField path="baseline" type="torch.Tensor">
+Baseline values for each prompt group.
+</ParamField>
+
+<ParamField path="dynamic_sampling_num_gen_batches" type="int">
+Number of generation batches processed at the current step.
+</ParamField>
+
+<ParamField path="master_config" type="MasterConfig">
+Configuration containing GRPO and policy settings.
+</ParamField>
+
+<ParamField path="batch_cache" type="BatchedDataDict[DatumSpec]" default="None">
+Cache storing previously selected prompts with non-zero std.
+</ParamField>
+
+**Returns:** `BatchedDataDict[DatumSpec]`
+
+A tuple containing:
+- repeated_batch (BatchedDataDict[DatumSpec]): Updated batch with selected prompts.
+- is_batch_complete (bool): Indicates if the batch has enough samples with non-zero std for training.
+- batch_cache (BatchedDataDict[DatumSpec]): Updated cache for future iterations.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-grpo-grpo_train">
+
+<CodeBlock links={{"nemo_rl.models.policy.interfaces.ColocatablePolicyInterface":"/nemo-rl/nemo_rl/models/policy/interfaces#nemo_rl-models-policy-interfaces-ColocatablePolicyInterface","nemo_rl.models.generation.interfaces.GenerationInterface":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationInterface","nemo_rl.algorithms.grpo.TokenizerType":"#nemo_rl-algorithms-grpo-TokenizerType","nemo_rl.algorithms.interfaces.LossFunction":"/nemo-rl/nemo_rl/algorithms/interfaces#nemo_rl-algorithms-interfaces-LossFunction","nemo_rl.environments.interfaces.EnvironmentInterface":"/nemo-rl/nemo_rl/environments/interfaces#nemo_rl-environments-interfaces-EnvironmentInterface","nemo_rl.utils.logger.Logger":"/nemo-rl/nemo_rl/utils/logger#nemo_rl-utils-logger-Logger","nemo_rl.utils.checkpoint.CheckpointManager":"/nemo-rl/nemo_rl/utils/checkpoint#nemo_rl-utils-checkpoint-CheckpointManager","nemo_rl.algorithms.grpo.GRPOSaveState":"#nemo_rl-algorithms-grpo-GRPOSaveState","nemo_rl.algorithms.grpo.MasterConfig":"#nemo_rl-algorithms-grpo-MasterConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.grpo.grpo_train(
+    policy: nemo_rl.models.policy.interfaces.ColocatablePolicyInterface,
+    policy_generation: typing.Optional[nemo_rl.models.generation.interfaces.GenerationInterface],
+    dataloader: torchdata.stateful_dataloader.StatefulDataLoader,
+    val_dataloader: typing.Optional[torchdata.stateful_dataloader.StatefulDataLoader],
+    tokenizer: nemo_rl.algorithms.grpo.TokenizerType,
+    loss_fn: nemo_rl.algorithms.interfaces.LossFunction,
+    task_to_env: dict[str, nemo_rl.environments.interfaces.EnvironmentInterface],
+    val_task_to_env: typing.Optional[dict[str, nemo_rl.environments.interfaces.EnvironmentInterface]],
+    logger: nemo_rl.utils.logger.Logger,
+    checkpointer: nemo_rl.utils.checkpoint.CheckpointManager,
+    grpo_save_state: nemo_rl.algorithms.grpo.GRPOSaveState,
+    master_config: nemo_rl.algorithms.grpo.MasterConfig
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run GRPO training algorithm.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-grpo-refit_policy_generation">
+
+<CodeBlock links={{"nemo_rl.models.policy.interfaces.ColocatablePolicyInterface":"/nemo-rl/nemo_rl/models/policy/interfaces#nemo_rl-models-policy-interfaces-ColocatablePolicyInterface","nemo_rl.models.generation.interfaces.GenerationInterface":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationInterface","nemo_rl.utils.timer.Timer":"/nemo-rl/nemo_rl/utils/timer#nemo_rl-utils-timer-Timer"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.grpo.refit_policy_generation(
+    policy: nemo_rl.models.policy.interfaces.ColocatablePolicyInterface,
+    policy_generation: nemo_rl.models.generation.interfaces.GenerationInterface,
+    colocated_inference: bool,
+    _refit_buffer_size_gb: typing.Optional[int] = None,
+    timer: typing.Optional[nemo_rl.utils.timer.Timer] = None,
+    kv_scales: typing.Optional[dict[str, float]] = None
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Refit the policy generation interface with the latest policy weights.
+
+**Parameters:**
+
+<ParamField path="policy" type="ColocatablePolicyInterface">
+The policy to provide weights to the inference engine.
+</ParamField>
+
+<ParamField path="policy_generation" type="GenerationInterface">
+The inference engine to refit.
+</ParamField>
+
+<ParamField path="_refit_buffer_size_gb" type="Optional[int]" default="None">
+The size of the buffer to use for refitting.
+If it is None, the buffer size will be computed by the remaining memory.
+This parameter is primarily used for testing.
+</ParamField>
+
+<ParamField path="timer" type="Optional[Timer]" default="None">
+Optional Timer used to time the prepare/transfer/update phase
+</ParamField>
+
+<ParamField path="kv_scales" type="Optional[dict[str, float]]" default="None">
+Optional dictionary of KV cache scales for FP8 quantization.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-grpo-scale_rewards">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.data.interfaces.DatumSpec":"/nemo-rl/nemo_rl/data/interfaces#nemo_rl-data-interfaces-DatumSpec","nemo_rl.algorithms.grpo.RewardScalingConfig":"#nemo_rl-algorithms-grpo-RewardScalingConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.grpo.scale_rewards(
+    repeated_batch: nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.data.interfaces.DatumSpec],
+    reward_scaling_cfg: nemo_rl.algorithms.grpo.RewardScalingConfig
+) -> nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.data.interfaces.DatumSpec]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Linearly scales rewards from a source range to a target range.
+
+If `reward_scaling.enabled` is True, each reward in `repeated_batch["total_reward"]`
+is clamped to the configured source interval [source_min, source_max] and then
+rescaled to the target interval [target_min, target_max].
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-grpo-setup">
+
+<CodeBlock links={{"nemo_rl.algorithms.grpo.MasterConfig":"#nemo_rl-algorithms-grpo-MasterConfig","nemo_rl.algorithms.grpo.TokenizerType":"#nemo_rl-algorithms-grpo-TokenizerType","nemo_rl.data.datasets.AllTaskProcessedDataset":"/nemo-rl/nemo_rl/data/datasets/processed_dataset#nemo_rl-data-datasets-processed_dataset-AllTaskProcessedDataset","nemo_rl.models.policy.interfaces.ColocatablePolicyInterface":"/nemo-rl/nemo_rl/models/policy/interfaces#nemo_rl-models-policy-interfaces-ColocatablePolicyInterface","nemo_rl.models.generation.interfaces.GenerationInterface":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationInterface","nemo_rl.distributed.virtual_cluster.RayVirtualCluster":"/nemo-rl/nemo_rl/distributed/virtual_cluster#nemo_rl-distributed-virtual_cluster-RayVirtualCluster","nemo_rl.algorithms.loss_functions.ClippedPGLossFn":"/nemo-rl/nemo_rl/algorithms/loss_functions#nemo_rl-algorithms-loss_functions-ClippedPGLossFn","nemo_rl.utils.logger.Logger":"/nemo-rl/nemo_rl/utils/logger#nemo_rl-utils-logger-Logger","nemo_rl.utils.checkpoint.CheckpointManager":"/nemo-rl/nemo_rl/utils/checkpoint#nemo_rl-utils-checkpoint-CheckpointManager","nemo_rl.algorithms.grpo.GRPOSaveState":"#nemo_rl-algorithms-grpo-GRPOSaveState"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.grpo.setup(
+    master_config: nemo_rl.algorithms.grpo.MasterConfig,
+    tokenizer: nemo_rl.algorithms.grpo.TokenizerType,
+    dataset: nemo_rl.data.datasets.AllTaskProcessedDataset,
+    val_dataset: typing.Optional[nemo_rl.data.datasets.AllTaskProcessedDataset],
+    processor: typing.Optional[transformers.AutoProcessor] = None
+) -> tuple[nemo_rl.models.policy.interfaces.ColocatablePolicyInterface, typing.Optional[nemo_rl.models.generation.interfaces.GenerationInterface], tuple[nemo_rl.distributed.virtual_cluster.RayVirtualCluster, nemo_rl.distributed.virtual_cluster.RayVirtualCluster], torchdata.stateful_dataloader.StatefulDataLoader, typing.Optional[torchdata.stateful_dataloader.StatefulDataLoader], nemo_rl.algorithms.loss_functions.ClippedPGLossFn, nemo_rl.utils.logger.Logger, nemo_rl.utils.checkpoint.CheckpointManager, nemo_rl.algorithms.grpo.GRPOSaveState, nemo_rl.algorithms.grpo.MasterConfig]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Main entry point for running GRPO algorithm.
+
+**Returns:** `tuple[ColocatablePolicyInterface, Optional[GenerationInterface], tuple[RayVirtualCluster, RayVirtualCluster], StatefulDataLoader, Optional[StatefulDataLoader], ClippedPGLossFn, Logger, CheckpointManager, GRPOSaveState, MasterConfig]`
+
+tuple of policy, cluster, dataloader, tokenizer, loss_fn, math_env, logger, master_config, val_dataloader
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-grpo-validate">
+
+<CodeBlock links={{"nemo_rl.models.generation.interfaces.GenerationInterface":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationInterface","nemo_rl.environments.interfaces.EnvironmentInterface":"/nemo-rl/nemo_rl/environments/interfaces#nemo_rl-environments-interfaces-EnvironmentInterface","nemo_rl.algorithms.grpo.MasterConfig":"#nemo_rl-algorithms-grpo-MasterConfig","nemo_rl.utils.logger.Logger":"/nemo-rl/nemo_rl/utils/logger#nemo_rl-utils-logger-Logger"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.grpo.validate(
+    policy_generation: nemo_rl.models.generation.interfaces.GenerationInterface,
+    val_dataloader: typing.Optional[torchdata.stateful_dataloader.StatefulDataLoader],
+    tokenizer,
+    val_task_to_env: typing.Optional[dict[str, nemo_rl.environments.interfaces.EnvironmentInterface]],
+    step: int,
+    master_config: nemo_rl.algorithms.grpo.MasterConfig,
+    logger: typing.Optional[nemo_rl.utils.logger.Logger] = None
+) -> tuple[dict[str, typing.Any], dict[str, typing.Any]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run validation on the validation dataset.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-grpo-TokenizerType">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.grpo.TokenizerType = TypeVar('TokenizerType', bound=PreTrainedTokenizerBase)
+```
+
+</CodeBlock>
+</Anchor>
+

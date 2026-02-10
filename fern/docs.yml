@@ -26,6 +26,14 @@ tabs:
     display-name: Library Reference
     icon: book
 
+libraries:
+  nemo-rl:
+    input:
+      git: https://github.com/NVIDIA-NeMo/RL
+    output:
+      path: ./static/nemo-rl-docs
+    lang: python
+
 navigation:
   - tab: home
     layout:
@@ -71,9 +79,7 @@ navigation:
             contents: []
   - tab: Library Reference
     layout:
-      - library-docs: https://github.com/NVIDIA/NeMo-RL
-        title: NeMo-RL Reference
-        slug: nemo-rl
+      - library: nemo-rl
 
 navbar-links:
   - type: minimal

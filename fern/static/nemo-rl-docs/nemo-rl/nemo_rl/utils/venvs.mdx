@@ -1,0 +1,177 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/utils/venvs
+title: nemo_rl.utils.venvs
+---
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_env_builder`](#nemo_rl-utils-venvs-_env_builder) | - |
+| [`create_local_venv`](#nemo_rl-utils-venvs-create_local_venv) | Create a virtual environment using uv and execute a command within it. |
+| [`create_local_venv_on_each_node`](#nemo_rl-utils-venvs-create_local_venv_on_each_node) | Create a virtual environment on each Ray node. |
+
+### Data
+
+[`DEFAULT_VENV_DIR`](#nemo_rl-utils-venvs-DEFAULT_VENV_DIR)
+
+[`dir_path`](#nemo_rl-utils-venvs-dir_path)
+
+[`git_root`](#nemo_rl-utils-venvs-git_root)
+
+[`logger`](#nemo_rl-utils-venvs-logger)
+
+### API
+
+<Anchor id="nemo_rl-utils-venvs-_env_builder">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.venvs._env_builder(
+    py_executable: str,
+    venv_name: str,
+    node_idx: int,
+    force_rebuild: bool = False
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-utils-venvs-create_local_venv">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.venvs.create_local_venv(
+    py_executable: str,
+    venv_name: str,
+    force_rebuild: bool = False
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a virtual environment using uv and execute a command within it.
+
+The output can be used as a py_executable for a Ray worker assuming the worker
+nodes also have access to the same file system as the head node.
+
+This function is cached to avoid multiple calls to uv to create the same venv,
+which avoids duplicate logging.
+
+**Parameters:**
+
+<ParamField path="py_executable" type="str">
+Command to run with the virtual environment (e.g., "uv.sh run --locked")
+</ParamField>
+
+<ParamField path="venv_name" type="str">
+Name of the virtual environment (e.g., "foobar.Worker")
+</ParamField>
+
+<ParamField path="force_rebuild" type="bool" default="False">
+If True, force rebuild the venv even if it already exists
+</ParamField>
+
+**Returns:** `str`
+
+Path to the python executable in the created virtual environment
+
+
+</Indent>
+
+<Anchor id="nemo_rl-utils-venvs-create_local_venv_on_each_node">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.venvs.create_local_venv_on_each_node(
+    py_executable: str,
+    venv_name: str
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a virtual environment on each Ray node.
+
+**Parameters:**
+
+<ParamField path="py_executable" type="str">
+Command to run with the virtual environment
+</ParamField>
+
+<ParamField path="venv_name" type="str">
+Name of the virtual environment
+</ParamField>
+
+**Returns:**
+
+Path to the python executable in the created virtual environment
+
+
+</Indent>
+
+<Anchor id="nemo_rl-utils-venvs-DEFAULT_VENV_DIR">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.venvs.DEFAULT_VENV_DIR = os.path.join(git_root, 'venvs')
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="nemo_rl-utils-venvs-dir_path">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.venvs.dir_path = os.path.dirname(os.path.abspath(__file__))
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="nemo_rl-utils-venvs-git_root">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.venvs.git_root = os.path.abspath(os.path.join(dir_path, '../..'))
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="nemo_rl-utils-venvs-logger">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.venvs.logger = logging.getLogger(__name__)
+```
+
+</CodeBlock>
+</Anchor>
+

@@ -1,0 +1,108 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/distributed/collectives
+title: nemo_rl.distributed.collectives
+---
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`gather_jagged_object_lists`](#nemo_rl-distributed-collectives-gather_jagged_object_lists) | Gathers jagged lists of picklable objects from all ranks and flattens them into a single list. |
+| [`rebalance_nd_tensor`](#nemo_rl-distributed-collectives-rebalance_nd_tensor) | Takes tensors with variable leading sizes (at dim=0) and stacks them into a single tensor. |
+
+### Data
+
+[`T`](#nemo_rl-distributed-collectives-T)
+
+### API
+
+<Anchor id="nemo_rl-distributed-collectives-gather_jagged_object_lists">
+
+<CodeBlock links={{"nemo_rl.distributed.collectives.T":"#nemo_rl-distributed-collectives-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.collectives.gather_jagged_object_lists(
+    local_objects: list[nemo_rl.distributed.collectives.T],
+    group: typing.Optional[torch.distributed.ProcessGroup] = None
+) -> list[nemo_rl.distributed.collectives.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Gathers jagged lists of picklable objects from all ranks and flattens them into a single list.
+
+This function handles the case where different GPUs have lists of different lengths
+and combines them into a single list containing all objects from all ranks.
+
+For example, with 3 GPUs:
+    GPU0: [obj0, obj1]
+    GPU1: [obj2, obj3, obj4]
+    GPU2: [obj5]
+
+WARNING: synchronous
+
+**Parameters:**
+
+<ParamField path="local_objects" type="list[T]">
+List of objects to gather from current rank
+</ParamField>
+
+<ParamField path="group" type="Optional[torch.distributed.ProcessGroup]" default="None">
+Optional process group
+</ParamField>
+
+**Returns:** `list[T]`
+
+Flattened list of all objects from all ranks in order [rank0, rank1, ...]
+
+
+</Indent>
+
+<Anchor id="nemo_rl-distributed-collectives-rebalance_nd_tensor">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.collectives.rebalance_nd_tensor(
+    tensor: torch.Tensor,
+    group: typing.Optional[torch.distributed.ProcessGroup] = None
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Takes tensors with variable leading sizes (at dim=0) and stacks them into a single tensor.
+
+This function handles the case where different GPUs have tensors with different batch sizes
+and combines them into a single balanced tensor across all ranks.
+
+For example, with 3 GPUs:
+    GPU0: tensor of shape [3, D]
+    GPU1: tensor of shape [5, D]
+    GPU2: tensor of shape [2, D]
+
+NOTE: assumes all other (i.e., non-zero) dimensions are equal.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-distributed-collectives-T">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.collectives.T = TypeVar('T')
+```
+
+</CodeBlock>
+</Anchor>
+

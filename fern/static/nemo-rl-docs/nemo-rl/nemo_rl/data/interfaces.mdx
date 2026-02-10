@@ -1,0 +1,284 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/data/interfaces
+title: nemo_rl.data.interfaces
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`DatumSpec`](#nemo_rl-data-interfaces-DatumSpec) | - |
+| [`PreferenceDatumSpec`](#nemo_rl-data-interfaces-PreferenceDatumSpec) | - |
+| [`TaskDataProcessFnCallable`](#nemo_rl-data-interfaces-TaskDataProcessFnCallable) | A callable that processes a loaded datum dictionary into a DatumSpec. |
+| [`TaskDataSpec`](#nemo_rl-data-interfaces-TaskDataSpec) | - |
+
+### Data
+
+[`FlatMessagesType`](#nemo_rl-data-interfaces-FlatMessagesType)
+
+[`LLMMessageLogType`](#nemo_rl-data-interfaces-LLMMessageLogType)
+
+[`PathLike`](#nemo_rl-data-interfaces-PathLike)
+
+[`TokenizerType`](#nemo_rl-data-interfaces-TokenizerType)
+
+[`VLMMessageLogType`](#nemo_rl-data-interfaces-VLMMessageLogType)
+
+### API
+
+<Anchor id="nemo_rl-data-interfaces-DatumSpec">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.interfaces.DatumSpec
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="__extra__" type="NotRequired[Any]">
+
+</ParamField>
+
+<ParamField path="extra_env_info" type="Optional[dict[str, Any]]">
+
+</ParamField>
+
+<ParamField path="idx" type="int">
+
+</ParamField>
+
+<ParamField path="length" type="int">
+
+</ParamField>
+
+<ParamField path="loss_multiplier" type="float">
+
+</ParamField>
+
+<ParamField path="message_log" type="LLMMessageLogType | VLMMessageLogType">
+
+</ParamField>
+
+<ParamField path="stop_strings" type="NotRequired[list[str]]">
+
+</ParamField>
+
+<ParamField path="task_name" type="NotRequired[str]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-data-interfaces-PreferenceDatumSpec">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.interfaces.PreferenceDatumSpec
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="idx" type="int">
+
+</ParamField>
+
+<ParamField path="length_chosen" type="int">
+
+</ParamField>
+
+<ParamField path="length_rejected" type="int">
+
+</ParamField>
+
+<ParamField path="loss_multiplier" type="float">
+
+</ParamField>
+
+<ParamField path="message_log_chosen" type="LLMMessageLogType">
+
+</ParamField>
+
+<ParamField path="message_log_rejected" type="LLMMessageLogType">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-data-interfaces-TaskDataProcessFnCallable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.interfaces.TaskDataProcessFnCallable()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Protocol</Badge>
+
+A callable that processes a loaded datum dictionary into a DatumSpec.
+
+
+<Anchor id="nemo_rl-data-interfaces-TaskDataProcessFnCallable-__call__">
+
+<CodeBlock links={{"nemo_rl.data.interfaces.TaskDataSpec":"#nemo_rl-data-interfaces-TaskDataSpec","nemo_rl.data.interfaces.TokenizerType":"#nemo_rl-data-interfaces-TokenizerType","nemo_rl.data.interfaces.DatumSpec":"#nemo_rl-data-interfaces-DatumSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.interfaces.TaskDataProcessFnCallable.__call__(
+    datum_dict: dict[str, typing.Any],
+    task_data_spec: nemo_rl.data.interfaces.TaskDataSpec,
+    tokenizer: nemo_rl.data.interfaces.TokenizerType,
+    max_seq_length: int | None,
+    idx: int
+) -> nemo_rl.data.interfaces.DatumSpec
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-data-interfaces-TaskDataSpec">
+
+<CodeBlock links={{"nemo_rl.data.interfaces.PathLike":"#nemo_rl-data-interfaces-PathLike"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.interfaces.TaskDataSpec(
+    task_name: typing.Optional[str] = None,
+    prompt_file: typing.Optional[nemo_rl.data.interfaces.PathLike] = None,
+    system_prompt_file: typing.Optional[nemo_rl.data.interfaces.PathLike] = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Dataclass</Badge>
+
+<ParamField path="prompt_file" type="Optional[PathLike] = None">
+</ParamField>
+
+<ParamField path="system_prompt_file" type="Optional[PathLike] = None">
+</ParamField>
+
+<ParamField path="task_name" type="Optional[str] = None">
+</ParamField>
+<Anchor id="nemo_rl-data-interfaces-TaskDataSpec-__post_init__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.interfaces.TaskDataSpec.__post_init__() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-data-interfaces-TaskDataSpec-copy_defaults">
+
+<CodeBlock links={{"nemo_rl.data.interfaces.TaskDataSpec":"#nemo_rl-data-interfaces-TaskDataSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.interfaces.TaskDataSpec.copy_defaults(
+    from_spec: nemo_rl.data.interfaces.TaskDataSpec
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Apply default values from another Task instance for any None attributes.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-data-interfaces-FlatMessagesType">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.interfaces.FlatMessagesType = dict[str, Union[list[str], torch.Tensor]]
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="nemo_rl-data-interfaces-LLMMessageLogType">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.interfaces.LLMMessageLogType = list[dict[str, Union[str, torch.Tensor]]]
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="nemo_rl-data-interfaces-PathLike">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.interfaces.PathLike = Union[str, 'os.PathLike[Any]']
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="nemo_rl-data-interfaces-TokenizerType">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.interfaces.TokenizerType = PreTrainedTokenizerBase
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="nemo_rl-data-interfaces-VLMMessageLogType">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.interfaces.VLMMessageLogType = list[dict[str, Union[str, torch.Tensor, PackedTensor]]]
+```
+
+</CodeBlock>
+</Anchor>
+

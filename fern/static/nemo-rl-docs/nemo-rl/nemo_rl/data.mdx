@@ -1,0 +1,466 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/data
+title: nemo_rl.data
+---
+
+## Subpackages
+
+- **[`nemo_rl.data.datasets`](/nemo-rl/nemo_rl/data/datasets)**
+- **[`nemo_rl.data.packing`](/nemo-rl/nemo_rl/data/packing)**
+
+## Submodules
+
+- **[`nemo_rl.data.chat_templates`](/nemo-rl/nemo_rl/data/chat_templates)**
+- **[`nemo_rl.data.collate_fn`](/nemo-rl/nemo_rl/data/collate_fn)**
+- **[`nemo_rl.data.interfaces`](/nemo-rl/nemo_rl/data/interfaces)**
+- **[`nemo_rl.data.llm_message_utils`](/nemo-rl/nemo_rl/data/llm_message_utils)**
+- **[`nemo_rl.data.multimodal_utils`](/nemo-rl/nemo_rl/data/multimodal_utils)**
+- **[`nemo_rl.data.processors`](/nemo-rl/nemo_rl/data/processors)**
+- **[`nemo_rl.data.utils`](/nemo-rl/nemo_rl/data/utils)**
+
+## Package Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`AIMEEvalDataConfig`](#nemo_rl-data-AIMEEvalDataConfig) | Config for AIME datasets. |
+| [`DataConfig`](#nemo_rl-data-DataConfig) | - |
+| [`GPQAEvalDataConfig`](#nemo_rl-data-GPQAEvalDataConfig) | Config for GPQA datasets. |
+| [`LocalMathEvalDataConfig`](#nemo_rl-data-LocalMathEvalDataConfig) | Config for local math datasets loaded from files. |
+| [`MMLUEvalDataConfig`](#nemo_rl-data-MMLUEvalDataConfig) | Config for MMLU and multilingual MMLU datasets. |
+| [`MMLUProEvalDataConfig`](#nemo_rl-data-MMLUProEvalDataConfig) | Config for MMLU Pro dataset. |
+| [`MathEvalDataConfig`](#nemo_rl-data-MathEvalDataConfig) | Config for Math datasets. |
+| [`PreferenceDatasetConfig`](#nemo_rl-data-PreferenceDatasetConfig) | - |
+| [`ResponseDatasetConfig`](#nemo_rl-data-ResponseDatasetConfig) | - |
+
+### Data
+
+[`EvalDataConfigType`](#nemo_rl-data-EvalDataConfigType)
+
+### API
+
+<Anchor id="nemo_rl-data-AIMEEvalDataConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.AIMEEvalDataConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Config for AIME datasets.
+
+<ParamField path="dataset_name" type="Literal['aime2024', 'aime2025']">
+
+</ParamField>
+
+<ParamField path="max_input_seq_length" type="int">
+
+</ParamField>
+
+<ParamField path="prompt_file" type="NotRequired[str | None]">
+
+</ParamField>
+
+<ParamField path="system_prompt_file" type="NotRequired[str | None]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-data-DataConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.DataConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="add_bos" type="NotRequired[bool]">
+
+</ParamField>
+
+<ParamField path="add_eos" type="NotRequired[bool]">
+
+</ParamField>
+
+<ParamField path="add_generation_prompt" type="NotRequired[bool]">
+
+</ParamField>
+
+<ParamField path="add_system_prompt" type="NotRequired[bool]">
+
+</ParamField>
+
+<ParamField path="default" type="NotRequired[ResponseDatasetConfig | PreferenceDatasetConfig | None]">
+
+</ParamField>
+
+<ParamField path="max_input_seq_length" type="int | None">
+
+</ParamField>
+
+<ParamField path="num_workers" type="NotRequired[int]">
+
+</ParamField>
+
+<ParamField path="shuffle" type="bool">
+
+</ParamField>
+
+<ParamField path="train" type="ResponseDatasetConfig | PreferenceDatasetConfig | list[ResponseDatasetConfig]">
+
+</ParamField>
+
+<ParamField path="validation" type="NotRequired[ResponseDatasetConfig | PreferenceDatasetConfig | list[ResponseDatasetConfig] | None]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-data-GPQAEvalDataConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.GPQAEvalDataConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Config for GPQA datasets.
+
+<ParamField path="dataset_name" type="Literal['gpqa', 'gpqa_diamond']">
+
+</ParamField>
+
+<ParamField path="max_input_seq_length" type="int">
+
+</ParamField>
+
+<ParamField path="prompt_file" type="NotRequired[str | None]">
+
+</ParamField>
+
+<ParamField path="system_prompt_file" type="NotRequired[str | None]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-data-LocalMathEvalDataConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.LocalMathEvalDataConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Config for local math datasets loaded from files.
+
+dataset_name can be a URL or local file path.
+Requires additional fields: problem_key, solution_key, file_format, split.
+
+<ParamField path="dataset_name" type="str">
+
+</ParamField>
+
+<ParamField path="file_format" type="Literal['csv', 'json']">
+
+</ParamField>
+
+<ParamField path="max_input_seq_length" type="int">
+
+</ParamField>
+
+<ParamField path="problem_key" type="str">
+
+</ParamField>
+
+<ParamField path="prompt_file" type="NotRequired[str | None]">
+
+</ParamField>
+
+<ParamField path="solution_key" type="str">
+
+</ParamField>
+
+<ParamField path="split" type="NotRequired[str | None]">
+
+</ParamField>
+
+<ParamField path="system_prompt_file" type="NotRequired[str | None]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-data-MMLUEvalDataConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.MMLUEvalDataConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Config for MMLU and multilingual MMLU datasets.
+
+Supports dataset_name: "mmlu" or "mmlu_&#123;language&#125;" where language is one of:
+AR-XY, BN-BD, DE-DE, EN-US, ES-LA, FR-FR, HI-IN, ID-ID, IT-IT, JA-JP,
+KO-KR, PT-BR, ZH-CN, SW-KE, YO-NG
+
+<ParamField path="dataset_name" type="Literal['mmlu', 'mmlu_AR-XY', 'mmlu_BN-BD', 'mmlu_DE-DE', 'mmlu_EN-US', 'mmlu_ES-LA', 'mmlu_FR-FR', 'mmlu_HI-IN', 'mmlu_ID-ID', 'mmlu_IT-IT', 'mmlu_JA-JP', 'mmlu_KO-KR', 'mmlu_PT-BR', 'mmlu_ZH-CN', 'mmlu_SW-KE', 'mmlu_YO-NG']">
+
+</ParamField>
+
+<ParamField path="max_input_seq_length" type="int">
+
+</ParamField>
+
+<ParamField path="prompt_file" type="NotRequired[str | None]">
+
+</ParamField>
+
+<ParamField path="system_prompt_file" type="NotRequired[str | None]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-data-MMLUProEvalDataConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.MMLUProEvalDataConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Config for MMLU Pro dataset.
+
+<ParamField path="dataset_name" type="Literal['mmlu_pro']">
+
+</ParamField>
+
+<ParamField path="max_input_seq_length" type="int">
+
+</ParamField>
+
+<ParamField path="prompt_file" type="NotRequired[str | None]">
+
+</ParamField>
+
+<ParamField path="system_prompt_file" type="NotRequired[str | None]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-data-MathEvalDataConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.MathEvalDataConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Config for Math datasets.
+
+<ParamField path="dataset_name" type="Literal['math', 'math500']">
+
+</ParamField>
+
+<ParamField path="max_input_seq_length" type="int">
+
+</ParamField>
+
+<ParamField path="prompt_file" type="NotRequired[str | None]">
+
+</ParamField>
+
+<ParamField path="system_prompt_file" type="NotRequired[str | None]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-data-PreferenceDatasetConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.PreferenceDatasetConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="chosen_key" type="NotRequired[str]">
+
+</ParamField>
+
+<ParamField path="data_path" type="NotRequired[str]">
+
+</ParamField>
+
+<ParamField path="dataset_name" type="NotRequired[str]">
+
+</ParamField>
+
+<ParamField path="prompt_file" type="NotRequired[str | None]">
+
+</ParamField>
+
+<ParamField path="prompt_key" type="NotRequired[str]">
+
+</ParamField>
+
+<ParamField path="rejected_key" type="NotRequired[str]">
+
+</ParamField>
+
+<ParamField path="split" type="NotRequired[str]">
+
+</ParamField>
+
+<ParamField path="subset" type="NotRequired[str | None]">
+
+</ParamField>
+
+<ParamField path="system_prompt_file" type="NotRequired[str | None]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-data-ResponseDatasetConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.ResponseDatasetConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="data_path" type="NotRequired[str]">
+
+</ParamField>
+
+<ParamField path="dataset_name" type="NotRequired[str]">
+
+</ParamField>
+
+<ParamField path="download_dir" type="NotRequired[str]">
+
+</ParamField>
+
+<ParamField path="env_name" type="NotRequired[str]">
+
+</ParamField>
+
+<ParamField path="input_key" type="NotRequired[str]">
+
+</ParamField>
+
+<ParamField path="output_key" type="NotRequired[str]">
+
+</ParamField>
+
+<ParamField path="processor" type="NotRequired[str]">
+
+</ParamField>
+
+<ParamField path="prompt_file" type="NotRequired[str | None]">
+
+</ParamField>
+
+<ParamField path="seed" type="NotRequired[int]">
+
+</ParamField>
+
+<ParamField path="split" type="NotRequired[str]">
+
+</ParamField>
+
+<ParamField path="split_validation_size" type="NotRequired[float]">
+
+</ParamField>
+
+<ParamField path="subset" type="NotRequired[str | None]">
+
+</ParamField>
+
+<ParamField path="system_prompt_file" type="NotRequired[str | None]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-data-EvalDataConfigType">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.EvalDataConfigType = MMLUEvalDataConfig | MMLUProEvalDataConfig | AIMEEvalDataConfig | GPQAEvalDataCo...
+```
+
+</CodeBlock>
+</Anchor>
+

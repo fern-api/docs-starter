@@ -1,0 +1,84 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/data/datasets/response_datasets/openmathinstruct2
+title: nemo_rl.data.datasets.response_datasets.openmathinstruct2
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`OpenMathInstruct2Dataset`](#nemo_rl-data-datasets-response_datasets-openmathinstruct2-OpenMathInstruct2Dataset) | Simple wrapper around the OpenMathInstruct2 dataset. |
+
+### API
+
+<Anchor id="nemo_rl-data-datasets-response_datasets-openmathinstruct2-OpenMathInstruct2Dataset">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.datasets.response_datasets.openmathinstruct2.OpenMathInstruct2Dataset(
+    output_key: str = 'expected_answer',
+    split: str = 'train_1M',
+    split_validation_size: float = 0.05,
+    seed: int = 42,
+    kwargs = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RawDataset](/nemo-rl/nemo_rl/data/datasets/raw_dataset#nemo_rl-data-datasets-raw_dataset-RawDataset)
+
+Simple wrapper around the OpenMathInstruct2 dataset.
+
+**Parameters:**
+
+<ParamField path="output_key" type="str" default="'expected_answer'">
+Key for the output text, default is "expected_answer"
+</ParamField>
+
+<ParamField path="split" type="str" default="'train_1M'">
+Split name for the dataset, default is "train_1M"
+</ParamField>
+
+<ParamField path="split_validation_size" type="float" default="0.05">
+Size of the validation data, default is 0.05
+</ParamField>
+
+<ParamField path="seed" type="int" default="42">
+Seed for train/validation split when split_validation_size &gt; 0, default is 42
+</ParamField>
+
+
+<ParamField path="dataset">
+</ParamField>
+
+<ParamField path="input_key" type="= 'problem'">
+</ParamField>
+
+<ParamField path="task_name" type="= 'OpenMathInstruct-2'">
+</ParamField>
+<Anchor id="nemo_rl-data-datasets-response_datasets-openmathinstruct2-OpenMathInstruct2Dataset-format_data">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.response_datasets.openmathinstruct2.OpenMathInstruct2Dataset.format_data(
+    data: dict[str, typing.Any]
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>

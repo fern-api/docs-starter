@@ -1,0 +1,535 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/megatron/setup
+title: nemo_rl.models.megatron.setup
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`MoEFloat16Module`](#nemo_rl-models-megatron-setup-MoEFloat16Module) | Float 16 Module with the ability to keep the expert bias in float32. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_apply_moe_config`](#nemo_rl-models-megatron-setup-_apply_moe_config) | Apply Mixture of Experts configuration. |
+| [`_apply_parallelism_config`](#nemo_rl-models-megatron-setup-_apply_parallelism_config) | Apply tensor/pipeline/context parallelism configuration. |
+| [`_apply_performance_config`](#nemo_rl-models-megatron-setup-_apply_performance_config) | Apply performance optimization configuration. |
+| [`_apply_precision_config`](#nemo_rl-models-megatron-setup-_apply_precision_config) | Apply precision and dtype configuration. |
+| [`_create_checkpoint_config`](#nemo_rl-models-megatron-setup-_create_checkpoint_config) | Create checkpoint configurations. |
+| [`_create_megatron_config`](#nemo_rl-models-megatron-setup-_create_megatron_config) | Create the final Megatron configuration container. |
+| [`_validate_chunking_config`](#nemo_rl-models-megatron-setup-_validate_chunking_config) | Validate chunking configuration. |
+| [`_validate_dtype_config`](#nemo_rl-models-megatron-setup-_validate_dtype_config) | - |
+| [`_validate_optimizer_config`](#nemo_rl-models-megatron-setup-_validate_optimizer_config) | Validate optimizer configuration. |
+| [`_validate_training_config`](#nemo_rl-models-megatron-setup-_validate_training_config) | Validate training configuration. |
+| [`destroy_parallel_state`](#nemo_rl-models-megatron-setup-destroy_parallel_state) | Safely destroy parallel state and reset async call tracking. |
+| [`finalize_megatron_setup`](#nemo_rl-models-megatron-setup-finalize_megatron_setup) | Finalize the setup with remaining configurations. |
+| [`handle_model_import`](#nemo_rl-models-megatron-setup-handle_model_import) | Handle HF model import if checkpoint doesn't exist. |
+| [`setup_distributed`](#nemo_rl-models-megatron-setup-setup_distributed) | Handle NCCL settings, dtype mapping, and basic config setup. |
+| [`setup_model_and_optimizer`](#nemo_rl-models-megatron-setup-setup_model_and_optimizer) | - |
+| [`setup_model_config`](#nemo_rl-models-megatron-setup-setup_model_config) | Handle all the model configuration logic. |
+| [`setup_reference_model_state`](#nemo_rl-models-megatron-setup-setup_reference_model_state) | Setup the reference model for inference and return its state dict. |
+| [`validate_and_set_config`](#nemo_rl-models-megatron-setup-validate_and_set_config) | - |
+| [`validate_model_paths`](#nemo_rl-models-megatron-setup-validate_model_paths) | Validate and setup model paths. |
+
+### Data
+
+[`HAVE_FSDP2`](#nemo_rl-models-megatron-setup-HAVE_FSDP2)
+
+[`TokenizerType`](#nemo_rl-models-megatron-setup-TokenizerType)
+
+### API
+
+<Anchor id="nemo_rl-models-megatron-setup-MoEFloat16Module">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.megatron.setup.MoEFloat16Module(
+    config: megatron.core.transformer.transformer_config.TransformerConfig,
+    module: torch.nn.Module
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `Float16Module`
+
+Float 16 Module with the ability to keep the expert bias in float32.
+
+**Parameters:**
+
+<ParamField path="config" type="TransformerConfig">
+The transformer config used to initalize the model
+</ParamField>
+
+
+<Anchor id="nemo_rl-models-megatron-setup-MoEFloat16Module-re_enable_float32_expert_bias">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup.MoEFloat16Module.re_enable_float32_expert_bias() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Ensure MoE router expert bias stays in float32 for numerical stability.
+
+Walks the wrapped module to find MoE routers and invokes the
+`_maintain_float32_expert_bias()` helper which recreates or casts the
+expert bias tensors to float32 as required by Megatron-LM.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-setup-_apply_moe_config">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup._apply_moe_config(
+    model_cfg: typing.Any,
+    config: nemo_rl.models.policy.PolicyConfig
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Apply Mixture of Experts configuration.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-setup-_apply_parallelism_config">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup._apply_parallelism_config(
+    model_cfg: typing.Any,
+    config: nemo_rl.models.policy.PolicyConfig
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Apply tensor/pipeline/context parallelism configuration.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-setup-_apply_performance_config">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup._apply_performance_config(
+    model_cfg: typing.Any,
+    config: nemo_rl.models.policy.PolicyConfig
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Apply performance optimization configuration.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-setup-_apply_precision_config">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup._apply_precision_config(
+    model_cfg: typing.Any,
+    config: nemo_rl.models.policy.PolicyConfig,
+    dtype: torch.dtype
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Apply precision and dtype configuration.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-setup-_create_checkpoint_config">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup._create_checkpoint_config(
+    pretrained_path: str,
+    weights_path: typing.Optional[str]
+) -> megatron.bridge.training.config.CheckpointConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create checkpoint configurations.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-setup-_create_megatron_config">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup._create_megatron_config(
+    model_cfg: typing.Any,
+    checkpoint_config: megatron.bridge.training.config.CheckpointConfig,
+    config: nemo_rl.models.policy.PolicyConfig,
+    hf_model_name: str,
+    dtype: torch.dtype
+) -> megatron.bridge.training.config.ConfigContainer
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create the final Megatron configuration container.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-setup-_validate_chunking_config">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup._validate_chunking_config(
+    config: nemo_rl.models.policy.PolicyConfig
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Validate chunking configuration.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-setup-_validate_dtype_config">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup._validate_dtype_config(
+    dtype: torch.dtype,
+    model_cfg: typing.Any,
+    optimizer_cfg: typing.Any
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-setup-_validate_optimizer_config">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup._validate_optimizer_config(
+    config: nemo_rl.models.policy.PolicyConfig
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Validate optimizer configuration.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-setup-_validate_training_config">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup._validate_training_config(
+    config: nemo_rl.models.policy.PolicyConfig,
+    model_cfg: typing.Any
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Validate training configuration.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-setup-destroy_parallel_state">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup.destroy_parallel_state()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Safely destroy parallel state and reset async call tracking.
+
+This function is called during initialization to clean up temporary distributed
+state from model import operations. Resetting async call tracking ensures that
+when the main Megatron distributed context is created, all ranks start with
+consistent call_idx values for async checkpointing.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-setup-finalize_megatron_setup">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig","nemo_rl.distributed.named_sharding.NamedSharding":"/nemo-rl/nemo_rl/distributed/named_sharding#nemo_rl-distributed-named_sharding-NamedSharding"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup.finalize_megatron_setup(
+    config: nemo_rl.models.policy.PolicyConfig,
+    megatron_cfg: megatron.bridge.training.config.ConfigContainer,
+    hf_model_name: str,
+    worker_sharding_annotations: nemo_rl.distributed.named_sharding.NamedSharding,
+    model,
+    optimizer
+) -> tuple
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Finalize the setup with remaining configurations.
+
+**Returns:** `tuple`
+
+Tuple of (megatron_tokenizer, megatron_bridge, should_disable_forward_pre_hook, dp_size)
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-setup-handle_model_import">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup.handle_model_import(
+    config: nemo_rl.models.policy.PolicyConfig,
+    hf_model_name: str,
+    pretrained_path: str,
+    pt_checkpoint_exists: bool
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Handle HF model import if checkpoint doesn't exist.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-setup-setup_distributed">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup.setup_distributed() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Handle NCCL settings, dtype mapping, and basic config setup.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-setup-setup_model_and_optimizer">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup.setup_model_and_optimizer(
+    policy_cfg: nemo_rl.models.policy.PolicyConfig,
+    megatron_cfg: megatron.bridge.training.config.ConfigContainer,
+    load_optimizer: bool = True,
+    get_embedding_ranks = None,
+    get_position_embedding_ranks = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-setup-setup_model_config">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup.setup_model_config(
+    config: nemo_rl.models.policy.PolicyConfig,
+    rank,
+    dtype,
+    hf_model_name: str,
+    pretrained_path: str,
+    weights_path: typing.Optional[str] = None
+) -> tuple[megatron.bridge.training.config.ConfigContainer, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Handle all the model configuration logic.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-setup-setup_reference_model_state">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup.setup_reference_model_state(
+    config: nemo_rl.models.policy.PolicyConfig,
+    megatron_cfg: megatron.bridge.training.config.ConfigContainer,
+    pretrained_path: str
+) -> dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Setup the reference model for inference and return its state dict.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-setup-validate_and_set_config">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup.validate_and_set_config(
+    config,
+    rank,
+    hf_model_name,
+    pretrained_path,
+    weights_path,
+    tokenizer
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-setup-validate_model_paths">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup.validate_model_paths(
+    config: nemo_rl.models.policy.PolicyConfig
+) -> tuple[str, str, bool]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Validate and setup model paths.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-setup-HAVE_FSDP2">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup.HAVE_FSDP2 = True
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="nemo_rl-models-megatron-setup-TokenizerType">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.setup.TokenizerType = TypeVar('TokenizerType', bound=PreTrainedTokenizerBase)
+```
+
+</CodeBlock>
+</Anchor>
+

@@ -1,0 +1,127 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/data/datasets/response_datasets/oasst
+title: nemo_rl.data.datasets.response_datasets.oasst
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`OasstDataset`](#nemo_rl-data-datasets-response_datasets-oasst-OasstDataset) | Simple wrapper around the OASST dataset. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`get_data_records`](#nemo_rl-data-datasets-response_datasets-oasst-get_data_records) | - |
+| [`parse_conversations`](#nemo_rl-data-datasets-response_datasets-oasst-parse_conversations) | Recusive function that returns all the sub converstaions in a list starting from node tree_obj. |
+
+### Data
+
+[`SYSTEM_PROMPT`](#nemo_rl-data-datasets-response_datasets-oasst-SYSTEM_PROMPT)
+
+### API
+
+<Anchor id="nemo_rl-data-datasets-response_datasets-oasst-OasstDataset">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.datasets.response_datasets.oasst.OasstDataset(
+    split_validation_size: float = 0.05,
+    seed: int = 42,
+    kwargs = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RawDataset](/nemo-rl/nemo_rl/data/datasets/raw_dataset#nemo_rl-data-datasets-raw_dataset-RawDataset)
+
+Simple wrapper around the OASST dataset.
+
+**Parameters:**
+
+<ParamField path="split_validation_size" type="float" default="0.05">
+Size of the validation data, default is 0.05
+</ParamField>
+
+<ParamField path="seed" type="int" default="42">
+Seed for train/validation split when split_validation_size &gt; 0, default is 42
+</ParamField>
+
+
+<ParamField path="dataset" type="= Dataset.from_list(self.dataset)">
+</ParamField>
+
+<ParamField path="task_name" type="= 'oasst'">
+</ParamField>
+</Indent>
+
+<Anchor id="nemo_rl-data-datasets-response_datasets-oasst-get_data_records">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.response_datasets.oasst.get_data_records(
+    objs,
+    task_name: str = 'oasst'
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-data-datasets-response_datasets-oasst-parse_conversations">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.response_datasets.oasst.parse_conversations(
+    tree_obj,
+    first: bool = False
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Recusive function that returns all the sub converstaions in a list starting from node tree_obj.
+
+**Parameters:**
+
+<ParamField path="tree_obj" type="obj">
+current conversation node
+</ParamField>
+
+**Returns:**
+
+a list of sub conversation threads including the current conversation node
+
+
+</Indent>
+
+<Anchor id="nemo_rl-data-datasets-response_datasets-oasst-SYSTEM_PROMPT">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.response_datasets.oasst.SYSTEM_PROMPT = "A chat between a curious user and an artificial intelligence assistant. The ass...
+```
+
+</CodeBlock>
+</Anchor>
+

@@ -1,0 +1,42 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/environments/metrics
+title: nemo_rl.environments.metrics
+---
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`calculate_pass_rate_per_prompt`](#nemo_rl-environments-metrics-calculate_pass_rate_per_prompt) | Function to compute fraction of prompts that have at least one correct answer (reward &gt; 0). |
+
+### API
+
+<Anchor id="nemo_rl-environments-metrics-calculate_pass_rate_per_prompt">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.metrics.calculate_pass_rate_per_prompt(
+    prompts: torch.Tensor,
+    is_correct: torch.Tensor
+) -> float
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Function to compute fraction of prompts that have at least one correct answer (reward &gt; 0).
+
+prompts:    tensor (b, s)     Tensor of prompts the model used. May be on any device
+is_correct: tensor (b,)       bool-valued label. May be on any device
+
+Returns:
+pass rate: float
+
+
+</Indent>

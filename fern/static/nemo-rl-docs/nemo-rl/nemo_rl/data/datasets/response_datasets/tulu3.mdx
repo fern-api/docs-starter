@@ -1,0 +1,76 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/data/datasets/response_datasets/tulu3
+title: nemo_rl.data.datasets.response_datasets.tulu3
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`Tulu3SftMixtureDataset`](#nemo_rl-data-datasets-response_datasets-tulu3-Tulu3SftMixtureDataset) | Simple wrapper around the Tulu3 SFT mixture dataset with train split. |
+
+### API
+
+<Anchor id="nemo_rl-data-datasets-response_datasets-tulu3-Tulu3SftMixtureDataset">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.datasets.response_datasets.tulu3.Tulu3SftMixtureDataset(
+    split_validation_size: float = 0.05,
+    seed: int = 42,
+    max_samples: int | None = None,
+    kwargs = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RawDataset](/nemo-rl/nemo_rl/data/datasets/raw_dataset#nemo_rl-data-datasets-raw_dataset-RawDataset)
+
+Simple wrapper around the Tulu3 SFT mixture dataset with train split.
+
+**Parameters:**
+
+<ParamField path="split_validation_size" type="float" default="0.05">
+Size of the validation data, default is 0.05
+</ParamField>
+
+<ParamField path="seed" type="int" default="42">
+Seed for train/validation split when split_validation_size &gt; 0, default is 42
+</ParamField>
+
+<ParamField path="max_samples" type="int | None" default="None">
+Optional maximum number of samples to use from the dataset
+</ParamField>
+
+
+<ParamField path="dataset">
+</ParamField>
+
+<ParamField path="task_name" type="= 'tulu3_sft_mixture'">
+</ParamField>
+<Anchor id="nemo_rl-data-datasets-response_datasets-tulu3-Tulu3SftMixtureDataset-format_data">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.response_datasets.tulu3.Tulu3SftMixtureDataset.format_data(
+    data: dict[str, typing.Any]
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>

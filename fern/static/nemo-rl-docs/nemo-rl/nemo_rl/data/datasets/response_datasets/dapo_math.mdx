@@ -1,0 +1,84 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/data/datasets/response_datasets/dapo_math
+title: nemo_rl.data.datasets.response_datasets.dapo_math
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`DAPOMath17KDataset`](#nemo_rl-data-datasets-response_datasets-dapo_math-DAPOMath17KDataset) | Simple wrapper around the DAPO Math 17K dataset with train split. |
+| [`DAPOMathAIME2024Dataset`](#nemo_rl-data-datasets-response_datasets-dapo_math-DAPOMathAIME2024Dataset) | - |
+
+### API
+
+<Anchor id="nemo_rl-data-datasets-response_datasets-dapo_math-DAPOMath17KDataset">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.datasets.response_datasets.dapo_math.DAPOMath17KDataset(
+    kwargs = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RawDataset](/nemo-rl/nemo_rl/data/datasets/raw_dataset#nemo_rl-data-datasets-raw_dataset-RawDataset)
+
+Simple wrapper around the DAPO Math 17K dataset with train split.
+
+
+<ParamField path="dataset">
+</ParamField>
+
+<ParamField path="task_name" type="= 'DAPOMath17K'">
+</ParamField>
+<Anchor id="nemo_rl-data-datasets-response_datasets-dapo_math-DAPOMath17KDataset-format_data">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.response_datasets.dapo_math.DAPOMath17KDataset.format_data(
+    data: dict[str, typing.Any]
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-data-datasets-response_datasets-dapo_math-DAPOMathAIME2024Dataset">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.datasets.response_datasets.dapo_math.DAPOMathAIME2024Dataset(
+    kwargs = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [DAPOMath17KDataset](#nemo_rl-data-datasets-response_datasets-dapo_math-DAPOMath17KDataset)
+
+<ParamField path="dataset">
+</ParamField>
+
+<ParamField path="task_name" type="= 'DAPOMathAIME2024'">
+</ParamField>
+</Indent>

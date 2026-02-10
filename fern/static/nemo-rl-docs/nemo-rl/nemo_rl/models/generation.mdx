@@ -1,0 +1,62 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/generation
+title: nemo_rl.models.generation
+---
+
+## Subpackages
+
+- **[`nemo_rl.models.generation.sglang`](/nemo-rl/nemo_rl/models/generation/sglang)**
+- **[`nemo_rl.models.generation.vllm`](/nemo-rl/nemo_rl/models/generation/vllm)**
+
+## Submodules
+
+- **[`nemo_rl.models.generation.interfaces`](/nemo-rl/nemo_rl/models/generation/interfaces)**
+
+## Package Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`configure_generation_config`](#nemo_rl-models-generation-configure_generation_config) | Apply specific configurations to generation config. |
+
+### Data
+
+[`TokenizerType`](#nemo_rl-models-generation-TokenizerType)
+
+### API
+
+<Anchor id="nemo_rl-models-generation-configure_generation_config">
+
+<CodeBlock links={{"nemo_rl.models.generation.interfaces.GenerationConfig":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationConfig","nemo_rl.models.generation.TokenizerType":"#nemo_rl-models-generation-TokenizerType"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.configure_generation_config(
+    config: nemo_rl.models.generation.interfaces.GenerationConfig,
+    tokenizer: nemo_rl.models.generation.TokenizerType,
+    is_eval = False
+) -> nemo_rl.models.generation.interfaces.GenerationConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Apply specific configurations to generation config.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-generation-TokenizerType">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.TokenizerType = PreTrainedTokenizerBase
+```
+
+</CodeBlock>
+</Anchor>
+

@@ -1,0 +1,243 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/environments/vlm_environment
+title: nemo_rl.environments.vlm_environment
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`VLMEnvConfig`](#nemo_rl-environments-vlm_environment-VLMEnvConfig) | - |
+| [`VLMEnvironment`](#nemo_rl-environments-vlm_environment-VLMEnvironment) | - |
+| [`VLMEnvironmentMetadata`](#nemo_rl-environments-vlm_environment-VLMEnvironmentMetadata) | - |
+| [`VLMVerifyWorker`](#nemo_rl-environments-vlm_environment-VLMVerifyWorker) | - |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_mute_output`](#nemo_rl-environments-vlm_environment-_mute_output) | - |
+
+### API
+
+<Anchor id="nemo_rl-environments-vlm_environment-VLMEnvConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.environments.vlm_environment.VLMEnvConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="num_workers" type="int">
+
+</ParamField>
+
+<ParamField path="reward_functions" type="List[dict[str, Any]]">
+
+</ParamField>
+
+<ParamField path="stop_strings" type="Optional[list[str]]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-environments-vlm_environment-VLMEnvironment">
+
+<CodeBlock links={{"nemo_rl.environments.vlm_environment.VLMEnvConfig":"#nemo_rl-environments-vlm_environment-VLMEnvConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.environments.vlm_environment.VLMEnvironment(
+    cfg: nemo_rl.environments.vlm_environment.VLMEnvConfig
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [EnvironmentInterface](/nemo-rl/nemo_rl/environments/interfaces#nemo_rl-environments-interfaces-EnvironmentInterface)
+
+<ParamField path="num_workers" type="= cfg['num_workers']">
+</ParamField>
+
+<ParamField path="workers">
+</ParamField>
+<Anchor id="nemo_rl-environments-vlm_environment-VLMEnvironment-global_post_process_and_metrics">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.vlm_environment.VLMEnvironment.global_post_process_and_metrics(
+    batch: nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any]
+) -> tuple[nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any], dict[str, float | int]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Computes metrics for this environment given a global rollout batch.
+
+Every rank will run this function, so you're free to use distributed
+calculations if you'd prefer for heavy metrics.
+
+
+</Indent>
+<Anchor id="nemo_rl-environments-vlm_environment-VLMEnvironment-shutdown">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.vlm_environment.VLMEnvironment.shutdown() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-environments-vlm_environment-VLMEnvironment-step">
+
+<CodeBlock links={{"nemo_rl.environments.vlm_environment.VLMEnvironmentMetadata":"#nemo_rl-environments-vlm_environment-VLMEnvironmentMetadata","nemo_rl.environments.interfaces.EnvironmentReturn":"/nemo-rl/nemo_rl/environments/interfaces#nemo_rl-environments-interfaces-EnvironmentReturn"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.vlm_environment.VLMEnvironment.step(
+    message_log_batch: list[list[dict[str, str]]],
+    metadata: list[nemo_rl.environments.vlm_environment.VLMEnvironmentMetadata]
+) -> nemo_rl.environments.interfaces.EnvironmentReturn
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Runs a step in the vlm environment.
+
+**Parameters:**
+
+<ParamField path="message_log">
+list[list[dict[str, str]]]. A batch of OpenAI-API-like message logs that represent interactions with the VLM.
+</ParamField>
+
+<ParamField path="metadata" type="list[VLMEnvironmentMetadata]">
+list[VLMEnvironmentMetadata]. The grader will use the 'ground_truth' key to evaluate correctness.
+</ParamField>
+
+**Returns:** `EnvironmentReturn`
+
+A tuple containing:
+- list[dict[str, str]]: Observations/responses batch
+- list[dict]: Updated metadata
+- list[str]: Next stop strings for the next turn
+- Tensor: Rewards tensor
+- Tensor: Done flags tensor
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-environments-vlm_environment-VLMEnvironmentMetadata">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.environments.vlm_environment.VLMEnvironmentMetadata
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="ground_truth" type="str">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-environments-vlm_environment-VLMVerifyWorker">
+
+<CodeBlock links={{"nemo_rl.environments.vlm_environment.VLMEnvConfig":"#nemo_rl-environments-vlm_environment-VLMEnvConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.environments.vlm_environment.VLMVerifyWorker(
+    cfg: nemo_rl.environments.vlm_environment.VLMEnvConfig
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<ParamField path="verify_func" type="= combine_reward_functions(reward_functions)">
+</ParamField>
+<Anchor id="nemo_rl-environments-vlm_environment-VLMVerifyWorker-verify">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.vlm_environment.VLMVerifyWorker.verify(
+    pred_responses: list[str],
+    ground_truths: list[str]
+) -> list[float]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Verify the correctness of the predicted responses against the ground truth.
+
+**Parameters:**
+
+<ParamField path="pred_responses" type="list[str]">
+list[str]. The predicted responses from the LLM.
+</ParamField>
+
+<ParamField path="ground_truths" type="list[str]">
+list[str]. The ground truth responses.
+</ParamField>
+
+**Returns:** `list[float]`
+
+list[float]. The rewards for each predicted response.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-environments-vlm_environment-_mute_output">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.vlm_environment._mute_output()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>

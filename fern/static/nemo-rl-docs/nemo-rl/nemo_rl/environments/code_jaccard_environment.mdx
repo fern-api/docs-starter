@@ -1,0 +1,268 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/environments/code_jaccard_environment
+title: nemo_rl.environments.code_jaccard_environment
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`CodeJaccardEnvConfig`](#nemo_rl-environments-code_jaccard_environment-CodeJaccardEnvConfig) | - |
+| [`CodeJaccardEnvironment`](#nemo_rl-environments-code_jaccard_environment-CodeJaccardEnvironment) | Environment for evaluating code responses using Jaccard similarity. |
+| [`CodeJaccardEnvironmentMetadata`](#nemo_rl-environments-code_jaccard_environment-CodeJaccardEnvironmentMetadata) | - |
+| [`CodeJaccardVerifyWorker`](#nemo_rl-environments-code_jaccard_environment-CodeJaccardVerifyWorker) | Worker for evaluating code responses using Jaccard-based similarity. |
+
+### API
+
+<Anchor id="nemo_rl-environments-code_jaccard_environment-CodeJaccardEnvConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.environments.code_jaccard_environment.CodeJaccardEnvConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="num_workers" type="int">
+
+</ParamField>
+
+<ParamField path="stop_strings" type="Optional[list[str]]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-environments-code_jaccard_environment-CodeJaccardEnvironment">
+
+<CodeBlock links={{"nemo_rl.environments.code_jaccard_environment.CodeJaccardEnvConfig":"#nemo_rl-environments-code_jaccard_environment-CodeJaccardEnvConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.environments.code_jaccard_environment.CodeJaccardEnvironment(
+    cfg: nemo_rl.environments.code_jaccard_environment.CodeJaccardEnvConfig
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [EnvironmentInterface[CodeJaccardEnvironmentMetadata]](/nemo-rl/nemo_rl/environments/interfaces#nemo_rl-environments-interfaces-EnvironmentInterface)
+
+Environment for evaluating code responses using Jaccard similarity.
+
+
+<ParamField path="num_workers" type="= cfg['num_workers']">
+</ParamField>
+
+<ParamField path="workers">
+</ParamField>
+<Anchor id="nemo_rl-environments-code_jaccard_environment-CodeJaccardEnvironment-global_post_process_and_metrics">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.code_jaccard_environment.CodeJaccardEnvironment.global_post_process_and_metrics(
+    batch: nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any]
+) -> tuple[nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any], dict[str, float | int]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Post-process batch and compute metrics for CodeJaccard.
+
+
+</Indent>
+<Anchor id="nemo_rl-environments-code_jaccard_environment-CodeJaccardEnvironment-shutdown">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.code_jaccard_environment.CodeJaccardEnvironment.shutdown() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Shutdown all workers.
+
+
+</Indent>
+<Anchor id="nemo_rl-environments-code_jaccard_environment-CodeJaccardEnvironment-step">
+
+<CodeBlock links={{"nemo_rl.data.interfaces.LLMMessageLogType":"/nemo-rl/nemo_rl/data/interfaces#nemo_rl-data-interfaces-LLMMessageLogType","nemo_rl.environments.code_jaccard_environment.CodeJaccardEnvironmentMetadata":"#nemo_rl-environments-code_jaccard_environment-CodeJaccardEnvironmentMetadata","nemo_rl.environments.interfaces.EnvironmentReturn":"/nemo-rl/nemo_rl/environments/interfaces#nemo_rl-environments-interfaces-EnvironmentReturn"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.code_jaccard_environment.CodeJaccardEnvironment.step(
+    message_log_batch: list[nemo_rl.data.interfaces.LLMMessageLogType],
+    metadata: list[nemo_rl.environments.code_jaccard_environment.CodeJaccardEnvironmentMetadata],
+    return_extracted_answer: bool = False
+) -> nemo_rl.environments.interfaces.EnvironmentReturn[nemo_rl.environments.code_jaccard_environment.CodeJaccardEnvironmentMetadata]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Runs a step in the CodeJaccard environment.
+
+**Parameters:**
+
+<ParamField path="message_log_batch" type="list[LLMMessageLogType]">
+Batch of OpenAI-API-like message logs.
+</ParamField>
+
+<ParamField path="metadata" type="list[CodeJaccardEnvironmentMetadata]">
+Batch of CodeJaccardEnvironmentMetadata with ground truth.
+</ParamField>
+
+<ParamField path="return_extracted_answer" type="bool" default="False">
+Whether to return extracted answers.
+</ParamField>
+
+**Returns:** `EnvironmentReturn[CodeJaccardEnvironmentMetadata]`
+
+Tuple containing observations, metadata, stop strings, rewards, and done flags.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-environments-code_jaccard_environment-CodeJaccardEnvironmentMetadata">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.environments.code_jaccard_environment.CodeJaccardEnvironmentMetadata
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="ground_truth" type="str">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-environments-code_jaccard_environment-CodeJaccardVerifyWorker">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.environments.code_jaccard_environment.CodeJaccardVerifyWorker()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Worker for evaluating code responses using Jaccard-based similarity.
+
+
+<Anchor id="nemo_rl-environments-code_jaccard_environment-CodeJaccardVerifyWorker-_calculate_preference_score">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.code_jaccard_environment.CodeJaccardVerifyWorker._calculate_preference_score(
+    response: str,
+    ground_truth: str
+) -> float
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Calculate a Jaccard-based alignment score between response and ground truth.
+
+This is a simplified scoring function. In practice, you might want to use:
+- Semantic similarity models
+- BLEU/ROUGE scores
+- Tokenize both texts into sets A and B (here we use whitespace tokenization).
+- Compute intersection size |A ∩ B| and union size |A ∪ B|.
+- J(A, B) = |A ∩ B| / |A ∪ B|, with guards for union=0 -&gt; 0.0.
+- Optionally combine with a length-ratio penalty to discourage degenerate very short/long matches.
+
+Complexity:
+- Tokenization: O(n + m)
+- Set ops: O(n + m) average (hash sets)
+
+**Parameters:**
+
+<ParamField path="response" type="str">
+The model's response
+</ParamField>
+
+**Returns:** `float`
+
+Score between 0.0 and 1.0
+
+
+</Indent>
+<Anchor id="nemo_rl-environments-code_jaccard_environment-CodeJaccardVerifyWorker-verify">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.code_jaccard_environment.CodeJaccardVerifyWorker.verify(
+    pred_responses: list[str],
+    ground_truths: list[str],
+    return_extracted_answer: bool = False
+) -> typing.Union[list[float], tuple[list[float], list[str | None]]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Verify code responses against ground-truth solutions using Jaccard-based similarity.
+
+We use a simple text similarity approach (Jaccard over tokenized words)
+to evaluate how well the model's response aligns with the ground truth.
+
+**Parameters:**
+
+<ParamField path="pred_responses" type="list[str]">
+list[str]. The predicted responses from the LLM.
+</ParamField>
+
+<ParamField path="ground_truths" type="list[str]">
+list[str]. The ground-truth solutions.
+</ParamField>
+
+<ParamField path="return_extracted_answer" type="bool" default="False">
+bool. Whether to return extracted answers (here, the full response).
+</ParamField>
+
+**Returns:** `Union[list[float], tuple[list[float], list[str | None]]]`
+
+Union[list[float], tuple[list[float], list[str | None]]].
+
+
+</Indent>
+</Indent>

@@ -1,0 +1,77 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/data/datasets/preference_datasets/preference_dataset
+title: nemo_rl.data.datasets.preference_datasets.preference_dataset
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`PreferenceDataset`](#nemo_rl-data-datasets-preference_datasets-preference_dataset-PreferenceDataset) | Dataset class for preference data which can be loaded from a JSON file. |
+
+### API
+
+<Anchor id="nemo_rl-data-datasets-preference_datasets-preference_dataset-PreferenceDataset">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.datasets.preference_datasets.preference_dataset.PreferenceDataset(
+    data_path: str,
+    subset: typing.Optional[str] = None,
+    split: typing.Optional[str] = None,
+    kwargs = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RawDataset](/nemo-rl/nemo_rl/data/datasets/raw_dataset#nemo_rl-data-datasets-raw_dataset-RawDataset)
+
+Dataset class for preference data which can be loaded from a JSON file.
+
+This class handles loading of preference data for DPO and RM training.
+The input JSONL files should contain valid JSON objects formatted like this:
+&#123;
+    "context": list[dict],              # The prompt message (including previous turns, if any)
+    "completions": [                    # The list of completions
+        &#123;
+            "rank": 0,                  # The rank of the completion (lower rank is preferred)
+            "completion": list[dict],   # The completion message(s)
+        &#125;,
+        &#123;
+            "rank": 1,                  # The rank of the completion (lower rank is preferred)
+            "completion": list[dict],   # The completion message(s)
+        &#125;,
+        ...                             # More completions can be added if needed
+    ]
+&#125;
+Please refer to https://github.com/NVIDIA-NeMo/RL/blob/main/docs/guides/dpo.md#datasets for more details.
+
+**Parameters:**
+
+<ParamField path="data_path" type="str">
+Path to the dataset JSON file
+</ParamField>
+
+<ParamField path="subset" type="Optional[str]" default="None">
+Optional subset name for the dataset, used for HuggingFace datasets
+</ParamField>
+
+<ParamField path="split" type="Optional[str]" default="None">
+Optional split name for the dataset, used for HuggingFace datasets
+</ParamField>
+
+
+<ParamField path="dataset">
+</ParamField>
+
+<ParamField path="task_name">
+</ParamField>
+</Indent>

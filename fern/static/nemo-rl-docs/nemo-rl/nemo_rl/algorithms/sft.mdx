@@ -1,0 +1,258 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/algorithms/sft
+title: nemo_rl.algorithms.sft
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`MasterConfig`](#nemo_rl-algorithms-sft-MasterConfig) | - |
+| [`SFTConfig`](#nemo_rl-algorithms-sft-SFTConfig) | - |
+| [`SFTSaveState`](#nemo_rl-algorithms-sft-SFTSaveState) | - |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_default_sft_save_state`](#nemo_rl-algorithms-sft-_default_sft_save_state) | - |
+| [`setup`](#nemo_rl-algorithms-sft-setup) | Main entry point for running SFT algorithm. |
+| [`sft_train`](#nemo_rl-algorithms-sft-sft_train) | - |
+| [`validate`](#nemo_rl-algorithms-sft-validate) | Run validation on the validation dataset. |
+
+### API
+
+<Anchor id="nemo_rl-algorithms-sft-MasterConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.algorithms.sft.MasterConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="checkpointing" type="CheckpointingConfig">
+
+</ParamField>
+
+<ParamField path="cluster" type="ClusterConfig">
+
+</ParamField>
+
+<ParamField path="data" type="DataConfig">
+
+</ParamField>
+
+<ParamField path="logger" type="LoggerConfig">
+
+</ParamField>
+
+<ParamField path="policy" type="PolicyConfig">
+
+</ParamField>
+
+<ParamField path="sft" type="SFTConfig">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-sft-SFTConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.algorithms.sft.SFTConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="max_num_epochs" type="int">
+
+</ParamField>
+
+<ParamField path="max_num_steps" type="int">
+
+</ParamField>
+
+<ParamField path="seed" type="int">
+
+</ParamField>
+
+<ParamField path="val_at_end" type="bool">
+
+</ParamField>
+
+<ParamField path="val_at_start" type="bool">
+
+</ParamField>
+
+<ParamField path="val_batches" type="int">
+
+</ParamField>
+
+<ParamField path="val_global_batch_size" type="int">
+
+</ParamField>
+
+<ParamField path="val_micro_batch_size" type="int">
+
+</ParamField>
+
+<ParamField path="val_period" type="int">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-sft-SFTSaveState">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.algorithms.sft.SFTSaveState
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="consumed_samples" type="int">
+
+</ParamField>
+
+<ParamField path="epoch" type="int">
+
+</ParamField>
+
+<ParamField path="step" type="int">
+
+</ParamField>
+
+<ParamField path="total_steps" type="int">
+
+</ParamField>
+
+<ParamField path="total_valid_tokens" type="int">
+
+</ParamField>
+
+<ParamField path="val_loss" type="NotRequired[float]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-sft-_default_sft_save_state">
+
+<CodeBlock links={{"nemo_rl.algorithms.sft.SFTSaveState":"#nemo_rl-algorithms-sft-SFTSaveState"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.sft._default_sft_save_state() -> nemo_rl.algorithms.sft.SFTSaveState
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-sft-setup">
+
+<CodeBlock links={{"nemo_rl.algorithms.sft.MasterConfig":"#nemo_rl-algorithms-sft-MasterConfig","nemo_rl.data.datasets.AllTaskProcessedDataset":"/nemo-rl/nemo_rl/data/datasets/processed_dataset#nemo_rl-data-datasets-processed_dataset-AllTaskProcessedDataset","nemo_rl.models.policy.lm_policy.Policy":"/nemo-rl/nemo_rl/models/policy/lm_policy#nemo_rl-models-policy-lm_policy-Policy","nemo_rl.distributed.virtual_cluster.RayVirtualCluster":"/nemo-rl/nemo_rl/distributed/virtual_cluster#nemo_rl-distributed-virtual_cluster-RayVirtualCluster","nemo_rl.algorithms.loss_functions.NLLLoss":"/nemo-rl/nemo_rl/algorithms/loss_functions#nemo_rl-algorithms-loss_functions-NLLLoss","nemo_rl.utils.logger.Logger":"/nemo-rl/nemo_rl/utils/logger#nemo_rl-utils-logger-Logger","nemo_rl.utils.checkpoint.CheckpointManager":"/nemo-rl/nemo_rl/utils/checkpoint#nemo_rl-utils-checkpoint-CheckpointManager","nemo_rl.algorithms.sft.SFTSaveState":"#nemo_rl-algorithms-sft-SFTSaveState"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.sft.setup(
+    master_config: nemo_rl.algorithms.sft.MasterConfig,
+    tokenizer: transformers.AutoTokenizer,
+    train_dataset: nemo_rl.data.datasets.AllTaskProcessedDataset,
+    val_dataset: typing.Optional[nemo_rl.data.datasets.AllTaskProcessedDataset]
+) -> tuple[nemo_rl.models.policy.lm_policy.Policy, nemo_rl.distributed.virtual_cluster.RayVirtualCluster, torchdata.stateful_dataloader.StatefulDataLoader, typing.Optional[torchdata.stateful_dataloader.StatefulDataLoader], nemo_rl.algorithms.loss_functions.NLLLoss, nemo_rl.utils.logger.Logger, nemo_rl.utils.checkpoint.CheckpointManager, nemo_rl.algorithms.sft.SFTSaveState, nemo_rl.algorithms.sft.MasterConfig]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Main entry point for running SFT algorithm.
+
+**Returns:** `tuple[Policy, RayVirtualCluster, StatefulDataLoader, Optional[StatefulDataLoader], NLLLoss, Logger, CheckpointManager, SFTSaveState, MasterConfig]`
+
+Tuple of policy, cluster, dataloader, tokenizer, loss_fn, math_env, master_config, logger
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-sft-sft_train">
+
+<CodeBlock links={{"nemo_rl.algorithms.sft.SFTSaveState":"#nemo_rl-algorithms-sft-SFTSaveState"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.sft.sft_train(
+    policy,
+    train_dataloader,
+    val_dataloader,
+    tokenizer,
+    loss_fn,
+    master_config,
+    logger,
+    checkpointer,
+    sft_save_state: nemo_rl.algorithms.sft.SFTSaveState
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-sft-validate">
+
+<CodeBlock links={{"nemo_rl.models.policy.interfaces.PolicyInterface":"/nemo-rl/nemo_rl/models/policy/interfaces#nemo_rl-models-policy-interfaces-PolicyInterface","nemo_rl.algorithms.sft.MasterConfig":"#nemo_rl-algorithms-sft-MasterConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.sft.validate(
+    policy: nemo_rl.models.policy.interfaces.PolicyInterface,
+    val_dataloader: typing.Optional[torchdata.stateful_dataloader.StatefulDataLoader],
+    tokenizer,
+    loss_fn,
+    step: int,
+    master_config: nemo_rl.algorithms.sft.MasterConfig,
+    val_batches: int,
+    val_batch_size: int,
+    val_mbs: int
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run validation on the validation dataset.
+
+
+</Indent>

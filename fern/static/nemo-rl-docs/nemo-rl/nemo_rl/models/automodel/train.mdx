@@ -1,0 +1,841 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/automodel/train
+title: nemo_rl.models.automodel.train
+---
+
+Training utilities for automodel (DTensor-based) policy workers.
+
+This module provides post-processor classes and forward/backward functions
+that follow the same pattern as nemo_rl/models/megatron/train.py.
+
+Key differences from megatron approach:
+- Post-processors compute results directly (no callable return pattern)
+- forward_with_post_processing_fn calls post-processor directly
+- automodel_forward_backward uses PyTorch autograd instead of Megatron's pipeline
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`LogprobsPostProcessor`](#nemo_rl-models-automodel-train-LogprobsPostProcessor) | Post-processor for computing log probabilities from model outputs. |
+| [`LossPostProcessor`](#nemo_rl-models-automodel-train-LossPostProcessor) | Post-processor for computing training loss from model outputs. |
+| [`ScorePostProcessor`](#nemo_rl-models-automodel-train-ScorePostProcessor) | Post-processor for computing reward model scores from model outputs. |
+| [`TopkLogitsPostProcessor`](#nemo_rl-models-automodel-train-TopkLogitsPostProcessor) | Post-processor for computing top-k logits from model outputs. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`aggregate_training_statistics`](#nemo_rl-models-automodel-train-aggregate_training_statistics) | Aggregate training statistics across microbatches and ranks. |
+| [`apply_temperature_scaling`](#nemo_rl-models-automodel-train-apply_temperature_scaling) | Apply temperature scaling to logits. |
+| [`automodel_forward_backward`](#nemo_rl-models-automodel-train-automodel_forward_backward) | Execute forward and backward passes for automodel. |
+| [`extract_logits`](#nemo_rl-models-automodel-train-extract_logits) | Extract logits from model outputs. |
+| [`forward_with_post_processing_fn`](#nemo_rl-models-automodel-train-forward_with_post_processing_fn) | Perform forward pass with pre-processed microbatch and apply post-processing. |
+| [`model_forward`](#nemo_rl-models-automodel-train-model_forward) | Perform a single forward pass through the model. |
+| [`prepare_data_for_cp`](#nemo_rl-models-automodel-train-prepare_data_for_cp) | Prepare data for context parallel processing. |
+| [`redistribute_logits_for_cp`](#nemo_rl-models-automodel-train-redistribute_logits_for_cp) | Redistribute logits for context parallel processing. |
+
+### Data
+
+[`PostProcessingFunction`](#nemo_rl-models-automodel-train-PostProcessingFunction)
+
+### API
+
+<Anchor id="nemo_rl-models-automodel-train-LogprobsPostProcessor">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.automodel.train.LogprobsPostProcessor(
+    cfg: nemo_rl.models.policy.PolicyConfig,
+    device_mesh: typing.Any,
+    cp_mesh: typing.Any,
+    tp_mesh: typing.Any,
+    cp_size: int,
+    enable_seq_packing: bool = False
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Post-processor for computing log probabilities from model outputs.
+
+
+<ParamField path="logprob_chunk_size" type="= cfg.get('logprob_chunk_size', None)">
+</ParamField>
+<Anchor id="nemo_rl-models-automodel-train-LogprobsPostProcessor-__call__">
+
+<CodeBlock links={{"nemo_rl.models.automodel.data.ProcessedInputs":"/nemo-rl/nemo_rl/models/automodel/data#nemo_rl-models-automodel-data-ProcessedInputs"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.automodel.train.LogprobsPostProcessor.__call__(
+    logits: torch.Tensor,
+    processed_inputs: nemo_rl.models.automodel.data.ProcessedInputs,
+    input_lengths: torch.Tensor,
+    original_batch_size: int,
+    original_seq_len: int,
+    sequence_dim: int = 1
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Compute token log probabilities from logits.
+
+**Parameters:**
+
+<ParamField path="logits" type="torch.Tensor">
+Model output logits
+</ParamField>
+
+<ParamField path="processed_inputs" type="ProcessedInputs">
+Processed inputs
+</ParamField>
+
+<ParamField path="input_lengths" type="torch.Tensor">
+Sequence lengths
+</ParamField>
+
+<ParamField path="original_batch_size" type="int">
+Original batch size before packing
+</ParamField>
+
+<ParamField path="original_seq_len" type="int">
+Original sequence length before packing
+</ParamField>
+
+<ParamField path="sequence_dim" type="int" default="1">
+Sequence dimension
+</ParamField>
+
+**Returns:** `torch.Tensor`
+
+Token log probabilities tensor [batch_size, seq_length]
+
+
+</Indent>
+<Anchor id="nemo_rl-models-automodel-train-LogprobsPostProcessor-_compute_local_logprobs">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.automodel.train.LogprobsPostProcessor._compute_local_logprobs(
+    logits: torch.Tensor,
+    input_ids: torch.Tensor
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Compute logprobs locally without distributed processing.
+
+**Parameters:**
+
+<ParamField path="logits" type="torch.Tensor">
+Model output logits
+</ParamField>
+
+<ParamField path="input_ids" type="torch.Tensor">
+Input token IDs
+</ParamField>
+
+**Returns:** `torch.Tensor`
+
+Token log probabilities
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-models-automodel-train-LossPostProcessor">
+
+<CodeBlock links={{"nemo_rl.algorithms.interfaces.LossFunction":"/nemo-rl/nemo_rl/algorithms/interfaces#nemo_rl-algorithms-interfaces-LossFunction","nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.automodel.train.LossPostProcessor(
+    loss_fn: nemo_rl.algorithms.interfaces.LossFunction,
+    cfg: nemo_rl.models.policy.PolicyConfig,
+    device_mesh: typing.Any,
+    cp_mesh: typing.Any,
+    tp_mesh: typing.Any,
+    cp_size: int,
+    dp_size: int,
+    enable_seq_packing: bool = False
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Post-processor for computing training loss from model outputs.
+
+
+<Anchor id="nemo_rl-models-automodel-train-LossPostProcessor-__call__">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.models.automodel.data.ProcessedInputs":"/nemo-rl/nemo_rl/models/automodel/data#nemo_rl-models-automodel-data-ProcessedInputs"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.automodel.train.LossPostProcessor.__call__(
+    logits: torch.Tensor,
+    mb: nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any],
+    processed_inputs: nemo_rl.models.automodel.data.ProcessedInputs,
+    global_valid_seqs: torch.Tensor,
+    global_valid_toks: torch.Tensor,
+    sequence_dim: int = 1
+) -> tuple[torch.Tensor, dict[str, typing.Any]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Compute loss from logits.
+
+**Parameters:**
+
+<ParamField path="logits" type="torch.Tensor">
+Model output logits
+</ParamField>
+
+<ParamField path="mb" type="BatchedDataDict[Any]">
+Microbatch data
+</ParamField>
+
+<ParamField path="processed_inputs" type="ProcessedInputs">
+Processed inputs
+</ParamField>
+
+<ParamField path="global_valid_seqs" type="torch.Tensor">
+Global valid sequence count
+</ParamField>
+
+<ParamField path="global_valid_toks" type="torch.Tensor">
+Global valid token count
+</ParamField>
+
+<ParamField path="sequence_dim" type="int" default="1">
+Sequence dimension
+</ParamField>
+
+**Returns:** `tuple[torch.Tensor, dict[str, Any]]`
+
+Tuple of (loss, metrics)
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-models-automodel-train-ScorePostProcessor">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.automodel.train.ScorePostProcessor(
+    cfg: nemo_rl.models.policy.PolicyConfig
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Post-processor for computing reward model scores from model outputs.
+
+
+<Anchor id="nemo_rl-models-automodel-train-ScorePostProcessor-__call__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.automodel.train.ScorePostProcessor.__call__(
+    logits: torch.Tensor
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Extract scores from reward model outputs.
+
+**Parameters:**
+
+<ParamField path="logits" type="torch.Tensor">
+Model output logits
+</ParamField>
+
+**Returns:** `torch.Tensor`
+
+Scores tensor
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-models-automodel-train-TopkLogitsPostProcessor">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.automodel.train.TopkLogitsPostProcessor(
+    cfg: nemo_rl.models.policy.PolicyConfig,
+    device_mesh: typing.Any,
+    cp_mesh: typing.Any,
+    tp_mesh: typing.Any,
+    cp_size: int,
+    k: int,
+    enable_seq_packing: bool = False
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Post-processor for computing top-k logits from model outputs.
+
+
+<Anchor id="nemo_rl-models-automodel-train-TopkLogitsPostProcessor-__call__">
+
+<CodeBlock links={{"nemo_rl.models.automodel.data.ProcessedInputs":"/nemo-rl/nemo_rl/models/automodel/data#nemo_rl-models-automodel-data-ProcessedInputs"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.automodel.train.TopkLogitsPostProcessor.__call__(
+    logits: torch.Tensor,
+    processed_inputs: nemo_rl.models.automodel.data.ProcessedInputs,
+    input_lengths: torch.Tensor,
+    original_batch_size: int,
+    original_seq_len: int,
+    sequence_dim: int = 1
+) -> tuple[torch.Tensor, torch.Tensor]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Compute top-k logits and indices from model outputs.
+
+**Parameters:**
+
+<ParamField path="logits" type="torch.Tensor">
+Model output logits
+</ParamField>
+
+<ParamField path="processed_inputs" type="ProcessedInputs">
+Processed inputs
+</ParamField>
+
+<ParamField path="input_lengths" type="torch.Tensor">
+Sequence lengths
+</ParamField>
+
+<ParamField path="original_batch_size" type="int">
+Original batch size before packing
+</ParamField>
+
+<ParamField path="original_seq_len" type="int">
+Original sequence length before packing
+</ParamField>
+
+<ParamField path="sequence_dim" type="int" default="1">
+Sequence dimension
+</ParamField>
+
+**Returns:** `tuple[torch.Tensor, torch.Tensor]`
+
+Tuple of (top-k values, top-k indices) tensors
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-models-automodel-train-aggregate_training_statistics">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.automodel.train.aggregate_training_statistics(
+    losses: list[float],
+    all_mb_metrics: list[dict[str, typing.Any]],
+    grad_norm: typing.Optional[torch.Tensor],
+    dp_group: typing.Any,
+    dtype: torch.dtype
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Aggregate training statistics across microbatches and ranks.
+
+**Parameters:**
+
+<ParamField path="losses" type="list[float]">
+List of loss values from each microbatch
+</ParamField>
+
+<ParamField path="all_mb_metrics" type="list[dict[str, Any]]">
+List of metrics dictionaries from each microbatch
+</ParamField>
+
+<ParamField path="grad_norm" type="Optional[torch.Tensor]">
+Gradient norm tensor (or None if eval mode)
+</ParamField>
+
+<ParamField path="dp_group" type="Any">
+Data parallel process group for all-reduce
+</ParamField>
+
+<ParamField path="dtype" type="torch.dtype">
+Model dtype for metrics
+</ParamField>
+
+**Returns:** `dict[str, Any]`
+
+Dictionary containing aggregated metrics including global_loss, grad_norm, etc.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-automodel-train-apply_temperature_scaling">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.automodel.train.apply_temperature_scaling(
+    logits: torch.Tensor,
+    cfg: nemo_rl.models.policy.PolicyConfig
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Apply temperature scaling to logits.
+
+**Parameters:**
+
+<ParamField path="logits" type="torch.Tensor">
+Logits tensor to scale
+</ParamField>
+
+<ParamField path="cfg" type="PolicyConfig">
+Configuration dictionary containing generation settings
+</ParamField>
+
+**Returns:** `torch.Tensor`
+
+torch.Tensor: Temperature-scaled logits
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-automodel-train-automodel_forward_backward">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig","nemo_rl.models.automodel.data.ProcessedMicrobatch":"/nemo-rl/nemo_rl/models/automodel/data#nemo_rl-models-automodel-data-ProcessedMicrobatch","nemo_rl.models.automodel.train.PostProcessingFunction":"#nemo_rl-models-automodel-train-PostProcessingFunction"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.automodel.train.automodel_forward_backward(
+    model: torch.nn.Module,
+    cfg: nemo_rl.models.policy.PolicyConfig,
+    data_iterator: typing.Iterator[nemo_rl.models.automodel.data.ProcessedMicrobatch],
+    post_processing_fn: nemo_rl.models.automodel.train.PostProcessingFunction,
+    forward_only: bool = False,
+    is_reward_model: bool = False,
+    allow_flash_attn_args: bool = True,
+    global_valid_seqs: typing.Optional[torch.Tensor] = None,
+    global_valid_toks: typing.Optional[torch.Tensor] = None,
+    sequence_dim: int = 1,
+    dp_size: int = 1,
+    cp_size: int = 1,
+    num_global_batches: int = 1,
+    train_context_fn: typing.Optional[typing.Callable[[ProcessedInputs], typing.Any]] = None,
+    num_valid_microbatches: typing.Optional[int] = None,
+    on_microbatch_start: typing.Optional[typing.Callable[[int], None]] = None
+) -> list[typing.Tuple[typing.Any, dict[str, typing.Any]]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Execute forward and backward passes for automodel.
+
+This is the main training loop function that coordinates forward and backward
+passes across multiple microbatches using PyTorch autograd.
+
+Unlike megatron_forward_backward which uses Megatron's pipeline parallel
+framework, this uses standard PyTorch operations.
+
+**Parameters:**
+
+<ParamField path="model" type="nn.Module">
+The model to train
+</ParamField>
+
+<ParamField path="cfg" type="PolicyConfig">
+Configuration dictionary
+</ParamField>
+
+<ParamField path="data_iterator" type="Iterator[ProcessedMicrobatch]">
+Iterator yielding ProcessedMicrobatch objects (already processed)
+</ParamField>
+
+<ParamField path="num_microbatches">
+Number of microbatches to process
+</ParamField>
+
+<ParamField path="post_processing_fn" type="PostProcessingFunction">
+Post-processing function to apply to the logits
+</ParamField>
+
+<ParamField path="forward_only" type="bool" default="False">
+If True, skip backward pass
+</ParamField>
+
+<ParamField path="is_reward_model" type="bool" default="False">
+Whether this is a reward model
+</ParamField>
+
+<ParamField path="allow_flash_attn_args" type="bool" default="True">
+Whether to pass flash_attn_kwargs to model
+</ParamField>
+
+<ParamField path="global_valid_seqs" type="Optional[torch.Tensor]" default="None">
+Global valid sequence count for loss normalization
+</ParamField>
+
+<ParamField path="global_valid_toks" type="Optional[torch.Tensor]" default="None">
+Global valid token count for loss normalization
+</ParamField>
+
+<ParamField path="sequence_dim" type="int" default="1">
+Sequence dimension
+</ParamField>
+
+<ParamField path="dp_size" type="int" default="1">
+Data parallel size
+</ParamField>
+
+<ParamField path="cp_size" type="int" default="1">
+Context parallel size
+</ParamField>
+
+<ParamField path="num_global_batches" type="int" default="1">
+Number of global batches (for metric scaling)
+</ParamField>
+
+<ParamField path="train_context_fn" type="Optional[Callable[[ProcessedInputs], Any]]" default="None">
+Optional callable that takes ProcessedInputs and returns
+a context manager for the forward/backward pass. If None, no context is used.
+</ParamField>
+
+<ParamField path="num_valid_microbatches" type="Optional[int]" default="None">
+Number of valid (non-dummy) microbatches. If provided,
+microbatches beyond this index are treated as dummy batches (loss *= 0).
+If None, all microbatches are considered valid.
+</ParamField>
+
+<ParamField path="on_microbatch_start" type="Optional[Callable[[int], None]]" default="None">
+Optional callback called at the start of each microbatch
+with the microbatch index. Useful for cache clearing, etc.
+</ParamField>
+
+**Returns:** `list[Tuple[Any, dict[str, Any]]]`
+
+List of (result, metrics) tuples from each microbatch
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-automodel-train-extract_logits">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.automodel.train.extract_logits(
+    model: torch.nn.Module,
+    outputs: typing.Any
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Extract logits from model outputs.
+
+**Parameters:**
+
+<ParamField path="model" type="nn.Module">
+The model (used for lm_head if needed)
+</ParamField>
+
+<ParamField path="outputs" type="Any">
+Model outputs (can be tensor, DTensor, or object with logits attribute)
+</ParamField>
+
+**Returns:** `torch.Tensor`
+
+torch.Tensor: Logits tensor
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-automodel-train-forward_with_post_processing_fn">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig","nemo_rl.models.automodel.train.PostProcessingFunction":"#nemo_rl-models-automodel-train-PostProcessingFunction","nemo_rl.models.automodel.data.ProcessedMicrobatch":"/nemo-rl/nemo_rl/models/automodel/data#nemo_rl-models-automodel-data-ProcessedMicrobatch"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.automodel.train.forward_with_post_processing_fn(
+    model: torch.nn.Module,
+    cfg: nemo_rl.models.policy.PolicyConfig,
+    post_processing_fn: nemo_rl.models.automodel.train.PostProcessingFunction,
+    processed_mb: nemo_rl.models.automodel.data.ProcessedMicrobatch,
+    is_reward_model: bool = False,
+    allow_flash_attn_args: bool = True,
+    global_valid_seqs: typing.Optional[torch.Tensor] = None,
+    global_valid_toks: typing.Optional[torch.Tensor] = None,
+    sequence_dim: int = 1
+) -> typing.Tuple[typing.Any, dict[str, typing.Any], nemo_rl.models.automodel.data.ProcessedMicrobatch]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Perform forward pass with pre-processed microbatch and apply post-processing.
+
+This function takes a pre-processed microbatch (with sequence packing already handled),
+runs the forward step through the model, and applies the post-processing function
+to compute the result.
+
+Unlike the megatron approach which returns a callable, this directly computes
+and returns the result since automodel uses PyTorch autograd.
+
+**Parameters:**
+
+<ParamField path="model" type="nn.Module">
+The model to run forward pass on
+</ParamField>
+
+<ParamField path="cfg" type="PolicyConfig">
+Configuration dictionary
+</ParamField>
+
+<ParamField path="post_processing_fn" type="PostProcessingFunction">
+Post-processing function to apply to the logits
+</ParamField>
+
+<ParamField path="processed_mb" type="ProcessedMicrobatch">
+Pre-fetched ProcessedMicrobatch containing data and processed inputs
+</ParamField>
+
+<ParamField path="is_reward_model" type="bool" default="False">
+Whether this is a reward model
+</ParamField>
+
+<ParamField path="allow_flash_attn_args" type="bool" default="True">
+Whether to pass flash_attn_kwargs to model
+</ParamField>
+
+<ParamField path="global_valid_seqs" type="Optional[torch.Tensor]" default="None">
+Global valid sequence count for loss normalization
+</ParamField>
+
+<ParamField path="global_valid_toks" type="Optional[torch.Tensor]" default="None">
+Global valid token count for loss normalization
+</ParamField>
+
+<ParamField path="sequence_dim" type="int" default="1">
+Sequence dimension
+</ParamField>
+
+**Returns:** `Tuple[Any, dict[str, Any], ProcessedMicrobatch]`
+
+(result, metrics, processed_microbatch)
+- result: Output from post-processing (loss, logprobs, topk, or scores)
+- metrics: Dictionary of metrics from post-processing
+- processed_microbatch: The ProcessedMicrobatch that was processed
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-automodel-train-model_forward">
+
+<CodeBlock links={{"nemo_rl.models.automodel.data.ProcessedInputs":"/nemo-rl/nemo_rl/models/automodel/data#nemo_rl-models-automodel-data-ProcessedInputs"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.automodel.train.model_forward(
+    model: torch.nn.Module,
+    processed_inputs: nemo_rl.models.automodel.data.ProcessedInputs,
+    is_reward_model: bool = False,
+    allow_flash_attn_args: bool = True
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Perform a single forward pass through the model.
+
+**Parameters:**
+
+<ParamField path="model" type="nn.Module">
+The model to run forward pass on
+</ParamField>
+
+<ParamField path="processed_inputs" type="ProcessedInputs">
+ProcessedInputs containing all tensors for forward pass
+</ParamField>
+
+<ParamField path="is_reward_model" type="bool" default="False">
+Whether this is a reward model
+</ParamField>
+
+<ParamField path="allow_flash_attn_args" type="bool" default="True">
+Whether to pass flash_attn_kwargs to model
+</ParamField>
+
+**Returns:** `torch.Tensor`
+
+torch.Tensor: Output tensor from the model (logits)
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-automodel-train-prepare_data_for_cp">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.models.automodel.data.ProcessedInputs":"/nemo-rl/nemo_rl/models/automodel/data#nemo_rl-models-automodel-data-ProcessedInputs"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.automodel.train.prepare_data_for_cp(
+    mb: nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any],
+    processed_inputs: nemo_rl.models.automodel.data.ProcessedInputs,
+    cp_mesh: typing.Any,
+    sequence_dim: int = 1
+) -> tuple[torch.Tensor, nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Prepare data for context parallel processing.
+
+Converts seq_index to full tensor and wraps CP-sharded tensors in DTensor.
+
+**Parameters:**
+
+<ParamField path="mb" type="BatchedDataDict[Any]">
+Microbatch data dictionary
+</ParamField>
+
+<ParamField path="processed_inputs" type="ProcessedInputs">
+Processed inputs containing CP buffers
+</ParamField>
+
+<ParamField path="cp_mesh" type="Any">
+Context parallel mesh
+</ParamField>
+
+<ParamField path="sequence_dim" type="int" default="1">
+Dimension for sequence sharding
+</ParamField>
+
+**Returns:** `tuple[torch.Tensor, BatchedDataDict[Any]]`
+
+Tuple of (seq_index_dtensor, updated_mb)
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-automodel-train-redistribute_logits_for_cp">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.automodel.train.redistribute_logits_for_cp(
+    logits: torch.Tensor,
+    device_mesh: typing.Any,
+    cp_mesh: typing.Any,
+    sequence_dim: int = 1
+) -> torch.distributed.tensor.DTensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Redistribute logits for context parallel processing.
+
+Handles the case where logits may be TP-sharded DTensor or regular tensor,
+and converts them to CP+TP sharded DTensor.
+
+**Parameters:**
+
+<ParamField path="logits" type="torch.Tensor">
+Logits tensor (may be DTensor or regular tensor)
+</ParamField>
+
+<ParamField path="device_mesh" type="Any">
+Full device mesh
+</ParamField>
+
+<ParamField path="cp_mesh" type="Any">
+Context parallel mesh (kept for signature compatibility)
+</ParamField>
+
+<ParamField path="sequence_dim" type="int" default="1">
+Dimension for sequence sharding
+</ParamField>
+
+**Returns:** `DTensor`
+
+DTensor sharded on both CP and TP dimensions
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-automodel-train-PostProcessingFunction">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.automodel.train.PostProcessingFunction = Union['LossPostProcessor', 'LogprobsPostProcessor', 'TopkLogitsPostProcessor', '...
+```
+
+</CodeBlock>
+</Anchor>
+

@@ -1,0 +1,97 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/data/datasets/response_datasets/clevr
+title: nemo_rl.data.datasets.response_datasets.clevr
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`CLEVRCoGenTDataset`](#nemo_rl-data-datasets-response_datasets-clevr-CLEVRCoGenTDataset) | Simple wrapper around the CLEVR-CoGenT dataset. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`format_answer_fromtags`](#nemo_rl-data-datasets-response_datasets-clevr-format_answer_fromtags) | Extract content between &lt;answer&gt; tags and strip whitespace. |
+| [`format_clevr_cogent_dataset`](#nemo_rl-data-datasets-response_datasets-clevr-format_clevr_cogent_dataset) | Format the CLEVR-CoGenT dataset into an OpenAI-API-like message log. |
+
+### API
+
+<Anchor id="nemo_rl-data-datasets-response_datasets-clevr-CLEVRCoGenTDataset">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.datasets.response_datasets.clevr.CLEVRCoGenTDataset(
+    split: str = 'train',
+    kwargs = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RawDataset](/nemo-rl/nemo_rl/data/datasets/raw_dataset#nemo_rl-data-datasets-raw_dataset-RawDataset)
+
+Simple wrapper around the CLEVR-CoGenT dataset.
+
+**Parameters:**
+
+<ParamField path="split" type="str" default="'train'">
+Split name for the dataset, default is "train"
+</ParamField>
+
+
+<ParamField path="dataset">
+</ParamField>
+
+<ParamField path="task_name" type="= 'clevr-cogent'">
+</ParamField>
+</Indent>
+
+<Anchor id="nemo_rl-data-datasets-response_datasets-clevr-format_answer_fromtags">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.response_datasets.clevr.format_answer_fromtags(
+    answer: str
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Extract content between &lt;answer&gt; tags and strip whitespace.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-data-datasets-response_datasets-clevr-format_clevr_cogent_dataset">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.response_datasets.clevr.format_clevr_cogent_dataset(
+    example: dict[str, typing.Any],
+    return_pil: bool = False
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format the CLEVR-CoGenT dataset into an OpenAI-API-like message log.
+
+
+</Indent>

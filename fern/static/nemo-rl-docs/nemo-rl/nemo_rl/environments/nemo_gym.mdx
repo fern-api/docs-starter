@@ -1,0 +1,210 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/environments/nemo_gym
+title: nemo_rl.environments.nemo_gym
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`NemoGym`](#nemo_rl-environments-nemo_gym-NemoGym) | This environment class isn't really used for training. It's really meant as an integration wrapper around NeMo-Gym that hooks into the existing NeMo RL resource management via ray. So there is still one source of truth for resource management in NeMo RL. |
+| [`NemoGymConfig`](#nemo_rl-environments-nemo_gym-NemoGymConfig) | - |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`setup_nemo_gym_config`](#nemo_rl-environments-nemo_gym-setup_nemo_gym_config) | - |
+
+### API
+
+<Anchor id="nemo_rl-environments-nemo_gym-NemoGym">
+
+<CodeBlock links={{"nemo_rl.environments.nemo_gym.NemoGymConfig":"#nemo_rl-environments-nemo_gym-NemoGymConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.environments.nemo_gym.NemoGym(
+    cfg: nemo_rl.environments.nemo_gym.NemoGymConfig
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [EnvironmentInterface](/nemo-rl/nemo_rl/environments/interfaces#nemo_rl-environments-interfaces-EnvironmentInterface)
+
+This environment class isn't really used for training. It's really meant as an integration wrapper around NeMo-Gym that hooks into the existing NeMo RL resource management via ray. So there is still one source of truth for resource management in NeMo RL.
+
+
+<ParamField path="head_server_config">
+</ParamField>
+
+<ParamField path="head_server_port" type="= _get_free_port_local()">
+</ParamField>
+
+<ParamField path="node_ip" type="= _get_node_ip_local()">
+</ParamField>
+
+<ParamField path="rch" type="= RolloutCollectionHelper()">
+</ParamField>
+
+<ParamField path="rh" type="= RunHelper()">
+</ParamField>
+<Anchor id="nemo_rl-environments-nemo_gym-NemoGym-_postprocess_nemo_gym_to_nemo_rl_result">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.nemo_gym.NemoGym._postprocess_nemo_gym_to_nemo_rl_result(
+    nemo_gym_result: dict,
+    tokenizer: transformers.PreTrainedTokenizerBase
+) -> dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-environments-nemo_gym-NemoGym-global_post_process_and_metrics">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.nemo_gym.NemoGym.global_post_process_and_metrics(
+    batch
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-environments-nemo_gym-NemoGym-health_check">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.nemo_gym.NemoGym.health_check() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-environments-nemo_gym-NemoGym-run_rollouts">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.nemo_gym.NemoGym.run_rollouts(
+    nemo_gym_examples: list[dict],
+    tokenizer: transformers.PreTrainedTokenizerBase,
+    timer_prefix: str
+) -> list[dict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-environments-nemo_gym-NemoGym-shutdown">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.nemo_gym.NemoGym.shutdown() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-environments-nemo_gym-NemoGym-step">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.nemo_gym.NemoGym.step(
+    message_log_batch,
+    metadata
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-environments-nemo_gym-NemoGymConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.environments.nemo_gym.NemoGymConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="base_urls" type="List[str]">
+
+</ParamField>
+
+<ParamField path="initial_global_config_dict" type="Dict[str, Any]">
+
+</ParamField>
+
+<ParamField path="model_name" type="str">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-environments-nemo_gym-setup_nemo_gym_config">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.nemo_gym.setup_nemo_gym_config(
+    config,
+    tokenizer
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>

@@ -1,0 +1,603 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/distributed/worker_groups
+title: nemo_rl.distributed.worker_groups
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`MultiWorkerFuture`](#nemo_rl-distributed-worker_groups-MultiWorkerFuture) | Container for Ray futures with associated worker information. |
+| [`RayWorkerBuilder`](#nemo_rl-distributed-worker_groups-RayWorkerBuilder) | - |
+| [`RayWorkerGroup`](#nemo_rl-distributed-worker_groups-RayWorkerGroup) | Manages a group of distributed Ray worker/actor processes that execute tasks in parallel. |
+
+### API
+
+<Anchor id="nemo_rl-distributed-worker_groups-MultiWorkerFuture">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.distributed.worker_groups.MultiWorkerFuture(
+    futures: list[ray.ObjectRef],
+    return_from_workers: typing.Optional[list[int]] = None,
+    called_workers: typing.Optional[list[int]] = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Dataclass</Badge>
+
+Container for Ray futures with associated worker information.
+
+
+<ParamField path="called_workers" type="Optional[list[int]] = None">
+</ParamField>
+
+<ParamField path="futures" type="list[ObjectRef]">
+</ParamField>
+
+<ParamField path="return_from_workers" type="Optional[list[int]] = None">
+</ParamField>
+<Anchor id="nemo_rl-distributed-worker_groups-MultiWorkerFuture-get_results">
+
+<CodeBlock links={{"nemo_rl.distributed.worker_groups.RayWorkerGroup":"#nemo_rl-distributed-worker_groups-RayWorkerGroup"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.worker_groups.MultiWorkerFuture.get_results(
+    worker_group: nemo_rl.distributed.worker_groups.RayWorkerGroup,
+    return_generators_as_proxies: bool = False
+) -> list[typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get results from the futures, optionally respecting tied workers.
+
+The method uses worker_group.worker_to_tied_group_index to identify which tied
+worker group each worker belongs to, then selects only the first result from each group.
+
+**Parameters:**
+
+<ParamField path="worker_group" type="RayWorkerGroup">
+The RayWorkerGroup that spawned the futures.  The
+mapping contained in worker_group.worker_to_tied_group_index
+is required for the deduplication path.
+</ParamField>
+
+<ParamField path="return_generators_as_proxies" type="bool" default="False">
+If True, and a future is an ObjectRefGenerator,
+                          return the ObjectRefGenerator itself instead of consuming it.
+</ParamField>
+
+**Returns:** `list[Any]`
+
+List of results
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-distributed-worker_groups-RayWorkerBuilder">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.distributed.worker_groups.RayWorkerBuilder(
+    ray_actor_class_fqn: str,
+    args = (),
+    kwargs = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Anchor id="nemo_rl-distributed-worker_groups-RayWorkerBuilder-__call__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.worker_groups.RayWorkerBuilder.__call__(
+    placement_group: ray.util.placement_group.PlacementGroup,
+    placement_group_bundle_index: int,
+    num_gpus: float | int,
+    bundle_indices: typing.Optional[tuple[int, list[int]]] = None,
+    extra_options: typing.Any = {}
+) -> ray.actor.ActorHandle
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a Ray worker with the specified configuration.
+
+Order of precedence for worker options configuration (from lowest to highest):
+1. Options passed by the user to __call__ (extra_options)
+2. Options required by the worker via configure_worker (may override user options with warning)
+3. Options set by the RayWorkerBuilder.__call__ (specifically scheduling strategy)
+
+If the worker needs to override user-provided options, it should log a warning
+to inform the user about the change and the reason for it.
+
+**Parameters:**
+
+<ParamField path="placement_group" type="PlacementGroup">
+Ray placement group for resource allocation
+</ParamField>
+
+<ParamField path="placement_group_bundle_index" type="int">
+Index of the bundle in the placement group
+</ParamField>
+
+<ParamField path="num_gpus" type="float | int">
+Number of GPUs to allocate to this worker (can be fractional)
+</ParamField>
+
+<ParamField path="bundle_indices" type="Optional[tuple[int, list[int]]]" default="None">
+Tuple of (node_idx, local_bundle_indices) for tensor parallelism (if applicable)
+</ParamField>
+
+<ParamField path="extra_options" type="Any" default="&#123;&#125;">
+Additional options to pass to the Ray actor (may be overridden by actor's configure_worker(...) method)
+</ParamField>
+
+**Returns:** `ray.actor.ActorHandle`
+
+A Ray actor reference to the created worker
+
+
+</Indent>
+<Anchor id="nemo_rl-distributed-worker_groups-RayWorkerBuilder-create_worker_async">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.worker_groups.RayWorkerBuilder.create_worker_async(
+    placement_group: ray.util.placement_group.PlacementGroup,
+    placement_group_bundle_index: int,
+    num_gpus: float | int,
+    bundle_indices: typing.Optional[tuple[int, list[int]]] = None,
+    extra_options: typing.Any = {}
+) -> tuple[ray.ObjectRef, ray.actor.ActorHandle]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a Ray worker asynchronously, returning futures.
+
+This method returns immediately with futures that can be awaited later.
+
+**Parameters:**
+
+<ParamField path="placement_group" type="PlacementGroup">
+Ray placement group for resource allocation
+</ParamField>
+
+<ParamField path="placement_group_bundle_index" type="int">
+Index of the bundle in the placement group
+</ParamField>
+
+<ParamField path="num_gpus" type="float | int">
+Number of GPUs to allocate to this worker (can be fractional)
+</ParamField>
+
+<ParamField path="bundle_indices" type="Optional[tuple[int, list[int]]]" default="None">
+Tuple of (node_idx, local_bundle_indices) for tensor parallelism (if applicable)
+</ParamField>
+
+<ParamField path="extra_options" type="Any" default="&#123;&#125;">
+Additional options to pass to the Ray actor
+</ParamField>
+
+**Returns:** `tuple[ray.ObjectRef, ray.actor.ActorHandle]`
+
+Tuple of (worker_future, initializer_actor):
+- worker_future: A Ray ObjectRef that will resolve to the worker actor
+- initializer_actor: The initializer actor (needed to prevent GC)
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-distributed-worker_groups-RayWorkerGroup">
+
+<CodeBlock links={{"nemo_rl.distributed.virtual_cluster.RayVirtualCluster":"/nemo-rl/nemo_rl/distributed/virtual_cluster#nemo_rl-distributed-virtual_cluster-RayVirtualCluster","nemo_rl.distributed.worker_groups.RayWorkerBuilder":"#nemo_rl-distributed-worker_groups-RayWorkerBuilder","nemo_rl.distributed.named_sharding.NamedSharding":"/nemo-rl/nemo_rl/distributed/named_sharding#nemo_rl-distributed-named_sharding-NamedSharding"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.distributed.worker_groups.RayWorkerGroup(
+    cluster: nemo_rl.distributed.virtual_cluster.RayVirtualCluster,
+    remote_worker_builder: nemo_rl.distributed.worker_groups.RayWorkerBuilder,
+    workers_per_node: typing.Optional[typing.Union[int, list[int]]] = None,
+    name_prefix: str = '',
+    bundle_indices_list: typing.Optional[list[tuple[int, list[int]]]] = None,
+    sharding_annotations: typing.Optional[nemo_rl.distributed.named_sharding.NamedSharding] = None,
+    env_vars: dict[str, str] = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Manages a group of distributed Ray worker/actor processes that execute tasks in parallel.
+
+This class creates and manages Ray actor instances that run on resources
+allocated by a RayVirtualCluster. It handles:
+- Worker creation and placement on specific GPU resources
+- Setting up distributed training environment variables (rank, world size, etc.)
+- Executing methods across all workers in parallel
+- Collecting and aggregating results
+- Support for tied worker groups where multiple workers process the same data
+
+
+<ParamField path="_worker_metadata" type="list[dict[str, Any]] = []">
+</ParamField>
+
+<ParamField path="_workers" type="list[ActorHandle] = []">
+</ParamField>
+
+<ParamField path="dp_leader_worker_indices" type="list[int] = []">
+</ParamField>
+
+<ParamField path="dp_size" type="int">
+Number of data parallel shards.
+</ParamField>
+
+<ParamField path="worker_metadata" type="list[dict[str, Any]]">
+</ParamField>
+
+<ParamField path="workers" type="list[ActorHandle]">
+</ParamField>
+<Anchor id="nemo_rl-distributed-worker_groups-RayWorkerGroup-_create_workers_from_bundle_indices">
+
+<CodeBlock links={{"nemo_rl.distributed.worker_groups.RayWorkerBuilder":"#nemo_rl-distributed-worker_groups-RayWorkerBuilder"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.worker_groups.RayWorkerGroup._create_workers_from_bundle_indices(
+    remote_worker_builder: nemo_rl.distributed.worker_groups.RayWorkerBuilder,
+    bundle_indices_list: list[tuple[int, list[int]]],
+    env_vars: dict[str, str] = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create workers based on explicit bundle indices for tied worker groups.
+
+**Parameters:**
+
+<ParamField path="remote_worker_builder" type="RayWorkerBuilder">
+Builder function for Ray actors
+</ParamField>
+
+<ParamField path="bundle_indices_list" type="list[tuple[int, list[int]]]">
+List of (node_idx, local_bundle_indices) tuples, where each tuple
+                specifies a tied group with its node and local bundle indices. If the local_bundle_indices
+                spans multiple nodes, the node_idx will be the first node's index in the tied group.
+</ParamField>
+
+
+</Indent>
+<Anchor id="nemo_rl-distributed-worker_groups-RayWorkerGroup-get_all_worker_results">
+
+<CodeBlock links={{"nemo_rl.distributed.worker_groups.MultiWorkerFuture":"#nemo_rl-distributed-worker_groups-MultiWorkerFuture"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.worker_groups.RayWorkerGroup.get_all_worker_results(
+    future_bundle: nemo_rl.distributed.worker_groups.MultiWorkerFuture,
+    return_generators_as_proxies: bool = False
+) -> list[typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get results from all workers, optionally filtering to get just one result per tied worker group.
+
+**Parameters:**
+
+<ParamField path="future_bundle" type="MultiWorkerFuture">
+MultiWorkerFuture containing futures and worker information.
+</ParamField>
+
+<ParamField path="return_generators_as_proxies" type="bool" default="False">
+If True, and a future in the bundle is an ObjectRefGenerator,
+                          return the ObjectRefGenerator itself instead of consuming it.
+</ParamField>
+
+**Returns:** `list[Any]`
+
+List of results, deduplicated as specified in the future_bundle
+
+
+</Indent>
+<Anchor id="nemo_rl-distributed-worker_groups-RayWorkerGroup-get_dp_leader_worker_idx">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.worker_groups.RayWorkerGroup.get_dp_leader_worker_idx(
+    dp_shard_idx: int
+) -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Returns the index of the primary worker for a given data parallel shard.
+
+
+</Indent>
+<Anchor id="nemo_rl-distributed-worker_groups-RayWorkerGroup-run_all_workers_multiple_data">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.worker_groups.RayWorkerGroup.run_all_workers_multiple_data(
+    method_name: str,
+    args = (),
+    run_rank_0_only_axes: list[str] | None = None,
+    common_kwargs: typing.Optional[dict[str, typing.Any]] = None,
+    kwargs = {}
+) -> list[ray.ObjectRef]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run a method on all workers in parallel with different data.
+
+**Parameters:**
+
+<ParamField path="method_name" type="str">
+Name of the method to call on each worker
+</ParamField>
+
+<ParamField path="*args" default="()">
+List of arguments to pass to workers/groups
+   e.g. [[arg1_for_worker_1, arg1_for_worker_2], [arg2_for_worker_1, arg2_for_worker_2]]
+</ParamField>
+
+<ParamField path="run_rank_0_only_axes" type="list[str] | None" default="None">
+List of named axes for which only rank 0 should run the method.
+</ParamField>
+
+<ParamField path="common_kwargs" type="Optional[dict[str, Any]]" default="None">
+Keyword arguments to pass to all workers
+</ParamField>
+
+<ParamField path="**kwargs" default="&#123;&#125;">
+Keyword arguments to pass to workers/groups
+      e.g. &#123;"key1": [value_for_worker_1, value_for_worker_2], "key2": [value_for_worker_1, value_for_worker_2]&#125;
+</ParamField>
+
+**Returns:** `list[ray.ObjectRef]`
+
+list[ray.ObjectRef]: A list of ray futures
+
+
+</Indent>
+<Anchor id="nemo_rl-distributed-worker_groups-RayWorkerGroup-run_all_workers_sharded_data">
+
+<CodeBlock links={{"nemo_rl.distributed.worker_groups.MultiWorkerFuture":"#nemo_rl-distributed-worker_groups-MultiWorkerFuture"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.worker_groups.RayWorkerGroup.run_all_workers_sharded_data(
+    method_name: str,
+    args = (),
+    in_sharded_axes: list[str] | None = None,
+    replicate_on_axes: list[str] | None = None,
+    output_is_replicated: list[str] | None = None,
+    make_dummy_calls_to_free_axes: bool = False,
+    common_kwargs: typing.Optional[dict[str, typing.Any]] = None,
+    kwargs = {}
+) -> nemo_rl.distributed.worker_groups.MultiWorkerFuture
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run a method on all workers in parallel with sharded data.
+
+Axes in in_sharded_axes: Data is already split across these axes, so we just send the appropriate slice to each worker (along this axis)
+Axes in replicate_on_axes: Data is replicated to all workers along these dimensions
+Free axes (axes not in either list): Data is only sent to workers at index 0 of these axes
+
+**Parameters:**
+
+<ParamField path="method_name" type="str">
+Name of the method to call on each worker
+</ParamField>
+
+<ParamField path="*args" default="()">
+List of arguments to pass to workers/groups
+   e.g. [[arg1_for_worker_1, arg1_for_worker_2], [arg2_for_worker_1, arg2_for_worker_2]]
+</ParamField>
+
+<ParamField path="in_sharded_axes" type="list[str] | None" default="None">
+List of axes that are sharded
+</ParamField>
+
+<ParamField path="replicate_on_axes" type="list[str] | None" default="None">
+List of axes that are to be replicated
+</ParamField>
+
+<ParamField path="output_is_replicated" type="list[str] | None" default="None">
+List of axes along which the output is replicated (and we should just return the first result).
+                  We also just return from rank 0 of free axes.
+</ParamField>
+
+<ParamField path="make_dummy_calls_to_free_axes" type="bool" default="False">
+Whether to make dummy calls (with None) to workers that
+                           aren't rank 0 on 'free axes' (axes not in in_sharded_axes or replicate_on_axes).
+</ParamField>
+
+<ParamField path="common_kwargs" type="Optional[dict[str, Any]]" default="None">
+Keyword arguments to pass to all workers
+</ParamField>
+
+<ParamField path="**kwargs" default="&#123;&#125;">
+Keyword arguments to pass to workers/groups
+      e.g. &#123;"key1": [value_for_worker_1, value_for_worker_2], "key2": [value_for_worker_1, value_for_worker_2]&#125;
+</ParamField>
+
+**Returns:** `MultiWorkerFuture`
+
+Object containing futures and their associated worker information
+
+
+</Indent>
+<Anchor id="nemo_rl-distributed-worker_groups-RayWorkerGroup-run_all_workers_single_data">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.worker_groups.RayWorkerGroup.run_all_workers_single_data(
+    method_name: str,
+    args = (),
+    run_rank_0_only_axes: list[str] | None = None,
+    kwargs = {}
+) -> list[ray.ObjectRef]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run a method on all workers in parallel with the same data.
+
+**Parameters:**
+
+<ParamField path="method_name" type="str">
+Name of the method to call on each worker
+</ParamField>
+
+<ParamField path="*args, **kwargs">
+Arguments to pass to the method
+</ParamField>
+
+<ParamField path="run_rank_0_only_axes" type="list[str] | None" default="None">
+List of named axes for which only rank 0 should run the method.
+</ParamField>
+
+**Returns:** `list[ray.ObjectRef]`
+
+list[ray.ObjectRef]: A list of ray futures
+
+
+</Indent>
+<Anchor id="nemo_rl-distributed-worker_groups-RayWorkerGroup-run_single_worker_single_data">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.worker_groups.RayWorkerGroup.run_single_worker_single_data(
+    method_name: str,
+    worker_idx: int,
+    args = (),
+    kwargs = {}
+) -> ray.ObjectRef
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run a method on a single, specific worker.
+
+**Parameters:**
+
+<ParamField path="method_name" type="str">
+Name of the method to call on the worker.
+</ParamField>
+
+<ParamField path="worker_idx" type="int">
+The index of the worker to run the method on.
+</ParamField>
+
+<ParamField path="*args, **kwargs">
+Arguments to pass to the method.
+</ParamField>
+
+**Returns:** `ray.ObjectRef`
+
+ray.ObjectRef: A Ray future for the result.
+
+
+</Indent>
+<Anchor id="nemo_rl-distributed-worker_groups-RayWorkerGroup-shutdown">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.worker_groups.RayWorkerGroup.shutdown(
+    cleanup_method: typing.Optional[str] = None,
+    timeout: typing.Optional[float] = 30.0,
+    force: bool = False
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Shutdown all workers in the worker group.
+
+**Parameters:**
+
+<ParamField path="cleanup_method" type="Optional[str]" default="None">
+Optional method name to call on each worker before termination.
+            If provided, this method will be called on each worker to allow
+            for graceful cleanup.
+</ParamField>
+
+<ParamField path="timeout" type="Optional[float]" default="30.0">
+Timeout in seconds for graceful shutdown. Only applicable if cleanup_method is provided.
+     If None, wait indefinitely for workers to complete their cleanup.
+</ParamField>
+
+<ParamField path="force" type="bool" default="False">
+If True, forcefully terminate workers with ray.kill() even if cleanup_method is provided.
+   If cleanup_method is None, workers are always forcefully terminated.
+</ParamField>
+
+**Returns:** `bool`
+
+True if all workers were successfully shut down
+
+
+</Indent>
+</Indent>

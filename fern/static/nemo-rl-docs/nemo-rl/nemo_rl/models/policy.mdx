@@ -1,0 +1,948 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/policy
+title: nemo_rl.models.policy
+---
+
+## Subpackages
+
+- **[`nemo_rl.models.policy.workers`](/nemo-rl/nemo_rl/models/policy/workers)**
+
+## Submodules
+
+- **[`nemo_rl.models.policy.interfaces`](/nemo-rl/nemo_rl/models/policy/interfaces)**
+- **[`nemo_rl.models.policy.lm_policy`](/nemo-rl/nemo_rl/models/policy/lm_policy)**
+- **[`nemo_rl.models.policy.utils`](/nemo-rl/nemo_rl/models/policy/utils)**
+
+## Package Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`AutomodelBackendConfig`](#nemo_rl-models-policy-AutomodelBackendConfig) | Configuration for custom MoE implementation backend in Automodel. |
+| [`AutomodelKwargs`](#nemo_rl-models-policy-AutomodelKwargs) | - |
+| [`DTensorConfig`](#nemo_rl-models-policy-DTensorConfig) | - |
+| [`DTensorConfigDisabled`](#nemo_rl-models-policy-DTensorConfigDisabled) | - |
+| [`DynamicBatchingConfig`](#nemo_rl-models-policy-DynamicBatchingConfig) | - |
+| [`DynamicBatchingConfigDisabled`](#nemo_rl-models-policy-DynamicBatchingConfigDisabled) | - |
+| [`LoRAConfig`](#nemo_rl-models-policy-LoRAConfig) | - |
+| [`LoRAConfigDisabled`](#nemo_rl-models-policy-LoRAConfigDisabled) | - |
+| [`MegatronConfig`](#nemo_rl-models-policy-MegatronConfig) | - |
+| [`MegatronConfigDisabled`](#nemo_rl-models-policy-MegatronConfigDisabled) | - |
+| [`MegatronDDPConfig`](#nemo_rl-models-policy-MegatronDDPConfig) | - |
+| [`MegatronOptimizerConfig`](#nemo_rl-models-policy-MegatronOptimizerConfig) | - |
+| [`MegatronSchedulerConfig`](#nemo_rl-models-policy-MegatronSchedulerConfig) | - |
+| [`PolicyConfig`](#nemo_rl-models-policy-PolicyConfig) | - |
+| [`PytorchOptimizerConfig`](#nemo_rl-models-policy-PytorchOptimizerConfig) | - |
+| [`RewardModelConfig`](#nemo_rl-models-policy-RewardModelConfig) | - |
+| [`SequencePackingConfig`](#nemo_rl-models-policy-SequencePackingConfig) | - |
+| [`SequencePackingConfigDisabled`](#nemo_rl-models-policy-SequencePackingConfigDisabled) | - |
+| [`SinglePytorchMilestonesConfig`](#nemo_rl-models-policy-SinglePytorchMilestonesConfig) | - |
+| [`SinglePytorchSchedulerConfig`](#nemo_rl-models-policy-SinglePytorchSchedulerConfig) | - |
+| [`TokenizerConfig`](#nemo_rl-models-policy-TokenizerConfig) | - |
+
+### Data
+
+[`SchedulerMilestones`](#nemo_rl-models-policy-SchedulerMilestones)
+
+### API
+
+<Anchor id="nemo_rl-models-policy-AutomodelBackendConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.AutomodelBackendConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Configuration for custom MoE implementation backend in Automodel.
+
+Used when setting the backend in automodel_kwargs in your config.
+Alternatively, pass `force_hf: true` in automodel_kwargs to fall back
+to the HuggingFace implementation.
+
+<ParamField path="_target_" type="str">
+
+</ParamField>
+
+<ParamField path="attn" type="NotRequired[str]">
+
+</ParamField>
+
+<ParamField path="enable_deepep" type="NotRequired[bool]">
+
+</ParamField>
+
+<ParamField path="enable_fsdp_optimizations" type="NotRequired[bool]">
+
+</ParamField>
+
+<ParamField path="enable_hf_state_dict_adapter" type="NotRequired[bool]">
+
+</ParamField>
+
+<ParamField path="fake_balanced_gate" type="NotRequired[bool]">
+
+</ParamField>
+
+<ParamField path="gate_precision" type="NotRequired[str]">
+
+</ParamField>
+
+<ParamField path="linear" type="NotRequired[str]">
+
+</ParamField>
+
+<ParamField path="rms_norm" type="NotRequired[str]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-AutomodelKwargs">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.AutomodelKwargs
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="backend" type="NotRequired[AutomodelBackendConfig]">
+
+</ParamField>
+
+<ParamField path="force_hf" type="NotRequired[bool]">
+
+</ParamField>
+
+<ParamField path="use_liger_kernel" type="NotRequired[bool]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-DTensorConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.DTensorConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="_v2" type="NotRequired[bool]">
+
+</ParamField>
+
+<ParamField path="activation_checkpointing" type="bool">
+
+</ParamField>
+
+<ParamField path="automodel_kwargs" type="NotRequired[AutomodelKwargs]">
+
+</ParamField>
+
+<ParamField path="clear_cache_every_n_steps" type="NotRequired[int | None]">
+
+</ParamField>
+
+<ParamField path="context_parallel_size" type="int">
+
+</ParamField>
+
+<ParamField path="cpu_offload" type="bool">
+
+</ParamField>
+
+<ParamField path="custom_parallel_plan" type="str | None">
+
+</ParamField>
+
+<ParamField path="enabled" type="Literal[True]">
+
+</ParamField>
+
+<ParamField path="env_vars" type="NotRequired[dict[str, str] | None]">
+
+</ParamField>
+
+<ParamField path="lora_cfg" type="NotRequired[LoRAConfig | LoRAConfigDisabled]">
+
+</ParamField>
+
+<ParamField path="sequence_parallel" type="bool">
+
+</ParamField>
+
+<ParamField path="tensor_parallel_size" type="int">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-DTensorConfigDisabled">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.DTensorConfigDisabled
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="enabled" type="Literal[False]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-DynamicBatchingConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.DynamicBatchingConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="enabled" type="Literal[True]">
+
+</ParamField>
+
+<ParamField path="logprob_mb_tokens" type="NotRequired[int]">
+
+</ParamField>
+
+<ParamField path="sequence_length_round" type="int">
+
+</ParamField>
+
+<ParamField path="train_mb_tokens" type="int">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-DynamicBatchingConfigDisabled">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.DynamicBatchingConfigDisabled
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="enabled" type="Literal[False]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-LoRAConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.LoRAConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="alpha" type="int">
+
+</ParamField>
+
+<ParamField path="dim" type="int">
+
+</ParamField>
+
+<ParamField path="dropout" type="float">
+
+</ParamField>
+
+<ParamField path="dropout_position" type="Literal['pre', 'post']">
+
+</ParamField>
+
+<ParamField path="enabled" type="Literal[True]">
+
+</ParamField>
+
+<ParamField path="exclude_modules" type="list[str]">
+
+</ParamField>
+
+<ParamField path="lora_A_init" type="str">
+
+</ParamField>
+
+<ParamField path="match_all_linear" type="NotRequired[bool]">
+
+</ParamField>
+
+<ParamField path="target_modules" type="list[str]">
+
+</ParamField>
+
+<ParamField path="use_triton" type="NotRequired[bool]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-LoRAConfigDisabled">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.LoRAConfigDisabled
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="enabled" type="Literal[False]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-MegatronConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.MegatronConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="activation_checkpointing" type="bool">
+
+</ParamField>
+
+<ParamField path="apply_rope_fusion" type="bool">
+
+</ParamField>
+
+<ParamField path="bias_activation_fusion" type="bool">
+
+</ParamField>
+
+<ParamField path="context_parallel_size" type="int">
+
+</ParamField>
+
+<ParamField path="defer_fp32_logits" type="NotRequired[bool]">
+
+</ParamField>
+
+<ParamField path="distributed_data_parallel_config" type="MegatronDDPConfig">
+
+</ParamField>
+
+<ParamField path="empty_unused_memory_level" type="int">
+
+</ParamField>
+
+<ParamField path="enabled" type="Literal[True]">
+
+</ParamField>
+
+<ParamField path="env_vars" type="NotRequired[dict[str, str] | None]">
+
+</ParamField>
+
+<ParamField path="expert_model_parallel_size" type="int">
+
+</ParamField>
+
+<ParamField path="expert_tensor_parallel_size" type="int">
+
+</ParamField>
+
+<ParamField path="force_overwrite_initial_ckpt" type="NotRequired[bool]">
+
+</ParamField>
+
+<ParamField path="freeze_moe_router" type="bool">
+
+</ParamField>
+
+<ParamField path="moe_enable_deepep" type="bool">
+
+</ParamField>
+
+<ParamField path="moe_per_layer_logging" type="bool">
+
+</ParamField>
+
+<ParamField path="moe_shared_expert_overlap" type="bool">
+
+</ParamField>
+
+<ParamField path="moe_token_dispatcher_type" type="str">
+
+</ParamField>
+
+<ParamField path="num_layers_in_first_pipeline_stage" type="int | None">
+
+</ParamField>
+
+<ParamField path="num_layers_in_last_pipeline_stage" type="int | None">
+
+</ParamField>
+
+<ParamField path="optimizer" type="MegatronOptimizerConfig">
+
+</ParamField>
+
+<ParamField path="pipeline_dtype" type="str">
+
+</ParamField>
+
+<ParamField path="pipeline_model_parallel_size" type="int">
+
+</ParamField>
+
+<ParamField path="scheduler" type="MegatronSchedulerConfig">
+
+</ParamField>
+
+<ParamField path="sequence_parallel" type="bool">
+
+</ParamField>
+
+<ParamField path="tensor_model_parallel_size" type="int">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-MegatronConfigDisabled">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.MegatronConfigDisabled
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="enabled" type="Literal[False]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-MegatronDDPConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.MegatronDDPConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="data_parallel_sharding_strategy" type="str">
+
+</ParamField>
+
+<ParamField path="grad_reduce_in_fp32" type="bool">
+
+</ParamField>
+
+<ParamField path="overlap_grad_reduce" type="bool">
+
+</ParamField>
+
+<ParamField path="overlap_param_gather" type="bool">
+
+</ParamField>
+
+<ParamField path="use_custom_fsdp" type="bool">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-MegatronOptimizerConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.MegatronOptimizerConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="adam_beta1" type="float">
+
+</ParamField>
+
+<ParamField path="adam_beta2" type="float">
+
+</ParamField>
+
+<ParamField path="adam_eps" type="float">
+
+</ParamField>
+
+<ParamField path="bf16" type="bool">
+
+</ParamField>
+
+<ParamField path="clip_grad" type="float">
+
+</ParamField>
+
+<ParamField path="fp16" type="bool">
+
+</ParamField>
+
+<ParamField path="lr" type="float">
+
+</ParamField>
+
+<ParamField path="min_lr" type="float">
+
+</ParamField>
+
+<ParamField path="optimizer" type="str">
+
+</ParamField>
+
+<ParamField path="optimizer_cpu_offload" type="bool">
+
+</ParamField>
+
+<ParamField path="optimizer_offload_fraction" type="float">
+
+</ParamField>
+
+<ParamField path="params_dtype" type="str">
+
+</ParamField>
+
+<ParamField path="sgd_momentum" type="float">
+
+</ParamField>
+
+<ParamField path="use_distributed_optimizer" type="bool">
+
+</ParamField>
+
+<ParamField path="use_precision_aware_optimizer" type="bool">
+
+</ParamField>
+
+<ParamField path="weight_decay" type="float">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-MegatronSchedulerConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.MegatronSchedulerConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="end_weight_decay" type="float">
+
+</ParamField>
+
+<ParamField path="lr_decay_iters" type="NotRequired[int | None]">
+
+</ParamField>
+
+<ParamField path="lr_decay_style" type="str">
+
+</ParamField>
+
+<ParamField path="lr_warmup_init" type="float">
+
+</ParamField>
+
+<ParamField path="lr_warmup_iters" type="int">
+
+</ParamField>
+
+<ParamField path="start_weight_decay" type="float">
+
+</ParamField>
+
+<ParamField path="weight_decay_incr_style" type="str">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-PolicyConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.PolicyConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="dtensor_cfg" type="DTensorConfig | DTensorConfigDisabled">
+
+</ParamField>
+
+<ParamField path="dynamic_batching" type="DynamicBatchingConfig | DynamicBatchingConfigDisabled">
+
+</ParamField>
+
+<ParamField path="generation" type="NotRequired[GenerationConfig]">
+
+</ParamField>
+
+<ParamField path="generation_batch_size" type="NotRequired[int]">
+
+</ParamField>
+
+<ParamField path="hf_config_overrides" type="NotRequired[dict[str, Any]]">
+
+</ParamField>
+
+<ParamField path="logprob_batch_size" type="NotRequired[int]">
+
+</ParamField>
+
+<ParamField path="logprob_chunk_size" type="NotRequired[int | None]">
+
+</ParamField>
+
+<ParamField path="make_sequence_length_divisible_by" type="int">
+
+</ParamField>
+
+<ParamField path="max_grad_norm" type="NotRequired[float | int | None]">
+
+</ParamField>
+
+<ParamField path="max_total_sequence_length" type="int">
+
+</ParamField>
+
+<ParamField path="megatron_cfg" type="NotRequired[MegatronConfig | MegatronConfigDisabled]">
+
+</ParamField>
+
+<ParamField path="model_name" type="str">
+
+</ParamField>
+
+<ParamField path="optimizer" type="NotRequired[PytorchOptimizerConfig | None]">
+
+</ParamField>
+
+<ParamField path="precision" type="str">
+
+</ParamField>
+
+<ParamField path="refit_buffer_size_gb" type="NotRequired[float]">
+
+</ParamField>
+
+<ParamField path="reward_model_cfg" type="NotRequired[RewardModelConfig]">
+
+</ParamField>
+
+<ParamField path="scheduler" type="NotRequired[list[SinglePytorchSchedulerConfig | SinglePytorchMilestonesConfig] | SchedulerMilestones | None]">
+
+</ParamField>
+
+<ParamField path="sequence_packing" type="NotRequired[SequencePackingConfig | SequencePackingConfigDisabled]">
+
+</ParamField>
+
+<ParamField path="tokenizer" type="TokenizerConfig">
+
+</ParamField>
+
+<ParamField path="train_global_batch_size" type="int">
+
+</ParamField>
+
+<ParamField path="train_micro_batch_size" type="int">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-PytorchOptimizerConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.PytorchOptimizerConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="kwargs" type="dict[str, Any]">
+
+</ParamField>
+
+<ParamField path="name" type="str">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-RewardModelConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.RewardModelConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="enabled" type="bool">
+
+</ParamField>
+
+<ParamField path="reward_model_type" type="str">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-SequencePackingConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.SequencePackingConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="algorithm" type="str">
+
+</ParamField>
+
+<ParamField path="enabled" type="Literal[True]">
+
+</ParamField>
+
+<ParamField path="logprob_mb_tokens" type="NotRequired[int]">
+
+</ParamField>
+
+<ParamField path="train_mb_tokens" type="int">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-SequencePackingConfigDisabled">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.SequencePackingConfigDisabled
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="enabled" type="Literal[False]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-SinglePytorchMilestonesConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.SinglePytorchMilestonesConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="milestones" type="list[int]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-SinglePytorchSchedulerConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.SinglePytorchSchedulerConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="kwargs" type="dict[str, Any]">
+
+</ParamField>
+
+<ParamField path="name" type="str">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-TokenizerConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.TokenizerConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="chat_template" type="NotRequired[str]">
+
+</ParamField>
+
+<ParamField path="chat_template_kwargs" type="NotRequired[dict[str, Any] | None]">
+
+</ParamField>
+
+<ParamField path="name" type="str">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-SchedulerMilestones">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.SchedulerMilestones = dict[str, list[int]]
+```
+
+</CodeBlock>
+</Anchor>
+

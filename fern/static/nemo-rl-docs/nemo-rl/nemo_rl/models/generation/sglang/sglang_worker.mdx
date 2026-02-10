@@ -1,0 +1,529 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/generation/sglang/sglang_worker
+title: nemo_rl.models.generation.sglang.sglang_worker
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`SGLangGenerationWorker`](#nemo_rl-models-generation-sglang-sglang_worker-SGLangGenerationWorker) | - |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_require_sglang`](#nemo_rl-models-generation-sglang-sglang_worker-_require_sglang) | Import `sglang` lazily so test collection works without the optional extra. |
+
+### Data
+
+[`logger`](#nemo_rl-models-generation-sglang-sglang_worker-logger)
+
+### API
+
+<Anchor id="nemo_rl-models-generation-sglang-sglang_worker-SGLangGenerationWorker">
+
+<CodeBlock links={{"nemo_rl.models.generation.sglang.config.SGLangConfig":"/nemo-rl/nemo_rl/models/generation/sglang/config#nemo_rl-models-generation-sglang-config-SGLangConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.generation.sglang.sglang_worker.SGLangGenerationWorker(
+    config: nemo_rl.models.generation.sglang.config.SGLangConfig,
+    bundle_indices: typing.Optional[list[int]] = None,
+    fraction_of_gpus: float = 1.0,
+    seed: typing.Optional[int] = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<ParamField path="async_loop_thread" type="= AsyncLoopThread()">
+</ParamField>
+
+<ParamField path="base_url" type="= f'http://&#123;node_ip&#125;:&#123;free_port&#125;'">
+</ParamField>
+
+<ParamField path="global_rank" type="= int(os.environ.get('RANK', '0'))">
+</ParamField>
+
+<ParamField path="is_model_owner" type="= bundle_indices is not None">
+</ParamField>
+
+<ParamField path="max_concurrent_requests" type="= config.get('max_concurrent_requests', 999999)">
+</ParamField>
+
+<ParamField path="server_process" type="= self._launch_server_process(server_args)">
+</ParamField>
+
+<ParamField path="sglang_cfg" type="= config['sglang_cfg']">
+</ParamField>
+<Anchor id="nemo_rl-models-generation-sglang-sglang_worker-SGLangGenerationWorker-__repr__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_worker.SGLangGenerationWorker.__repr__() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Customizes the actor's prefix in the Ray logs.
+
+This makes it easier to identify which worker is producing specific log messages.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-sglang-sglang_worker-SGLangGenerationWorker-_build_sampling_params">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_worker.SGLangGenerationWorker._build_sampling_params(
+    greedy: bool,
+    stop_strings,
+    max_new_tokens: typing.Optional[int] = None,
+    input_len: typing.Optional[int] = None,
+    context_length: typing.Optional[int] = None,
+    sample_index: typing.Optional[int] = None
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Build sampling parameters dictionary for SGLang API.
+
+**Parameters:**
+
+<ParamField path="greedy" type="bool">
+Whether to use greedy decoding (temperature=0.0)
+</ParamField>
+
+<ParamField path="stop_strings">
+Merged stop strings (not used here, handled per sample)
+</ParamField>
+
+<ParamField path="max_new_tokens" type="Optional[int]" default="None">
+Override max_new_tokens from config if provided
+</ParamField>
+
+<ParamField path="input_len" type="Optional[int]" default="None">
+Input length for this sample (used for context_length adjustment)
+</ParamField>
+
+<ParamField path="context_length" type="Optional[int]" default="None">
+Maximum context length (if provided, adjusts max_new_tokens)
+</ParamField>
+
+<ParamField path="sample_index" type="Optional[int]" default="None">
+Sample index (used for warning messages, 0-indexed)
+</ParamField>
+
+**Returns:** `dict[str, Any]`
+
+Dictionary of sampling parameters compatible with SGLang API
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-sglang-sglang_worker-SGLangGenerationWorker-_ensure_session">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_worker.SGLangGenerationWorker._ensure_session()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-sglang-sglang_worker-SGLangGenerationWorker-_generate_async">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_worker.SGLangGenerationWorker._generate_async(
+    tasks
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Execute generation tasks with concurrency control.
+
+TEMP: Uses a semaphore to limit the number of concurrent requests per server, preventing server overload.
+A router based solution is preffered in the future.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-sglang-sglang_worker-SGLangGenerationWorker-_generate_single_sample">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_worker.SGLangGenerationWorker._generate_single_sample(
+    input_ids: list[int],
+    sampling_params: dict[str, typing.Any],
+    stop_string: typing.Optional[str] = None
+) -> tuple[list[int], list[float]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Generate a single sample using SGLang API (async function).
+
+**Parameters:**
+
+<ParamField path="input_ids" type="list[int]">
+List of input token IDs (without padding)
+</ParamField>
+
+<ParamField path="sampling_params" type="dict[str, Any]">
+Dictionary of sampling parameters (temperature, top_p, max_new_tokens, etc.)
+</ParamField>
+
+<ParamField path="stop_string" type="Optional[str]" default="None">
+Optional stop string for this sample
+</ParamField>
+
+**Returns:** `tuple[list[int], list[float]]`
+
+Tuple of (generated_tokens, logprobs):
+- generated_tokens: List of generated token IDs
+- logprobs: List of log probabilities for generated tokens
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-sglang-sglang_worker-SGLangGenerationWorker-_launch_server_process">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_worker.SGLangGenerationWorker._launch_server_process(
+    server_args: typing.Any
+) -> multiprocessing.Process
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Launch the SGLang server process and wait for it to be ready.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-sglang-sglang_worker-SGLangGenerationWorker-_make_request">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_worker.SGLangGenerationWorker._make_request(
+    endpoint: str,
+    payload: typing.Optional[dict] = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Make a POST request to the specified endpoint with the given payload.
+
+**Parameters:**
+
+<ParamField path="endpoint" type="str">
+The API endpoint to call
+</ParamField>
+
+<ParamField path="payload" type="Optional[dict]" default="None">
+The JSON payload to send (default: empty dict)
+</ParamField>
+
+**Returns:**
+
+The JSON response from the server
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-sglang-sglang_worker-SGLangGenerationWorker-_merge_stop_strings">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_worker.SGLangGenerationWorker._merge_stop_strings(
+    batch_stop_strings
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Merge stop strings from config and batch.
+
+**Parameters:**
+
+<ParamField path="batch_stop_strings">
+List of stop strings from batch (one per sample)
+</ParamField>
+
+**Returns:**
+
+List of merged stop strings (one per sample)
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-sglang-sglang_worker-SGLangGenerationWorker-configure_worker">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_worker.SGLangGenerationWorker.configure_worker(
+    num_gpus: int | float,
+    bundle_indices: typing.Optional[tuple[int, list[int]]] = None
+) -> tuple[dict[str, typing.Any], dict[str, str], dict[str, typing.Any]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+Provides complete worker configuration for SGLang server.
+
+This method configures the worker based on bundle_indices which tells us
+how many GPUs this server should use.
+
+**Parameters:**
+
+<ParamField path="num_gpus" type="int | float">
+Original GPU allocation for this worker based on the placement group
+</ParamField>
+
+<ParamField path="bundle_indices" type="Optional[tuple[int, list[int]]]" default="None">
+Tuple of (node_idx, local_bundle_indices) for this server
+</ParamField>
+
+**Returns:** `tuple[dict[str, Any], dict[str, str], dict[str, Any]]`
+
+tuple with complete worker configuration:
+- 'resources': Resource allocation (e.g., num_gpus)
+- 'env_vars': Environment variables for this worker
+- 'init_kwargs': Parameters to pass to __init__ of the worker
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-sglang-sglang_worker-SGLangGenerationWorker-generate">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.models.generation.interfaces.GenerationDatumSpec":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationDatumSpec","nemo_rl.models.generation.interfaces.GenerationOutputSpec":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationOutputSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_worker.SGLangGenerationWorker.generate(
+    data: nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.generation.interfaces.GenerationDatumSpec],
+    greedy: bool = False
+) -> nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.generation.interfaces.GenerationOutputSpec]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Generate a batch of data using SGLang generation.
+
+**Parameters:**
+
+<ParamField path="data" type="BatchedDataDict[GenerationDatumSpec]">
+BatchedDataDict containing input_ids and input_lengths tensors
+</ParamField>
+
+<ParamField path="greedy" type="bool" default="False">
+Whether to use greedy decoding instead of sampling
+</ParamField>
+
+**Returns:** `BatchedDataDict[GenerationOutputSpec]`
+
+BatchedDataDict conforming to GenerationOutputSpec:
+- output_ids: input + generated token IDs with proper padding
+- logprobs: Log probabilities for tokens
+- generation_lengths: Lengths of each response
+- unpadded_sequence_lengths: Lengths of each input + generated sequence
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-sglang-sglang_worker-SGLangGenerationWorker-get_base_url">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_worker.SGLangGenerationWorker.get_base_url() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the base URL of this SGLang server.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-sglang-sglang_worker-SGLangGenerationWorker-get_gpu_uuids">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_worker.SGLangGenerationWorker.get_gpu_uuids() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get list of GPU UUIDs used by this SGLang server.
+
+**Returns:** `list[str]`
+
+List of GPU UUIDs (e.g., ["GPU-xxxxx", "GPU-yyyyy"])
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-sglang-sglang_worker-SGLangGenerationWorker-invalidate_kv_cache">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_worker.SGLangGenerationWorker.invalidate_kv_cache() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Invalidate KV cache before weight updates (Megatron-style).
+
+This flushes the cache before weight updates to clear stale cache.
+Uses retry logic to handle cases where there are pending requests.
+
+**Returns:** `bool`
+
+True if flush was successful, False otherwise
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-sglang-sglang_worker-SGLangGenerationWorker-shutdown">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_worker.SGLangGenerationWorker.shutdown() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Shutdown the SGLang server process and cleanup async resources.
+
+**Returns:** `bool`
+
+True if shutdown was successful, False otherwise
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-sglang-sglang_worker-SGLangGenerationWorker-sleep">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_worker.SGLangGenerationWorker.sleep()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-sglang-sglang_worker-SGLangGenerationWorker-wake_up">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_worker.SGLangGenerationWorker.wake_up(
+    kwargs = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-models-generation-sglang-sglang_worker-_require_sglang">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_worker._require_sglang()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Import `sglang` lazily so test collection works without the optional extra.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-generation-sglang-sglang_worker-logger">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_worker.logger = logging.getLogger(__name__)
+```
+
+</CodeBlock>
+</Anchor>
+

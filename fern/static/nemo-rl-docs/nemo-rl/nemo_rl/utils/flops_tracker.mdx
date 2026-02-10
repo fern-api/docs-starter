@@ -1,0 +1,215 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/utils/flops_tracker
+title: nemo_rl.utils.flops_tracker
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`FLOPTracker`](#nemo_rl-utils-flops_tracker-FLOPTracker) | - |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`convert_config_to_flops_config`](#nemo_rl-utils-flops_tracker-convert_config_to_flops_config) | Convert a pretrained config to a tuple containing a FLOPSConfig and a flops formula. |
+| [`get_default_hf_config`](#nemo_rl-utils-flops_tracker-get_default_hf_config) | Get the default Hugging Face config for a model. |
+| [`get_theoretical_tflops`](#nemo_rl-utils-flops_tracker-get_theoretical_tflops) | Get the theoretical total flops for a device name. |
+| [`is_using_tf32`](#nemo_rl-utils-flops_tracker-is_using_tf32) | Check if the current device is using TF32. |
+
+### Data
+
+[`THEORETICAL_TFLOPS`](#nemo_rl-utils-flops_tracker-THEORETICAL_TFLOPS)
+
+### API
+
+<Anchor id="nemo_rl-utils-flops_tracker-FLOPTracker">
+
+<CodeBlock links={{"nemo_rl.utils.flops_formulas.FLOPSConfig":"/nemo-rl/nemo_rl/utils/flops_formulas#nemo_rl-utils-flops_formulas-FLOPSConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.utils.flops_tracker.FLOPTracker(
+    model_name: str,
+    base_config: nemo_rl.utils.flops_formulas.FLOPSConfig | None = None,
+    flops_formula: typing.Callable[[FLOPSConfig], float] | None = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<ParamField path="total_flops" type="= 0">
+</ParamField>
+<Anchor id="nemo_rl-utils-flops_tracker-FLOPTracker-from_config">
+
+<CodeBlock links={{"nemo_rl.utils.flops_tracker.FLOPTracker":"#nemo_rl-utils-flops_tracker-FLOPTracker"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.flops_tracker.FLOPTracker.from_config(
+    model_name: str,
+    config: transformers.configuration_utils.PretrainedConfig
+) -> nemo_rl.utils.flops_tracker.FLOPTracker
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-utils-flops_tracker-FLOPTracker-reset">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.flops_tracker.FLOPTracker.reset()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-utils-flops_tracker-FLOPTracker-track">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.flops_tracker.FLOPTracker.track(
+    n_samples: int,
+    padded_seq_len: int
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-utils-flops_tracker-FLOPTracker-track_batch">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.flops_tracker.FLOPTracker.track_batch(
+    sequence_lengths: list[int]
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Track the flops for a batch of sequences.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-utils-flops_tracker-convert_config_to_flops_config">
+
+<CodeBlock links={{"nemo_rl.utils.flops_formulas.FLOPSConfig":"/nemo-rl/nemo_rl/utils/flops_formulas#nemo_rl-utils-flops_formulas-FLOPSConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.flops_tracker.convert_config_to_flops_config(
+    config: transformers.configuration_utils.PretrainedConfig
+) -> tuple[nemo_rl.utils.flops_formulas.FLOPSConfig, typing.Callable]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert a pretrained config to a tuple containing a FLOPSConfig and a flops formula.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-utils-flops_tracker-get_default_hf_config">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.flops_tracker.get_default_hf_config(
+    model_name: str
+) -> transformers.configuration_utils.PretrainedConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the default Hugging Face config for a model.
+
+Both the DTensor and MCore paths use the same default config, we initialize the model config
+here to allow computation of theoretical flops which is agnostic to the backend.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-utils-flops_tracker-get_theoretical_tflops">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.flops_tracker.get_theoretical_tflops(
+    device_name: str,
+    model_dtype: torch.dtype
+) -> float
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the theoretical total flops for a device name.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-utils-flops_tracker-is_using_tf32">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.flops_tracker.is_using_tf32() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if the current device is using TF32.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-utils-flops_tracker-THEORETICAL_TFLOPS">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.flops_tracker.THEORETICAL_TFLOPS = {('NVIDIA A100 80GB PCIe', torch.bfloat16): 624 / 2, ('NVIDIA A100 80GB PCIe', t...
+```
+
+</CodeBlock>
+</Anchor>
+

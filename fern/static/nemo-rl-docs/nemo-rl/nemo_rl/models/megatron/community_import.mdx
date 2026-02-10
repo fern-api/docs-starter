@@ -1,0 +1,76 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/megatron/community_import
+title: nemo_rl.models.megatron.community_import
+---
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`export_model_from_megatron`](#nemo_rl-models-megatron-community_import-export_model_from_megatron) | - |
+| [`import_model_from_hf_name`](#nemo_rl-models-megatron-community_import-import_model_from_hf_name) | Import a Hugging Face model into Megatron checkpoint format and save the Megatron checkpoint to the output path. |
+
+### API
+
+<Anchor id="nemo_rl-models-megatron-community_import-export_model_from_megatron">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.community_import.export_model_from_megatron(
+    hf_model_name: str,
+    input_path: str,
+    output_path: str,
+    hf_tokenizer_path: str,
+    overwrite: bool = False,
+    hf_overrides: typing.Optional[dict[str, typing.Any]] = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-community_import-import_model_from_hf_name">
+
+<CodeBlock links={{"nemo_rl.models.policy.MegatronConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-MegatronConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.community_import.import_model_from_hf_name(
+    hf_model_name: str,
+    output_path: str,
+    megatron_config: typing.Optional[nemo_rl.models.policy.MegatronConfig] = None,
+    config_overrides: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Import a Hugging Face model into Megatron checkpoint format and save the Megatron checkpoint to the output path.
+
+**Parameters:**
+
+<ParamField path="hf_model_name" type="str">
+Hugging Face model ID or local path (e.g., 'meta-llama/Llama-3.1-8B-Instruct').
+</ParamField>
+
+<ParamField path="output_path" type="str">
+Directory to write the Megatron checkpoint (e.g., /tmp/megatron_ckpt).
+</ParamField>
+
+<ParamField path="megatron_config" type="Optional[MegatronConfig]" default="None">
+Optional megatron config with paralellism settings for distributed megatron model import.
+</ParamField>
+
+
+</Indent>

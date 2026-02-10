@@ -1,0 +1,316 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/environments/dapo_math_verifier
+title: nemo_rl.environments.dapo_math_verifier
+---
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`compute_score`](#nemo_rl-environments-dapo_math_verifier-compute_score) | Compute the reward score for a solution. |
+| [`is_correct_minerva`](#nemo_rl-environments-dapo_math_verifier-is_correct_minerva) | Check if the solution is correct according to Minerva criteria. |
+| [`is_correct_strict_box`](#nemo_rl-environments-dapo_math_verifier-is_correct_strict_box) | Check if the prediction is correct using strict boxed answer criteria. |
+| [`last_boxed_only_string`](#nemo_rl-environments-dapo_math_verifier-last_boxed_only_string) | Extract the last LaTeX boxed expression from a string. |
+| [`normalize_final_answer`](#nemo_rl-environments-dapo_math_verifier-normalize_final_answer) | Normalize a final answer to a quantitative reasoning question. |
+| [`remove_boxed`](#nemo_rl-environments-dapo_math_verifier-remove_boxed) | Remove the LaTeX boxed command from a string. |
+| [`verify`](#nemo_rl-environments-dapo_math_verifier-verify) | Verify if the solution is correct. |
+
+### Data
+
+[`REMOVED_EXPRESSIONS`](#nemo_rl-environments-dapo_math_verifier-REMOVED_EXPRESSIONS)
+
+[`SUBSTITUTIONS`](#nemo_rl-environments-dapo_math_verifier-SUBSTITUTIONS)
+
+### API
+
+<Anchor id="nemo_rl-environments-dapo_math_verifier-compute_score">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.dapo_math_verifier.compute_score(
+    solution_str: str,
+    ground_truth: str,
+    strict_box_verify: bool = False,
+    pause_tokens_index: typing.Optional[list[int]] = None
+) -> float
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Compute the reward score for a solution.
+
+**Parameters:**
+
+<ParamField path="solution_str" type="str">
+The solution string
+</ParamField>
+
+<ParamField path="ground_truth" type="str">
+The ground truth answer
+</ParamField>
+
+<ParamField path="strict_box_verify" type="bool" default="False">
+Whether to use strict box verification
+</ParamField>
+
+<ParamField path="pause_tokens_index" type="Optional[list[int]]" default="None">
+Indices of pause tokens
+</ParamField>
+
+**Returns:** `float`
+
+Reward score (1.0 for correct, 0.0 for incorrect)
+
+
+</Indent>
+
+<Anchor id="nemo_rl-environments-dapo_math_verifier-is_correct_minerva">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.dapo_math_verifier.is_correct_minerva(
+    solution_str: str,
+    gt: str,
+    gt_need_extract: bool = False,
+    answer_pattern: str = '(?i)Answer\\s*:\\s*([^\\n]+)'
+) -> tuple[bool, str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if the solution is correct according to Minerva criteria.
+
+**Parameters:**
+
+<ParamField path="solution_str" type="str">
+The solution string to check
+</ParamField>
+
+<ParamField path="gt" type="str">
+The ground truth answer
+</ParamField>
+
+<ParamField path="gt_need_extract" type="bool" default="False">
+Whether the ground truth needs extraction
+</ParamField>
+
+<ParamField path="answer_pattern" type="str" default="'(?i)Answer\\s*:\\s*([^\\n]+)'">
+Regex pattern to extract the answer
+</ParamField>
+
+**Returns:** `tuple[bool, str]`
+
+Tuple of (is_correct, normalized_prediction)
+
+
+</Indent>
+
+<Anchor id="nemo_rl-environments-dapo_math_verifier-is_correct_strict_box">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.dapo_math_verifier.is_correct_strict_box(
+    pred: str,
+    gt: str,
+    pause_tokens_index: typing.Optional[list[int]] = None
+) -> tuple[int, typing.Optional[str]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if the prediction is correct using strict boxed answer criteria.
+
+**Parameters:**
+
+<ParamField path="pred" type="str">
+The prediction string
+</ParamField>
+
+<ParamField path="gt" type="str">
+The ground truth answer
+</ParamField>
+
+<ParamField path="pause_tokens_index" type="Optional[list[int]]" default="None">
+Indices of pause tokens
+</ParamField>
+
+**Returns:** `tuple[int, Optional[str]]`
+
+Tuple of (score, extracted_prediction)
+
+
+</Indent>
+
+<Anchor id="nemo_rl-environments-dapo_math_verifier-last_boxed_only_string">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.dapo_math_verifier.last_boxed_only_string(
+    string: str
+) -> typing.Optional[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Extract the last LaTeX boxed expression from a string.
+
+**Parameters:**
+
+<ParamField path="string" type="str">
+Input string containing LaTeX code
+</ParamField>
+
+**Returns:** `Optional[str]`
+
+The last boxed expression or None if not found
+
+
+</Indent>
+
+<Anchor id="nemo_rl-environments-dapo_math_verifier-normalize_final_answer">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.dapo_math_verifier.normalize_final_answer(
+    final_answer: str
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Normalize a final answer to a quantitative reasoning question.
+
+**Parameters:**
+
+<ParamField path="final_answer" type="str">
+The answer string to normalize
+</ParamField>
+
+**Returns:** `str`
+
+Normalized answer string
+
+
+</Indent>
+
+<Anchor id="nemo_rl-environments-dapo_math_verifier-remove_boxed">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.dapo_math_verifier.remove_boxed(
+    s: str
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Remove the LaTeX boxed command from a string.
+
+**Parameters:**
+
+<ParamField path="s" type="str">
+String with format "\\boxed&#123;content&#125;"
+</ParamField>
+
+**Returns:** `str`
+
+The content inside the boxed command
+
+
+</Indent>
+
+<Anchor id="nemo_rl-environments-dapo_math_verifier-verify">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.dapo_math_verifier.verify(
+    solution_str: str,
+    answer: str,
+    strict_box_verify: bool = False,
+    pause_tokens_index: typing.Optional[list[int]] = None
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Verify if the solution is correct.
+
+**Parameters:**
+
+<ParamField path="solution_str" type="str">
+The solution string to verify
+</ParamField>
+
+<ParamField path="answer" type="str">
+The ground truth answer
+</ParamField>
+
+<ParamField path="strict_box_verify" type="bool" default="False">
+Whether to use strict box verification
+</ParamField>
+
+<ParamField path="pause_tokens_index" type="Optional[list[int]]" default="None">
+Indices of pause tokens
+</ParamField>
+
+**Returns:** `bool`
+
+True if the solution is correct, False otherwise
+
+
+</Indent>
+
+<Anchor id="nemo_rl-environments-dapo_math_verifier-REMOVED_EXPRESSIONS">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.dapo_math_verifier.REMOVED_EXPRESSIONS = ['square', 'ways', 'integers', 'dollars', 'mph', 'inches', 'hours', 'km', 'units...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="nemo_rl-environments-dapo_math_verifier-SUBSTITUTIONS">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.environments.dapo_math_verifier.SUBSTITUTIONS = [('an ', ''), ('a ', ''), ('.$', '$'), ('\\$', ''), ('\\ ', ''), (' ', ''), ('mb...
+```
+
+</CodeBlock>
+</Anchor>
+

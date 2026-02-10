@@ -1,0 +1,851 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/distributed/model_utils
+title: nemo_rl.distributed.model_utils
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`AllGatherCPTensor`](#nemo_rl-distributed-model_utils-AllGatherCPTensor) | - |
+| [`ChunkedDistributedEntropy`](#nemo_rl-distributed-model_utils-ChunkedDistributedEntropy) | Compute H_all = sum_v p_v log p_v across TP with chunking over sequence. |
+| [`ChunkedDistributedGatherLogprob`](#nemo_rl-distributed-model_utils-ChunkedDistributedGatherLogprob) | Compute distributed log-softmax once and gather logprobs at given global indices. |
+| [`ChunkedDistributedLogprob`](#nemo_rl-distributed-model_utils-ChunkedDistributedLogprob) | Custom autograd function for computing log probabilities in a distributed setting. |
+| [`DistributedLogprob`](#nemo_rl-distributed-model_utils-DistributedLogprob) | Custom autograd function for computing log probabilities in a distributed setting. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_compute_distributed_log_softmax`](#nemo_rl-distributed-model_utils-_compute_distributed_log_softmax) | Compute a stable distributed log softmax across tensor parallel workers. |
+| [`_get_tokens_on_this_cp_rank`](#nemo_rl-distributed-model_utils-_get_tokens_on_this_cp_rank) | Get tokens on this context parallelism rank. |
+| [`allgather_cp_sharded_tensor`](#nemo_rl-distributed-model_utils-allgather_cp_sharded_tensor) | - |
+| [`distributed_vocab_topk`](#nemo_rl-distributed-model_utils-distributed_vocab_topk) | Compute global top-k over TP-sharded vocabulary logits. |
+| [`dtensor_from_parallel_logits_to_logprobs`](#nemo_rl-distributed-model_utils-dtensor_from_parallel_logits_to_logprobs) | Get log probabilities from TP+CP sharded vocab logits. |
+| [`from_parallel_logits_to_logprobs`](#nemo_rl-distributed-model_utils-from_parallel_logits_to_logprobs) | Get log probabilities from TP+CP sharded vocab logits. |
+| [`from_parallel_logits_to_logprobs_packed_sequences`](#nemo_rl-distributed-model_utils-from_parallel_logits_to_logprobs_packed_sequences) | Get log probabilities from TP sharded vocab logits for packed sequences. |
+| [`gather_logits_at_global_indices`](#nemo_rl-distributed-model_utils-gather_logits_at_global_indices) | Gather student logits at given global token indices under TP+CP sharding. |
+| [`get_logprobs_from_vocab_parallel_logits`](#nemo_rl-distributed-model_utils-get_logprobs_from_vocab_parallel_logits) | Computes log probabilities from vocabulary-parallel logits. |
+
+### API
+
+<Anchor id="nemo_rl-distributed-model_utils-AllGatherCPTensor">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.distributed.model_utils.AllGatherCPTensor()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `Function`
+
+<Anchor id="nemo_rl-distributed-model_utils-AllGatherCPTensor-backward">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.model_utils.AllGatherCPTensor.backward(
+    ctx,
+    grad_output
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-distributed-model_utils-AllGatherCPTensor-forward">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.model_utils.AllGatherCPTensor.forward(
+    ctx,
+    tensor,
+    cp_group: torch.distributed.ProcessGroup,
+    seq_dim = 1
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-distributed-model_utils-ChunkedDistributedEntropy">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.distributed.model_utils.ChunkedDistributedEntropy()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `Function`
+
+Compute H_all = sum_v p_v log p_v across TP with chunking over sequence.
+
+Forward returns [B, S] tensor of global entropy; backward propagates through logits.
+
+
+<Anchor id="nemo_rl-distributed-model_utils-ChunkedDistributedEntropy-backward">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.model_utils.ChunkedDistributedEntropy.backward(
+    ctx: typing.Any,
+    grad_outputs: torch.Tensor = ()
+) -> tuple[torch.Tensor, None, None, None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-distributed-model_utils-ChunkedDistributedEntropy-forward">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.model_utils.ChunkedDistributedEntropy.forward(
+    ctx: typing.Any,
+    vocab_parallel_logits: torch.Tensor,
+    chunk_size: int,
+    tp_group: torch.distributed.ProcessGroup,
+    inference_only: bool = False
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-distributed-model_utils-ChunkedDistributedGatherLogprob">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.distributed.model_utils.ChunkedDistributedGatherLogprob()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `Function`
+
+Compute distributed log-softmax once and gather logprobs at given global indices.
+
+Forward computes per-chunk distributed log-softmax across TP, gathers selected
+log probabilities at the provided global indices (shape [B, S, K]), and returns
+a tensor of shape [B, S, K].
+
+
+<Anchor id="nemo_rl-distributed-model_utils-ChunkedDistributedGatherLogprob-backward">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.model_utils.ChunkedDistributedGatherLogprob.backward(
+    ctx: typing.Any,
+    grad_outputs: torch.Tensor = ()
+) -> tuple[torch.Tensor, None, None, None, None, None, None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-distributed-model_utils-ChunkedDistributedGatherLogprob-forward">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.model_utils.ChunkedDistributedGatherLogprob.forward(
+    ctx: typing.Any,
+    vocab_parallel_logits: torch.Tensor,
+    global_indices: torch.Tensor,
+    vocab_start_index: int,
+    vocab_end_index: int,
+    chunk_size: int,
+    tp_group: torch.distributed.ProcessGroup,
+    inference_only: bool = False
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-distributed-model_utils-ChunkedDistributedLogprob">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.distributed.model_utils.ChunkedDistributedLogprob()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `Function`
+
+Custom autograd function for computing log probabilities in a distributed setting.
+
+The log probabilities computation is chunked in the sequence dimension
+to mitigate GPU OOM (especially during backward pass).
+In addition, logits casting from float16 or bfloat16 -&gt; float32 is performed
+inside the chunk loop to avoid materializing a whole float32 logits tensor.
+
+Adapted from https://github.com/NVIDIA/NeMo-Aligner/blob/9faab404f21994a7eb1d6ed5890b76152b941636/nemo_aligner/utils/distributed.py#L286
+
+
+<Anchor id="nemo_rl-distributed-model_utils-ChunkedDistributedLogprob-backward">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.model_utils.ChunkedDistributedLogprob.backward(
+    ctx: typing.Any,
+    grad_outputs: torch.Tensor = ()
+) -> tuple[torch.Tensor, None, None, None, None, None, None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-distributed-model_utils-ChunkedDistributedLogprob-forward">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.model_utils.ChunkedDistributedLogprob.forward(
+    ctx: typing.Any,
+    vocab_parallel_logits: torch.Tensor,
+    target: torch.Tensor,
+    vocab_start_index: int,
+    vocab_end_index: int,
+    chunk_size: int,
+    tp_group: torch.distributed.ProcessGroup,
+    inference_only: bool = False
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-distributed-model_utils-DistributedLogprob">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.distributed.model_utils.DistributedLogprob()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `Function`
+
+Custom autograd function for computing log probabilities in a distributed setting.
+
+Taken from https://github.com/NVIDIA/NeMo-Aligner/blob/9faab404f21994a7eb1d6ed5890b76152b941636/nemo_aligner/utils/distributed.py#L286
+
+
+<Anchor id="nemo_rl-distributed-model_utils-DistributedLogprob-backward">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.model_utils.DistributedLogprob.backward(
+    ctx: typing.Any,
+    grad_outputs: torch.Tensor = ()
+) -> tuple[torch.Tensor, None, None, None, None, None, None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-distributed-model_utils-DistributedLogprob-forward">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.model_utils.DistributedLogprob.forward(
+    ctx: typing.Any,
+    vocab_parallel_logits: torch.Tensor,
+    target: torch.Tensor,
+    vocab_start_index: int,
+    vocab_end_index: int,
+    group: torch.distributed.ProcessGroup,
+    inference_only: bool = False
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-distributed-model_utils-_compute_distributed_log_softmax">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.model_utils._compute_distributed_log_softmax(
+    vocab_parallel_logits: torch.Tensor,
+    group: torch.distributed.ProcessGroup
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Compute a stable distributed log softmax across tensor parallel workers.
+
+Taken from: https://github.com/NVIDIA/NeMo-Aligner/blob/9faab404f21994a7eb1d6ed5890b76152b941636/nemo_aligner/utils/distributed.py#L265
+
+**Parameters:**
+
+<ParamField path="vocab_parallel_logits" type="torch.Tensor">
+Logits tensor with shape [batch_size, seq_length, vocab_size//TP]
+where TP is the tensor parallel size.
+</ParamField>
+
+<ParamField path="group" type="torch.distributed.ProcessGroup">
+Process group for the all-reduce operations.
+</ParamField>
+
+**Returns:** `torch.Tensor`
+
+torch.Tensor: Log softmax output with the same shape as input, but values represent
+log probabilities normalized across the full vocabulary dimension.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-distributed-model_utils-_get_tokens_on_this_cp_rank">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.model_utils._get_tokens_on_this_cp_rank(
+    input_ids: torch.Tensor,
+    cp_rank: int,
+    cp_size: int,
+    seq_dim: int = 1
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get tokens on this context parallelism rank.
+
+Assumes that input_ids are already padded to a multiple of cp_size * 2 or cp_size == 1.
+
+**Parameters:**
+
+<ParamField path="input_ids" type="torch.Tensor">
+Input token IDs [seq_length, ]
+</ParamField>
+
+<ParamField path="cp_rank" type="int">
+Context parallelism rank
+</ParamField>
+
+<ParamField path="cp_size" type="int">
+Context parallelism size
+</ParamField>
+
+**Returns:** `torch.Tensor`
+
+Tokens on this context parallelism rank [1, seq_length // cp_size]
+
+
+</Indent>
+
+<Anchor id="nemo_rl-distributed-model_utils-allgather_cp_sharded_tensor">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.model_utils.allgather_cp_sharded_tensor(
+    tensor,
+    cp_group,
+    seq_dim = 1
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-distributed-model_utils-distributed_vocab_topk">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.model_utils.distributed_vocab_topk(
+    vocab_parallel_logits: torch.Tensor,
+    k: int,
+    tp_group: torch.distributed.ProcessGroup,
+    vocab_start_index: int,
+    vocab_end_index: int,
+    chunk_size: typing.Optional[int] = None
+) -> tuple[torch.Tensor, torch.Tensor]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Compute global top-k over TP-sharded vocabulary logits.
+
+**Parameters:**
+
+<ParamField path="vocab_parallel_logits" type="torch.Tensor">
+[B, S, V_local]
+</ParamField>
+
+<ParamField path="k" type="int">
+number of top tokens to select globally
+</ParamField>
+
+<ParamField path="tp_group" type="torch.distributed.ProcessGroup">
+tensor-parallel process group
+</ParamField>
+
+<ParamField path="vocab_start_index" type="int">
+global vocab start for this rank (inclusive)
+</ParamField>
+
+<ParamField path="vocab_end_index" type="int">
+global vocab end for this rank (exclusive)
+</ParamField>
+
+<ParamField path="chunk_size" type="Optional[int]" default="None">
+optional chunk along sequence dim to bound memory
+</ParamField>
+
+**Returns:** `torch.Tensor`
+
+[B, S, k]
+
+
+</Indent>
+
+<Anchor id="nemo_rl-distributed-model_utils-dtensor_from_parallel_logits_to_logprobs">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.model_utils.dtensor_from_parallel_logits_to_logprobs(
+    vocab_parallel_logits: torch.Tensor,
+    target: torch.distributed.tensor.DTensor | torch.Tensor,
+    vocab_start_index: int,
+    vocab_end_index: int,
+    tp_group: torch.distributed.ProcessGroup,
+    inference_only: bool = False,
+    seq_index: typing.Optional[torch.Tensor] = None,
+    chunk_size: typing.Optional[int] = None
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get log probabilities from TP+CP sharded vocab logits.
+
+**Parameters:**
+
+<ParamField path="vocab_parallel_logits" type="orch.Tensor">
+Logits distributed across tensor parallel workers,
+with shape [batch_size, seq_len, vocab_size/tp_size].
+</ParamField>
+
+<ParamField path="target" type="DTensor">
+Target token indices with shape [batch_size, seq_len].
+NOTE: Must be the unmodified targets as this function will shift them internally.
+</ParamField>
+
+<ParamField path="vocab_start_index" type="int">
+Starting vocabulary index for this worker's partition.
+</ParamField>
+
+<ParamField path="vocab_end_index" type="int">
+Ending vocabulary index for this worker's partition.
+</ParamField>
+
+<ParamField path="tp_group" type="torch.distributed.ProcessGroup">
+Process group for distributed communication.
+</ParamField>
+
+<ParamField path="inference_only" type="bool" default="False">
+If True, tensors won't be saved for backward pass. Defaults to False.
+</ParamField>
+
+<ParamField path="seq_index" type="Optional[torch.Tensor]" default="None">
+Sequence index tensor with shape [seq_len].
+It is only provided for cp sharded logits. It represents how tensor is sharded across the sequence dimension.
+</ParamField>
+
+<ParamField path="chunk_size" type="Optional[int]" default="None">
+Sequence dimension chunk size for computing the log probabilities.
+</ParamField>
+
+**Returns:** `torch.Tensor`
+
+torch.Tensor: Log probabilities tensor with shape [batch_size, seq_len-1].
+The sequence dimension is reduced by 1 due to the target shifting.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-distributed-model_utils-from_parallel_logits_to_logprobs">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.model_utils.from_parallel_logits_to_logprobs(
+    vocab_parallel_logits: torch.Tensor,
+    target: torch.Tensor,
+    vocab_start_index: int,
+    vocab_end_index: int,
+    tp_group: torch.distributed.ProcessGroup,
+    inference_only: bool = False,
+    cp_group: typing.Optional[torch.distributed.ProcessGroup] = None,
+    chunk_size: typing.Optional[int] = None
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get log probabilities from TP+CP sharded vocab logits.
+
+Taken from: https://github.com/NVIDIA/NeMo-Aligner/blob/9faab404f21994a7eb1d6ed5890b76152b941636/nemo_aligner/utils/distributed.py#L354
+
+**Parameters:**
+
+<ParamField path="vocab_parallel_logits" type="torch.Tensor">
+Logits tensor with shape [batch_size, seq_len // CP, vocab_size // TP]
+where TP is the tensor parallel size.
+</ParamField>
+
+<ParamField path="target" type="torch.Tensor">
+Target token indices with shape [batch_size, seq_len].
+NOTE: Must be the unmodified targets as this function will shift them internally.
+</ParamField>
+
+<ParamField path="vocab_start_index" type="int">
+Starting vocabulary index for this worker's partition.
+</ParamField>
+
+<ParamField path="vocab_end_index" type="int">
+Ending vocabulary index for this worker's partition.
+</ParamField>
+
+<ParamField path="tp_group" type="torch.distributed.ProcessGroup">
+Process group for distributed communication.
+</ParamField>
+
+<ParamField path="inference_only" type="bool" default="False">
+If True, tensors won't be saved for backward pass. Defaults to False.
+</ParamField>
+
+<ParamField path="cp_group" type="torch.distributed.ProcessGroup" default="None">
+Context parallelism process group. Defaults to None.
+</ParamField>
+
+<ParamField path="chunk_size" type="int" default="None">
+Sequence dimension chunk size for computing the log probabilities.
+</ParamField>
+
+**Returns:** `torch.Tensor`
+
+torch.Tensor: Log probabilities tensor with shape [batch_size, seq_len-1].
+The sequence dimension is reduced by 1 due to the target shifting.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-distributed-model_utils-from_parallel_logits_to_logprobs_packed_sequences">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.model_utils.from_parallel_logits_to_logprobs_packed_sequences(
+    vocab_parallel_logits: torch.Tensor,
+    target: torch.Tensor,
+    cu_seqlens_padded: torch.Tensor,
+    unpacked_seqlen: int,
+    vocab_start_index: int,
+    vocab_end_index: int,
+    group: torch.distributed.ProcessGroup,
+    inference_only: bool = False,
+    cp_group: typing.Optional[torch.distributed.ProcessGroup] = None,
+    chunk_size: typing.Optional[int] = None
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get log probabilities from TP sharded vocab logits for packed sequences.
+
+**Parameters:**
+
+<ParamField path="vocab_parallel_logits" type="torch.Tensor">
+Packed logits tensor with shape [1, T // CP, vocab_size//TP]
+where T is the total number of tokens across all packed sequences.
+</ParamField>
+
+<ParamField path="target" type="torch.Tensor">
+Packed target token indices with shape [1, T].
+NOTE: Must be the unmodified targets as this function will shift them internally.
+</ParamField>
+
+<ParamField path="cu_seqlens" type="torch.Tensor">
+Cumulative sequence lengths tensor with shape [batch_size + 1].
+cu_seqlens[i] indicates the start position of sequence i in the packed format.
+</ParamField>
+
+<ParamField path="unpacked_seqlen" type="int">
+The length of the unpacked sequence tensor.
+</ParamField>
+
+<ParamField path="vocab_start_index" type="int">
+Starting vocabulary index for this worker's partition.
+</ParamField>
+
+<ParamField path="vocab_end_index" type="int">
+Ending vocabulary index for this worker's partition.
+</ParamField>
+
+<ParamField path="group" type="torch.distributed.ProcessGroup">
+Process group for distributed communication.
+</ParamField>
+
+<ParamField path="inference_only" type="bool" default="False">
+If True, tensors won't be saved for backward pass. Defaults to False.
+</ParamField>
+
+<ParamField path="cp_group" type="torch.distributed.ProcessGroup" default="None">
+Context parallelism process group. Defaults to None.
+</ParamField>
+
+<ParamField path="chunk_size" type="int" default="None">
+Sequence dimension chunk size for computing the log probabilities.
+</ParamField>
+
+**Returns:** `torch.Tensor`
+
+torch.Tensor: Unpacked log probabilities tensor with shape [batch_size, unpacked_seqlen-1].
+The total length is reduced by batch_size due to target shifting (one token per sequence).
+
+
+</Indent>
+
+<Anchor id="nemo_rl-distributed-model_utils-gather_logits_at_global_indices">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.model_utils.gather_logits_at_global_indices(
+    vocab_parallel_logits: torch.Tensor,
+    global_indices: torch.Tensor,
+    tp_group: typing.Optional[torch.distributed.ProcessGroup] = None,
+    cp_group: typing.Optional[torch.distributed.ProcessGroup] = None,
+    vocab_start_index: int,
+    vocab_end_index: int,
+    chunk_size: typing.Optional[int] = None
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Gather student logits at given global token indices under TP+CP sharding.
+
+Differentiable w.r.t. vocab_parallel_logits.
+
+**Parameters:**
+
+<ParamField path="vocab_parallel_logits" type="torch.Tensor">
+[B, S_cp, V_local] where S_cp is CP sharded sequence length
+</ParamField>
+
+<ParamField path="global_indices" type="torch.Tensor">
+[B, S_full, k] where S_full is full sequence length
+</ParamField>
+
+<ParamField path="tp_group" type="Optional[torch.distributed.ProcessGroup]" default="None">
+Optional tensor-parallel process group. If None, treats logits as full-vocab (no TP) and skips TP all-reduce.
+</ParamField>
+
+<ParamField path="vocab_start_index" type="int">
+global vocab start for this rank (inclusive)
+</ParamField>
+
+<ParamField path="vocab_end_index" type="int">
+global vocab end for this rank (exclusive)
+</ParamField>
+
+<ParamField path="chunk_size" type="Optional[int]" default="None">
+optional chunk along sequence dim to bound memory
+</ParamField>
+
+<ParamField path="cp_group" type="Optional[torch.distributed.ProcessGroup]" default="None">
+Optional context-parallel process group
+</ParamField>
+
+**Returns:** `torch.Tensor`
+
+[B, S_full, k]
+
+
+</Indent>
+
+<Anchor id="nemo_rl-distributed-model_utils-get_logprobs_from_vocab_parallel_logits">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.distributed.model_utils.get_logprobs_from_vocab_parallel_logits(
+    vocab_parallel_logits: torch.distributed.tensor.DTensor,
+    input_ids: torch.Tensor | torch.distributed.tensor.DTensor,
+    seq_index: typing.Optional[torch.Tensor] = None,
+    chunk_size: typing.Optional[int] = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Computes log probabilities from vocabulary-parallel logits.
+
+This function takes logits that are sharded across the vocabulary dimension (tensor parallel)
+and computes the log probabilities for the given input IDs.
+
+**Parameters:**
+
+<ParamField path="vocab_parallel_logits" type="DTensor">
+Logits distributed across tensor parallel workers,
+with shape [batch_size, seq_len, vocab_size/tp_size].
+</ParamField>
+
+<ParamField path="input_ids" type="torch.Tensor | DTensor">
+Input token IDs for which to compute log probabilities,
+with shape [batch_size, seq_len].
+</ParamField>
+
+<ParamField path="seq_index" type="Optional[torch.Tensor]" default="None">
+Sequence index for the input IDs,
+with shape [sequence_length].
+</ParamField>
+
+<ParamField path="chunk_size" type="Optional[int]" default="None">
+Sequence dimension chunk size for computing log probabilities.
+</ParamField>
+
+**Returns:**
+
+torch.Tensor: Log probabilities for the given input IDs.
+
+
+</Indent>

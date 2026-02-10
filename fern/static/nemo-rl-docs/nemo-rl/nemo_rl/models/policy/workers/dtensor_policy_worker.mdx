@@ -1,0 +1,693 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/policy/workers/dtensor_policy_worker
+title: nemo_rl.models.policy.workers.dtensor_policy_worker
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`DTensorPolicyWorker`](#nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker) | - |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`get_cpu_state_dict`](#nemo_rl-models-policy-workers-dtensor_policy_worker-get_cpu_state_dict) | Copy the state dict generator to CPU memory. |
+| [`unshard_fsdp2_model`](#nemo_rl-models-policy-workers-dtensor_policy_worker-unshard_fsdp2_model) | Explicitly unshard and then reshard the FSDP2 modules. Useful for logprob inference. |
+
+### API
+
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker(
+    config: nemo_rl.models.policy.PolicyConfig,
+    tokenizer: transformers.AutoTokenizer,
+    processor: typing.Optional[transformers.AutoProcessor] = None,
+    weights_path: typing.Optional[str] = None,
+    optimizer_path: typing.Optional[str] = None,
+    init_optimizer: bool = True,
+    init_reference_model: bool = True,
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [AbstractPolicyWorker](/nemo-rl/nemo_rl/models/policy/workers/base_policy_worker#nemo_rl-models-policy-workers-base_policy_worker-AbstractPolicyWorker), [ColocatablePolicyInterface](/nemo-rl/nemo_rl/models/policy/interfaces#nemo_rl-models-policy-interfaces-ColocatablePolicyInterface)
+
+<ParamField path="_is_reward_model">
+</ParamField>
+
+<ParamField path="cpu_offload" type="= self.cfg['dtensor_cfg']['cpu_offload']">
+</ParamField>
+
+<ParamField path="dp_cp_mesh">
+</ParamField>
+
+<ParamField path="dtype" type="= torch.float32">
+</ParamField>
+
+<ParamField path="enable_seq_packing" type="= self.cfg['sequence_packing']['enabled']">
+</ParamField>
+
+<ParamField path="is_vlm" type="= processor is not None">
+</ParamField>
+
+<ParamField path="max_grad_norm" type="= self.cfg['max_grad_norm']">
+</ParamField>
+
+<ParamField path="model">
+</ParamField>
+
+<ParamField path="offload_optimizer_for_logprob" type="= self.cfg['offload_optimizer_for_logprob']">
+</ParamField>
+
+<ParamField path="optimizer">
+</ParamField>
+
+<ParamField path="rank" type="= torch.distributed.get_rank()">
+</ParamField>
+
+<ParamField path="reference_model_state_dict">
+</ParamField>
+
+<ParamField path="scheduler">
+</ParamField>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-__repr__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.__repr__() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Customizes the actor's prefix in the Ray logs.
+
+This makes it easier to identify which worker is producing specific log messages.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-_add_noise_to_weights">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker._add_noise_to_weights() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add small Gaussian noise to the weights of the model. Note that this is used for testing purposes only.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-_apply_temperature_scaling">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker._apply_temperature_scaling(
+    logits: torch.Tensor
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-broadcast_weights_for_collective">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.broadcast_weights_for_collective(
+    kv_scales: typing.Optional[dict[str, float]] = None
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Broadcast the weights for collective communication.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-calibrate_qkv_fp8_scales">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.calibrate_qkv_fp8_scales(
+    data: nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any],
+    micro_batch_size: typing.Optional[int] = None,
+    percentile: float = 99.9,
+    margin: float = 1.05,
+    include_q: bool = False
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Placeholder for FP8 Q/K/V scale calibration, not implemented for DTensorPolicyWorker.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-create_context_parallel_ctx">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.create_context_parallel_ctx(
+    cp_mesh: torch.distributed.device_mesh.DeviceMesh,
+    cp_buffers: list[torch.Tensor],
+    cp_seq_dims: list[int],
+    cp_no_restore_buffers: typing.Set[torch.Tensor],
+    cp_rotate_method: typing.Optional[str] = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+Create a context parallel context.
+
+**Parameters:**
+
+<ParamField path="cp_mesh" type="DeviceMesh">
+The device mesh for context parallel.
+</ParamField>
+
+<ParamField path="cp_buffers" type="list[torch.Tensor]">
+The buffers for context parallel.
+</ParamField>
+
+<ParamField path="cp_seq_dims" type="list[int]">
+The sequence dimensions for context parallel.
+</ParamField>
+
+<ParamField path="cp_no_restore_buffers" type="Set[torch.Tensor]">
+The no restore buffers for context parallel.
+</ParamField>
+
+<ParamField path="cp_rotate_method" type="str" default="None">
+The rotation method for context parallel, such as "allgather" or "addtoall".
+</ParamField>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-get_logprobs">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.models.policy.interfaces.LogprobOutputSpec":"/nemo-rl/nemo_rl/models/policy/interfaces#nemo_rl-models-policy-interfaces-LogprobOutputSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.get_logprobs(
+    data: nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any],
+    micro_batch_size: typing.Optional[int] = None
+) -> nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.policy.interfaces.LogprobOutputSpec]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the logprobs of the model for a batch of data.
+
+Uses the configured logprob_batch_size to do microbatching.
+
+Input data is assumed to be right-padded. The method internally converts to
+left-padded format for computation, and returns outputs in right-padded format.
+
+**Returns:** `BatchedDataDict[LogprobOutputSpec]`
+
+a BatchedDataDict with key "logprobs" and shape [batch_size, sequence_length].
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-get_topk_logits">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.get_topk_logits(
+    data: nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any],
+    k: int,
+    micro_batch_size: typing.Optional[int] = None
+) -> nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return per-position top-k logits and corresponding global indices.
+
+Notes:
+- Return shapes are [B, S, k].
+- Computes top-k over the full sequence (no trimming of the last position).
+- If alignment with next-token targets is required, the caller should handle it.
+- If logits are TP-sharded DTensor, performs distributed global top-k across TP.
+- Supports context parallelism with proper CP gather.
+- Otherwise, computes local top-k on full-vocab tensor.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-load_checkpoint">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.load_checkpoint(
+    weights_path: str,
+    optimizer_path: typing.Optional[str] = None
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Load a checkpoint into the model.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-move_buffer_to_device">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.move_buffer_to_device(
+    model: torch.nn.Module,
+    device: str | torch.device
+) -> torch.nn.Module
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-move_optimizer_to_device">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.move_optimizer_to_device(
+    device: str | torch.device
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-move_to_cpu">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.move_to_cpu(
+    model: torch.nn.Module
+) -> torch.nn.Module
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-move_to_cuda">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.move_to_cuda(
+    model: torch.nn.Module
+) -> torch.nn.Module
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-move_to_device">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.move_to_device(
+    model: torch.nn.Module,
+    device: str | torch.device
+) -> torch.nn.Module
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-offload_after_refit">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.offload_after_refit() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Offload as much as possible on the CPU.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-offload_before_refit">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.offload_before_refit() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Offload the optimizer to the CPU.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-prepare_for_lp_inference">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.prepare_for_lp_inference() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-prepare_for_training">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.prepare_for_training(
+    args = (),
+    kwargs = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-prepare_refit_info">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.prepare_refit_info() -> typing.Optional[dict[str, typing.Any]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Prepare state dict metadata for weight refitting and IPC streaming.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-return_model_config">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.return_model_config() -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return the model configuration as a dictionary.
+
+**Returns:** `dict[str, Any]`
+
+Model configuration dictionary
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-return_state_dict">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.return_state_dict()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-save_checkpoint">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.save_checkpoint(
+    weights_path: str,
+    optimizer_path: typing.Optional[str] = None,
+    tokenizer_path: typing.Optional[str] = None
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Save a checkpoint of the model.
+
+the optimizer states are saved only if `optimizer` and `optimizer_path` are provided.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-score">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.models.policy.interfaces.ScoreOutputSpec":"/nemo-rl/nemo_rl/models/policy/interfaces#nemo_rl-models-policy-interfaces-ScoreOutputSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.score(
+    data: nemo_rl.distributed.batched_data_dict.BatchedDataDict
+) -> nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.policy.interfaces.ScoreOutputSpec]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-stream_weights_via_ipc_zmq">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.stream_weights_via_ipc_zmq(
+    buffer_size_bytes: int = 0,
+    kv_scales: typing.Optional[dict[str, float]] = None
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Stream model weights to peer process via ZMQ IPC socket.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-train">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.algorithms.interfaces.LossFunction":"/nemo-rl/nemo_rl/algorithms/interfaces#nemo_rl-algorithms-interfaces-LossFunction"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.train(
+    data: nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any],
+    loss_fn: nemo_rl.algorithms.interfaces.LossFunction,
+    eval_mode: bool = False,
+    gbs: typing.Optional[int] = None,
+    mbs: typing.Optional[int] = None
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Train the policy on a batch of data with a given loss function.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-train_context">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.train_context(
+    cp_context: typing.Optional[typing.Generator[None, None, None]] = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-DTensorPolicyWorker-use_reference_model">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.DTensorPolicyWorker.use_reference_model() -> typing.Generator[None, None, None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Context manager that temporarily swaps the reference model and active model.
+
+On entry: Moves model to CPU, moves reference_model to CUDA. Swaps the references
+On exit: Restores original references and re-flips cuda/cpu
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-get_cpu_state_dict">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.get_cpu_state_dict(
+    state_generator: typing.Iterable[tuple[str, typing.Union[torch.Tensor, torch.distributed.tensor.DTensor]]],
+    pin_memory: bool = False
+) -> dict[str, torch.Tensor]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Copy the state dict generator to CPU memory.
+
+**Parameters:**
+
+<ParamField path="state_generator" type="Iterable[tuple[str, Union[torch.Tensor, DTensor]]]">
+
+An iterable that yields (key, tensor) pairs from a model state.
+</ParamField>
+
+<ParamField path="pin_memory" type="bool" default="False">
+
+Whether to allocate the CPU tensors in pinned memory for faster GPU transfer.
+Defaults to False.
+</ParamField>
+
+**Returns:** `dict[str, torch.Tensor]`
+
+dict[str, torch.Tensor]: A dictionary mapping parameter names to CPU tensors.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-workers-dtensor_policy_worker-unshard_fsdp2_model">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.dtensor_policy_worker.unshard_fsdp2_model(
+    model: torch.nn.Module
+) -> typing.Generator[None, None, None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Explicitly unshard and then reshard the FSDP2 modules. Useful for logprob inference.
+
+
+</Indent>

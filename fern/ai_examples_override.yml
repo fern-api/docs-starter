@@ -1,0 +1,13 @@
+paths:
+  /user/username:
+    get:
+      x-fern-examples:
+        - path-parameters:
+            username: username
+          request:
+            body: {}
+          response:
+            body:
+              id: 42
+              username: plantlover99
+              email: plantlover99@example.com

@@ -1,0 +1,111 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/generation/vllm/config
+title: nemo_rl.models.generation.vllm.config
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`VllmConfig`](#nemo_rl-models-generation-vllm-config-VllmConfig) | - |
+| [`VllmSpecificArgs`](#nemo_rl-models-generation-vllm-config-VllmSpecificArgs) | - |
+
+### API
+
+<Anchor id="nemo_rl-models-generation-vllm-config-VllmConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.generation.vllm.config.VllmConfig()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [GenerationConfig](/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationConfig)
+
+<ParamField path="vllm_cfg" type="VllmSpecificArgs">
+</ParamField>
+
+<ParamField path="vllm_kwargs" type="NotRequired[dict[str, Any]]">
+</ParamField>
+</Indent>
+
+<Anchor id="nemo_rl-models-generation-vllm-config-VllmSpecificArgs">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.generation.vllm.config.VllmSpecificArgs
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="async_engine" type="bool">
+
+</ParamField>
+
+<ParamField path="enforce_eager" type="NotRequired[bool]">
+
+</ParamField>
+
+<ParamField path="expert_parallel_size" type="int">
+
+</ParamField>
+
+<ParamField path="expose_http_server" type="NotRequired[bool]">
+
+</ParamField>
+
+<ParamField path="gpu_memory_utilization" type="float">
+
+</ParamField>
+
+<ParamField path="http_server_serving_chat_kwargs" type="NotRequired[dict[str, Any]]">
+
+</ParamField>
+
+<ParamField path="kv_cache_dtype" type="Literal['auto', 'fp8', 'fp8_e4m3']">
+
+</ParamField>
+
+<ParamField path="load_format" type="NotRequired[str]">
+
+</ParamField>
+
+<ParamField path="max_model_len" type="int">
+
+</ParamField>
+
+<ParamField path="pipeline_parallel_size" type="int">
+
+</ParamField>
+
+<ParamField path="precision" type="NotRequired[str]">
+
+</ParamField>
+
+<ParamField path="skip_tokenizer_init" type="bool">
+
+</ParamField>
+
+<ParamField path="tensor_parallel_size" type="int">
+
+</ParamField>
+
+<ParamField path="tool_parser_plugin" type="NotRequired[str]">
+
+</ParamField>
+
+</Indent>

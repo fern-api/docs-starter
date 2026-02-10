@@ -1,0 +1,108 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/utils/prefetch_venvs
+title: nemo_rl.utils.prefetch_venvs
+---
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`create_frozen_environment_symlinks`](#nemo_rl-utils-prefetch_venvs-create_frozen_environment_symlinks) | Create python-&#123;ClassName&#125; wrapper scripts in /usr/local/bin for frozen environment support. |
+| [`prefetch_venvs`](#nemo_rl-utils-prefetch_venvs-prefetch_venvs) | Prefetch all virtual environments that will be used by workers. |
+
+### Data
+
+[`args`](#nemo_rl-utils-prefetch_venvs-args)
+
+[`parser`](#nemo_rl-utils-prefetch_venvs-parser)
+
+### API
+
+<Anchor id="nemo_rl-utils-prefetch_venvs-create_frozen_environment_symlinks">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.prefetch_venvs.create_frozen_environment_symlinks(
+    venv_configs
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create python-&#123;ClassName&#125; wrapper scripts in /usr/local/bin for frozen environment support.
+
+Only runs in container (when NRL_CONTAINER=1 is set).
+
+**Parameters:**
+
+<ParamField path="venv_configs">
+Dictionary mapping py_executable to list of actor FQNs
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-utils-prefetch_venvs-prefetch_venvs">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.prefetch_venvs.prefetch_venvs(
+    filters = None,
+    negative_filters = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Prefetch all virtual environments that will be used by workers.
+
+**Parameters:**
+
+<ParamField path="filters" default="None">
+List of strings to match against actor FQNs. If provided, only
+    actors whose FQN contains at least one of the filter strings will
+    be prefetched. If None, all venvs are prefetched.
+</ParamField>
+
+<ParamField path="negative_filters" default="None">
+List of strings to exclude from prefetching. Actors whose
+    FQN contains any of these strings will be skipped.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-utils-prefetch_venvs-args">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.prefetch_venvs.args = parser.parse_args()
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="nemo_rl-utils-prefetch_venvs-parser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.prefetch_venvs.parser = argparse.ArgumentParser(description='Prefetch virtual environments for Ray actor...
+```
+
+</CodeBlock>
+</Anchor>
+

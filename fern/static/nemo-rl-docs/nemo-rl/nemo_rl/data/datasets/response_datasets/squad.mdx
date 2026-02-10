@@ -1,0 +1,66 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/data/datasets/response_datasets/squad
+title: nemo_rl.data.datasets.response_datasets.squad
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`SquadDataset`](#nemo_rl-data-datasets-response_datasets-squad-SquadDataset) | Simple wrapper around the squad dataset. |
+
+### API
+
+<Anchor id="nemo_rl-data-datasets-response_datasets-squad-SquadDataset">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.datasets.response_datasets.squad.SquadDataset(
+    split: str = 'train',
+    kwargs = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RawDataset](/nemo-rl/nemo_rl/data/datasets/raw_dataset#nemo_rl-data-datasets-raw_dataset-RawDataset)
+
+Simple wrapper around the squad dataset.
+
+**Parameters:**
+
+<ParamField path="split" type="str" default="'train'">
+Split name for the dataset, default is "train"
+</ParamField>
+
+
+<ParamField path="dataset">
+</ParamField>
+
+<ParamField path="task_name" type="= 'squad'">
+</ParamField>
+<Anchor id="nemo_rl-data-datasets-response_datasets-squad-SquadDataset-format_data">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.response_datasets.squad.SquadDataset.format_data(
+    data: dict[str, typing.Any]
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>

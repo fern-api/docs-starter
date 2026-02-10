@@ -1,0 +1,574 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/policy/interfaces
+title: nemo_rl.models.policy.interfaces
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`ColocatablePolicyInterface`](#nemo_rl-models-policy-interfaces-ColocatablePolicyInterface) | - |
+| [`LogprobOutputSpec`](#nemo_rl-models-policy-interfaces-LogprobOutputSpec) | logprobs: Tensor of log probabilities. |
+| [`PolicyInterface`](#nemo_rl-models-policy-interfaces-PolicyInterface) | Abstract base class defining the interface for RL policies. |
+| [`ReferenceLogprobOutputSpec`](#nemo_rl-models-policy-interfaces-ReferenceLogprobOutputSpec) | logprobs: Tensor of log probabilities. |
+| [`ScoreOutputSpec`](#nemo_rl-models-policy-interfaces-ScoreOutputSpec) | scores: Tensor of scores. |
+| [`TopkLogitsOutputSpec`](#nemo_rl-models-policy-interfaces-TopkLogitsOutputSpec) | Per-position top-k logits and corresponding global token indices. |
+
+### API
+
+<Anchor id="nemo_rl-models-policy-interfaces-ColocatablePolicyInterface">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.interfaces.ColocatablePolicyInterface()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [PolicyInterface](#nemo_rl-models-policy-interfaces-PolicyInterface)
+
+<Anchor id="nemo_rl-models-policy-interfaces-ColocatablePolicyInterface-broadcast_weights_for_collective">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.interfaces.ColocatablePolicyInterface.broadcast_weights_for_collective(
+    kv_scales: typing.Optional[dict[str, float]] = None
+) -> list[ray.ObjectRef]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-interfaces-ColocatablePolicyInterface-init_collective">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.interfaces.ColocatablePolicyInterface.init_collective(
+    ip: str,
+    port: int,
+    world_size: int,
+    train_world_size: int
+) -> list[ray.ObjectRef]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-interfaces-ColocatablePolicyInterface-offload_after_refit">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.interfaces.ColocatablePolicyInterface.offload_after_refit() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-interfaces-ColocatablePolicyInterface-offload_before_refit">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.interfaces.ColocatablePolicyInterface.offload_before_refit() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-interfaces-ColocatablePolicyInterface-prepare_for_lp_inference">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.interfaces.ColocatablePolicyInterface.prepare_for_lp_inference() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-interfaces-ColocatablePolicyInterface-prepare_refit_info">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.interfaces.ColocatablePolicyInterface.prepare_refit_info() -> typing.Optional[dict[str, typing.Any]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-interfaces-ColocatablePolicyInterface-stream_weights_via_http">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.interfaces.ColocatablePolicyInterface.stream_weights_via_http(
+    sglang_url_to_gpu_uuids: dict[str, list[str]]
+) -> list[ray.ObjectRef]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Stream model weights to SGLang servers via HTTP API.
+
+**Parameters:**
+
+<ParamField path="sglang_url_to_gpu_uuids" type="dict[str, list[str]]">
+Dict mapping SGLang server URL to list of GPU UUIDs it uses
+</ParamField>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-interfaces-ColocatablePolicyInterface-stream_weights_via_ipc_zmq">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.interfaces.ColocatablePolicyInterface.stream_weights_via_ipc_zmq(
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+) -> list[ray.ObjectRef]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-interfaces-LogprobOutputSpec">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.interfaces.LogprobOutputSpec
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+logprobs: Tensor of log probabilities.
+
+<ParamField path="logprobs" type="Tensor">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-interfaces-PolicyInterface">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.interfaces.PolicyInterface()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+Abstract base class defining the interface for RL policies.
+
+
+<Anchor id="nemo_rl-models-policy-interfaces-PolicyInterface-calibrate_qkv_fp8_scales">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.models.generation.interfaces.GenerationDatumSpec":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationDatumSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.interfaces.PolicyInterface.calibrate_qkv_fp8_scales(
+    data: nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.generation.interfaces.GenerationDatumSpec],
+    micro_batch_size: typing.Optional[int] = None,
+    percentile: float = 99.9,
+    margin: float = 1.05,
+    include_q: bool = False
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Calibrate FP8 scales for Q/K/V activations used by KV cache.
+
+**Parameters:**
+
+<ParamField path="data" type="BatchedDataDict[GenerationDatumSpec]">
+BatchedDataDict containing input_ids and input_lengths.
+</ParamField>
+
+<ParamField path="micro_batch_size" type="Optional[int]" default="None">
+Optional override for micro batch size during calibration.
+</ParamField>
+
+<ParamField path="percentile" type="float" default="99.9">
+Percentile for per-tensor amax estimation.
+</ParamField>
+
+<ParamField path="margin" type="float" default="1.05">
+Safety margin multiplier applied to amax.
+</ParamField>
+
+<ParamField path="include_q" type="bool" default="False">
+Whether to also compute scale for Q in addition to K/V.
+</ParamField>
+
+**Returns:** `dict[str, Any]`
+
+Dict with overall configuration and per-layer scales.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-interfaces-PolicyInterface-finish_training">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.interfaces.PolicyInterface.finish_training(
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-interfaces-PolicyInterface-get_logprobs">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.models.generation.interfaces.GenerationDatumSpec":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationDatumSpec","nemo_rl.utils.timer.Timer":"/nemo-rl/nemo_rl/utils/timer#nemo_rl-utils-timer-Timer","nemo_rl.models.policy.interfaces.LogprobOutputSpec":"#nemo_rl-models-policy-interfaces-LogprobOutputSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.interfaces.PolicyInterface.get_logprobs(
+    data: nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.generation.interfaces.GenerationDatumSpec],
+    timer: typing.Optional[nemo_rl.utils.timer.Timer] = None
+) -> nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.policy.interfaces.LogprobOutputSpec]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Get logprobs of actions from observations.
+
+**Parameters:**
+
+<ParamField path="data" type="BatchedDataDict[GenerationDatumSpec]">
+BatchedDataDict containing rollouts (tokens)
+</ParamField>
+
+**Returns:** `BatchedDataDict[LogprobOutputSpec]`
+
+BatchedDataDict containing:
+- logprobs: Tensor of logprobs of actions
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-interfaces-PolicyInterface-get_reference_policy_logprobs">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.models.generation.interfaces.GenerationDatumSpec":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationDatumSpec","nemo_rl.utils.timer.Timer":"/nemo-rl/nemo_rl/utils/timer#nemo_rl-utils-timer-Timer","nemo_rl.models.policy.interfaces.ReferenceLogprobOutputSpec":"#nemo_rl-models-policy-interfaces-ReferenceLogprobOutputSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.interfaces.PolicyInterface.get_reference_policy_logprobs(
+    data: nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.generation.interfaces.GenerationDatumSpec],
+    micro_batch_size: typing.Optional[int] = None,
+    timer: typing.Optional[nemo_rl.utils.timer.Timer] = None
+) -> nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.policy.interfaces.ReferenceLogprobOutputSpec]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Get logprobs of actions from observations.
+
+**Parameters:**
+
+<ParamField path="data" type="BatchedDataDict[GenerationDatumSpec]">
+BatchedDataDict containing rollouts (tokens)
+</ParamField>
+
+**Returns:** `BatchedDataDict[ReferenceLogprobOutputSpec]`
+
+BatchedDataDict containing:
+- logprobs: Tensor of logprobs of actions
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-interfaces-PolicyInterface-get_topk_logits">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.models.generation.interfaces.GenerationDatumSpec":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationDatumSpec","nemo_rl.utils.timer.Timer":"/nemo-rl/nemo_rl/utils/timer#nemo_rl-utils-timer-Timer","nemo_rl.models.policy.interfaces.TopkLogitsOutputSpec":"#nemo_rl-models-policy-interfaces-TopkLogitsOutputSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.interfaces.PolicyInterface.get_topk_logits(
+    data: nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.generation.interfaces.GenerationDatumSpec],
+    k: int,
+    micro_batch_size: typing.Optional[int] = None,
+    timer: typing.Optional[nemo_rl.utils.timer.Timer] = None
+) -> nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.policy.interfaces.TopkLogitsOutputSpec]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Get per-position top-k logits and global indices for a batch of inputs.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-interfaces-PolicyInterface-prepare_for_training">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.interfaces.PolicyInterface.prepare_for_training(
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-interfaces-PolicyInterface-save_checkpoint">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.interfaces.PolicyInterface.save_checkpoint(
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-interfaces-PolicyInterface-shutdown">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.interfaces.PolicyInterface.shutdown() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-interfaces-PolicyInterface-train">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.algorithms.interfaces.LossFunction":"/nemo-rl/nemo_rl/algorithms/interfaces#nemo_rl-algorithms-interfaces-LossFunction","nemo_rl.utils.timer.Timer":"/nemo-rl/nemo_rl/utils/timer#nemo_rl-utils-timer-Timer"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.interfaces.PolicyInterface.train(
+    data: nemo_rl.distributed.batched_data_dict.BatchedDataDict,
+    loss_fn: nemo_rl.algorithms.interfaces.LossFunction,
+    eval_mode: bool = False,
+    gbs: typing.Optional[int] = None,
+    mbs: typing.Optional[int] = None,
+    timer: typing.Optional[nemo_rl.utils.timer.Timer] = None
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Train the policy on a global batch of data.
+
+**Parameters:**
+
+<ParamField path="data" type="BatchedDataDict">
+BatchedDataDict containing rollouts (tokens)
+</ParamField>
+
+<ParamField path="loss_fn" type="LossFunction">
+Loss function to use for training
+</ParamField>
+
+<ParamField path="eval_mode" type="bool" default="False">
+Whether to run in evaluation mode (no gradient updates)
+</ParamField>
+
+<ParamField path="gbs" type="Optional[int]" default="None">
+Global batch size override (if None, uses config default)
+</ParamField>
+
+<ParamField path="mbs" type="Optional[int]" default="None">
+Micro batch size override (if None, uses config default)
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-interfaces-ReferenceLogprobOutputSpec">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.interfaces.ReferenceLogprobOutputSpec
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+logprobs: Tensor of log probabilities.
+
+<ParamField path="reference_logprobs" type="Tensor">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-interfaces-ScoreOutputSpec">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.interfaces.ScoreOutputSpec
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+scores: Tensor of scores.
+
+<ParamField path="scores" type="Tensor">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-interfaces-TopkLogitsOutputSpec">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.interfaces.TopkLogitsOutputSpec
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Per-position top-k logits and corresponding global token indices.
+
+<ParamField path="topk_indices" type="Tensor">
+
+</ParamField>
+
+<ParamField path="topk_logits" type="Tensor">
+
+</ParamField>
+
+</Indent>

@@ -1,0 +1,326 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/algorithms/distillation
+title: nemo_rl.algorithms.distillation
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`DistillationConfig`](#nemo_rl-algorithms-distillation-DistillationConfig) | - |
+| [`DistillationSaveState`](#nemo_rl-algorithms-distillation-DistillationSaveState) | - |
+| [`MasterConfig`](#nemo_rl-algorithms-distillation-MasterConfig) | Main configuration structure. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_default_distillation_save_state`](#nemo_rl-algorithms-distillation-_default_distillation_save_state) | - |
+| [`check_vocab_equality`](#nemo_rl-algorithms-distillation-check_vocab_equality) | Check if the vocab of the tokenizer (student) and the teacher tokenizer are equal. |
+| [`distillation_train`](#nemo_rl-algorithms-distillation-distillation_train) | Run Distillation training algorithm. |
+| [`setup`](#nemo_rl-algorithms-distillation-setup) | Main entry point for distillation algorithm. |
+| [`validate`](#nemo_rl-algorithms-distillation-validate) | Run validation on the validation dataset. |
+
+### Data
+
+[`TokenizerType`](#nemo_rl-algorithms-distillation-TokenizerType)
+
+### API
+
+<Anchor id="nemo_rl-algorithms-distillation-DistillationConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.algorithms.distillation.DistillationConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="max_num_epochs" type="int">
+
+</ParamField>
+
+<ParamField path="max_num_steps" type="int">
+
+</ParamField>
+
+<ParamField path="max_rollout_turns" type="int">
+
+</ParamField>
+
+<ParamField path="max_val_samples" type="int">
+
+</ParamField>
+
+<ParamField path="num_generations_per_prompt" type="int">
+
+</ParamField>
+
+<ParamField path="num_prompts_per_step" type="int">
+
+</ParamField>
+
+<ParamField path="seed" type="int">
+
+</ParamField>
+
+<ParamField path="topk_logits_k" type="int">
+
+</ParamField>
+
+<ParamField path="val_at_end" type="bool">
+
+</ParamField>
+
+<ParamField path="val_at_start" type="bool">
+
+</ParamField>
+
+<ParamField path="val_batch_size" type="int">
+
+</ParamField>
+
+<ParamField path="val_period" type="int">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-distillation-DistillationSaveState">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.algorithms.distillation.DistillationSaveState
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="consumed_samples" type="int">
+
+</ParamField>
+
+<ParamField path="current_epoch" type="int">
+
+</ParamField>
+
+<ParamField path="current_step" type="int">
+
+</ParamField>
+
+<ParamField path="total_steps" type="int">
+
+</ParamField>
+
+<ParamField path="total_valid_tokens" type="int">
+
+</ParamField>
+
+<ParamField path="val_reward" type="NotRequired[float]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-distillation-MasterConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.algorithms.distillation.MasterConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Main configuration structure.
+
+<ParamField path="checkpointing" type="CheckpointingConfig">
+
+</ParamField>
+
+<ParamField path="cluster" type="ClusterConfig">
+
+</ParamField>
+
+<ParamField path="data" type="DataConfig">
+
+</ParamField>
+
+<ParamField path="distillation" type="DistillationConfig">
+
+</ParamField>
+
+<ParamField path="env" type="dict[str, Any]">
+
+</ParamField>
+
+<ParamField path="logger" type="LoggerConfig">
+
+</ParamField>
+
+<ParamField path="loss_fn" type="DistillationLossConfig">
+
+</ParamField>
+
+<ParamField path="policy" type="PolicyConfig">
+
+</ParamField>
+
+<ParamField path="teacher" type="PolicyConfig">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-distillation-_default_distillation_save_state">
+
+<CodeBlock links={{"nemo_rl.algorithms.distillation.DistillationSaveState":"#nemo_rl-algorithms-distillation-DistillationSaveState"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.distillation._default_distillation_save_state() -> nemo_rl.algorithms.distillation.DistillationSaveState
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-distillation-check_vocab_equality">
+
+<CodeBlock links={{"nemo_rl.algorithms.distillation.TokenizerType":"#nemo_rl-algorithms-distillation-TokenizerType"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.distillation.check_vocab_equality(
+    tokenizer: nemo_rl.algorithms.distillation.TokenizerType,
+    student_model_name: str,
+    teacher_model_name: str
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if the vocab of the tokenizer (student) and the teacher tokenizer are equal.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-distillation-distillation_train">
+
+<CodeBlock links={{"nemo_rl.models.policy.interfaces.ColocatablePolicyInterface":"/nemo-rl/nemo_rl/models/policy/interfaces#nemo_rl-models-policy-interfaces-ColocatablePolicyInterface","nemo_rl.models.generation.interfaces.GenerationInterface":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationInterface","nemo_rl.algorithms.distillation.TokenizerType":"#nemo_rl-algorithms-distillation-TokenizerType","nemo_rl.algorithms.loss_functions.DistillationLossFn":"/nemo-rl/nemo_rl/algorithms/loss_functions#nemo_rl-algorithms-loss_functions-DistillationLossFn","nemo_rl.environments.interfaces.EnvironmentInterface":"/nemo-rl/nemo_rl/environments/interfaces#nemo_rl-environments-interfaces-EnvironmentInterface","nemo_rl.utils.logger.Logger":"/nemo-rl/nemo_rl/utils/logger#nemo_rl-utils-logger-Logger","nemo_rl.utils.checkpoint.CheckpointManager":"/nemo-rl/nemo_rl/utils/checkpoint#nemo_rl-utils-checkpoint-CheckpointManager","nemo_rl.algorithms.distillation.DistillationSaveState":"#nemo_rl-algorithms-distillation-DistillationSaveState","nemo_rl.algorithms.distillation.MasterConfig":"#nemo_rl-algorithms-distillation-MasterConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.distillation.distillation_train(
+    student_policy: nemo_rl.models.policy.interfaces.ColocatablePolicyInterface,
+    teacher_policy: nemo_rl.models.policy.interfaces.ColocatablePolicyInterface,
+    student_generation: typing.Optional[nemo_rl.models.generation.interfaces.GenerationInterface],
+    dataloader: torchdata.stateful_dataloader.StatefulDataLoader,
+    val_dataloader: typing.Optional[torchdata.stateful_dataloader.StatefulDataLoader],
+    tokenizer: nemo_rl.algorithms.distillation.TokenizerType,
+    loss_fn: nemo_rl.algorithms.loss_functions.DistillationLossFn,
+    task_to_env: dict[str, nemo_rl.environments.interfaces.EnvironmentInterface],
+    val_task_to_env: typing.Optional[dict[str, nemo_rl.environments.interfaces.EnvironmentInterface]],
+    logger: nemo_rl.utils.logger.Logger,
+    checkpointer: nemo_rl.utils.checkpoint.CheckpointManager,
+    distillation_save_state: nemo_rl.algorithms.distillation.DistillationSaveState,
+    master_config: nemo_rl.algorithms.distillation.MasterConfig
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run Distillation training algorithm.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-distillation-setup">
+
+<CodeBlock links={{"nemo_rl.algorithms.distillation.MasterConfig":"#nemo_rl-algorithms-distillation-MasterConfig","nemo_rl.algorithms.distillation.TokenizerType":"#nemo_rl-algorithms-distillation-TokenizerType","nemo_rl.data.datasets.AllTaskProcessedDataset":"/nemo-rl/nemo_rl/data/datasets/processed_dataset#nemo_rl-data-datasets-processed_dataset-AllTaskProcessedDataset","nemo_rl.models.policy.interfaces.ColocatablePolicyInterface":"/nemo-rl/nemo_rl/models/policy/interfaces#nemo_rl-models-policy-interfaces-ColocatablePolicyInterface","nemo_rl.models.generation.interfaces.GenerationInterface":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationInterface","nemo_rl.algorithms.loss_functions.DistillationLossFn":"/nemo-rl/nemo_rl/algorithms/loss_functions#nemo_rl-algorithms-loss_functions-DistillationLossFn","nemo_rl.utils.logger.Logger":"/nemo-rl/nemo_rl/utils/logger#nemo_rl-utils-logger-Logger","nemo_rl.utils.checkpoint.CheckpointManager":"/nemo-rl/nemo_rl/utils/checkpoint#nemo_rl-utils-checkpoint-CheckpointManager","nemo_rl.algorithms.distillation.DistillationSaveState":"#nemo_rl-algorithms-distillation-DistillationSaveState"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.distillation.setup(
+    master_config: nemo_rl.algorithms.distillation.MasterConfig,
+    tokenizer: nemo_rl.algorithms.distillation.TokenizerType,
+    train_dataset: nemo_rl.data.datasets.AllTaskProcessedDataset,
+    val_dataset: typing.Optional[nemo_rl.data.datasets.AllTaskProcessedDataset]
+) -> tuple[nemo_rl.models.policy.interfaces.ColocatablePolicyInterface, nemo_rl.models.policy.interfaces.ColocatablePolicyInterface, typing.Optional[nemo_rl.models.generation.interfaces.GenerationInterface], torchdata.stateful_dataloader.StatefulDataLoader, typing.Optional[torchdata.stateful_dataloader.StatefulDataLoader], nemo_rl.algorithms.loss_functions.DistillationLossFn, nemo_rl.utils.logger.Logger, nemo_rl.utils.checkpoint.CheckpointManager, nemo_rl.algorithms.distillation.DistillationSaveState, nemo_rl.algorithms.distillation.MasterConfig]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Main entry point for distillation algorithm.
+
+**Returns:** `ColocatablePolicyInterface`
+
+tuple of student_policy, teacher_policy, student_generation,
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-distillation-validate">
+
+<CodeBlock links={{"nemo_rl.models.generation.interfaces.GenerationInterface":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationInterface","nemo_rl.environments.interfaces.EnvironmentInterface":"/nemo-rl/nemo_rl/environments/interfaces#nemo_rl-environments-interfaces-EnvironmentInterface","nemo_rl.algorithms.distillation.MasterConfig":"#nemo_rl-algorithms-distillation-MasterConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.distillation.validate(
+    policy_generation: nemo_rl.models.generation.interfaces.GenerationInterface,
+    val_dataloader: typing.Optional[torchdata.stateful_dataloader.StatefulDataLoader],
+    tokenizer,
+    val_task_to_env: typing.Optional[dict[str, nemo_rl.environments.interfaces.EnvironmentInterface]],
+    step: int,
+    master_config: nemo_rl.algorithms.distillation.MasterConfig
+) -> tuple[dict[str, typing.Any], dict[str, typing.Any]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run validation on the validation dataset.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-distillation-TokenizerType">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.distillation.TokenizerType = TypeVar('TokenizerType', bound=PreTrainedTokenizerBase)
+```
+
+</CodeBlock>
+</Anchor>
+

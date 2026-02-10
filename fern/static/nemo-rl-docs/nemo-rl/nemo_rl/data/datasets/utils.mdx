@@ -1,0 +1,191 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/data/datasets/utils
+title: nemo_rl.data.datasets.utils
+---
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`assert_no_double_bos`](#nemo_rl-data-datasets-utils-assert_no_double_bos) | Assert that there are no double starting BOS tokens in the message. |
+| [`extract_necessary_env_names`](#nemo_rl-data-datasets-utils-extract_necessary_env_names) | Extract the necessary environment names from the data config. |
+| [`load_dataset_from_path`](#nemo_rl-data-datasets-utils-load_dataset_from_path) | Load a dataset from a local file, huggingface dataset, or Arrow dataset (saved with save_to_disk). |
+| [`pil_to_base64`](#nemo_rl-data-datasets-utils-pil_to_base64) | Converts a PIL Image object to a base64 encoded string. |
+| [`update_single_dataset_config`](#nemo_rl-data-datasets-utils-update_single_dataset_config) | Fill the single dataset config with default dataset config. |
+
+### Data
+
+[`TokenizerType`](#nemo_rl-data-datasets-utils-TokenizerType)
+
+### API
+
+<Anchor id="nemo_rl-data-datasets-utils-assert_no_double_bos">
+
+<CodeBlock links={{"nemo_rl.data.datasets.utils.TokenizerType":"#nemo_rl-data-datasets-utils-TokenizerType"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.utils.assert_no_double_bos(
+    token_ids: torch.Tensor,
+    tokenizer: nemo_rl.data.datasets.utils.TokenizerType
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Assert that there are no double starting BOS tokens in the message.
+
+**Parameters:**
+
+<ParamField path="token_ids" type="torch.Tensor">
+List of token IDs
+</ParamField>
+
+<ParamField path="tokenizer" type="TokenizerType">
+Tokenizer
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-data-datasets-utils-extract_necessary_env_names">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.utils.extract_necessary_env_names(
+    data_config: dict
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Extract the necessary environment names from the data config.
+
+Some environments are set in env_configs but not used in the data config.
+This function extracts the necessary environment names from the data config.
+
+**Parameters:**
+
+<ParamField path="data_config" type="dict">
+The data config.
+</ParamField>
+
+**Returns:** `list[str]`
+
+The necessary environment names.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-data-datasets-utils-load_dataset_from_path">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.utils.load_dataset_from_path(
+    data_path: str,
+    data_subset: typing.Optional[str] = None,
+    data_split: typing.Optional[str] = 'train'
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Load a dataset from a local file, huggingface dataset, or Arrow dataset (saved with save_to_disk).
+
+**Parameters:**
+
+<ParamField path="data_path" type="str">
+The path to the dataset.
+</ParamField>
+
+<ParamField path="data_subset" type="Optional[str]" default="None">
+The subset to load from the dataset. Only supported for huggingface datasets.
+</ParamField>
+
+<ParamField path="data_split" type="Optional[str]" default="'train'">
+The split to load from the dataset.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-data-datasets-utils-pil_to_base64">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.utils.pil_to_base64(
+    image: PIL.Image.Image,
+    format: str = 'PNG'
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Converts a PIL Image object to a base64 encoded string.
+
+**Parameters:**
+
+<ParamField path="image" type="Image.Image">
+The PIL Image object to convert.
+</ParamField>
+
+<ParamField path="format" type="str" default="'PNG'">
+The image format (e.g., "PNG", "JPEG"). Defaults to "PNG".
+</ParamField>
+
+**Returns:** `str`
+
+A base64 encoded string representation of the image.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-data-datasets-utils-update_single_dataset_config">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.utils.update_single_dataset_config(
+    data_config: dict,
+    default_data_config: dict
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Fill the single dataset config with default dataset config.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-data-datasets-utils-TokenizerType">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.utils.TokenizerType = Union[PreTrainedTokenizerBase, AutoProcessor]
+```
+
+</CodeBlock>
+</Anchor>
+

@@ -1,0 +1,166 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/data/collate_fn
+title: nemo_rl.data.collate_fn
+---
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`eval_collate_fn`](#nemo_rl-data-collate_fn-eval_collate_fn) | Collate function for evaluation. |
+| [`preference_collate_fn`](#nemo_rl-data-collate_fn-preference_collate_fn) | Collate function for preference data training. |
+| [`rl_collate_fn`](#nemo_rl-data-collate_fn-rl_collate_fn) | Collate function for RL training. |
+
+### Data
+
+[`TokenizerType`](#nemo_rl-data-collate_fn-TokenizerType)
+
+### API
+
+<Anchor id="nemo_rl-data-collate_fn-eval_collate_fn">
+
+<CodeBlock links={{"nemo_rl.data.interfaces.DatumSpec":"/nemo-rl/nemo_rl/data/interfaces#nemo_rl-data-interfaces-DatumSpec","nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.collate_fn.eval_collate_fn(
+    data_batch: list[nemo_rl.data.interfaces.DatumSpec]
+) -> nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Collate function for evaluation.
+
+Takes a list of data samples and combines them into a single batched dictionary
+for model evaluation.
+
+Examples:
+<CodeBlock showLineNumbers={false}>
+
+```python
+>>> import torch
+>>> from nemo_rl.data.collate_fn import eval_collate_fn
+>>> from nemo_rl.data.interfaces import DatumSpec
+>>> data_batch = [
+...     DatumSpec(
+...         message_log=[{"role": "user", "content": "Hello", "token_ids": torch.tensor([1, 2, 3])}],
+...         extra_env_info={'ground_truth': '1'},
+...         idx=0,
+...     ),
+...     DatumSpec(
+...         message_log=[{"role": "assistant", "content": "Hi there", "token_ids": torch.tensor([4, 5, 6, 7])}],
+...         extra_env_info={'ground_truth': '2'},
+...         idx=1,
+...     ),
+... ]
+>>> output = eval_collate_fn(data_batch)
+>>> output['message_log'][0]
+[{'role': 'user', 'content': 'Hello', 'token_ids': tensor([1, 2, 3])}]
+>>> output['message_log'][1]
+[{'role': 'assistant', 'content': 'Hi there', 'token_ids': tensor([4, 5, 6, 7])}]
+>>> output['extra_env_info']
+[{'ground_truth': '1'}, {'ground_truth': '2'}]
+>>> output['idx']
+[0, 1]
+```
+
+</CodeBlock>
+
+**Parameters:**
+
+<ParamField path="data_batch" type="list[DatumSpec]">
+List of data samples with message_log, extra_env_info, and idx fields.
+</ParamField>
+
+**Returns:** `BatchedDataDict[Any]`
+
+BatchedDataDict with message_log, extra_env_info, and idx fields.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-data-collate_fn-preference_collate_fn">
+
+<CodeBlock links={{"nemo_rl.data.interfaces.PreferenceDatumSpec":"/nemo-rl/nemo_rl/data/interfaces#nemo_rl-data-interfaces-PreferenceDatumSpec","nemo_rl.data.collate_fn.TokenizerType":"#nemo_rl-data-collate_fn-TokenizerType","nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.collate_fn.preference_collate_fn(
+    data_batch: list[nemo_rl.data.interfaces.PreferenceDatumSpec],
+    tokenizer: nemo_rl.data.collate_fn.TokenizerType,
+    make_sequence_length_divisible_by: int,
+    add_loss_mask: bool
+) -> nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Collate function for preference data training.
+
+This function separates the chosen and rejected responses to create
+two examples per prompt. The chosen and rejected examples are interleaved
+along the batch dimension, resulting in a batch size of 2 * len(data_batch).
+
+Returns:
+    BatchedDataDict with input_ids, input_lengths, token_mask (optional), and sample_mask fields.
+
+**Parameters:**
+
+<ParamField path="data_batch" type="list[PreferenceDatumSpec]">
+List of data samples with message_log_chosen, message_log_rejected, length_chosen, length_rejected, loss_multiplier, idx, and task_name fields.
+</ParamField>
+
+<ParamField path="tokenizer" type="TokenizerType">
+Tokenizer for text processing
+</ParamField>
+
+<ParamField path="make_sequence_length_divisible_by" type="int">
+Make the sequence length divisible by this value
+</ParamField>
+
+<ParamField path="add_loss_mask" type="bool">
+Whether to add a token_mask to the returned data
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-data-collate_fn-rl_collate_fn">
+
+<CodeBlock links={{"nemo_rl.data.interfaces.DatumSpec":"/nemo-rl/nemo_rl/data/interfaces#nemo_rl-data-interfaces-DatumSpec","nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.collate_fn.rl_collate_fn(
+    data_batch: list[nemo_rl.data.interfaces.DatumSpec]
+) -> nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Collate function for RL training.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-data-collate_fn-TokenizerType">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.collate_fn.TokenizerType = Union[PreTrainedTokenizerBase, AutoProcessor]
+```
+
+</CodeBlock>
+</Anchor>
+

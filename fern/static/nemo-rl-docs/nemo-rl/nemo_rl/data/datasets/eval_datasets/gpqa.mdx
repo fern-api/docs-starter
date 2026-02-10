@@ -1,0 +1,64 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/data/datasets/eval_datasets/gpqa
+title: nemo_rl.data.datasets.eval_datasets.gpqa
+---
+
+GPQA dataset and its variants.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`GPQADataset`](#nemo_rl-data-datasets-eval_datasets-gpqa-GPQADataset) | - |
+
+### API
+
+<Anchor id="nemo_rl-data-datasets-eval_datasets-gpqa-GPQADataset">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.datasets.eval_datasets.gpqa.GPQADataset(
+    variant: typing.Literal['diamond', 'main'] = 'diamond',
+    prompt_file: typing.Optional[str] = None,
+    system_prompt_file: typing.Optional[str] = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<ParamField path="_rng" type="= random.Random()">
+</ParamField>
+
+<ParamField path="processor" type="= processors.multichoice_qa_processor">
+</ParamField>
+
+<ParamField path="rekeyed_ds">
+</ParamField>
+
+<ParamField path="task_spec">
+</ParamField>
+<Anchor id="nemo_rl-data-datasets-eval_datasets-gpqa-GPQADataset-_rekey">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.eval_datasets.gpqa.GPQADataset._rekey(
+    data: dict[str, typing.Any]
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>

@@ -1,0 +1,109 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/generation/sglang/utils
+title: nemo_rl.models.generation.sglang.utils
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`AsyncLoopThread`](#nemo_rl-models-generation-sglang-utils-AsyncLoopThread) | A background event loop thread for running async operations in Ray actors. |
+
+### API
+
+<Anchor id="nemo_rl-models-generation-sglang-utils-AsyncLoopThread">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.generation.sglang.utils.AsyncLoopThread()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+A background event loop thread for running async operations in Ray actors.
+
+This class creates a dedicated thread with its own event loop, allowing
+synchronous Ray actor methods to execute async coroutines without blocking
+the main actor thread. This is necessary because run_coroutine_threadsafe
+requires the event loop to be in a different thread.
+
+
+<ParamField path="_ready" type="= threading.Event()">
+</ParamField>
+
+<ParamField path="_thread">
+</ParamField>
+
+<ParamField path="loop" type="= asyncio.new_event_loop()">
+</ParamField>
+<Anchor id="nemo_rl-models-generation-sglang-utils-AsyncLoopThread-_start_loop">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.utils.AsyncLoopThread._start_loop()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run the event loop in the background thread.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-sglang-utils-AsyncLoopThread-run">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.utils.AsyncLoopThread.run(
+    coro
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Schedule a coroutine onto the loop and block until it's done.
+
+**Parameters:**
+
+<ParamField path="coro">
+The coroutine to execute
+</ParamField>
+
+**Returns:**
+
+The result of the coroutine
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-sglang-utils-AsyncLoopThread-shutdown">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.utils.AsyncLoopThread.shutdown()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Shutdown the event loop and wait for the thread to finish.
+
+
+</Indent>
+</Indent>

@@ -1,0 +1,212 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/megatron/common
+title: nemo_rl.models.megatron.common
+---
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_round_up_to_multiple`](#nemo_rl-models-megatron-common-_round_up_to_multiple) | - |
+| [`broadcast_tensor`](#nemo_rl-models-megatron-common-broadcast_tensor) | Broadcasts a tensor from src_rank to all ranks in the group using broadcast_object_list for metadata. |
+| [`forward_step_arbitrary_loss`](#nemo_rl-models-megatron-common-forward_step_arbitrary_loss) | Forward training step with support for packed sequences and context parallelism. |
+| [`get_moe_metrics`](#nemo_rl-models-megatron-common-get_moe_metrics) | Returns Mixture of Experts (MoE) auxiliary-loss metrics. |
+
+### API
+
+<Anchor id="nemo_rl-models-megatron-common-_round_up_to_multiple">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.common._round_up_to_multiple(
+    value: int,
+    multiple: int
+) -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-common-broadcast_tensor">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.common.broadcast_tensor(
+    tensor: torch.Tensor | None,
+    src_rank: int,
+    group: torch.distributed.ProcessGroup
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Broadcasts a tensor from src_rank to all ranks in the group using broadcast_object_list for metadata.
+
+Handles the case where the input tensor might be None on non-source ranks.
+If the input tensor is provided on non-source ranks, it must have the
+correct shape and dtype matching the tensor on the source rank.
+
+**Parameters:**
+
+<ParamField path="tensor" type="torch.Tensor | None">
+The tensor to broadcast on the source rank. Can be None on
+    non-source ranks (will be created with correct shape/dtype).
+    If not None on non-source ranks, it's used as the buffer
+    for the broadcast and must match the source tensor's metadata.
+</ParamField>
+
+<ParamField path="src_rank" type="int">
+The global rank of the source process.
+</ParamField>
+
+<ParamField path="group" type="dist.ProcessGroup">
+The process group for communication.
+</ParamField>
+
+**Returns:** `torch.Tensor`
+
+torch.Tensor: The broadcasted tensor. On non-source ranks, this will
+          be the tensor received from the source.
+
+**Raises:**
+
+- `ValueError`: If the tensor is None on the source rank, or if a tensor
+        provided on a non-source rank has mismatched shape/dtype/device.
+- `TypeError`: If broadcasting metadata fails (e.g., due to pickling issues).
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-common-forward_step_arbitrary_loss">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.algorithms.loss_functions.LossFunction":"/nemo-rl/nemo_rl/algorithms/interfaces#nemo_rl-algorithms-interfaces-LossFunction"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.common.forward_step_arbitrary_loss(
+    state: megatron.bridge.training.state.GlobalState,
+    global_valid_seqs: torch.Tensor,
+    global_valid_toks: torch.Tensor,
+    data_iterator: typing.Iterator[nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any]],
+    model: megatron.core.models.gpt.GPTModel,
+    loss_fn: nemo_rl.algorithms.loss_functions.LossFunction,
+    pack_sequences: bool = False,
+    defer_fp32_logits: typing.Optional[bool] = None,
+    cp_normalize: bool = True,
+    policy_cfg: typing.Optional[dict] = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Forward training step with support for packed sequences and context parallelism.
+
+Notes on packed sequences with context parallelism (CP):
+    - When CP &gt; 1, each sequence is padded to a multiple of (cp_size * 2)
+    - The factor of 2 ensures load balancing for causal attention
+    - cu_seqlens tracks actual sequence boundaries
+    - cu_seqlens_padded tracks padded sequence boundaries for CP
+    - Requires TransformerEngine &gt;= 1.10 for CP support
+
+**Parameters:**
+
+<ParamField path="state" type="GlobalState">
+Global state for the run
+</ParamField>
+
+<ParamField path="global_valid_seqs" type="torch.Tensor">
+Global count of valid sequences
+</ParamField>
+
+<ParamField path="global_valid_toks" type="torch.Tensor">
+Global count of valid tokens
+</ParamField>
+
+<ParamField path="data_iterator" type="Iterator[BatchedDataDict[Any]]">
+Input data iterator
+</ParamField>
+
+<ParamField path="model" type="GPTModel">
+The GPT Model
+</ParamField>
+
+<ParamField path="loss_fn" type="LossFunction">
+Loss function to apply
+</ParamField>
+
+<ParamField path="pack_sequences" type="bool" default="False">
+Whether to pack sequences for efficiency
+</ParamField>
+
+<ParamField path="defer_fp32_logits" type="Optional[bool]" default="None">
+Whether to skip the conversion of logits to fp32
+</ParamField>
+
+<ParamField path="cp_normalize" type="bool" default="True">
+Whether to normalize the loss by the cp_size
+</ParamField>
+
+<ParamField path="policy_cfg" type="Optional[dict]" default="None">
+Policy configuration containing generation parameters
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-common-get_moe_metrics">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.common.get_moe_metrics(
+    loss_scale: float,
+    total_loss_dict: typing.Optional[dict] = None,
+    per_layer_logging: bool = False
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Returns Mixture of Experts (MoE) auxiliary-loss metrics.
+
+This function reduces MoE auxiliary losses across ranks, aggregates them, and
+returns a dictionary of metrics.
+
+**Parameters:**
+
+<ParamField path="loss_scale" type="float">
+Scale factor to apply to each auxiliary loss (e.g., 1/num_microbatches).
+</ParamField>
+
+<ParamField path="total_loss_dict" type="Optional[dict]" default="None">
+If provided, accumulate means into this dict (by name).
+</ParamField>
+
+<ParamField path="per_layer_logging" type="bool" default="False">
+If True, include per-layer values in the returned dict.
+</ParamField>
+
+**Returns:** `dict[str, Any]`
+
+dict[str, Any]: A flat dict of aggregated metrics. For each aux loss name,
+
+
+</Indent>

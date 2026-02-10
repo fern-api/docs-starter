@@ -1,0 +1,236 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/generation/vllm/vllm_backend
+title: nemo_rl.models.generation.vllm.vllm_backend
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`VllmInternalWorkerExtension`](#nemo_rl-models-generation-vllm-vllm_backend-VllmInternalWorkerExtension) | - |
+
+### API
+
+<Anchor id="nemo_rl-models-generation-vllm-vllm_backend-VllmInternalWorkerExtension">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.generation.vllm.vllm_backend.VllmInternalWorkerExtension()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Anchor id="nemo_rl-models-generation-vllm-vllm_backend-VllmInternalWorkerExtension-_maybe_process_fp8_kv_cache">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.vllm.vllm_backend.VllmInternalWorkerExtension._maybe_process_fp8_kv_cache() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Process weights after loading for FP8 KV cache (static scales).
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-vllm-vllm_backend-VllmInternalWorkerExtension-cleanup">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.vllm.vllm_backend.VllmInternalWorkerExtension.cleanup() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Shutdown and cleanup resources.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-vllm-vllm_backend-VllmInternalWorkerExtension-get_zmq_address">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.vllm.vllm_backend.VllmInternalWorkerExtension.get_zmq_address()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the ZMQ address for the current device.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-vllm-vllm_backend-VllmInternalWorkerExtension-init_collective">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.vllm.vllm_backend.VllmInternalWorkerExtension.init_collective(
+    rank_prefix: int,
+    ip: str,
+    port: int,
+    world_size: int,
+    train_world_size: int
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Initialize the collective communication.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-vllm-vllm_backend-VllmInternalWorkerExtension-maybe_init_zmq">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.vllm.vllm_backend.VllmInternalWorkerExtension.maybe_init_zmq()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Initialize the ZMQ socket if it doesn't exist.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-vllm-vllm_backend-VllmInternalWorkerExtension-prepare_refit_info">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.vllm.vllm_backend.VllmInternalWorkerExtension.prepare_refit_info(
+    state_dict_info: dict[str, typing.Any]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Prepare state dict metadata for weight refitting and IPC streaming.
+
+**Parameters:**
+
+<ParamField path="state_dict_info" type="dict">
+A dictionary containing the info for refit.
+e.g. &#123;tensor_name: (shape, dtype)&#125;
+</ParamField>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-vllm-vllm_backend-VllmInternalWorkerExtension-report_device_id">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.vllm.vllm_backend.VllmInternalWorkerExtension.report_device_id() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Retrieve the UUID of the current CUDA device.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-vllm-vllm_backend-VllmInternalWorkerExtension-start_gpu_profiling">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.vllm.vllm_backend.VllmInternalWorkerExtension.start_gpu_profiling() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Start GPU profiling.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-vllm-vllm_backend-VllmInternalWorkerExtension-stop_gpu_profiling">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.vllm.vllm_backend.VllmInternalWorkerExtension.stop_gpu_profiling() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Stop GPU profiling.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-vllm-vllm_backend-VllmInternalWorkerExtension-update_weights_from_collective">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.vllm.vllm_backend.VllmInternalWorkerExtension.update_weights_from_collective() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Update the model weights from collective communication.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-vllm-vllm_backend-VllmInternalWorkerExtension-update_weights_via_ipc_zmq">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.vllm.vllm_backend.VllmInternalWorkerExtension.update_weights_via_ipc_zmq() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Receive and update model weights via ZMQ IPC socket.
+
+**Returns:** `bool`
+
+True if weights were successfully updated.
+
+
+</Indent>
+</Indent>

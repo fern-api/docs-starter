@@ -1,0 +1,303 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/huggingface/common
+title: nemo_rl.models.huggingface.common
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`FlashAttentionKwargs`](#nemo_rl-models-huggingface-common-FlashAttentionKwargs) | Dataclass to hold FlashAttention v2 kwargs. |
+| [`ModelFlag`](#nemo_rl-models-huggingface-common-ModelFlag) | Enum that defines special flags for model-specific behaviors. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`get_flash_attention_kwargs`](#nemo_rl-models-huggingface-common-get_flash_attention_kwargs) | Returns kwargs required for FlashAttention v2 forward functions. |
+| [`group_and_cat_tensors`](#nemo_rl-models-huggingface-common-group_and_cat_tensors) | Groups and concatenates tensors according to group_sizes, then pads them to form a 2D tensor. |
+| [`is_gemma_model`](#nemo_rl-models-huggingface-common-is_gemma_model) | - |
+| [`pack_sequences`](#nemo_rl-models-huggingface-common-pack_sequences) | Packs sequences into rows where each row concatenates multiple sequences. |
+| [`unpack_tensor`](#nemo_rl-models-huggingface-common-unpack_tensor) | Unpacks a packed tensor into individual sequences padded to the same length. |
+
+### Data
+
+[`Tensor`](#nemo_rl-models-huggingface-common-Tensor)
+
+### API
+
+<Anchor id="nemo_rl-models-huggingface-common-FlashAttentionKwargs">
+
+<CodeBlock links={{"nemo_rl.models.huggingface.common.Tensor":"#nemo_rl-models-huggingface-common-Tensor"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.huggingface.common.FlashAttentionKwargs(
+    cu_seqlens_q: nemo_rl.models.huggingface.common.Tensor,
+    cu_seqlens_k: nemo_rl.models.huggingface.common.Tensor,
+    max_seqlen_q: int,
+    max_seqlen_k: int
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Dataclass</Badge>
+
+Dataclass to hold FlashAttention v2 kwargs.
+
+
+<ParamField path="cu_seqlens_k" type="Tensor">
+</ParamField>
+
+<ParamField path="cu_seqlens_q" type="Tensor">
+</ParamField>
+
+<ParamField path="max_seqlen_k" type="int">
+</ParamField>
+
+<ParamField path="max_seqlen_q" type="int">
+</ParamField>
+</Indent>
+
+<Anchor id="nemo_rl-models-huggingface-common-ModelFlag">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.huggingface.common.ModelFlag
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `enum.Enum`
+
+Enum that defines special flags for model-specific behaviors.
+
+This enum provides a way to identify models that require special handling or
+configuration in different parts of the NeMo RL codebase.
+
+Each flag has a `matches` method that determines if the flag applies to a given model_name.
+
+<ParamField path="VLLM_LOAD_FORMAT_AUTO" type="= auto()">
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-huggingface-common-get_flash_attention_kwargs">
+
+<CodeBlock links={{"nemo_rl.models.huggingface.common.FlashAttentionKwargs":"#nemo_rl-models-huggingface-common-FlashAttentionKwargs"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.huggingface.common.get_flash_attention_kwargs(
+    input_lengths: torch.Tensor
+) -> nemo_rl.models.huggingface.common.FlashAttentionKwargs
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Returns kwargs required for FlashAttention v2 forward functions.
+
+**Parameters:**
+
+<ParamField path="input_lengths" type="torch.Tensor">
+[batch_size] containing lengths of each sequence
+</ParamField>
+
+**Returns:** `FlashAttentionKwargs`
+
+Dict[str, torch.Tensor | int]:
+&#123;
+    "cu_seqlens_q": Tensor[int32],
+    "cu_seqlens_k": Tensor[int32],
+    "max_seqlen_q": int,
+    "max_seqlen_k": int
+&#125;
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-huggingface-common-group_and_cat_tensors">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.huggingface.common.group_and_cat_tensors(
+    tensors: list[torch.Tensor],
+    group_sizes: list[int],
+    padding_value: int = 0,
+    min_seq_len: int = 0
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Groups and concatenates tensors according to group_sizes, then pads them to form a 2D tensor.
+
+Each group of 1D tensors is concatenated into a single 1D tensor, and all resulting
+group tensors are padded to the same length and stacked into a 2D tensor.
+
+**Parameters:**
+
+<ParamField path="tensors" type="list[torch.Tensor]">
+List of 1D tensors of varying lengths.
+</ParamField>
+
+<ParamField path="group_sizes" type="list[int]">
+List of integers. Each integer specifies how many tensors to group.
+</ParamField>
+
+<ParamField path="padding_value" type="int" default="0">
+Integer used to pad shorter sequences.
+</ParamField>
+
+<ParamField path="min_seq_len" type="int" default="0">
+Minimum sequence length.
+</ParamField>
+
+**Returns:** `torch.Tensor`
+
+A 2D tensor where each row is a padded concatenation of the grouped tensors.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-huggingface-common-is_gemma_model">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.huggingface.common.is_gemma_model(
+    model_name: str
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-huggingface-common-pack_sequences">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.huggingface.common.pack_sequences(
+    input_ids: torch.Tensor,
+    input_lengths: torch.Tensor,
+    packed_sequence_size: list[int],
+    padding_value: int = 0,
+    return_attention_mask: bool = True,
+    min_seq_len: int = 0
+) -> typing.Tuple[torch.Tensor, torch.Tensor, typing.Optional[torch.Tensor]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Packs sequences into rows where each row concatenates multiple sequences.
+
+Useful for sequence packing in transformer models (e.g. for SFT training). Returns:
+packed input_ids, packed position_ids, and optional attention_mask.
+
+**Parameters:**
+
+<ParamField path="input_ids" type="torch.Tensor">
+Tensor of shape [num_sequences, max_seq_len]
+</ParamField>
+
+<ParamField path="input_lengths" type="torch.Tensor">
+Tensor of shape [num_sequences], containing true lengths
+</ParamField>
+
+<ParamField path="packed_sequence_size" type="List[int]">
+How many sequences to pack per row
+</ParamField>
+
+<ParamField path="padding_value" type="int" default="0">
+Pad value for input_ids
+</ParamField>
+
+<ParamField path="return_attention_mask" type="bool" default="True">
+Whether to return per-row causal attention mask
+</ParamField>
+
+<ParamField path="min_seq_len" type="int" default="0">
+Minimum sequence length.
+</ParamField>
+
+**Returns:** `Tuple[torch.Tensor, torch.Tensor, Optional[torch.Tensor]]`
+
+
+input_ids_packed (torch.Tensor): [batch_size, max_packed_seq_len]
+position_ids_packed (torch.Tensor): [batch_size, max_packed_seq_len]
+attention_mask (Optional[torch.Tensor]): [batch_size, max_len, max_len] if requested
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-huggingface-common-unpack_tensor">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.huggingface.common.unpack_tensor(
+    tensor,
+    input_lengths
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Unpacks a packed tensor into individual sequences padded to the same length.
+
+**Parameters:**
+
+<ParamField path="tensor" type="torch.Tensor">
+Packed tensor of shape [batch_size, packed_seq_len].
+</ParamField>
+
+<ParamField path="packed_lengths" type="List[int]">
+Original sequence lengths in the order they were packed.
+</ParamField>
+
+**Returns:**
+
+torch.Tensor: [num_sequences, max_seq_len], each row is one unpacked and padded sequence.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-huggingface-common-Tensor">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.huggingface.common.Tensor = TypeVar('Tensor', bound=(torch.Tensor))
+```
+
+</CodeBlock>
+</Anchor>
+
