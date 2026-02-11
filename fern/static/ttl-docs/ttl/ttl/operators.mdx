@@ -1,0 +1,642 @@
+---
+layout: overview
+slug: ttl/ttl/operators
+title: ttl.operators
+---
+
+DSL operators for tensor operations and data movement.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`CopyTransferHandler`](#ttl-operators-CopyTransferHandler) | Transfer handle for asynchronous copy operations. |
+| [`TensorBlock`](#ttl-operators-TensorBlock) | Represents a block of tensor data in the TTL dialect. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_get_cb_from_block`](#ttl-operators-_get_cb_from_block) | Extract the CB from a block (result of ttl.attach_cb). |
+| [`_get_cb_shape`](#ttl-operators-_get_cb_shape) | Extract the block shape from a CB value. |
+| [`_get_constant_int`](#ttl-operators-_get_constant_int) | Extract Python int from MLIR arith.ConstantOp or return as-is if already int. |
+| [`_get_current_grid`](#ttl-operators-_get_current_grid) | Get the current grid dimensions. |
+| [`_is_block`](#ttl-operators-_is_block) | Check if a value is a block (result of cb.reserve() or cb.wait()). |
+| [`_make_tensor_slice`](#ttl-operators-_make_tensor_slice) | Create a ttl.tensor_slice from a tensor, tile indices, and shape. |
+| [`_process_tensor_subscript`](#ttl-operators-_process_tensor_subscript) | Process tensor subscript and create tensor slice. |
+| [`_set_current_grid`](#ttl-operators-_set_current_grid) | Set the current grid dimensions. Called before compiling threads. |
+| [`broadcast`](#ttl-operators-broadcast) | Broadcast over specified dimensions. |
+| [`copy`](#ttl-operators-copy) | Initiate an asynchronous data transfer using ttl.copy. |
+| [`core`](#ttl-operators-core) | Get the coordinates of the current core. |
+| [`grid_size`](#ttl-operators-grid_size) | Get the size of the grid. |
+| [`signpost`](#ttl-operators-signpost) | Emit a profiling marker visible in Tracy. |
+
+### Data
+
+[`CoreCoordinate`](#ttl-operators-CoreCoordinate)
+
+[`IndexedTensor`](#ttl-operators-IndexedTensor)
+
+[`__all__`](#ttl-operators-__all__)
+
+[`_current_grid`](#ttl-operators-_current_grid)
+
+### API
+
+<Anchor id="ttl-operators-CopyTransferHandler">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class ttl.operators.CopyTransferHandler()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Transfer handle for asynchronous copy operations.
+
+CopyTransferHandler objects are returned by copy() calls and must be
+explicitly waited on to ensure transfer completion.
+
+
+<Anchor id="ttl-operators-CopyTransferHandler-wait">
+
+<CodeBlock links={{"ttl.operators.CopyTransferHandler":"#ttl-operators-CopyTransferHandler"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators.CopyTransferHandler.wait(
+    ast_self: ttl.operators.CopyTransferHandler
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Block until the copy operation completes.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="ttl-operators-TensorBlock">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class ttl.operators.TensorBlock(
+    shape,
+    dtype
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Represents a block of tensor data in the TTL dialect.
+
+TensorBlock supports arithmetic operations through operator
+overloading. Operations generate TTL high-level ops that get lowered
+to ttl.compute blocks.
+
+
+<Anchor id="ttl-operators-TensorBlock-__add__">
+
+<CodeBlock links={{"ttl.operators.TensorBlock":"#ttl-operators-TensorBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators.TensorBlock.__add__(
+    ast_self: ttl.operators.TensorBlock,
+    rhs: ttl.operators.TensorBlock
+) -> ttl.operators.TensorBlock
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Element-wise addition using ttl.add.
+
+**Parameters:**
+
+<ParamField path="rhs" type="TensorBlock">
+Right operand tensor. Must have the same shape as self.
+</ParamField>
+
+**Returns:** `TensorBlock`
+
+Result tensor with the same shape as inputs.
+
+
+</Indent>
+<Anchor id="ttl-operators-TensorBlock-__matmul__">
+
+<CodeBlock links={{"ttl.operators.TensorBlock":"#ttl-operators-TensorBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators.TensorBlock.__matmul__(
+    ast_self: ttl.operators.TensorBlock,
+    rhs: ttl.operators.TensorBlock
+) -> ttl.operators.TensorBlock
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Matrix multiplication is not yet supported in TTL mode.
+
+
+</Indent>
+<Anchor id="ttl-operators-TensorBlock-__mul__">
+
+<CodeBlock links={{"ttl.operators.TensorBlock":"#ttl-operators-TensorBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators.TensorBlock.__mul__(
+    ast_self: ttl.operators.TensorBlock,
+    rhs: ttl.operators.TensorBlock
+) -> ttl.operators.TensorBlock
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Element-wise multiplication using ttl.mul.
+
+
+</Indent>
+<Anchor id="ttl-operators-TensorBlock-__sub__">
+
+<CodeBlock links={{"ttl.operators.TensorBlock":"#ttl-operators-TensorBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators.TensorBlock.__sub__(
+    ast_self: ttl.operators.TensorBlock,
+    rhs: ttl.operators.TensorBlock
+) -> ttl.operators.TensorBlock
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Element-wise subtraction using ttl.sub.
+
+
+</Indent>
+<Anchor id="ttl-operators-TensorBlock-store">
+
+<CodeBlock links={{"ttl.operators.TensorBlock":"#ttl-operators-TensorBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators.TensorBlock.store(
+    ast_self: ttl.operators.TensorBlock,
+    rhs: ttl.operators.TensorBlock
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Store result tensor to CB by propagating CB association from output view.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="ttl-operators-_get_cb_from_block">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators._get_cb_from_block(
+    block
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Extract the CB from a block (result of ttl.attach_cb).
+
+The attach_cb op has signature: (tensor, cb) -&gt; tensor
+So the CB is operand[1].
+
+
+</Indent>
+
+<Anchor id="ttl-operators-_get_cb_shape">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators._get_cb_shape(
+    cb_val
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Extract the block shape from a CB value.
+
+
+</Indent>
+
+<Anchor id="ttl-operators-_get_constant_int">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators._get_constant_int(
+    val
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Extract Python int from MLIR arith.ConstantOp or return as-is if already int.
+
+
+</Indent>
+
+<Anchor id="ttl-operators-_get_current_grid">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators._get_current_grid() -> typing.Tuple[int, int]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the current grid dimensions.
+
+
+</Indent>
+
+<Anchor id="ttl-operators-_is_block">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators._is_block(
+    value
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if a value is a block (result of cb.reserve() or cb.wait()).
+
+A block is a tensor with an attached CB, produced by ttl.attach_cb.
+
+
+</Indent>
+
+<Anchor id="ttl-operators-_make_tensor_slice">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators._make_tensor_slice(
+    tensor,
+    indices,
+    slice_shape
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a ttl.tensor_slice from a tensor, tile indices, and shape.
+
+**Parameters:**
+
+<ParamField path="tensor">
+The source tensor to slice from
+</ParamField>
+
+<ParamField path="indices">
+(row, col) tile indices for the slice start position
+</ParamField>
+
+<ParamField path="slice_shape">
+(rows, cols) shape for the slice in tiles
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="ttl-operators-_process_tensor_subscript">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators._process_tensor_subscript(
+    subscript_tuple,
+    cb_shape
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Process tensor subscript and create tensor slice.
+
+**Parameters:**
+
+<ParamField path="subscript_tuple">
+(tensor, indices) where indices are [(value, is_range), ...]
+</ParamField>
+
+<ParamField path="cb_shape">
+[rows, cols] shape from the CB
+</ParamField>
+
+**Returns:**
+
+Tensor slice with shape matching cb_shape
+
+
+</Indent>
+
+<Anchor id="ttl-operators-_set_current_grid">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators._set_current_grid(
+    grid: typing.Tuple[int, int]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Set the current grid dimensions. Called before compiling threads.
+
+
+</Indent>
+
+<Anchor id="ttl-operators-broadcast">
+
+<CodeBlock links={{"ttl.operators.TensorBlock":"#ttl-operators-TensorBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators.broadcast(
+    input: ttl.operators.TensorBlock,
+    output: ttl.operators.TensorBlock,
+    dims: typing.List[int]
+) -> ttl.operators.TensorBlock
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Broadcast over specified dimensions.
+
+**Parameters:**
+
+<ParamField path="input" type="TensorBlock">
+Input tensor (CB-attached)
+</ParamField>
+
+<ParamField path="output" type="TensorBlock">
+Output tensor (CB-attached, used for output CB tracking)
+</ParamField>
+
+<ParamField path="dims" type="List[int]">
+Dimensions to broadcast over
+</ParamField>
+
+**Returns:** `TensorBlock`
+
+Result tensor with broadcast values
+
+
+</Indent>
+
+<Anchor id="ttl-operators-copy">
+
+<CodeBlock links={{"ttl.operators.CopyTransferHandler":"#ttl-operators-CopyTransferHandler"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators.copy(
+    src,
+    dst
+) -> ttl.operators.CopyTransferHandler
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Initiate an asynchronous data transfer using ttl.copy.
+
+For multi-tile CBs (shape &gt; 1x1), use range syntax: tensor[0:2, 0:2]
+For single-tile CBs (shape 1x1), use index syntax: tensor[0, 0]
+
+**Parameters:**
+
+<ParamField path="src">
+Source tensor/slice (for reads) or block (for writes)
+</ParamField>
+
+<ParamField path="dst">
+Destination block (for reads) or tensor/slice (for writes)
+</ParamField>
+
+**Returns:** `CopyTransferHandler`
+
+CopyTransferHandler handle that must be waited on for completion
+
+
+</Indent>
+
+<Anchor id="ttl-operators-core">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators.core(
+    dims
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the coordinates of the current core.
+
+Currently only dims=2 is supported (temporary restriction).
+
+**Parameters:**
+
+<ParamField path="dims">
+Number of dimensions to return (must be 2)
+</ParamField>
+
+**Returns:**
+
+For dims=2: Tuple (x, y) where x is column coordinate and y is row coordinate
+
+**Raises:**
+
+- `ValueError`: If dims is not 2
+
+
+</Indent>
+
+<Anchor id="ttl-operators-grid_size">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators.grid_size(
+    dims
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the size of the grid.
+
+Currently only dims=2 is supported (temporary restriction).
+
+**Parameters:**
+
+<ParamField path="dims">
+Number of dimensions to return (must be 2)
+</ParamField>
+
+**Returns:**
+
+For dims=2: Tuple (x_size, y_size) where x_size is columns and y_size is rows
+
+**Raises:**
+
+- `ValueError`: If dims is not 2
+
+
+</Indent>
+
+<Anchor id="ttl-operators-signpost">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators.signpost(
+    name: str
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Emit a profiling marker visible in Tracy.
+
+The marker creates a DeviceZoneScopedN in the generated C++ code,
+which will appear in Tracy profiler traces when TT_METAL_DEVICE_PROFILER=1.
+
+**Parameters:**
+
+<ParamField path="name" type="str">
+Name for the profiling region (must be a string literal)
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="ttl-operators-CoreCoordinate">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators.CoreCoordinate = Tuple[int, int]
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="ttl-operators-IndexedTensor">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators.IndexedTensor = Union['TensorBlock', Tuple['TensorBlock', Tuple[int, ...]]]
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="ttl-operators-__all__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators.__all__ = ['TensorBlock', 'CopyTransferHandler', 'copy', 'core', 'grid_size', 'signpost', ...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="ttl-operators-_current_grid">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.operators._current_grid: Tuple[int, int] = (-1, -1)
+```
+
+</CodeBlock>
+</Anchor>
+

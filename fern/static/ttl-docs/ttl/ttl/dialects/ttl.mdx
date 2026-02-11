@@ -1,0 +1,81 @@
+---
+layout: overview
+slug: ttl/ttl/dialects/ttl
+title: ttl.dialects.ttl
+---
+
+TTL (TT-Lang) dialect Python bindings.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`ensure_dialects_registered`](#ttl-dialects-ttl-ensure_dialects_registered) | Ensure TTL dialect is registered with the given MLIR context. |
+
+### Data
+
+[`CircularBufferType`](#ttl-dialects-ttl-CircularBufferType)
+
+[`SliceAttr`](#ttl-dialects-ttl-SliceAttr)
+
+[`__all__`](#ttl-dialects-ttl-__all__)
+
+### API
+
+<Anchor id="ttl-dialects-ttl-ensure_dialects_registered">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.dialects.ttl.ensure_dialects_registered(
+    ctx
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Ensure TTL dialect is registered with the given MLIR context.
+
+
+</Indent>
+
+<Anchor id="ttl-dialects-ttl-CircularBufferType">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.dialects.ttl.CircularBufferType = ir.CircularBufferType
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="ttl-dialects-ttl-SliceAttr">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.dialects.ttl.SliceAttr = ir.SliceAttr
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="ttl-dialects-ttl-__all__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.dialects.ttl.__all__ = [*[name for name in (globals().keys()) if not name.startswith('_')]]
+```
+
+</CodeBlock>
+</Anchor>
+

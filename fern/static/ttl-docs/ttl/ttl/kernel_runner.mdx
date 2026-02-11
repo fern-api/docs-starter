@@ -1,0 +1,274 @@
+---
+layout: overview
+slug: ttl/ttl/kernel_runner
+title: ttl.kernel_runner
+---
+
+Shared kernel execution logic for tt-lang.
+
+Provides functions for building kernel descriptors, CB descriptors, and
+executing kernels on device via ttnn.generic_op. Used by both the Python
+DSL (CompiledTTNNKernel) and ME2E tests.
+
+This module provides a single reusable implementation of kernel argument
+building and execution.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`KernelSpec`](#ttl-kernel_runner-KernelSpec) | Specification for a single kernel to execute. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`build_cb_descriptors`](#ttl-kernel_runner-build_cb_descriptors) | Build circular buffer descriptors for ttnn.generic_op. |
+| [`build_kernel_descriptors`](#ttl-kernel_runner-build_kernel_descriptors) | Build kernel descriptors for ttnn.generic_op. |
+| [`build_tensor_accessor_args`](#ttl-kernel_runner-build_tensor_accessor_args) | Build compile-time args for tensor accessors. |
+| [`run_kernel_on_device`](#ttl-kernel_runner-run_kernel_on_device) | Execute kernels on device using ttnn.generic_op. |
+
+### Data
+
+[`__all__`](#ttl-kernel_runner-__all__)
+
+### API
+
+<Anchor id="ttl-kernel_runner-KernelSpec">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class ttl.kernel_runner.KernelSpec(
+    path: str,
+    thread_type: str,
+    tensor_indices: typing.List[int],
+    config: typing.Any
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Dataclass</Badge>
+
+Specification for a single kernel to execute.
+
+
+<ParamField path="path" type="str">
+</ParamField>
+
+<ParamField path="tensor_indices" type="List[int]">
+</ParamField>
+
+<ParamField path="thread_type" type="str">
+</ParamField>
+</Indent>
+
+<Anchor id="ttl-kernel_runner-build_cb_descriptors">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.kernel_runner.build_cb_descriptors(
+    tensors: typing.List[typing.Any],
+    cb_configs: typing.List[typing.Any],
+    core_ranges: typing.Any
+) -> typing.List[typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Build circular buffer descriptors for ttnn.generic_op.
+
+**Parameters:**
+
+<ParamField path="tensors" type="List[Any]">
+List of ttnn.Tensor objects. Each tensor's position (0, 1, 2, ...)
+corresponds to its CB index. For intermediate CBs (not backed by
+input/output tensors), pass None in the corresponding position.
+</ParamField>
+
+<ParamField path="cb_configs" type="List[Any]">
+List of CircularBuffer objects for each CB, indexed by CB index.
+Each CB has shape, buffer_factor, tensor (for dtype), and _cb_index attributes.
+</ParamField>
+
+<ParamField path="core_ranges" type="Any">
+ttnn.CoreRangeSet for CB allocation.
+</ParamField>
+
+**Returns:** `List[Any]`
+
+List of ttnn.CBDescriptor objects.
+
+
+</Indent>
+
+<Anchor id="ttl-kernel_runner-build_kernel_descriptors">
+
+<CodeBlock links={{"ttl.kernel_runner.KernelSpec":"#ttl-kernel_runner-KernelSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.kernel_runner.build_kernel_descriptors(
+    kernel_specs: typing.List[ttl.kernel_runner.KernelSpec],
+    tensors: typing.List[typing.Any],
+    tensor_accessor_args: typing.List[int],
+    core_ranges: typing.Any,
+    grid_cols: int,
+    grid_rows: int,
+    num_cbs: int
+) -> typing.List[typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Build kernel descriptors for ttnn.generic_op.
+
+**Parameters:**
+
+<ParamField path="kernel_specs" type="List[KernelSpec]">
+List of kernel specifications.
+</ParamField>
+
+<ParamField path="tensors" type="List[Any]">
+List of ttnn.Tensor objects. Position in this list determines
+the global tensor index. Individual kernels access subsets via
+tensor_indices in each KernelSpec.
+</ParamField>
+
+<ParamField path="tensor_accessor_args" type="List[int]">
+Flattened compile-time args from all tensors.
+</ParamField>
+
+<ParamField path="core_ranges" type="Any">
+ttnn.CoreRangeSet for kernel execution.
+</ParamField>
+
+<ParamField path="grid_cols" type="int">
+Number of grid columns (x dimension).
+</ParamField>
+
+<ParamField path="grid_rows" type="int">
+Number of grid rows (y dimension).
+</ParamField>
+
+<ParamField path="num_cbs" type="int">
+Total number of circular buffers (including intermediate CBs).
+</ParamField>
+
+**Returns:** `List[Any]`
+
+List of ttnn.KernelDescriptor objects.
+
+
+</Indent>
+
+<Anchor id="ttl-kernel_runner-build_tensor_accessor_args">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.kernel_runner.build_tensor_accessor_args(
+    tensors: typing.List[typing.Any]
+) -> typing.List[int]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Build compile-time args for tensor accessors.
+
+**Parameters:**
+
+<ParamField path="tensors" type="List[Any]">
+List of ttnn.Tensor objects on device.
+</ParamField>
+
+**Returns:** `List[int]`
+
+List of compile-time args (flattened TensorAccessorArgs for all tensors).
+
+
+</Indent>
+
+<Anchor id="ttl-kernel_runner-run_kernel_on_device">
+
+<CodeBlock links={{"ttl.kernel_runner.KernelSpec":"#ttl-kernel_runner-KernelSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.kernel_runner.run_kernel_on_device(
+    kernel_specs: typing.List[ttl.kernel_runner.KernelSpec],
+    tensors: typing.List[typing.Any],
+    cb_configs: typing.List[typing.Any],
+    core_ranges: typing.Any,
+    program_hash: int = None
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Execute kernels on device using ttnn.generic_op.
+
+This is the main entry point for kernel execution. It builds all
+descriptors and runs the program.
+
+**Parameters:**
+
+<ParamField path="kernel_specs" type="List[KernelSpec]">
+List of kernel specifications (path, thread_type, tensor_indices, config).
+</ParamField>
+
+<ParamField path="tensors" type="List[Any]">
+List of ttnn.Tensor objects. Position in this list determines the
+global tensor index. Individual kernels access subsets via tensor_indices
+in each KernelSpec.
+</ParamField>
+
+<ParamField path="cb_configs" type="List[Any]">
+List of CircularBuffer objects for each CB, indexed by CB index.
+Includes both tensor-backed CBs and intermediate CBs. Each CB has shape,
+buffer_factor, tensor (for dtype), and _cb_index attributes.
+</ParamField>
+
+<ParamField path="core_ranges" type="Any">
+ttnn.CoreRangeSet for kernel execution.
+</ParamField>
+
+<ParamField path="program_hash" type="int" default="None">
+Hash for tt-metal program cache (not yet used).
+</ParamField>
+
+**Returns:** `Any`
+
+Result from ttnn.generic_op (typically None or output tensor).
+
+
+</Indent>
+
+<Anchor id="ttl-kernel_runner-__all__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.kernel_runner.__all__ = ['KernelSpec', 'build_tensor_accessor_args', 'build_kernel_descriptors', 'build_...
+```
+
+</CodeBlock>
+</Anchor>
+

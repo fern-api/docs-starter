@@ -25,6 +25,9 @@ tabs:
   Library Reference:
     display-name: Library Reference
     icon: book
+  TTL Reference:
+    display-name: TTL Reference
+    icon: book
 
 libraries:
   nemo-rl:
@@ -32,6 +35,13 @@ libraries:
       git: https://github.com/NVIDIA-NeMo/RL
     output:
       path: ./static/nemo-rl-docs
+    lang: python
+  ttl:
+    input:
+      git: https://github.com/tenstorrent/tt-lang
+      subpath: python/ttl
+    output:
+      path: ./static/ttl-docs
     lang: python
 
 navigation:
@@ -80,6 +90,10 @@ navigation:
   - tab: Library Reference
     layout:
       - library: nemo-rl
+  - tab: TTL Reference
+    layout:
+      - library: ttl
+  
 
 navbar-links:
   - type: minimal
