@@ -43,6 +43,9 @@ navigation:
           - page: Customize your docs
             path: docs/pages/customization.mdx
             icon: fa-duotone fa-palette
+          - page: Tooltips with reusable snippets
+            path: docs/pages/tooltip-snippets.mdx
+            icon: fa-duotone fa-message
           - page: Support
             path: docs/pages/support.mdx
             icon: fa-duotone fa-headset
