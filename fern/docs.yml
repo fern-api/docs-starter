@@ -28,20 +28,30 @@ tabs:
   TTL Reference:
     display-name: TTL Reference
     icon: book
+  LangChain Core Reference:
+    display-name: LangChain Core 
+    icon: book
 
 libraries:
   nemo-rl:
     input:
       git: https://github.com/NVIDIA-NeMo/RL
     output:
-      path: ./static/nemo-rl-docs
+      path: ./library-docs/nemo-rl-docs
     lang: python
   ttl:
     input:
       git: https://github.com/tenstorrent/tt-lang
       subpath: python/ttl
     output:
-      path: ./static/ttl-docs
+      path: ./library-docs/ttl-docs
+    lang: python
+  langchain-core:
+    input:
+      git: https://github.com/langchain-ai/langchain
+      subpath: libs/core/langchain_core
+    output:
+      path: ./library-docs/langchain-core-docs
     lang: python
 
 navigation:
@@ -93,6 +103,9 @@ navigation:
   - tab: TTL Reference
     layout:
       - library: ttl
+  - tab: LangChain Core Reference
+    layout:
+      - library: langchain-core
   
 
 navbar-links:
