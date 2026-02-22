@@ -97,4 +97,7 @@ logo:
 
 favicon: docs/assets/favicon.svg
 
+metadata:
+  og:dynamic: true
+
 css: styles.css
