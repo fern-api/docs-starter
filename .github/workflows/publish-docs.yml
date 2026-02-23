@@ -13,8 +13,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Fern CLI tool
-        run: npm install -g fern-api
+      - name: Setup Fern CLI
+        uses: fern-api/setup-fern-cli@v1
 
       - name: Publish Docs
         env:
