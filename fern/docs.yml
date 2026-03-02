@@ -22,6 +22,9 @@ tabs:
   API Reference:
     display-name: API Reference
     icon: puzzle
+  C++ Golden Pages:
+    display-name: C++ Golden Pages
+    icon: code
   Library Reference:
     display-name: Library Reference
     icon: book
@@ -29,7 +32,10 @@ tabs:
     display-name: TTL Reference
     icon: book
   LangChain Core Reference:
-    display-name: LangChain Core 
+    display-name: LangChain Core
+    icon: book
+  Django Core Reference:
+    display-name: Django Core Reference
     icon: book
 
 libraries:
@@ -54,6 +60,7 @@ libraries:
       path: ./library-docs/langchain-core-docs
     lang: python
 
+
 navigation:
   - tab: home
     layout:
@@ -74,6 +81,12 @@ navigation:
           - page: Customize your docs
             path: docs/pages/customization.mdx
             icon: fa-duotone fa-palette
+          - page: Steps TOC Test
+            path: docs/pages/steps-toc-test.mdx
+            icon: fa-duotone fa-list-ol
+          - page: Nominal Data Model
+            path: docs/pages/nominal-data-model.mdx
+            icon: fa-duotone fa-database
           - page: Support
             path: docs/pages/support.mdx
             icon: fa-duotone fa-headset
@@ -97,6 +110,38 @@ navigation:
             referenced-packages:
               - user
             contents: []
+  - tab: C++ Golden Pages
+    layout:
+      - section: CUB
+        contents:
+          - page: BlockReduce
+            path: pages/cub/block_reduce_v3.mdx
+          - page: BlockScan
+            path: pages/cub/block_scan_v4.mdx
+          - page: WarpReduce
+            path: pages/cub/warp_reduce_v4.mdx
+          - page: ArgMax
+            path: pages/cub/simple_struct_v4.mdx
+      - section: Thrust
+        contents:
+          - page: device_vector
+            path: pages/thrust/device_vector_v3.mdx
+          - page: pointer
+            path: pages/thrust/pointer_v4.mdx
+          - page: strided_iterator
+            path: pages/thrust/deprecated_example_v4.mdx
+          - page: disjoint_unsynchronized_pool_resource
+            path: pages/thrust/group_member_example_v4.mdx
+      - section: libcudacxx
+        contents:
+          - page: resource_with
+            path: pages/libcudacxx/concept_example_v3.mdx
+          - page: counting_iterator
+            path: pages/libcudacxx/deep_template_class_v4.mdx
+          - page: buffer
+            path: pages/libcudacxx/empty_docstring_class_v4.mdx
+          - page: stream
+            path: pages/libcudacxx/raises_example_v4.mdx
   - tab: Library Reference
     layout:
       - library: nemo-rl
