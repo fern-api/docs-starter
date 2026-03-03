@@ -18,7 +18,7 @@ Create beautiful documentation in under 5 minutes using your OpenAPI specificati
 
 ## Customer Showcase
 
-Get inspired by API documentation built with Fern: [Webflow](https://developers.webflow.com) | [Cartesia](https://docs.cartesia.ai) | [Cohere](https://docs.cohere.com) | [ElevenLabs](https://elevenlabs.io/docs)
+Get inspired by API documentation built with Fern: [Webflow](https://developers.webflow.com) | [You.com](https://you.com/docs) | [Cohere](https://docs.cohere.com) | [ElevenLabs](https://elevenlabs.io/docs)
 
 ---
 
