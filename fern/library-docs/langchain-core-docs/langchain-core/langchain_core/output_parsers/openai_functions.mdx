@@ -1,0 +1,422 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/output_parsers/openai_functions
+title: langchain_core.output_parsers.openai_functions
+---
+
+Parsers for OpenAI functions output.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`JsonKeyOutputFunctionsParser`](#langchain_core-output_parsers-openai_functions-JsonKeyOutputFunctionsParser) | Parse an output as the element of the JSON object. |
+| [`JsonOutputFunctionsParser`](#langchain_core-output_parsers-openai_functions-JsonOutputFunctionsParser) | Parse an output as the JSON object. |
+| [`OutputFunctionsParser`](#langchain_core-output_parsers-openai_functions-OutputFunctionsParser) | Parse an output that is one of sets of values. |
+| [`PydanticAttrOutputFunctionsParser`](#langchain_core-output_parsers-openai_functions-PydanticAttrOutputFunctionsParser) | Parse an output as an attribute of a Pydantic object. |
+| [`PydanticOutputFunctionsParser`](#langchain_core-output_parsers-openai_functions-PydanticOutputFunctionsParser) | Parse an output as a Pydantic object. |
+
+### API
+
+<Anchor id="langchain_core-output_parsers-openai_functions-JsonKeyOutputFunctionsParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.output_parsers.openai_functions.JsonKeyOutputFunctionsParser()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [JsonOutputFunctionsParser](#langchain_core-output_parsers-openai_functions-JsonOutputFunctionsParser)
+
+Parse an output as the element of the JSON object.
+
+
+<ParamField path="key_name" type="str">
+The name of the key to return.
+</ParamField>
+<Anchor id="langchain_core-output_parsers-openai_functions-JsonKeyOutputFunctionsParser-parse_result">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.openai_functions.JsonKeyOutputFunctionsParser.parse_result(
+    result: langchain_core.output_parsers.list[langchain_core.outputs.Generation],
+    partial: bool = False
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse the result of an LLM call to a JSON object.
+
+**Parameters:**
+
+<ParamField path="result" type="list[Generation]">
+The result of the LLM call.
+</ParamField>
+
+<ParamField path="partial" type="bool" default="False">
+Whether to parse partial JSON objects.
+</ParamField>
+
+**Returns:** `Any`
+
+The parsed JSON object.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-openai_functions-JsonOutputFunctionsParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.output_parsers.openai_functions.JsonOutputFunctionsParser()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseCumulativeTransformOutputParser[Any]](/langchain-core/langchain_core/output_parsers/transform#langchain_core-output_parsers-transform-BaseCumulativeTransformOutputParser)
+
+Parse an output as the JSON object.
+
+
+<ParamField path="_type" type="str">
+</ParamField>
+
+<ParamField path="args_only" type="bool = True">
+Whether to only return the arguments to the function call.
+</ParamField>
+
+<ParamField path="strict" type="bool = False">
+Whether to allow non-JSON-compliant strings.
+
+See: https://docs.python.org/3/library/json.html#encoders-and-decoders
+
+Useful when the parsed output may include unicode characters or new lines.
+</ParamField>
+<Anchor id="langchain_core-output_parsers-openai_functions-JsonOutputFunctionsParser-_diff">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.openai_functions.JsonOutputFunctionsParser._diff(
+    prev: typing.Any | None,
+    next: typing.Any
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-openai_functions-JsonOutputFunctionsParser-parse">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.openai_functions.JsonOutputFunctionsParser.parse(
+    text: str
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse the output of an LLM call to a JSON object.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The output of the LLM call.
+</ParamField>
+
+**Returns:** `Any`
+
+The parsed JSON object.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-openai_functions-JsonOutputFunctionsParser-parse_result">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.openai_functions.JsonOutputFunctionsParser.parse_result(
+    result: langchain_core.output_parsers.list[langchain_core.outputs.Generation],
+    partial: bool = False
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse the result of an LLM call to a JSON object.
+
+**Parameters:**
+
+<ParamField path="result" type="list[Generation]">
+The result of the LLM call.
+</ParamField>
+
+<ParamField path="partial" type="bool" default="False">
+Whether to parse partial JSON objects.
+</ParamField>
+
+**Returns:** `Any`
+
+The parsed JSON object.
+
+**Raises:**
+
+- `OutputParserException`: If the output is not valid JSON.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-openai_functions-OutputFunctionsParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.output_parsers.openai_functions.OutputFunctionsParser()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseGenerationOutputParser[Any]](/langchain-core/langchain_core/output_parsers/base#langchain_core-output_parsers-base-BaseGenerationOutputParser)
+
+Parse an output that is one of sets of values.
+
+
+<ParamField path="args_only" type="bool = True">
+Whether to only return the arguments to the function call.
+</ParamField>
+<Anchor id="langchain_core-output_parsers-openai_functions-OutputFunctionsParser-parse_result">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.openai_functions.OutputFunctionsParser.parse_result(
+    result: langchain_core.output_parsers.list[langchain_core.outputs.Generation],
+    partial: bool = False
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse the result of an LLM call to a JSON object.
+
+**Parameters:**
+
+<ParamField path="result" type="list[Generation]">
+The result of the LLM call.
+</ParamField>
+
+<ParamField path="partial" type="bool" default="False">
+Whether to parse partial JSON objects.
+</ParamField>
+
+**Returns:** `Any`
+
+The parsed JSON object.
+
+**Raises:**
+
+- `OutputParserException`: If the output is not valid JSON.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-openai_functions-PydanticAttrOutputFunctionsParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.output_parsers.openai_functions.PydanticAttrOutputFunctionsParser()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [PydanticOutputFunctionsParser](#langchain_core-output_parsers-openai_functions-PydanticOutputFunctionsParser)
+
+Parse an output as an attribute of a Pydantic object.
+
+
+<ParamField path="attr_name" type="str">
+The name of the attribute to return.
+</ParamField>
+<Anchor id="langchain_core-output_parsers-openai_functions-PydanticAttrOutputFunctionsParser-parse_result">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.openai_functions.PydanticAttrOutputFunctionsParser.parse_result(
+    result: langchain_core.output_parsers.list[langchain_core.outputs.Generation],
+    partial: bool = False
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse the result of an LLM call to a JSON object.
+
+**Parameters:**
+
+<ParamField path="result" type="list[Generation]">
+The result of the LLM call.
+</ParamField>
+
+<ParamField path="partial" type="bool" default="False">
+Whether to parse partial JSON objects.
+</ParamField>
+
+**Returns:** `Any`
+
+The parsed JSON object.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-openai_functions-PydanticOutputFunctionsParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.output_parsers.openai_functions.PydanticOutputFunctionsParser()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [OutputFunctionsParser](#langchain_core-output_parsers-openai_functions-OutputFunctionsParser)
+
+Parse an output as a Pydantic object.
+
+This parser is used to parse the output of a chat model that uses OpenAI function
+format to invoke functions.
+
+The parser extracts the function call invocation and matches them to the Pydantic
+schema provided.
+
+An exception will be raised if the function call does not match the provided schema.
+
+
+<ParamField path="pydantic_schema" type="type[BaseModel] | dict[str, type[BaseModel]]">
+The Pydantic schema to parse the output with.
+
+If multiple schemas are provided, then the function name will be used to
+determine which schema to use.
+</ParamField>
+<Anchor id="langchain_core-output_parsers-openai_functions-PydanticOutputFunctionsParser-parse_result">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.openai_functions.PydanticOutputFunctionsParser.parse_result(
+    result: langchain_core.output_parsers.list[langchain_core.outputs.Generation],
+    partial: bool = False
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse the result of an LLM call to a JSON object.
+
+**Parameters:**
+
+<ParamField path="result" type="list[Generation]">
+The result of the LLM call.
+</ParamField>
+
+<ParamField path="partial" type="bool" default="False">
+Whether to parse partial JSON objects.
+</ParamField>
+
+**Returns:** `Any`
+
+The parsed JSON object.
+
+**Raises:**
+
+- `ValueError`: If the Pydantic schema is not valid.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-openai_functions-PydanticOutputFunctionsParser-validate_schema">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.openai_functions.PydanticOutputFunctionsParser.validate_schema(
+    values: dict[str, typing.Any]
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Validate the Pydantic schema.
+
+**Parameters:**
+
+<ParamField path="values" type="dict[str, Any]">
+The values to validate.
+</ParamField>
+
+**Returns:** `Any`
+
+The validated values.
+
+**Raises:**
+
+- `ValueError`: If the schema is not a Pydantic schema.
+
+
+</Indent>
+</Indent>

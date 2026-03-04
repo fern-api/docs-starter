@@ -1,0 +1,541 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/caches
+title: langchain_core.caches
+---
+
+Optional caching layer for language models.
+
+Distinct from provider-based [prompt caching](https://docs.langchain.com/oss/python/langchain/models#prompt-caching).
+
+!!! warning "Beta feature"
+
+    This is a beta feature. Please be wary of deploying experimental code to production
+    unless you've taken appropriate precautions.
+
+A cache is useful for two reasons:
+
+1. It can save you money by reducing the number of API calls you make to the LLM
+    provider if you're often requesting the same completion multiple times.
+2. It can speed up your application by reducing the number of API calls you make to the
+    LLM provider.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`BaseCache`](#langchain_core-caches-BaseCache) | Interface for a caching layer for LLMs and Chat models. |
+| [`InMemoryCache`](#langchain_core-caches-InMemoryCache) | Cache that stores things in memory. |
+
+### Data
+
+[`RETURN_VAL_TYPE`](#langchain_core-caches-RETURN_VAL_TYPE)
+
+### API
+
+<Anchor id="langchain_core-caches-BaseCache">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.caches.BaseCache()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+Interface for a caching layer for LLMs and Chat models.
+
+The cache interface consists of the following methods:
+
+- lookup: Look up a value based on a prompt and `llm_string`.
+- update: Update the cache based on a prompt and `llm_string`.
+- clear: Clear the cache.
+
+In addition, the cache interface provides an async version of each method.
+
+The default implementation of the async methods is to run the synchronous
+method in an executor. It's recommended to override the async methods
+and provide async implementations to avoid unnecessary overhead.
+
+
+<Anchor id="langchain_core-caches-BaseCache-aclear">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.caches.BaseCache.aclear(
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async clear cache that can take additional keyword arguments.
+
+
+</Indent>
+<Anchor id="langchain_core-caches-BaseCache-alookup">
+
+<CodeBlock links={{"langchain_core.caches.RETURN_VAL_TYPE":"#langchain_core-caches-RETURN_VAL_TYPE"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.caches.BaseCache.alookup(
+    prompt: str,
+    llm_string: str
+) -> langchain_core.caches.RETURN_VAL_TYPE | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async look up based on `prompt` and `llm_string`.
+
+A cache implementation is expected to generate a key from the 2-tuple
+of `prompt` and `llm_string` (e.g., by concatenating them with a delimiter).
+
+**Parameters:**
+
+<ParamField path="prompt" type="str">
+A string representation of the prompt.
+
+In the case of a chat model, the prompt is a non-trivial
+serialization of the prompt into the language model.
+</ParamField>
+
+<ParamField path="llm_string" type="str">
+A string representation of the LLM configuration.
+
+This is used to capture the invocation parameters of the LLM
+(e.g., model name, temperature, stop tokens, max tokens, etc.).
+
+These invocation parameters are serialized into a string
+representation.
+</ParamField>
+
+**Returns:** `RETURN_VAL_TYPE | None`
+
+On a cache miss, return `None`. On a cache hit, return the cached value.
+The cached value is a list of `Generation` (or subclasses).
+
+
+</Indent>
+<Anchor id="langchain_core-caches-BaseCache-aupdate">
+
+<CodeBlock links={{"langchain_core.caches.RETURN_VAL_TYPE":"#langchain_core-caches-RETURN_VAL_TYPE"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.caches.BaseCache.aupdate(
+    prompt: str,
+    llm_string: str,
+    return_val: langchain_core.caches.RETURN_VAL_TYPE
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async update cache based on `prompt` and `llm_string`.
+
+The prompt and llm_string are used to generate a key for the cache.
+The key should match that of the look up method.
+
+**Parameters:**
+
+<ParamField path="prompt" type="str">
+A string representation of the prompt.
+
+In the case of a chat model, the prompt is a non-trivial
+serialization of the prompt into the language model.
+</ParamField>
+
+<ParamField path="llm_string" type="str">
+A string representation of the LLM configuration.
+
+This is used to capture the invocation parameters of the LLM
+(e.g., model name, temperature, stop tokens, max tokens, etc.).
+
+These invocation parameters are serialized into a string
+representation.
+</ParamField>
+
+<ParamField path="return_val" type="RETURN_VAL_TYPE">
+The value to be cached. The value is a list of `Generation`
+(or subclasses).
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-caches-BaseCache-clear">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.caches.BaseCache.clear(
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Clear cache that can take additional keyword arguments.
+
+
+</Indent>
+<Anchor id="langchain_core-caches-BaseCache-lookup">
+
+<CodeBlock links={{"langchain_core.caches.RETURN_VAL_TYPE":"#langchain_core-caches-RETURN_VAL_TYPE"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.caches.BaseCache.lookup(
+    prompt: str,
+    llm_string: str
+) -> langchain_core.caches.RETURN_VAL_TYPE | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Look up based on `prompt` and `llm_string`.
+
+A cache implementation is expected to generate a key from the 2-tuple
+of `prompt` and `llm_string` (e.g., by concatenating them with a delimiter).
+
+**Parameters:**
+
+<ParamField path="prompt" type="str">
+A string representation of the prompt.
+
+In the case of a chat model, the prompt is a non-trivial
+serialization of the prompt into the language model.
+</ParamField>
+
+<ParamField path="llm_string" type="str">
+A string representation of the LLM configuration.
+
+This is used to capture the invocation parameters of the LLM
+(e.g., model name, temperature, stop tokens, max tokens, etc.).
+
+These invocation parameters are serialized into a string representation.
+</ParamField>
+
+**Returns:** `RETURN_VAL_TYPE | None`
+
+On a cache miss, return `None`. On a cache hit, return the cached value.
+The cached value is a list of `Generation` (or subclasses).
+
+
+</Indent>
+<Anchor id="langchain_core-caches-BaseCache-update">
+
+<CodeBlock links={{"langchain_core.caches.RETURN_VAL_TYPE":"#langchain_core-caches-RETURN_VAL_TYPE"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.caches.BaseCache.update(
+    prompt: str,
+    llm_string: str,
+    return_val: langchain_core.caches.RETURN_VAL_TYPE
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Update cache based on `prompt` and `llm_string`.
+
+The `prompt` and `llm_string` are used to generate a key for the cache. The key
+should match that of the lookup method.
+
+**Parameters:**
+
+<ParamField path="prompt" type="str">
+A string representation of the prompt.
+
+In the case of a chat model, the prompt is a non-trivial
+serialization of the prompt into the language model.
+</ParamField>
+
+<ParamField path="llm_string" type="str">
+A string representation of the LLM configuration.
+
+This is used to capture the invocation parameters of the LLM
+(e.g., model name, temperature, stop tokens, max tokens, etc.).
+
+These invocation parameters are serialized into a string
+representation.
+</ParamField>
+
+<ParamField path="return_val" type="RETURN_VAL_TYPE">
+The value to be cached.
+
+The value is a list of `Generation` (or subclasses).
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-caches-InMemoryCache">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.caches.InMemoryCache(
+    maxsize: int | None = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseCache](#langchain_core-caches-BaseCache)
+
+Cache that stores things in memory.
+
+
+<ParamField path="_cache" type="dict[tuple[str, str], RETURN_VAL_TYPE] = &#123;&#125;">
+</ParamField>
+<Anchor id="langchain_core-caches-InMemoryCache-aclear">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.caches.InMemoryCache.aclear(
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async clear cache.
+
+
+</Indent>
+<Anchor id="langchain_core-caches-InMemoryCache-alookup">
+
+<CodeBlock links={{"langchain_core.caches.RETURN_VAL_TYPE":"#langchain_core-caches-RETURN_VAL_TYPE"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.caches.InMemoryCache.alookup(
+    prompt: str,
+    llm_string: str
+) -> langchain_core.caches.RETURN_VAL_TYPE | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async look up based on `prompt` and `llm_string`.
+
+**Parameters:**
+
+<ParamField path="prompt" type="str">
+A string representation of the prompt.
+
+In the case of a chat model, the prompt is a non-trivial
+serialization of the prompt into the language model.
+</ParamField>
+
+<ParamField path="llm_string" type="str">
+A string representation of the LLM configuration.
+</ParamField>
+
+**Returns:** `RETURN_VAL_TYPE | None`
+
+On a cache miss, return `None`. On a cache hit, return the cached value.
+
+
+</Indent>
+<Anchor id="langchain_core-caches-InMemoryCache-aupdate">
+
+<CodeBlock links={{"langchain_core.caches.RETURN_VAL_TYPE":"#langchain_core-caches-RETURN_VAL_TYPE"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.caches.InMemoryCache.aupdate(
+    prompt: str,
+    llm_string: str,
+    return_val: langchain_core.caches.RETURN_VAL_TYPE
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async update cache based on `prompt` and `llm_string`.
+
+**Parameters:**
+
+<ParamField path="prompt" type="str">
+A string representation of the prompt.
+
+In the case of a chat model, the prompt is a non-trivial
+serialization of the prompt into the language model.
+</ParamField>
+
+<ParamField path="llm_string" type="str">
+A string representation of the LLM configuration.
+</ParamField>
+
+<ParamField path="return_val" type="RETURN_VAL_TYPE">
+The value to be cached. The value is a list of `Generation`
+(or subclasses).
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-caches-InMemoryCache-clear">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.caches.InMemoryCache.clear(
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Clear cache.
+
+
+</Indent>
+<Anchor id="langchain_core-caches-InMemoryCache-lookup">
+
+<CodeBlock links={{"langchain_core.caches.RETURN_VAL_TYPE":"#langchain_core-caches-RETURN_VAL_TYPE"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.caches.InMemoryCache.lookup(
+    prompt: str,
+    llm_string: str
+) -> langchain_core.caches.RETURN_VAL_TYPE | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Look up based on `prompt` and `llm_string`.
+
+**Parameters:**
+
+<ParamField path="prompt" type="str">
+A string representation of the prompt.
+
+In the case of a chat model, the prompt is a non-trivial
+serialization of the prompt into the language model.
+</ParamField>
+
+<ParamField path="llm_string" type="str">
+A string representation of the LLM configuration.
+</ParamField>
+
+**Returns:** `RETURN_VAL_TYPE | None`
+
+On a cache miss, return `None`. On a cache hit, return the cached value.
+
+
+</Indent>
+<Anchor id="langchain_core-caches-InMemoryCache-update">
+
+<CodeBlock links={{"langchain_core.caches.RETURN_VAL_TYPE":"#langchain_core-caches-RETURN_VAL_TYPE"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.caches.InMemoryCache.update(
+    prompt: str,
+    llm_string: str,
+    return_val: langchain_core.caches.RETURN_VAL_TYPE
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Update cache based on `prompt` and `llm_string`.
+
+**Parameters:**
+
+<ParamField path="prompt" type="str">
+A string representation of the prompt.
+
+In the case of a chat model, the prompt is a non-trivial
+serialization of the prompt into the language model.
+</ParamField>
+
+<ParamField path="llm_string" type="str">
+A string representation of the LLM configuration.
+</ParamField>
+
+<ParamField path="return_val" type="RETURN_VAL_TYPE">
+The value to be cached.
+
+The value is a list of `Generation` (or subclasses).
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-caches-RETURN_VAL_TYPE">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.caches.RETURN_VAL_TYPE = Sequence[Generation]
+```
+
+</CodeBlock>
+</Anchor>
+

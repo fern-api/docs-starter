@@ -1,0 +1,324 @@
+---
+title: thrust::device_ptr
+description: "[`device_ptr`](/library/api/thrust::device_ptr) is a pointer-like object which points to an object that resides in memory associated with the device system."
+---
+
+`device_ptr` is a pointer-like object which points to an object that resides in memory associated with the device system.
+
+`device_ptr` has pointer semantics: it may be dereferenced safely from anywhere, including the host, and may be manipulated with pointer arithmetic.
+
+`device_ptr` can be created with device_new, device_malloc, [device_malloc_allocator](/library/api/thrust::device_malloc_allocator), [device_allocator](/library/api/thrust::device_allocator), or device_pointer_cast, or by explicitly calling its constructor with a raw pointer.
+
+The raw pointer contained in a `device_ptr` may be obtained via `get` member function or the raw_pointer_cast free function.
+
+[Algorithms](/library/api/Algorithms) operating on `device_ptr` types will automatically be dispatched to the device system.
+
+```cpp showLineNumbers={false}
+#include <thrust/device_ptr.h>
+```
+
+<Note>
+`device_ptr` is not a smart pointer; it is the programmer's responsibility to deallocate memory pointed to by `device_ptr`.
+</Note>
+
+**See also:**
+device_new,
+device_malloc,
+[device_malloc_allocator](/library/api/thrust::device_malloc_allocator),
+[device_allocator](/library/api/thrust::device_allocator),
+device_pointer_cast,
+raw_pointer_cast
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="T" type="typename">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `thrust::pointer< T, thrust::device_system_tag, thrust::device_reference< T >, thrust::device_ptr< T > >` (public)
+
+---
+
+## Constructors
+
+### device_ptr
+
+<Tabs>
+<Tab title="Default">
+
+<CodeBlock links={{"device_ptr": "/library/api/thrust::device_ptr"}}>
+```cpp showLineNumbers={false}
+thrust::device_ptr<T>::device_ptr() = default
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="From nullptr">
+
+<Badge intent="note" minimal>inline</Badge>
+
+Construct a null `device_ptr`.
+
+<CodeBlock links={{"device_ptr": "/library/api/thrust::device_ptr"}}>
+```cpp showLineNumbers={false}
+thrust::device_ptr<T>::device_ptr(
+    std::nullptr_t
+)
+```
+</CodeBlock>
+
+<Info title="Postconditions">
+[`get()`](/library/api/thrust::pointer::get())` == nullptr`.
+</Info>
+
+</Tab>
+<Tab title="From raw pointer">
+
+<Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>explicit</Badge>
+
+Construct a `device_ptr` from a raw pointer which is convertible to `T*`.
+
+<CodeBlock links={{"device_ptr": "/library/api/thrust::device_ptr"}}>
+```cpp showLineNumbers={false}
+template <typename U>
+thrust::device_ptr<T>::device_ptr(
+    U *ptr
+)
+```
+</CodeBlock>
+
+<Info title="Postconditions">
+[`get()`](/library/api/thrust::pointer::get())` == nullptr`.
+</Info>
+
+<Info title="Preconditions">
+`std::is_convertible_v<U*, T*> == true`.
+</Info>
+
+<Info title="Preconditions">
+`ptr` points to a location in device memory.
+</Info>
+
+**Template parameters**
+
+<ParamField path="U" type="typename">
+A type whose pointer is convertible to `T*`.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="ptr" type="U *">
+A raw pointer to a `U` in device memory to construct from.
+</ParamField>
+
+</Tab>
+<Tab title="Copy">
+
+<Badge intent="note" minimal>inline</Badge>
+
+Copy construct a `device_ptr` from another `device_ptr` whose pointer type is convertible to `T*`.
+
+<CodeBlock links={{"device_ptr": "/library/api/thrust::device_ptr"}}>
+```cpp showLineNumbers={false}
+template <typename U>
+thrust::device_ptr<T>::device_ptr(
+    device_ptr<U> const &other
+)
+```
+</CodeBlock>
+
+<Info title="Postconditions">
+[`get()`](/library/api/thrust::pointer::get())` == other.get()`.
+</Info>
+
+<Info title="Preconditions">
+`std::is_convertible_v<U*, T*> == true`.
+</Info>
+
+**Template parameters**
+
+<ParamField path="U" type="typename">
+A type whose pointer is convertible to `T*`.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="other" type="device_ptr<U> const &">
+A `device_ptr` to a `U` to construct from.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Assignment operators
+
+### operator= <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Copy assign">
+
+Set this `device_ptr` to point to the same object as another `device_ptr` whose pointer type is convertible to `T*`.
+
+<CodeBlock links={{"device_ptr": "/library/api/thrust::device_ptr"}}>
+```cpp showLineNumbers={false}
+template <typename U>
+device_ptr & thrust::device_ptr<T>::operator=(
+    device_ptr<U> const &other
+)
+```
+</CodeBlock>
+
+<Info title="Postconditions">
+[`get()`](/library/api/thrust::pointer::get())` == other.get()`.
+</Info>
+
+<Info title="Preconditions">
+`std::is_convertible_v<U*, T*> == true`.
+</Info>
+
+**Returns:** `*this`.
+
+**Template parameters**
+
+<ParamField path="U" type="typename">
+A type whose pointer is convertible to `T*`.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="other" type="device_ptr<U> const &">
+A `device_ptr` to a `U` to assign from.
+</ParamField>
+
+</Tab>
+<Tab title="From nullptr">
+
+Set this `device_ptr` to null.
+
+<CodeBlock links={{"device_ptr": "/library/api/thrust::device_ptr"}}>
+```cpp showLineNumbers={false}
+device_ptr & thrust::device_ptr<T>::operator=(
+    std::nullptr_t
+)
+```
+</CodeBlock>
+
+<Info title="Postconditions">
+[`get()`](/library/api/thrust::pointer::get())` == nullptr`.
+</Info>
+
+**Returns:** `*this`.
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### get <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+`get` returns this `pointer's` encapsulated raw pointer.
+
+<CodeBlock links={{"device_ptr": "/library/api/thrust::device_ptr", "pointer": "/library/api/thrust::pointer"}}>
+```cpp showLineNumbers={false}
+T * thrust::pointer<T, thrust::device_system_tag, thrust::device_reference<T>, thrust::device_ptr<T>>::get() const
+```
+</CodeBlock>
+
+**Returns:** This `pointer's` raw pointer.
+
+### operator-> <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"device_ptr": "/library/api/thrust::device_ptr", "pointer": "/library/api/thrust::pointer"}}>
+```cpp showLineNumbers={false}
+T * thrust::pointer<T, thrust::device_system_tag, thrust::device_reference<T>, thrust::device_ptr<T>>::operator->() const
+```
+</CodeBlock>
+
+### operator bool <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>explicit</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"device_ptr": "/library/api/thrust::device_ptr", "pointer": "/library/api/thrust::pointer"}}>
+```cpp showLineNumbers={false}
+thrust::pointer<T, thrust::device_system_tag, thrust::device_reference<T>, thrust::device_ptr<T>>::operator bool() const
+```
+</CodeBlock>
+
+### base <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"device_ptr": "/library/api/thrust::device_ptr", "pointer": "/library/api/thrust::pointer"}}>
+```cpp showLineNumbers={false}
+Base const  & thrust::iterator_adaptor<Derived, Base, Value, System, Traversal, Reference, Difference>::base() const
+```
+</CodeBlock>
+
+**Returns:** A `const` reference to the `Base` iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) adapts.
+
+### dereference <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"device_ptr": "/library/api/thrust::device_ptr", "pointer": "/library/api/thrust::pointer"}}>
+```cpp showLineNumbers={false}
+SuperRef thrust::pointer<T, thrust::device_system_tag, thrust::device_reference<T>, thrust::device_ptr<T>>::dereference() const
+```
+</CodeBlock>
+
+### base_reference <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+<CodeBlock links={{"device_ptr": "/library/api/thrust::device_ptr", "pointer": "/library/api/thrust::pointer"}}>
+```cpp showLineNumbers={false}
+Base & thrust::iterator_adaptor<Derived, Base, Value, System, Traversal, Reference, Difference>::base_reference()
+```
+</CodeBlock>
+
+**Returns:** A mutable reference to the `Base` iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) adapts.
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"device_ptr": "/library/api/thrust::device_ptr", "pointer": "/library/api/thrust::pointer"}}>
+```cpp showLineNumbers={false}
+Base const  & thrust::iterator_adaptor<Derived, Base, Value, System, Traversal, Reference, Difference>::base_reference() const
+```
+</CodeBlock>
+
+**Returns:** A `const` reference to the `Base` iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) adapts.
+
+</Tab>
+</Tabs>
+
+---
+
+## Static methods
+
+### pointer_to <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"device_ptr": "/library/api/thrust::device_ptr", "pointer": "/library/api/thrust::pointer"}}>
+```cpp showLineNumbers={false}
+static derived_type thrust::pointer<T, thrust::device_system_tag, thrust::device_reference<T>, thrust::device_ptr<T>>::pointer_to(
+    typename detail::pointer_traits_detail::pointer_to_param<T>::type r
+)
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `super_t` | `thrust::pointer< T, thrust::device_system_tag, thrust::device_reference< T >, thrust::device_ptr< T > >` | |
+| `derived_type` | `typename detail::pointer_base< T, thrust::device_system_tag, thrust::device_reference< T >, thrust::device_ptr< T > >::derived_type` | |
+| `raw_pointer` | `typename super_t::base_type` | The type of the raw pointer. |
+| `base_type` | `Base` | The type of iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor)`'s` `adapts`. |

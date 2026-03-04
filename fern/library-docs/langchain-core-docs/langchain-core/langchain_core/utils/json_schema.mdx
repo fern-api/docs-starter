@@ -1,0 +1,283 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/utils/json_schema
+title: langchain_core.utils.json_schema
+---
+
+Utilities for JSON Schema.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_dereference_refs_helper`](#langchain_core-utils-json_schema-_dereference_refs_helper) | Dereference JSON Schema $ref objects, handling both pure and mixed references. |
+| [`_process_dict_properties`](#langchain_core-utils-json_schema-_process_dict_properties) | Process dictionary properties, recursing into nested structures. |
+| [`_retrieve_ref`](#langchain_core-utils-json_schema-_retrieve_ref) | Retrieve a referenced object from a JSON schema using a path. |
+| [`dereference_refs`](#langchain_core-utils-json_schema-dereference_refs) | Resolve and inline JSON Schema `$ref` references in a schema object. |
+
+### API
+
+<Anchor id="langchain_core-utils-json_schema-_dereference_refs_helper">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.json_schema._dereference_refs_helper(
+    obj: typing.Any,
+    full_schema: dict[str, typing.Any],
+    processed_refs: set[str] | None,
+    skip_keys: collections.abc.Sequence[str],
+    shallow_refs: bool
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Dereference JSON Schema $ref objects, handling both pure and mixed references.
+
+This function processes JSON Schema objects containing $ref properties by resolving
+the references and merging any additional properties. It handles:
+
+- Pure `$ref` objects: `&#123;"$ref": "#/path/to/definition"&#125;`
+- Mixed `$ref` objects: `&#123;"$ref": "#/path", "title": "Custom Title", ...&#125;`
+- Circular references by breaking cycles and preserving non-ref properties
+
+**Parameters:**
+
+<ParamField path="obj" type="Any">
+The object to process (can be dict, list, or primitive)
+</ParamField>
+
+<ParamField path="full_schema" type="dict[str, Any]">
+The complete schema containing all definitions
+</ParamField>
+
+<ParamField path="processed_refs" type="set[str] | None">
+Set tracking currently processing refs (for cycle detection)
+</ParamField>
+
+<ParamField path="skip_keys" type="Sequence[str]">
+Keys under which to skip recursion
+</ParamField>
+
+<ParamField path="shallow_refs" type="bool">
+If `True`, only break cycles; if `False`, deep-inline all refs
+</ParamField>
+
+**Returns:** `Any`
+
+The object with `$ref` properties resolved and merged with other properties.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-json_schema-_process_dict_properties">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.json_schema._process_dict_properties(
+    properties: dict[str, typing.Any],
+    full_schema: dict[str, typing.Any],
+    processed_refs: set[str],
+    skip_keys: collections.abc.Sequence[str],
+    shallow_refs: bool
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Process dictionary properties, recursing into nested structures.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-json_schema-_retrieve_ref">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.json_schema._retrieve_ref(
+    path: str,
+    schema: dict
+) -> list | dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Retrieve a referenced object from a JSON schema using a path.
+
+Resolves JSON schema references (e.g., `'#/definitions/MyType'`) by traversing the
+schema structure.
+
+**Parameters:**
+
+<ParamField path="path" type="str">
+Reference path starting with `'#'` (e.g., `'#/definitions/MyType'`).
+</ParamField>
+
+<ParamField path="schema" type="dict">
+The JSON schema dictionary to search in.
+</ParamField>
+
+**Returns:** `list | dict`
+
+A deep copy of the referenced object (dict or list).
+
+**Raises:**
+
+- `ValueError`: If the path does not start with `'#'`.
+- `KeyError`: If the reference path is not found in the schema.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-json_schema-dereference_refs">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.json_schema.dereference_refs(
+    schema_obj: dict,
+    full_schema: dict | None = None,
+    skip_keys: collections.abc.Sequence[str] | None = None
+) -> dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Resolve and inline JSON Schema `$ref` references in a schema object.
+
+This function processes a JSON Schema and resolves all `$ref` references by
+replacing them with the actual referenced content.
+
+Handles both simple references and complex cases like circular references and mixed
+`$ref` objects that contain additional properties alongside the `$ref`.
+
+!!! note
+
+    - Circular references are handled gracefully by breaking cycles
+    - Mixed `$ref` objects (with both `$ref` and other properties) are supported
+    - Additional properties in mixed `$refs` override resolved properties
+    - The `$defs` section is preserved in the output by default
+
+**Parameters:**
+
+<ParamField path="schema_obj" type="dict">
+The JSON Schema object or fragment to process.
+
+This can be a complete schema or just a portion of one.
+</ParamField>
+
+<ParamField path="full_schema" type="dict | None" default="None">
+The complete schema containing all definitions that `$refs` might
+point to.
+
+If not provided, defaults to `schema_obj` (useful when the schema is
+self-contained).
+</ParamField>
+
+<ParamField path="skip_keys" type="Sequence[str] | None" default="None">
+Controls recursion behavior and reference resolution depth.
+
+- If `None` (Default): Only recurse under `'$defs'` and use shallow
+    reference resolution (break cycles but don't deep-inline nested refs)
+- If provided (even as `[]`): Recurse under all keys and use deep reference
+    resolution (fully inline all nested references)
+</ParamField>
+
+**Returns:** `dict`
+
+A new dictionary with all $ref references resolved and inlined.
+
+The original `schema_obj` is not modified.
+
+**Examples:**
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+Basic reference resolution:
+```
+
+</CodeBlock>
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+>>> schema = {
+...     "type": "object",
+...     "properties": {"name": {"$ref": "#/$defs/string_type"}},
+...     "$defs": {"string_type": {"type": "string"}},
+... }
+>>> result = dereference_refs(schema)
+>>> result["properties"]["name"]  # {"type": "string"}
+```
+
+</CodeBlock>
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+Mixed `$ref` with additional properties:
+```
+
+</CodeBlock>
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+>>> schema = {
+...     "properties": {
+...         "name": {"$ref": "#/$defs/base", "description": "User name"}
+...     },
+...     "$defs": {"base": {"type": "string", "minLength": 1}},
+... }
+>>> result = dereference_refs(schema)
+>>> result["properties"]["name"]
+# {"type": "string", "minLength": 1, "description": "User name"}
+```
+
+</CodeBlock>
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+Handling circular references:
+```
+
+</CodeBlock>
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+>>> schema = {
+...     "properties": {"user": {"$ref": "#/$defs/User"}},
+...     "$defs": {
+...         "User": {
+...             "type": "object",
+...             "properties": {"friend": {"$ref": "#/$defs/User"}},
+...         }
+...     },
+... }
+>>> result = dereference_refs(schema)  # Won't cause infinite recursion
+```
+
+</CodeBlock>
+
+
+</Indent>

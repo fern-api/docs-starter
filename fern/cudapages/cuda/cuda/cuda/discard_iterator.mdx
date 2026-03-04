@@ -1,0 +1,264 @@
+---
+title: "cuda::discard_iterator"
+description: "[`discard_iterator`](/libcudacxx/api/cuda::discard_iterator) is an iterator which represents a special kind of pointer that ignores values written to it upon dereference."
+---
+
+`discard_iterator` is an iterator which represents a special kind of pointer that ignores values written to it upon dereference.
+
+This iterator is useful for ignoring the output of certain algorithms without wasting memory capacity or bandwidth. `discard_iterator` may also be used to count the size of an algorithm's output which may not be known a priori.
+
+The following code snippet demonstrates how to use `discard_iterator` to ignore one of the output ranges of reduce_by_key
+
+```cpp showLineNumbers={false}
+#include <cuda/discard_iterator.h>
+```
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <cuda/iterator>
+#include <thrust/reduce.h>
+#include <thrust/device_vector.h>
+
+int main()
+{
+  thrust::device_vector<int> keys{1, 3, 3, 3, 2, 2, 1};
+  thrust::device_vector<int> values{9, 8, 7, 6, 5, 4, 3};
+
+  thrust::device_vector<int> result(4);
+
+  // we are only interested in the reduced values
+  // use discard_iterator to ignore the output keys
+  thrust::reduce_by_key(keys.begin(), keys.end(),
+                        values.begin(),
+                        cuda::discard_iterator{},
+                        result.begin());
+
+  // result is now [9, 21, 9, 3]
+
+  return 0;
+}
+```
+
+---
+
+## Constructors
+
+### discard_iterator <Badge intent="note" minimal>constexpr</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+Default constructs a `discard_iterator` at index zero.
+
+<CodeBlock links={{"discard_iterator": "/libcudacxx/api/cuda::discard_iterator"}}>
+```cpp showLineNumbers={false}
+cuda::discard_iterator::discard_iterator() = default
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Constructs a `discard_iterator` with a given index">
+
+<Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Constructs a `discard_iterator` with a given index.
+
+<CodeBlock links={{"discard_iterator": "/libcudacxx/api/cuda::discard_iterator"}}>
+```cpp showLineNumbers={false}
+template <class _Integer>
+cuda::discard_iterator::discard_iterator(
+    _Integer __index
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__index" type="_Integer">
+The index used for the discard iterator
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### index <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Returns the stored index.
+
+<CodeBlock links={{"discard_iterator": "/libcudacxx/api/cuda::discard_iterator"}}>
+```cpp showLineNumbers={false}
+difference_type cuda::discard_iterator::index() const noexcept
+```
+</CodeBlock>
+
+### operator* <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Dereferences the `discard_iterator` returning a proxy that discards all values that are assigned to it.
+
+<CodeBlock links={{"discard_iterator": "/libcudacxx/api/cuda::discard_iterator"}}>
+```cpp showLineNumbers={false}
+__discard_proxy cuda::discard_iterator::operator*() const noexcept
+```
+</CodeBlock>
+
+### operator[] <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Subscipts the `discard_iterator` returning a proxy that discards all values that are assigned to it.
+
+<CodeBlock links={{"discard_iterator": "/libcudacxx/api/cuda::discard_iterator"}}>
+```cpp showLineNumbers={false}
+__discard_proxy cuda::discard_iterator::operator[](
+    difference_type
+) const noexcept
+```
+</CodeBlock>
+
+### operator++ <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Pre-increment">
+
+Increments the stored index.
+
+<CodeBlock links={{"discard_iterator": "/libcudacxx/api/cuda::discard_iterator"}}>
+```cpp showLineNumbers={false}
+discard_iterator & cuda::discard_iterator::operator++() noexcept
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Post-increment">
+
+Increments the stored index.
+
+<CodeBlock links={{"discard_iterator": "/libcudacxx/api/cuda::discard_iterator"}}>
+```cpp showLineNumbers={false}
+discard_iterator cuda::discard_iterator::operator++(
+    int
+) noexcept
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### operator-- <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Pre-decrement">
+
+Decrements the stored index.
+
+<CodeBlock links={{"discard_iterator": "/libcudacxx/api/cuda::discard_iterator"}}>
+```cpp showLineNumbers={false}
+discard_iterator & cuda::discard_iterator::operator--() noexcept
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Post-decrement">
+
+Decrements the stored index.
+
+<CodeBlock links={{"discard_iterator": "/libcudacxx/api/cuda::discard_iterator"}}>
+```cpp showLineNumbers={false}
+discard_iterator cuda::discard_iterator::operator--(
+    int
+) noexcept
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### operator+ <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Returns a copy of this `discard_iterator` advanced by a number of elements.
+
+<CodeBlock links={{"discard_iterator": "/libcudacxx/api/cuda::discard_iterator"}}>
+```cpp showLineNumbers={false}
+discard_iterator cuda::discard_iterator::operator+(
+    difference_type __n
+) const noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The number of elements to advance
+</ParamField>
+
+### operator+= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Advances the index of this `discard_iterator` by a number of elements.
+
+<CodeBlock links={{"discard_iterator": "/libcudacxx/api/cuda::discard_iterator"}}>
+```cpp showLineNumbers={false}
+discard_iterator & cuda::discard_iterator::operator+=(
+    difference_type __n
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The number of elements to advance
+</ParamField>
+
+### operator- <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Returns a copy of this `discard_iterator` decremented by a number of elements.
+
+<CodeBlock links={{"discard_iterator": "/libcudacxx/api/cuda::discard_iterator"}}>
+```cpp showLineNumbers={false}
+discard_iterator cuda::discard_iterator::operator-(
+    difference_type __n
+) const noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The number of elements to decrement
+</ParamField>
+
+### operator-= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Decrements the index of the `discard_iterator` by a number of elements.
+
+<CodeBlock links={{"discard_iterator": "/libcudacxx/api/cuda::discard_iterator"}}>
+```cpp showLineNumbers={false}
+discard_iterator & cuda::discard_iterator::operator-=(
+    difference_type __n
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The number of elements to decrement
+</ParamField>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `iterator_concept` | `::cuda::std::random_access_iterator_tag` |
+| `iterator_category` | `::cuda::std::random_access_iterator_tag` |
+| `difference_type` | `::cuda::std::ptrdiff_t` |
+| `value_type` | `void` |
+| `pointer` | `void` |
+| `reference` | `void` |

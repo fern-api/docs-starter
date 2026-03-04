@@ -1,0 +1,173 @@
+---
+title: cub::BlockRadixRankMatchEarlyCounts
+description: "Radix-rank using matching which computes the counts of keys for each digit value early, at the expense of doing more work."
+---
+
+Radix-rank using matching which computes the counts of keys for each digit value early, at the expense of doing more work.
+
+This may be useful e.g. for decoupled look-back, where it reduces the time other thread blocks need to wait for digit counts to become available.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="BlockDimX" type="int">
+</ParamField>
+
+<ParamField path="RadixBits" type="int">
+</ParamField>
+
+<ParamField path="IsDescending" type="bool">
+</ParamField>
+
+<ParamField path="InnerScanAlgorithm" type="BlockScanAlgorithm" default="BLOCK_SCAN_WARP_SCANS">
+</ParamField>
+
+<ParamField path="MATCH_ALGORITHM" type="WarpMatchAlgorithm" default="WARP_MATCH_ANY">
+</ParamField>
+
+<ParamField path="NUM_PARTS" type="int" default="1">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### BlockRadixRankMatchEarlyCounts <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"BlockRadixRankMatchEarlyCounts": "/library/api/cub::BlockRadixRankMatchEarlyCounts", "TempStorage": "/library/api/cub::BlockRadixRankMatchEarlyCounts::TempStorage"}}>
+```cpp showLineNumbers={false}
+cub::BlockRadixRankMatchEarlyCounts<BlockDimX, RadixBits, IsDescending, InnerScanAlgorithm, MATCH_ALGORITHM, NUM_PARTS>::BlockRadixRankMatchEarlyCounts(
+    TempStorage &temp_storage
+)
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### RankKeys <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Rank keys">
+
+Rank keys.
+
+For the lower `RADIX_DIGITS` threads, digit counts for each digit are provided for the corresponding thread.
+
+<CodeBlock links={{"BlockRadixRankMatchEarlyCounts": "/library/api/cub::BlockRadixRankMatchEarlyCounts"}}>
+```cpp showLineNumbers={false}
+template <typename UnsignedBits,
+          int KEYS_PER_THREAD,
+          typename DigitExtractorT,
+          typename CountsCallback>
+void cub::BlockRadixRankMatchEarlyCounts<BlockDimX, RadixBits, IsDescending, InnerScanAlgorithm, MATCH_ALGORITHM, NUM_PARTS>::RankKeys(
+    UnsignedBits (&keys)[KEYS_PER_THREAD],
+    int (&ranks)[KEYS_PER_THREAD],
+    DigitExtractorT digit_extractor,
+    int (&exclusive_digit_prefix)[BINS_PER_THREAD],
+    CountsCallback callback
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Overload 2">
+
+<CodeBlock links={{"BlockRadixRankMatchEarlyCounts": "/library/api/cub::BlockRadixRankMatchEarlyCounts"}}>
+```cpp showLineNumbers={false}
+template <typename UnsignedBits, int KEYS_PER_THREAD, typename DigitExtractorT>
+void cub::BlockRadixRankMatchEarlyCounts<BlockDimX, RadixBits, IsDescending, InnerScanAlgorithm, MATCH_ALGORITHM, NUM_PARTS>::RankKeys(
+    UnsignedBits (&keys)[KEYS_PER_THREAD],
+    int (&ranks)[KEYS_PER_THREAD],
+    DigitExtractorT digit_extractor,
+    int (&exclusive_digit_prefix)[BINS_PER_THREAD]
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Overload 3">
+
+<CodeBlock links={{"BlockRadixRankMatchEarlyCounts": "/library/api/cub::BlockRadixRankMatchEarlyCounts"}}>
+```cpp showLineNumbers={false}
+template <typename UnsignedBits, int KEYS_PER_THREAD, typename DigitExtractorT>
+void cub::BlockRadixRankMatchEarlyCounts<BlockDimX, RadixBits, IsDescending, InnerScanAlgorithm, MATCH_ALGORITHM, NUM_PARTS>::RankKeys(
+    UnsignedBits (&keys)[KEYS_PER_THREAD],
+    int (&ranks)[KEYS_PER_THREAD],
+    DigitExtractorT digit_extractor
+)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `BlockScan` | `cub::BlockScan< int, BLOCK_THREADS, InnerScanAlgorithm >` |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `BLOCK_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `RADIX_DIGITS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `BINS_PER_THREAD` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `BINS_TRACKED_PER_THREAD` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `FULL_BINS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `WARP_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `PARTIAL_WARP_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `BLOCK_WARPS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `PARTIAL_WARP_ID` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `WARP_MASK` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `NUM_MATCH_MASKS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `MATCH_MASKS_ALLOC_SIZE` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `temp_storage` | `TempStorage &` | |
+
+---
+
+## Inner classes
+
+### TempStorage
+
+<CodeBlock links={{"BlockRadixRankMatchEarlyCounts": "/library/api/cub::BlockRadixRankMatchEarlyCounts"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockRadixRankMatchEarlyCounts::TempStorage
+```
+</CodeBlock>
+
+| Name | Type | Description |
+|---|---|---|
+| `warp_offsets` | `int` | |
+| `warp_histograms` | `int` | |
+| `` | `union cub::BlockRadixRankMatchEarlyCounts::TempStorage` | |
+| `match_masks` | `::cuda::std::uint32_t` | |
+| `prefix_tmp` | `BlockScan::TempStorage` | |
+
+### BlockRadixRankMatchInternal
+
+<CodeBlock links={{"BlockRadixRankMatchEarlyCounts": "/library/api/cub::BlockRadixRankMatchEarlyCounts"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockRadixRankMatchEarlyCounts::BlockRadixRankMatchInternal
+```
+</CodeBlock>
+
+| Name | Type | Description |
+|---|---|---|
+| `s` | `TempStorage &` | |
+| `digit_extractor` | `DigitExtractorT` | |
+| `callback` | `CountsCallback` | |
+| `warp` | `int` | |
+| `lane` | `int` | |

@@ -1,0 +1,104 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/data/utils
+title: nemo_rl.data.utils
+---
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`setup_preference_data`](#nemo_rl-data-utils-setup_preference_data) | Setup preference data. |
+| [`setup_response_data`](#nemo_rl-data-utils-setup_response_data) | Setup data with environments. |
+
+### API
+
+<Anchor id="nemo_rl-data-utils-setup_preference_data">
+
+<CodeBlock links={{"nemo_rl.data.DataConfig":"/nemo-rl/nemo_rl/data#nemo_rl-data-DataConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.utils.setup_preference_data(
+    tokenizer: transformers.AutoTokenizer,
+    data_config: nemo_rl.data.DataConfig
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Setup preference data.
+
+This function is used to setup the preference data for the training and validation datasets.
+
+**Parameters:**
+
+<ParamField path="tokenizer" type="AutoTokenizer">
+Tokenizer.
+</ParamField>
+
+<ParamField path="data_config" type="DataConfig">
+Data config for preference dataset.
+</ParamField>
+
+**Returns:**
+
+A tuple of (train dataset, validation dataset).
+
+
+</Indent>
+
+<Anchor id="nemo_rl-data-utils-setup_response_data">
+
+<CodeBlock links={{"nemo_rl.data.DataConfig":"/nemo-rl/nemo_rl/data#nemo_rl-data-DataConfig","nemo_rl.data.datasets.AllTaskProcessedDataset":"/nemo-rl/nemo_rl/data/datasets/processed_dataset#nemo_rl-data-datasets-processed_dataset-AllTaskProcessedDataset","nemo_rl.environments.interfaces.EnvironmentInterface":"/nemo-rl/nemo_rl/environments/interfaces#nemo_rl-environments-interfaces-EnvironmentInterface"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.utils.setup_response_data(
+    tokenizer: transformers.AutoProcessor | transformers.AutoTokenizer,
+    data_config: nemo_rl.data.DataConfig,
+    env_configs: typing.Optional[dict[str, typing.Any]] = None,
+    is_vlm: bool = False
+) -> typing.Union[tuple[nemo_rl.data.datasets.AllTaskProcessedDataset, typing.Optional[nemo_rl.data.datasets.AllTaskProcessedDataset]], tuple[nemo_rl.data.datasets.AllTaskProcessedDataset, typing.Optional[nemo_rl.data.datasets.AllTaskProcessedDataset], dict[str, nemo_rl.environments.interfaces.EnvironmentInterface], dict[str, nemo_rl.environments.interfaces.EnvironmentInterface]]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Setup data with environments.
+
+This function is used to setup the data and environments for the training and validation datasets.
+
+**Parameters:**
+
+<ParamField path="tokenizer" type="AutoProcessor | AutoTokenizer">
+Tokenizer or processor.
+</ParamField>
+
+<ParamField path="data_config" type="DataConfig">
+Data config.
+</ParamField>
+
+<ParamField path="env_configs" type="Optional[dict[str, Any]]" default="None">
+Environment configs.
+If None, no environments will be created. This is used for:
+- Algorithms like SFT which do not need environments.
+- Environments like NeMo-Gym which need to handle the environment creation outside of this function.
+</ParamField>
+
+<ParamField path="is_vlm" type="bool" default="False">
+Whether to use VLM training or not.
+</ParamField>
+
+**Returns:** `Union[tuple[AllTaskProcessedDataset, Optional[AllTaskProcessedDataset]], tuple[AllTaskProcessedDataset, Optional[AllTaskProcessedDataset], dict[str, EnvironmentInterface], dict[str, EnvironmentInterface]]]`
+
+If env_configs is not None:
+A tuple of (train dataset, validation dataset, task to environment, task to validation environment).
+
+
+</Indent>

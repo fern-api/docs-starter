@@ -1,0 +1,212 @@
+---
+title: cub::DeviceRleDispatch
+description: "Utility class for dispatching the appropriately-tuned kernels for DeviceRle."
+---
+
+Utility class for dispatching the appropriately-tuned kernels for DeviceRle.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="InputIteratorT" type="typename">
+Random-access input iterator type for reading input items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OffsetsOutputIteratorT" type="typename">
+Random-access output iterator type for writing run-offset values (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="LengthsOutputIteratorT" type="typename">
+Random-access output iterator type for writing run-length values (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="NumRunsOutputIteratorT" type="typename">
+Output iterator type for recording the number of runs encountered (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="EqualityOpT" type="typename">
+T equality operator type
+</ParamField>
+
+<ParamField path="OffsetT" type="typename">
+Signed integer type for global offsets
+</ParamField>
+
+<ParamField path="PolicyHub" type="typename" default="detail::rle::non_trivial_runs::policy_hub<cub::detail::non_void_value_t<LengthsOutputIteratorT, OffsetT>,                                                      cub::detail::it_value_t<InputIteratorT>>">
+Implementation detail, do not specify directly, requirements on the content of this type are subject to breaking change.
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### DeviceRleDispatch <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"DeviceRleDispatch": "/library/api/cub::DeviceRleDispatch"}}>
+```cpp showLineNumbers={false}
+cub::DeviceRleDispatch<InputIteratorT, OffsetsOutputIteratorT, LengthsOutputIteratorT, NumRunsOutputIteratorT, EqualityOpT, OffsetT, PolicyHub>::DeviceRleDispatch(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    OffsetsOutputIteratorT d_offsets_out,
+    LengthsOutputIteratorT d_lengths_out,
+    NumRunsOutputIteratorT d_num_runs_out,
+    EqualityOpT equality_op,
+    global_offset_t num_items,
+    cudaStream_t stream
+)
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### Invoke <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Internal dispatch routine for computing a device-wide run-length-encode using the specified kernel functions.
+
+<CodeBlock links={{"DeviceRleDispatch": "/library/api/cub::DeviceRleDispatch"}}>
+```cpp showLineNumbers={false}
+template <typename ActivePolicyT,
+          typename DeviceScanInitKernelPtr,
+          typename DeviceRleSweepKernelPtr>
+cudaError_t cub::DeviceRleDispatch<InputIteratorT, OffsetsOutputIteratorT, LengthsOutputIteratorT, NumRunsOutputIteratorT, EqualityOpT, OffsetT, PolicyHub>::Invoke(
+    DeviceScanInitKernelPtr device_scan_init_kernel,
+    DeviceRleSweepKernelPtr device_rle_sweep_kernel
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="DeviceScanInitKernelPtr" type="typename">
+Function type of cub::DeviceScanInitKernel
+</ParamField>
+
+<ParamField path="DeviceRleSweepKernelPtr" type="typename">
+Function type of cub::DeviceRleSweepKernelPtr
+</ParamField>
+
+**Parameters**
+
+<ParamField path="device_scan_init_kernel" type="DeviceScanInitKernelPtr">
+Kernel function pointer to parameterization of cub::DeviceScanInitKernel
+</ParamField>
+
+<ParamField path="device_rle_sweep_kernel" type="DeviceRleSweepKernelPtr">
+Kernel function pointer to parameterization of cub::DeviceRleSweepKernel
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+<CodeBlock links={{"DeviceRleDispatch": "/library/api/cub::DeviceRleDispatch"}}>
+```cpp showLineNumbers={false}
+template <class ActivePolicyT>
+cudaError_t cub::DeviceRleDispatch<InputIteratorT, OffsetsOutputIteratorT, LengthsOutputIteratorT, NumRunsOutputIteratorT, EqualityOpT, OffsetT, PolicyHub>::Invoke()
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Static methods
+
+### Dispatch <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Internal dispatch routine.
+
+<CodeBlock links={{"DeviceRleDispatch": "/library/api/cub::DeviceRleDispatch"}}>
+```cpp showLineNumbers={false}
+static cudaError_t cub::DeviceRleDispatch<InputIteratorT, OffsetsOutputIteratorT, LengthsOutputIteratorT, NumRunsOutputIteratorT, EqualityOpT, OffsetT, PolicyHub>::Dispatch(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    OffsetsOutputIteratorT d_offsets_out,
+    LengthsOutputIteratorT d_lengths_out,
+    NumRunsOutputIteratorT d_num_runs_out,
+    EqualityOpT equality_op,
+    OffsetT num_items,
+    cudaStream_t stream
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When nullptr, the required allocation size is written to [`temp_storage_bytes`](/library/api/cub::_device_rle_dispatch::temp_storage_bytes) and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of [`d_temp_storage`](/library/api/cub::_device_rle_dispatch::d_temp_storage) allocation
+</ParamField>
+
+<ParamField path="d_in" type="InputIteratorT">
+Pointer to input sequence of data items
+</ParamField>
+
+<ParamField path="d_offsets_out" type="OffsetsOutputIteratorT">
+Pointer to output sequence of run-offsets
+</ParamField>
+
+<ParamField path="d_lengths_out" type="LengthsOutputIteratorT">
+Pointer to output sequence of run-lengths
+</ParamField>
+
+<ParamField path="d_num_runs_out" type="NumRunsOutputIteratorT">
+Pointer to total number of runs (i.e., length of [`d_offsets_out`](/library/api/cub::_device_rle_dispatch::d_offsets_out))
+</ParamField>
+
+<ParamField path="equality_op" type="EqualityOpT">
+Equality operator for input items
+</ParamField>
+
+<ParamField path="num_items" type="OffsetT">
+Total number of input items (i.e., length of [`d_in`](/library/api/cub::_device_rle_dispatch::d_in))
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t">
+**[optional]** CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `local_offset_t` | `::cuda::std::int32_t` |
+| `global_offset_t` | `OffsetT` |
+| `length_t` | `cub::detail::non_void_value_t< LengthsOutputIteratorT, global_offset_t >` |
+| `streaming_context_t` | `::cuda::std::conditional_t< use_streaming_invocation, detail::rle::streaming_context< InputIteratorT, length_t, global_offset_t >, NullType >` |
+| `ScanTileStateT` | `ReduceByKeyScanTileState< length_t, local_offset_t >` |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `use_streaming_invocation` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `bool` | |
+| `init_kernel_threads` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `d_temp_storage` | `void *` | |
+| `temp_storage_bytes` | `size_t &` | |
+| `d_in` | `InputIteratorT` | |
+| `d_offsets_out` | `OffsetsOutputIteratorT` | |
+| `d_lengths_out` | `LengthsOutputIteratorT` | |
+| `d_num_runs_out` | `NumRunsOutputIteratorT` | |
+| `equality_op` | `EqualityOpT` | |
+| `num_items` | `global_offset_t` | |
+| `stream` | `cudaStream_t` | |

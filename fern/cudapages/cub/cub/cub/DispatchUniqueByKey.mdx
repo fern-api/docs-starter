@@ -1,0 +1,247 @@
+---
+title: cub::DispatchUniqueByKey
+description: "Utility class for dispatching the appropriately-tuned kernels for [DeviceSelect](/library/api/cub::_device_select)."
+---
+
+Utility class for dispatching the appropriately-tuned kernels for [DeviceSelect](/library/api/cub::_device_select).
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="KeyInputIteratorT" type="typename">
+Random-access input iterator type for keys
+</ParamField>
+
+<ParamField path="ValueInputIteratorT" type="typename">
+Random-access input iterator type for values
+</ParamField>
+
+<ParamField path="KeyOutputIteratorT" type="typename">
+Random-access output iterator type for keys
+</ParamField>
+
+<ParamField path="ValueOutputIteratorT" type="typename">
+Random-access output iterator type for values
+</ParamField>
+
+<ParamField path="NumSelectedIteratorT" type="typename">
+Output iterator type for recording the number of items selected
+</ParamField>
+
+<ParamField path="EqualityOpT" type="typename">
+Equality operator type
+</ParamField>
+
+<ParamField path="OffsetT" type="typename">
+Signed integer type for global offsets
+</ParamField>
+
+<ParamField path="PolicyHub" type="typename" default="detail::unique_by_key::policy_hub<detail::it_value_t<KeyInputIteratorT>, detail::it_value_t<ValueInputIteratorT>>">
+</ParamField>
+
+<ParamField path="KernelSource" type="typename" default="detail::unique_by_key::DeviceUniqueByKeyKernelSource<    typename PolicyHub::MaxPolicy,    KeyInputIteratorT,    ValueInputIteratorT,    KeyOutputIteratorT,    ValueOutputIteratorT,    NumSelectedIteratorT,    ScanTileState<OffsetT>,    EqualityOpT,    OffsetT>">
+</ParamField>
+
+<ParamField path="KernelLauncherFactory" type="typename" default="CUB_DETAIL_DEFAULT_KERNEL_LAUNCHER_FACTORY">
+</ParamField>
+
+<ParamField path="VSMemHelperT" type="typename" default="detail::unique_by_key::VSMemHelper">
+</ParamField>
+
+<ParamField path="KeyT" type="typename" default="detail::it_value_t<KeyInputIteratorT>">
+</ParamField>
+
+<ParamField path="ValueT" type="typename" default="detail::it_value_t<ValueInputIteratorT>">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### DispatchUniqueByKey <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"DispatchUniqueByKey": "/library/api/cub::DispatchUniqueByKey"}}>
+```cpp showLineNumbers={false}
+cub::DispatchUniqueByKey<KeyInputIteratorT, ValueInputIteratorT, KeyOutputIteratorT, ValueOutputIteratorT, NumSelectedIteratorT, EqualityOpT, OffsetT, PolicyHub, KernelSource, KernelLauncherFactory, VSMemHelperT, KeyT, ValueT>::DispatchUniqueByKey(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyInputIteratorT d_keys_in,
+    ValueInputIteratorT d_values_in,
+    KeyOutputIteratorT d_keys_out,
+    ValueOutputIteratorT d_values_out,
+    NumSelectedIteratorT d_num_selected_out,
+    EqualityOpT equality_op,
+    OffsetT num_items,
+    cudaStream_t stream,
+    KernelSource kernel_source = {},
+    KernelLauncherFactory launcher_factory = {}
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When nullptr, the required allocation size is written to [`temp_storage_bytes`](/library/api/cub::_dispatch_unique_by_key::temp_storage_bytes) and no work is done.
+</ParamField>
+
+<ParamField path="d_keys_in" type="KeyInputIteratorT">
+Pointer to the input sequence of keys
+</ParamField>
+
+<ParamField path="d_values_in" type="ValueInputIteratorT">
+Pointer to the input sequence of values
+</ParamField>
+
+<ParamField path="d_keys_out" type="KeyOutputIteratorT">
+Pointer to the output sequence of selected data items
+</ParamField>
+
+<ParamField path="d_values_out" type="ValueOutputIteratorT">
+Pointer to the output sequence of selected data items
+</ParamField>
+
+<ParamField path="d_num_selected_out" type="NumSelectedIteratorT">
+Pointer to the total number of items selected (i.e., length of `d_keys_out` or `d_values_out`)
+</ParamField>
+
+<ParamField path="equality_op" type="EqualityOpT">
+Equality operator
+</ParamField>
+
+<ParamField path="num_items" type="OffsetT">
+Total number of input items (i.e., length of `d_keys_in` or `d_values_in`)
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t">
+**[optional]** CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+---
+
+## Methods
+
+### Invoke <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+<CodeBlock links={{"DispatchUniqueByKey": "/library/api/cub::DispatchUniqueByKey"}}>
+```cpp showLineNumbers={false}
+template <typename ActivePolicyT, typename InitKernelT, typename UniqueByKeySweepKernelT>
+cudaError_t cub::DispatchUniqueByKey<KeyInputIteratorT, ValueInputIteratorT, KeyOutputIteratorT, ValueOutputIteratorT, NumSelectedIteratorT, EqualityOpT, OffsetT, PolicyHub, KernelSource, KernelLauncherFactory, VSMemHelperT, KeyT, ValueT>::Invoke(
+    InitKernelT init_kernel,
+    UniqueByKeySweepKernelT sweep_kernel,
+    ActivePolicyT policy = {}
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Overload 2">
+
+<CodeBlock links={{"DispatchUniqueByKey": "/library/api/cub::DispatchUniqueByKey"}}>
+```cpp showLineNumbers={false}
+template <typename ActivePolicyT>
+cudaError_t cub::DispatchUniqueByKey<KeyInputIteratorT, ValueInputIteratorT, KeyOutputIteratorT, ValueOutputIteratorT, NumSelectedIteratorT, EqualityOpT, OffsetT, PolicyHub, KernelSource, KernelLauncherFactory, VSMemHelperT, KeyT, ValueT>::Invoke(
+    ActivePolicyT active_policy = {}
+)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Static methods
+
+### Dispatch <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Internal dispatch routine.
+
+<CodeBlock links={{"DispatchUniqueByKey": "/library/api/cub::DispatchUniqueByKey"}}>
+```cpp showLineNumbers={false}
+template <typename MaxPolicyT>
+static cudaError_t cub::DispatchUniqueByKey<KeyInputIteratorT, ValueInputIteratorT, KeyOutputIteratorT, ValueOutputIteratorT, NumSelectedIteratorT, EqualityOpT, OffsetT, PolicyHub, KernelSource, KernelLauncherFactory, VSMemHelperT, KeyT, ValueT>::Dispatch(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyInputIteratorT d_keys_in,
+    ValueInputIteratorT d_values_in,
+    KeyOutputIteratorT d_keys_out,
+    ValueOutputIteratorT d_values_out,
+    NumSelectedIteratorT d_num_selected_out,
+    EqualityOpT equality_op,
+    OffsetT num_items,
+    cudaStream_t stream,
+    KernelSource kernel_source = {},
+    KernelLauncherFactory launcher_factory = {},
+    MaxPolicyT max_policy = {}
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When nullptr, the required allocation size is written to [`temp_storage_bytes`](/library/api/cub::_dispatch_unique_by_key::temp_storage_bytes) and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of [`d_temp_storage`](/library/api/cub::_dispatch_unique_by_key::d_temp_storage) allocation
+</ParamField>
+
+<ParamField path="d_keys_in" type="KeyInputIteratorT">
+Pointer to the input sequence of keys
+</ParamField>
+
+<ParamField path="d_values_in" type="ValueInputIteratorT">
+Pointer to the input sequence of values
+</ParamField>
+
+<ParamField path="d_keys_out" type="KeyOutputIteratorT">
+Pointer to the output sequence of selected data items
+</ParamField>
+
+<ParamField path="d_values_out" type="ValueOutputIteratorT">
+Pointer to the output sequence of selected data items
+</ParamField>
+
+<ParamField path="d_num_selected_out" type="NumSelectedIteratorT">
+Pointer to the total number of items selected (i.e., length of `d_keys_out` or `d_values_out`)
+</ParamField>
+
+<ParamField path="equality_op" type="EqualityOpT">
+Equality operator
+</ParamField>
+
+<ParamField path="num_items" type="OffsetT">
+Total number of input items (i.e., the length of `d_in`)
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t">
+**[optional]** CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `INIT_KERNEL_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `d_temp_storage` | `void *` | Device-accessible allocation of temporary storage. |
+| `temp_storage_bytes` | `size_t &` | Reference to size in bytes of [`d_temp_storage`](/library/api/cub::_dispatch_unique_by_key::d_temp_storage) allocation. |
+| `d_keys_in` | `KeyInputIteratorT` | Pointer to the input sequence of keys. |
+| `d_values_in` | `ValueInputIteratorT` | Pointer to the input sequence of values. |
+| `d_keys_out` | `KeyOutputIteratorT` | Pointer to the output sequence of selected data items. |
+| `d_values_out` | `ValueOutputIteratorT` | Pointer to the output sequence of selected data items. |
+| `d_num_selected_out` | `NumSelectedIteratorT` | Pointer to the total number of items selected (i.e., length of `d_keys_out` or `d_values_out`). |
+| `equality_op` | `EqualityOpT` | Equality operator. |
+| `num_items` | `OffsetT` | Total number of input items (i.e., length of `d_keys_in` or `d_values_in`). |
+| `stream` | `cudaStream_t` | **[optional]** CUDA stream to launch kernels within. Default is stream<sub>0</sub>. |
+| `kernel_source` | `KernelSource` | |
+| `launcher_factory` | `KernelLauncherFactory` | |

@@ -1,0 +1,185 @@
+---
+title: thrust::mr::allocator
+description: "An [`mr::allocator`](/library/api/thrust::mr::allocator) is a template that fulfills the C++ requirements for Allocators, allowing to use the NPA-based memory resources where an Allocator is required."
+---
+
+An `mr::allocator` is a template that fulfills the C++ requirements for Allocators, allowing to use the NPA-based memory resources where an Allocator is required.
+
+Unlike memory resources, but like other allocators, `mr::allocator` is typed and bound to allocate object of a specific type, however it can be freely rebound to other types.
+
+```cpp showLineNumbers={false}
+#include <thrust/mr/allocator.h>
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="T" type="typename">
+The type that will be allocated by this allocator.
+</ParamField>
+
+<ParamField path="MR" type="class">
+The upstream memory resource to use for memory allocation. Must derive from [`thrust::mr::memory_resource`](/library/api/thrust::mr::memory_resource) and must be `final` (in C++11 and beyond).
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `thrust::mr::validator< MR >` (private)
+
+---
+
+## Constructors
+
+### allocator <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="From raw pointer">
+
+Constructor.
+
+<CodeBlock links={{"allocator": "/library/api/thrust::mr::allocator"}}>
+```cpp showLineNumbers={false}
+thrust::mr::allocator<T, MR>::allocator(
+    MR *resource
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="resource" type="MR *">
+The resource to be used to allocate raw memory.
+</ParamField>
+
+</Tab>
+<Tab title="Copy">
+
+Copy constructor.
+
+Copies the resource pointer.
+
+<CodeBlock links={{"allocator": "/library/api/thrust::mr::allocator"}}>
+```cpp showLineNumbers={false}
+template <typename U>
+thrust::mr::allocator<T, MR>::allocator(
+    const allocator<U, MR> &other
+)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### max_size <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Calculates the maximum number of elements allocated by this allocator.
+
+<CodeBlock links={{"allocator": "/library/api/thrust::mr::allocator"}}>
+```cpp showLineNumbers={false}
+size_type thrust::mr::allocator<T, MR>::max_size() const
+```
+</CodeBlock>
+
+**Returns:** the maximum value of `std::size_t`, divided by the size of `T`.
+
+### allocate <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Allocates objects of type `T`.
+
+<CodeBlock links={{"allocator": "/library/api/thrust::mr::allocator"}}>
+```cpp showLineNumbers={false}
+pointer thrust::mr::allocator<T, MR>::allocate(
+    size_type n
+)
+```
+</CodeBlock>
+
+**Returns:** a pointer to the newly allocated storage.
+
+**Parameters**
+
+<ParamField path="n" type="size_type">
+Number of elements to allocate
+</ParamField>
+
+### deallocate <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Deallocates objects of type `T`.
+
+<CodeBlock links={{"allocator": "/library/api/thrust::mr::allocator"}}>
+```cpp showLineNumbers={false}
+void thrust::mr::allocator<T, MR>::deallocate(
+    pointer p,
+    size_type n
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="p" type="pointer">
+Pointer returned by a previous call to `allocate`
+</ParamField>
+
+<ParamField path="n" type="size_type">
+Number of elements, passed as an argument to the `allocate` call that produced `p`
+</ParamField>
+
+### resource <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Extracts the memory resource used by this allocator.
+
+<CodeBlock links={{"allocator": "/library/api/thrust::mr::allocator"}}>
+```cpp showLineNumbers={false}
+MR * thrust::mr::allocator<T, MR>::resource() const
+```
+</CodeBlock>
+
+**Returns:** the memory resource used by this allocator.
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `void_pointer` | `typename MR::pointer` | The pointer to void type of this allocator. |
+| `value_type` | `T` | The value type allocated by this allocator. |
+| `pointer` | `typename thrust::detail::pointer_traits< void_pointer >::template rebind< T >::other` | The pointer type allocated by this allocator. |
+| `const_pointer` | `typename thrust::detail::pointer_traits< void_pointer >::template rebind< const T >::other` | The pointer to const type. |
+| `reference` | `typename thrust::detail::pointer_traits< pointer >::reference` | The reference to the type allocated by this allocator. |
+| `const_reference` | `typename thrust::detail::pointer_traits< const_pointer >::reference` | The const reference to the type allocated by this allocator. |
+| `size_type` | `std::size_t` | The size type of this allocator. |
+| `difference_type` | `typename thrust::detail::pointer_traits< pointer >::difference_type` | The difference type between pointers allocated by this allocator. |
+| `propagate_on_container_copy_assignment` | `detail::true_type` | Specifies that the allocator shall be propagated on container copy assignment. |
+| `propagate_on_container_move_assignment` | `detail::true_type` | Specifies that the allocator shall be propagated on container move assignment. |
+| `propagate_on_container_swap` | `detail::true_type` | Specifies that the allocator shall be propagated on container swap. |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `mem_res` | `MR *` | |
+
+---
+
+## Inner classes
+
+### rebind
+
+<CodeBlock links={{"allocator": "/library/api/thrust::mr::allocator"}}>
+```cpp showLineNumbers={false}
+struct thrust::mr::allocator::rebind
+```
+</CodeBlock>
+
+The `rebind` metafunction provides the type of an `allocator` instantiated with another type.

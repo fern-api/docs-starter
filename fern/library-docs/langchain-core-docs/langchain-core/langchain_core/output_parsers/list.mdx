@@ -1,0 +1,473 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/output_parsers/list
+title: langchain_core.output_parsers.list
+---
+
+Parsers for list output.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`CommaSeparatedListOutputParser`](#langchain_core-output_parsers-list-CommaSeparatedListOutputParser) | Parse the output of a model to a comma-separated list. |
+| [`ListOutputParser`](#langchain_core-output_parsers-list-ListOutputParser) | Parse the output of a model to a list. |
+| [`MarkdownListOutputParser`](#langchain_core-output_parsers-list-MarkdownListOutputParser) | Parse a Markdown list. |
+| [`NumberedListOutputParser`](#langchain_core-output_parsers-list-NumberedListOutputParser) | Parse a numbered list. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`droplastn`](#langchain_core-output_parsers-list-droplastn) | Drop the last `n` elements of an iterator. |
+
+### Data
+
+[`T`](#langchain_core-output_parsers-list-T)
+
+### API
+
+<Anchor id="langchain_core-output_parsers-list-CommaSeparatedListOutputParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.output_parsers.list.CommaSeparatedListOutputParser()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [ListOutputParser](#langchain_core-output_parsers-list-ListOutputParser)
+
+Parse the output of a model to a comma-separated list.
+
+
+<ParamField path="_type" type="str">
+</ParamField>
+<Anchor id="langchain_core-output_parsers-list-CommaSeparatedListOutputParser-get_format_instructions">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.list.CommaSeparatedListOutputParser.get_format_instructions() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return the format instructions for the comma-separated list output.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-list-CommaSeparatedListOutputParser-get_lc_namespace">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.list.CommaSeparatedListOutputParser.get_lc_namespace() -> langchain_core.output_parsers.list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Get the namespace of the LangChain object.
+
+**Returns:** `list[str]`
+
+`["langchain", "output_parsers", "list"]`
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-list-CommaSeparatedListOutputParser-is_lc_serializable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.list.CommaSeparatedListOutputParser.is_lc_serializable() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Return `True` as this class is serializable.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-list-CommaSeparatedListOutputParser-parse">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.list.CommaSeparatedListOutputParser.parse(
+    text: str
+) -> langchain_core.output_parsers.list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse the output of an LLM call.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The output of an LLM call.
+</ParamField>
+
+**Returns:** `list[str]`
+
+A list of strings.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-list-ListOutputParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.output_parsers.list.ListOutputParser()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseTransformOutputParser[list[str]]](/langchain-core/langchain_core/output_parsers/transform#langchain_core-output_parsers-transform-BaseTransformOutputParser)
+
+Parse the output of a model to a list.
+
+
+<ParamField path="_type" type="str">
+</ParamField>
+<Anchor id="langchain_core-output_parsers-list-ListOutputParser-_atransform">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.list.ListOutputParser._atransform(
+    input: collections.abc.AsyncIterator[str | langchain_core.messages.BaseMessage]
+) -> collections.abc.AsyncIterator[langchain_core.output_parsers.list[str]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-list-ListOutputParser-_transform">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.list.ListOutputParser._transform(
+    input: collections.abc.Iterator[str | langchain_core.messages.BaseMessage]
+) -> collections.abc.Iterator[langchain_core.output_parsers.list[str]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-list-ListOutputParser-parse">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.list.ListOutputParser.parse(
+    text: str
+) -> langchain_core.output_parsers.list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Parse the output of an LLM call.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The output of an LLM call.
+</ParamField>
+
+**Returns:** `list[str]`
+
+A list of strings.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-list-ListOutputParser-parse_iter">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.list.ListOutputParser.parse_iter(
+    text: str
+) -> collections.abc.Iterator[re.Match]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse the output of an LLM call.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The output of an LLM call.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-list-MarkdownListOutputParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.output_parsers.list.MarkdownListOutputParser()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [ListOutputParser](#langchain_core-output_parsers-list-ListOutputParser)
+
+Parse a Markdown list.
+
+
+<ParamField path="_type" type="str">
+</ParamField>
+
+<ParamField path="pattern" type="str = '^\\s*[-*]\\s([^\\n]+)$'">
+The pattern to match a Markdown list item.
+</ParamField>
+<Anchor id="langchain_core-output_parsers-list-MarkdownListOutputParser-get_format_instructions">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.list.MarkdownListOutputParser.get_format_instructions() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return the format instructions for the Markdown list output.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-list-MarkdownListOutputParser-parse">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.list.MarkdownListOutputParser.parse(
+    text: str
+) -> langchain_core.output_parsers.list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse the output of an LLM call.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The output of an LLM call.
+</ParamField>
+
+**Returns:** `list[str]`
+
+A list of strings.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-list-MarkdownListOutputParser-parse_iter">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.list.MarkdownListOutputParser.parse_iter(
+    text: str
+) -> collections.abc.Iterator[re.Match]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-list-NumberedListOutputParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.output_parsers.list.NumberedListOutputParser()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [ListOutputParser](#langchain_core-output_parsers-list-ListOutputParser)
+
+Parse a numbered list.
+
+
+<ParamField path="_type" type="str">
+</ParamField>
+
+<ParamField path="pattern" type="str = '\\d+\\.\\s([^\\n]+)'">
+The pattern to match a numbered list item.
+</ParamField>
+<Anchor id="langchain_core-output_parsers-list-NumberedListOutputParser-get_format_instructions">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.list.NumberedListOutputParser.get_format_instructions() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-list-NumberedListOutputParser-parse">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.list.NumberedListOutputParser.parse(
+    text: str
+) -> langchain_core.output_parsers.list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse the output of an LLM call.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The output of an LLM call.
+</ParamField>
+
+**Returns:** `list[str]`
+
+A list of strings.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-list-NumberedListOutputParser-parse_iter">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.list.NumberedListOutputParser.parse_iter(
+    text: str
+) -> collections.abc.Iterator[re.Match]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-list-droplastn">
+
+<CodeBlock links={{"langchain_core.output_parsers.list.T":"#langchain_core-output_parsers-list-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.list.droplastn(
+    iter: collections.abc.Iterator[langchain_core.output_parsers.list.T],
+    n: int
+) -> collections.abc.Iterator[langchain_core.output_parsers.list.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Drop the last `n` elements of an iterator.
+
+**Parameters:**
+
+<ParamField path="iter" type="Iterator[T]">
+The iterator to drop elements from.
+</ParamField>
+
+<ParamField path="n" type="int">
+The number of elements to drop.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-list-T">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.list.T = TypeVar('T')
+```
+
+</CodeBlock>
+</Anchor>
+

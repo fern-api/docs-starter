@@ -1,0 +1,242 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/output_parsers/transform
+title: langchain_core.output_parsers.transform
+---
+
+Base classes for output parsers that can handle streaming input.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`BaseCumulativeTransformOutputParser`](#langchain_core-output_parsers-transform-BaseCumulativeTransformOutputParser) | Base class for an output parser that can handle streaming input. |
+| [`BaseTransformOutputParser`](#langchain_core-output_parsers-transform-BaseTransformOutputParser) | Base class for an output parser that can handle streaming input. |
+
+### API
+
+<Anchor id="langchain_core-output_parsers-transform-BaseCumulativeTransformOutputParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.output_parsers.transform.BaseCumulativeTransformOutputParser()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseTransformOutputParser[T]](#langchain_core-output_parsers-transform-BaseTransformOutputParser)
+
+Base class for an output parser that can handle streaming input.
+
+
+<ParamField path="diff" type="bool = False">
+In streaming mode, whether to yield diffs between the previous and current parsed
+output, or just the current parsed output.
+</ParamField>
+<Anchor id="langchain_core-output_parsers-transform-BaseCumulativeTransformOutputParser-_atransform">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.output_parsers.base.T":"/langchain-core/langchain_core/output_parsers/base#langchain_core-output_parsers-base-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.transform.BaseCumulativeTransformOutputParser._atransform(
+    input: collections.abc.AsyncIterator[str | langchain_core.messages.BaseMessage]
+) -> collections.abc.AsyncIterator[langchain_core.output_parsers.base.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-transform-BaseCumulativeTransformOutputParser-_diff">
+
+<CodeBlock links={{"langchain_core.output_parsers.base.T":"/langchain-core/langchain_core/output_parsers/base#langchain_core-output_parsers-base-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.transform.BaseCumulativeTransformOutputParser._diff(
+    prev: langchain_core.output_parsers.base.T | None,
+    next: langchain_core.output_parsers.base.T
+) -> langchain_core.output_parsers.base.T
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert parsed outputs into a diff format.
+
+The semantics of this are up to the output parser.
+
+**Parameters:**
+
+<ParamField path="prev" type="T | None">
+The previous parsed output.
+</ParamField>
+
+<ParamField path="next" type="T">
+The current parsed output.
+</ParamField>
+
+**Returns:** `T`
+
+The diff between the previous and current parsed output.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-transform-BaseCumulativeTransformOutputParser-_transform">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.transform.BaseCumulativeTransformOutputParser._transform(
+    input: collections.abc.Iterator[str | langchain_core.messages.BaseMessage]
+) -> collections.abc.Iterator[typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-transform-BaseTransformOutputParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.output_parsers.transform.BaseTransformOutputParser()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseOutputParser[T]](/langchain-core/langchain_core/output_parsers/base#langchain_core-output_parsers-base-BaseOutputParser)
+
+Base class for an output parser that can handle streaming input.
+
+
+<Anchor id="langchain_core-output_parsers-transform-BaseTransformOutputParser-_atransform">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.output_parsers.base.T":"/langchain-core/langchain_core/output_parsers/base#langchain_core-output_parsers-base-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.transform.BaseTransformOutputParser._atransform(
+    input: collections.abc.AsyncIterator[str | langchain_core.messages.BaseMessage]
+) -> collections.abc.AsyncIterator[langchain_core.output_parsers.base.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-transform-BaseTransformOutputParser-_transform">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.output_parsers.base.T":"/langchain-core/langchain_core/output_parsers/base#langchain_core-output_parsers-base-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.transform.BaseTransformOutputParser._transform(
+    input: collections.abc.Iterator[str | langchain_core.messages.BaseMessage]
+) -> collections.abc.Iterator[langchain_core.output_parsers.base.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-transform-BaseTransformOutputParser-atransform">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.output_parsers.base.T":"/langchain-core/langchain_core/output_parsers/base#langchain_core-output_parsers-base-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.transform.BaseTransformOutputParser.atransform(
+    input: collections.abc.AsyncIterator[str | langchain_core.messages.BaseMessage],
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> collections.abc.AsyncIterator[langchain_core.output_parsers.base.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async transform the input into the output format.
+
+**Parameters:**
+
+<ParamField path="input" type="AsyncIterator[str | BaseMessage]">
+The input to transform.
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig | None" default="None">
+The configuration to use for the transformation.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-transform-BaseTransformOutputParser-transform">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.output_parsers.base.T":"/langchain-core/langchain_core/output_parsers/base#langchain_core-output_parsers-base-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.transform.BaseTransformOutputParser.transform(
+    input: collections.abc.Iterator[str | langchain_core.messages.BaseMessage],
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> collections.abc.Iterator[langchain_core.output_parsers.base.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Transform the input into the output format.
+
+**Parameters:**
+
+<ParamField path="input" type="Iterator[str | BaseMessage]">
+The input to transform.
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig | None" default="None">
+The configuration to use for the transformation.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>

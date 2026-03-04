@@ -1,0 +1,244 @@
+---
+title: cub::WarpExchange
+description: "The [WarpExchange](/library/api/cub::_warp_exchange) class provides [collective](../index.html#sec0) methods for rearranging data partitioned across a CUDA warp."
+---
+
+The `WarpExchange` class provides [collective](../index.html#sec0) methods for rearranging data partitioned across a CUDA warp.
+
+**Overview**
+
+- It is commonplace for a warp of threads to rearrange data items between threads. For example, the global memory accesses prefer patterns where data items are "striped" across threads (where consecutive threads access consecutive items), yet most warp-wide operations prefer a "blocked" partitioning of items across threads (where consecutive items belong to a single thread).
+- `WarpExchange` supports the following types of data exchanges:
+Transposing between blocked and striped arrangements
+Scattering ranked items to a striped arrangement
+   - Transposing between [blocked](../index.html#sec5sec3) and [striped](../index.html#sec5sec3) arrangements
+   - Scattering ranked items to a [striped arrangement](../index.html#sec5sec3)
+
+**A Simple Example**
+
+
+The code snippet below illustrates the conversion from a "blocked" to a "striped" arrangement of 64 integer items partitioned across 16 threads where each thread owns 4 items.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/warp/warp_exchange.cuh>
+
+__global__ void ExampleKernel(int *d_data, ...)
+{
+    constexpr int warp_threads = 16;
+    constexpr int block_threads = 256;
+    constexpr int items_per_thread = 4;
+    constexpr int warps_per_block = block_threads / warp_threads;
+    const int warp_id = static_cast<int>(threadIdx.x) / warp_threads;
+
+    // Specialize WarpExchange for a virtual warp of 16 threads owning 4 integer items each
+    using WarpExchangeT =
+      cub::WarpExchange<int, items_per_thread, warp_threads>;
+
+    // Allocate shared memory for WarpExchange
+    __shared__ typename WarpExchangeT::TempStorage temp_storage[warps_per_block];
+
+    // Load a tile of data striped across threads
+    int thread_data[items_per_thread];
+    // ...
+
+    // Collectively exchange data into a blocked arrangement across threads
+    WarpExchangeT(temp_storage[warp_id]).StripedToBlocked(thread_data, thread_data);
+```
+
+Suppose the set of striped input `thread_data` across the block of threads is `{ [0,16,32,48], [1,17,33,49], ..., [15, 32, 47, 63] }`. The corresponding output `thread_data` in those threads will be `{ [0,1,2,3], [4,5,6,7], [8,9,10,11], ..., [60,61,62,63] }`.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="InputT" type="typename">
+</ParamField>
+
+<ParamField path="ITEMS_PER_THREAD" type="int">
+The number of items partitioned onto each thread.
+</ParamField>
+
+<ParamField path="LOGICAL_WARP_THREADS" type="int" default="detail::warp_threads">
+**[optional]** The number of threads per "logical" warp (may be less than the number of hardware warp threads). Default is the warp size of the targeted CUDA compute-capability (e.g., 32 threads for SM86). Must be a power of two.
+</ParamField>
+
+<ParamField path="WARP_EXCHANGE_ALGORITHM" type="WarpExchangeAlgorithm" default="WARP_EXCHANGE_SMEM">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `detail::InternalWarpExchangeImpl< InputT, ITEMS_PER_THREAD, detail::warp_threads, WARP_EXCHANGE_SMEM >` (private)
+
+---
+
+## Collective constructors
+
+### WarpExchange <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>explicit</Badge>
+
+<Tabs>
+<Tab title="With TempStorage">
+
+Collective constructor using the specified memory allocation as temporary storage.
+
+<CodeBlock links={{"WarpExchange": "/library/api/cub::WarpExchange"}}>
+```cpp showLineNumbers={false}
+cub::WarpExchange<InputT, ITEMS_PER_THREAD, LOGICAL_WARP_THREADS, WARP_EXCHANGE_ALGORITHM>::WarpExchange(
+    TempStorage &temp_storage
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Deleted overload 1">
+
+<CodeBlock links={{"WarpExchange": "/library/api/cub::WarpExchange"}}>
+```cpp showLineNumbers={false}
+cub::WarpExchange<InputT, ITEMS_PER_THREAD, LOGICAL_WARP_THREADS, WARP_EXCHANGE_ALGORITHM>::WarpExchange() = delete
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Data movement
+
+### BlockedToStriped <Badge intent="note" minimal>inline</Badge>
+
+Transposes data items from *blocked* arrangement to *striped* arrangement.
+
+<CodeBlock links={{"WarpExchange": "/library/api/cub::WarpExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT>
+void cub::WarpExchange<InputT, ITEMS_PER_THREAD, LOGICAL_WARP_THREADS, WARP_EXCHANGE_ALGORITHM>::BlockedToStriped(
+    const InputT (&input_items)[ITEMS_PER_THREAD],
+    OutputT (&output_items)[ITEMS_PER_THREAD]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Parameters**
+
+<ParamField path="input_items" type="const InputT(&)[ITEMS_PER_THREAD]">
+Items to exchange, converting between *blocked* and *striped* arrangements.
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ITEMS_PER_THREAD]">
+Items from exchange, converting between *striped* and *blocked* arrangements. May be aliased to `input_items`.
+</ParamField>
+
+### StripedToBlocked <Badge intent="note" minimal>inline</Badge>
+
+Transposes data items from *striped* arrangement to *blocked* arrangement.
+
+<CodeBlock links={{"WarpExchange": "/library/api/cub::WarpExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT>
+void cub::WarpExchange<InputT, ITEMS_PER_THREAD, LOGICAL_WARP_THREADS, WARP_EXCHANGE_ALGORITHM>::StripedToBlocked(
+    const InputT (&input_items)[ITEMS_PER_THREAD],
+    OutputT (&output_items)[ITEMS_PER_THREAD]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Parameters**
+
+<ParamField path="input_items" type="const InputT(&)[ITEMS_PER_THREAD]">
+Items to exchange
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ITEMS_PER_THREAD]">
+Items from exchange. May be aliased to `input_items`.
+</ParamField>
+
+### ScatterToStriped <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Multiple items per thread">
+
+Exchanges valid data items annotated by rank into *striped* arrangement.
+
+<CodeBlock links={{"WarpExchange": "/library/api/cub::WarpExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OffsetT>
+void cub::WarpExchange<InputT, ITEMS_PER_THREAD, LOGICAL_WARP_THREADS, WARP_EXCHANGE_ALGORITHM>::ScatterToStriped(
+    InputT (&items)[ITEMS_PER_THREAD],
+    OffsetT (&ranks)[ITEMS_PER_THREAD]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="OffsetT" type="typename">
+**[inferred]** Signed integer type for local offsets
+</ParamField>
+
+**Parameters**
+
+<ParamField path="items" type="InputT(&)[ITEMS_PER_THREAD]">
+Items to exchange
+</ParamField>
+
+<ParamField path="ranks" type="OffsetT(&)[ITEMS_PER_THREAD]">
+Corresponding scatter ranks
+</ParamField>
+
+</Tab>
+<Tab title="Multiple items per thread">
+
+Exchanges valid data items annotated by rank into *striped* arrangement.
+
+<CodeBlock links={{"WarpExchange": "/library/api/cub::WarpExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT, typename OffsetT>
+void cub::WarpExchange<InputT, ITEMS_PER_THREAD, LOGICAL_WARP_THREADS, WARP_EXCHANGE_ALGORITHM>::ScatterToStriped(
+    const InputT (&input_items)[ITEMS_PER_THREAD],
+    OutputT (&output_items)[ITEMS_PER_THREAD],
+    OffsetT (&ranks)[ITEMS_PER_THREAD]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="OffsetT" type="typename">
+**[inferred]** Signed integer type for local offsets
+</ParamField>
+
+**Parameters**
+
+<ParamField path="input_items" type="const InputT(&)[ITEMS_PER_THREAD]">
+Items to exchange
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ITEMS_PER_THREAD]">
+Items from exchange. May be aliased to `input_items`.
+</ParamField>
+
+<ParamField path="ranks" type="OffsetT(&)[ITEMS_PER_THREAD]">
+Corresponding scatter ranks
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `InternalWarpExchange` | `detail::InternalWarpExchangeImpl< InputT, ITEMS_PER_THREAD, LOGICAL_WARP_THREADS, WARP_EXCHANGE_ALGORITHM >` | |
+| `TempStorage` | `typename InternalWarpExchange::TempStorage` | The operations exposed by `WarpExchange` require a temporary memory allocation of this nested type for thread communication. This opaque storage can be allocated directly using the `__shared__` keyword. Alternatively, it can be aliased to externally allocated memory (shared or global) or `union`'d with other storage allocation types to facilitate memory reuse. |

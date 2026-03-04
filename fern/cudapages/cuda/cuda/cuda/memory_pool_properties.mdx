@@ -1,0 +1,23 @@
+---
+title: "cuda::memory_pool_properties"
+description: "[`memory_pool_properties`](/libcudacxx/api/cuda::memory_pool_properties) is a type that can controls memory pool to control the creation options."
+---
+
+`memory_pool_properties` is a type that can controls memory pool to control the creation options.
+
+Compared to attributes, properties can not be set after the pool is created.
+
+```cpp showLineNumbers={false}
+#include <cuda/memory_pool_base.h>
+```
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `initial_pool_size` | `size_t` | |
+| `release_threshold` | `size_t` | |
+| `allocation_handle_type` | `cudaMemAllocationHandleType` | |
+| `max_pool_size` | `size_t` | |

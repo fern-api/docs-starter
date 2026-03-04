@@ -1,0 +1,60 @@
+---
+title: cub::AgentScanPolicy
+description: "Parameterizable tuning policy type for AgentScan."
+---
+
+Parameterizable tuning policy type for AgentScan.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="NominalBlockThreads4B" type="int">
+Threads per thread block
+</ParamField>
+
+<ParamField path="NominalItemsPerThread4B" type="int">
+Items per thread (per tile of input)
+</ParamField>
+
+<ParamField path="ComputeT" type="typename">
+Dominant compute type
+</ParamField>
+
+<ParamField path="LoadAlgorithm" type="BlockLoadAlgorithm">
+The [BlockLoad](/library/api/cub::_block_load) algorithm to use
+</ParamField>
+
+<ParamField path="LoadModifier" type="CacheLoadModifier">
+Cache load modifier for reading input elements
+</ParamField>
+
+<ParamField path="StoreAlgorithm" type="BlockStoreAlgorithm">
+The [BlockStore](/library/api/cub::_block_store) algorithm to use
+</ParamField>
+
+<ParamField path="ScanAlgorithm" type="BlockScanAlgorithm">
+The [BlockScan](/library/api/cub::_block_scan) algorithm to use
+</ParamField>
+
+<ParamField path="ScalingType" type="typename" default="detail::MemBoundScaling<NominalBlockThreads4B, NominalItemsPerThread4B, ComputeT>">
+</ParamField>
+
+<ParamField path="DelayConstructorT" type="typename" default="detail::default_delay_constructor_t<ComputeT>">
+Implementation detail, do not specify directly, requirements on the content of this type are subject to breaking change.
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `detail::MemBoundScaling< NominalBlockThreads4B, NominalItemsPerThread4B, ComputeT >` (public)
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `LOAD_ALGORITHM` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `BlockLoadAlgorithm` | |
+| `LOAD_MODIFIER` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `CacheLoadModifier` | |
+| `STORE_ALGORITHM` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `BlockStoreAlgorithm` | |
+| `SCAN_ALGORITHM` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `BlockScanAlgorithm` | |

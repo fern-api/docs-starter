@@ -1,0 +1,202 @@
+---
+title: cub::DeviceMerge
+description: "[DeviceMerge](/library/api/cub::_device_merge) provides device-wide, parallel operations for merging two sorted sequences of values (called keys) or key-value pairs in device-accessible memory."
+---
+
+`DeviceMerge` provides device-wide, parallel operations for merging two sorted sequences of values (called keys) or key-value pairs in device-accessible memory.
+
+The sorting order is determined by a comparison functor (default: less-than), which has to establish a [strict weak ordering](https://en.cppreference.com/w/cpp/concepts/strict_weak_order).
+
+---
+
+## Static methods
+
+### MergeKeys <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"DeviceMerge": "/library/api/cub::DeviceMerge"}}>
+```cpp showLineNumbers={false}
+template <typename KeyIteratorIn1,
+          typename KeyIteratorIn2,
+          typename KeyIteratorOut,
+          typename CompareOp>
+static cudaError_t cub::DeviceMerge::MergeKeys(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyIteratorIn1 keys_in1,
+    ::cuda::std::int64_t num_keys1,
+    KeyIteratorIn2 keys_in2,
+    ::cuda::std::int64_t num_keys2,
+    KeyIteratorOut keys_out,
+    CompareOp compare_op = {},
+    cudaStream_t stream = nullptr
+)
+```
+</CodeBlock>
+
+*Added in v2.7.0. First appears in CUDA Toolkit 12.8.*
+
+**Template parameters**
+
+<ParamField path="KeyIteratorIn1" type="typename">
+**[deduced]** Random access iterator to the first sorted input sequence. Must have the same value type as KeyIteratorIn2.
+</ParamField>
+
+<ParamField path="KeyIteratorIn2" type="typename">
+**[deduced]** Random access iterator to the second sorted input sequence. Must have the same value type as KeyIteratorIn1.
+</ParamField>
+
+<ParamField path="KeyIteratorOut" type="typename">
+**[deduced]** Random access iterator to the output sequence.
+</ParamField>
+
+<ParamField path="CompareOp" type="typename">
+**[deduced]** Binary predicate to compare the input iterator's value types. Must have a signature equivalent to `bool operator()(Key lhs, Key rhs)` and establish a [strict weak ordering](https://en.cppreference.com/w/cpp/concepts/strict_weak_order).
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation.
+</ParamField>
+
+<ParamField path="keys_in1" type="KeyIteratorIn1">
+Iterator to the beginning of the first sorted input sequence.
+</ParamField>
+
+<ParamField path="num_keys1" type="::cuda::std::int64_t">
+Number of keys in the first input sequence.
+</ParamField>
+
+<ParamField path="keys_in2" type="KeyIteratorIn2">
+Iterator to the beginning of the second sorted input sequence.
+</ParamField>
+
+<ParamField path="num_keys2" type="::cuda::std::int64_t">
+Number of keys in the second input sequence.
+</ParamField>
+
+<ParamField path="keys_out" type="KeyIteratorOut">
+Iterator to the beginning of the output sequence.
+</ParamField>
+
+<ParamField path="compare_op" type="CompareOp" default="{}">
+Comparison function object, returning true if the first argument is ordered before the second. Must establish a [strict weak ordering](https://en.cppreference.com/w/cpp/concepts/strict_weak_order).
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="nullptr">
+**[optional]** CUDA stream to launch kernels into. Default is stream<sub>0</sub>.
+</ParamField>
+
+### MergePairs <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"DeviceMerge": "/library/api/cub::DeviceMerge"}}>
+```cpp showLineNumbers={false}
+template <typename KeyIteratorIn1,
+          typename ValueIteratorIn1,
+          typename KeyIteratorIn2,
+          typename ValueIteratorIn2,
+          typename KeyIteratorOut,
+          typename ValueIteratorOut,
+          typename CompareOp>
+static cudaError_t cub::DeviceMerge::MergePairs(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyIteratorIn1 keys_in1,
+    ValueIteratorIn1 values_in1,
+    ::cuda::std::int64_t num_pairs1,
+    KeyIteratorIn2 keys_in2,
+    ValueIteratorIn2 values_in2,
+    ::cuda::std::int64_t num_pairs2,
+    KeyIteratorOut keys_out,
+    ValueIteratorOut values_out,
+    CompareOp compare_op = {},
+    cudaStream_t stream = nullptr
+)
+```
+</CodeBlock>
+
+*Added in v2.7.0. First appears in CUDA Toolkit 12.8.*
+
+**Template parameters**
+
+<ParamField path="KeyIteratorIn1" type="typename">
+**[deduced]** Random access iterator to the keys of the first sorted input sequence. Must have the same value type as KeyIteratorIn2.
+</ParamField>
+
+<ParamField path="ValueIteratorIn1" type="typename">
+**[deduced]** Random access iterator to the values of the first sorted input sequence. Must have the same value type as ValueIteratorIn2.
+</ParamField>
+
+<ParamField path="KeyIteratorIn2" type="typename">
+**[deduced]** Random access iterator to the second sorted input sequence. Must have the same value type as KeyIteratorIn1.
+</ParamField>
+
+<ParamField path="ValueIteratorIn2" type="typename">
+**[deduced]** Random access iterator to the values of the second sorted input sequence. Must have the same value type as ValueIteratorIn1.
+</ParamField>
+
+<ParamField path="KeyIteratorOut" type="typename">
+**[deduced]** Random access iterator to the keys of the output sequence.
+</ParamField>
+
+<ParamField path="ValueIteratorOut" type="typename">
+**[deduced]** Random access iterator to the values of the output sequence.
+</ParamField>
+
+<ParamField path="CompareOp" type="typename">
+**[deduced]** Binary predicate to compare the key input iterator's value types. Must have a signature equivalent to `bool operator()(Key lhs, Key rhs)` and establish a [strict weak ordering](https://en.cppreference.com/w/cpp/concepts/strict_weak_order).
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation.
+</ParamField>
+
+<ParamField path="keys_in1" type="KeyIteratorIn1">
+Iterator to the beginning of the keys of the first sorted input sequence.
+</ParamField>
+
+<ParamField path="values_in1" type="ValueIteratorIn1">
+Iterator to the beginning of the values of the first sorted input sequence.
+</ParamField>
+
+<ParamField path="num_pairs1" type="::cuda::std::int64_t">
+Number of key-value pairs in the first input sequence.
+</ParamField>
+
+<ParamField path="keys_in2" type="KeyIteratorIn2">
+Iterator to the beginning of the keys of the second sorted input sequence.
+</ParamField>
+
+<ParamField path="values_in2" type="ValueIteratorIn2">
+Iterator to the beginning of the values of the second sorted input sequence.
+</ParamField>
+
+<ParamField path="num_pairs2" type="::cuda::std::int64_t">
+Number of key-value pairs in the second input sequence.
+</ParamField>
+
+<ParamField path="keys_out" type="KeyIteratorOut">
+Iterator to the beginning of the keys of the output sequence.
+</ParamField>
+
+<ParamField path="values_out" type="ValueIteratorOut">
+Iterator to the beginning of the values of the output sequence.
+</ParamField>
+
+<ParamField path="compare_op" type="CompareOp" default="{}">
+Comparison function object, returning true if the first argument is ordered before the second. Must establish a [strict weak ordering](https://en.cppreference.com/w/cpp/concepts/strict_weak_order).
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="nullptr">
+**[optional]** CUDA stream to launch kernels into. Default is stream<sub>0</sub>.
+</ParamField>

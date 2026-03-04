@@ -1,0 +1,61 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/data/datasets/eval_datasets/mmlu
+title: nemo_rl.data.datasets.eval_datasets.mmlu
+---
+
+MMLU dataset and its variants.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`MMLUDataset`](#nemo_rl-data-datasets-eval_datasets-mmlu-MMLUDataset) | - |
+
+### API
+
+<Anchor id="nemo_rl-data-datasets-eval_datasets-mmlu-MMLUDataset">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.datasets.eval_datasets.mmlu.MMLUDataset(
+    language: typing.Literal['AR-XY', 'BN-BD', 'DE-DE', 'EN-US', 'ES-LA', 'FR-FR', 'HI-IN', 'ID-ID', 'IT-IT', 'JA-JP', 'KO-KR', 'PT-BR', 'ZH-CN', 'SW-KE', 'YO-NG'] = 'EN-US',
+    prompt_file: typing.Optional[str] = None,
+    system_prompt_file: typing.Optional[str] = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<ParamField path="processor" type="= processors.multichoice_qa_processor">
+</ParamField>
+
+<ParamField path="rekeyed_ds">
+</ParamField>
+
+<ParamField path="task_spec">
+</ParamField>
+<Anchor id="nemo_rl-data-datasets-eval_datasets-mmlu-MMLUDataset-_rekey">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.eval_datasets.mmlu.MMLUDataset._rekey(
+    data: dict[str, typing.Any]
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>

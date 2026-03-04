@@ -1,0 +1,133 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/documents/compressor
+title: langchain_core.documents.compressor
+---
+
+Document compressor.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`BaseDocumentCompressor`](#langchain_core-documents-compressor-BaseDocumentCompressor) | Base class for document compressors. |
+
+### API
+
+<Anchor id="langchain_core-documents-compressor-BaseDocumentCompressor">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.documents.compressor.BaseDocumentCompressor()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+**Bases:** `BaseModel`
+
+Base class for document compressors.
+
+This abstraction is primarily used for post-processing of retrieved documents.
+
+`Document` objects matching a given query are first retrieved.
+
+Then the list of documents can be further processed.
+
+For example, one could re-rank the retrieved documents using an LLM.
+
+!!! note
+    Users should favor using a `RunnableLambda` instead of sub-classing from this
+    interface.
+
+
+<Anchor id="langchain_core-documents-compressor-BaseDocumentCompressor-acompress_documents">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document","langchain_core.callbacks.Callbacks":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-Callbacks"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.documents.compressor.BaseDocumentCompressor.acompress_documents(
+    documents: collections.abc.Sequence[langchain_core.documents.Document],
+    query: str,
+    callbacks: langchain_core.callbacks.Callbacks | None = None
+) -> collections.abc.Sequence[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async compress retrieved documents given the query context.
+
+**Parameters:**
+
+<ParamField path="documents" type="Sequence[Document]">
+The retrieved `Document` objects.
+</ParamField>
+
+<ParamField path="query" type="str">
+The query context.
+</ParamField>
+
+<ParamField path="callbacks" type="Callbacks | None" default="None">
+Optional `Callbacks` to run during compression.
+</ParamField>
+
+**Returns:** `Sequence[Document]`
+
+The compressed documents.
+
+
+</Indent>
+<Anchor id="langchain_core-documents-compressor-BaseDocumentCompressor-compress_documents">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document","langchain_core.callbacks.Callbacks":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-Callbacks"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.documents.compressor.BaseDocumentCompressor.compress_documents(
+    documents: collections.abc.Sequence[langchain_core.documents.Document],
+    query: str,
+    callbacks: langchain_core.callbacks.Callbacks | None = None
+) -> collections.abc.Sequence[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Compress retrieved documents given the query context.
+
+**Parameters:**
+
+<ParamField path="documents" type="Sequence[Document]">
+The retrieved `Document` objects.
+</ParamField>
+
+<ParamField path="query" type="str">
+The query context.
+</ParamField>
+
+<ParamField path="callbacks" type="Callbacks | None" default="None">
+Optional `Callbacks` to run during compression.
+</ParamField>
+
+**Returns:** `Sequence[Document]`
+
+The compressed documents.
+
+
+</Indent>
+</Indent>

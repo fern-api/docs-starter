@@ -1,0 +1,437 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/output_parsers/openai_tools
+title: langchain_core.output_parsers.openai_tools
+---
+
+Parse tools for OpenAI tools output.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`JsonOutputKeyToolsParser`](#langchain_core-output_parsers-openai_tools-JsonOutputKeyToolsParser) | Parse tools from OpenAI response. |
+| [`JsonOutputToolsParser`](#langchain_core-output_parsers-openai_tools-JsonOutputToolsParser) | Parse tools from OpenAI response. |
+| [`PydanticToolsParser`](#langchain_core-output_parsers-openai_tools-PydanticToolsParser) | Parse tools from OpenAI response. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`make_invalid_tool_call`](#langchain_core-output_parsers-openai_tools-make_invalid_tool_call) | Create an `InvalidToolCall` from a raw tool call. |
+| [`parse_tool_call`](#langchain_core-output_parsers-openai_tools-parse_tool_call) | Parse a single tool call. |
+| [`parse_tool_calls`](#langchain_core-output_parsers-openai_tools-parse_tool_calls) | Parse a list of tool calls. |
+
+### Data
+
+[`_MAX_TOKENS_ERROR`](#langchain_core-output_parsers-openai_tools-_MAX_TOKENS_ERROR)
+
+[`logger`](#langchain_core-output_parsers-openai_tools-logger)
+
+### API
+
+<Anchor id="langchain_core-output_parsers-openai_tools-JsonOutputKeyToolsParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.output_parsers.openai_tools.JsonOutputKeyToolsParser()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [JsonOutputToolsParser](#langchain_core-output_parsers-openai_tools-JsonOutputToolsParser)
+
+Parse tools from OpenAI response.
+
+
+<ParamField path="key_name" type="str">
+The type of tools to return.
+</ParamField>
+<Anchor id="langchain_core-output_parsers-openai_tools-JsonOutputKeyToolsParser-parse_result">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.openai_tools.JsonOutputKeyToolsParser.parse_result(
+    result: langchain_core.output_parsers.list[langchain_core.outputs.Generation],
+    partial: bool = False
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse the result of an LLM call to a list of tool calls.
+
+**Parameters:**
+
+<ParamField path="result" type="list[Generation]">
+The result of the LLM call.
+</ParamField>
+
+<ParamField path="partial" type="bool" default="False">
+Whether to parse partial JSON.
+If `True`, the output will be a JSON object containing
+    all the keys that have been returned so far.
+If `False`, the output will be the full JSON object.
+</ParamField>
+
+**Returns:** `Any`
+
+The parsed tool calls.
+
+**Raises:**
+
+- `OutputParserException`: If the generation is not a chat generation.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-openai_tools-JsonOutputToolsParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.output_parsers.openai_tools.JsonOutputToolsParser()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseCumulativeTransformOutputParser[Any]](/langchain-core/langchain_core/output_parsers/transform#langchain_core-output_parsers-transform-BaseCumulativeTransformOutputParser)
+
+Parse tools from OpenAI response.
+
+
+<ParamField path="first_tool_only" type="bool = False">
+Whether to return only the first tool call.
+
+If `False`, the result will be a list of tool calls, or an empty list if no tool
+calls are found.
+
+If `True`, and multiple tool calls are found, only the first one will be returned,
+and the other tool calls will be ignored.
+
+If no tool calls are found, `None` will be returned.
+</ParamField>
+
+<ParamField path="return_id" type="bool = False">
+Whether to return the tool call id.
+</ParamField>
+
+<ParamField path="strict" type="bool = False">
+Whether to allow non-JSON-compliant strings.
+
+See: https://docs.python.org/3/library/json.html#encoders-and-decoders
+
+Useful when the parsed output may include unicode characters or new lines.
+</ParamField>
+<Anchor id="langchain_core-output_parsers-openai_tools-JsonOutputToolsParser-parse">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.openai_tools.JsonOutputToolsParser.parse(
+    text: str
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse the output of an LLM call to a list of tool calls.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The output of the LLM call.
+</ParamField>
+
+**Returns:** `Any`
+
+The parsed tool calls.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-openai_tools-JsonOutputToolsParser-parse_result">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.openai_tools.JsonOutputToolsParser.parse_result(
+    result: langchain_core.output_parsers.list[langchain_core.outputs.Generation],
+    partial: bool = False
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse the result of an LLM call to a list of tool calls.
+
+**Parameters:**
+
+<ParamField path="result" type="list[Generation]">
+The result of the LLM call.
+</ParamField>
+
+<ParamField path="partial" type="bool" default="False">
+Whether to parse partial JSON.
+
+If `True`, the output will be a JSON object containing
+all the keys that have been returned so far.
+
+If `False`, the output will be the full JSON object.
+</ParamField>
+
+**Returns:** `Any`
+
+The parsed tool calls.
+
+**Raises:**
+
+- `OutputParserException`: If the output is not valid JSON.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-openai_tools-PydanticToolsParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.output_parsers.openai_tools.PydanticToolsParser()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [JsonOutputToolsParser](#langchain_core-output_parsers-openai_tools-JsonOutputToolsParser)
+
+Parse tools from OpenAI response.
+
+
+<ParamField path="tools" type="Annotated[list[TypeBaseModel], SkipValidation()]">
+The tools to parse.
+</ParamField>
+<Anchor id="langchain_core-output_parsers-openai_tools-PydanticToolsParser-parse_result">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.openai_tools.PydanticToolsParser.parse_result(
+    result: langchain_core.output_parsers.list[langchain_core.outputs.Generation],
+    partial: bool = False
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse the result of an LLM call to a list of Pydantic objects.
+
+**Parameters:**
+
+<ParamField path="result" type="list[Generation]">
+The result of the LLM call.
+</ParamField>
+
+<ParamField path="partial" type="bool" default="False">
+Whether to parse partial JSON.
+
+If `True`, the output will be a JSON object containing all the keys that
+have been returned so far.
+
+If `False`, the output will be the full JSON object.
+</ParamField>
+
+**Returns:** `Any`
+
+The parsed Pydantic objects.
+
+**Raises:**
+
+- `ValueError`: If the tool call arguments are not a dict.
+- `ValidationError`: If the tool call arguments do not conform to the Pydantic
+model.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-openai_tools-make_invalid_tool_call">
+
+<CodeBlock links={{"langchain_core.messages.InvalidToolCall":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-InvalidToolCall"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.openai_tools.make_invalid_tool_call(
+    raw_tool_call: dict[str, typing.Any],
+    error_msg: str | None
+) -> langchain_core.messages.InvalidToolCall
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create an `InvalidToolCall` from a raw tool call.
+
+**Parameters:**
+
+<ParamField path="raw_tool_call" type="dict[str, Any]">
+The raw tool call.
+</ParamField>
+
+<ParamField path="error_msg" type="str | None">
+The error message.
+</ParamField>
+
+**Returns:** `InvalidToolCall`
+
+An `InvalidToolCall` instance with the error message.
+
+
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-openai_tools-parse_tool_call">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.openai_tools.parse_tool_call(
+    raw_tool_call: dict[str, typing.Any],
+    partial: bool = False,
+    strict: bool = False,
+    return_id: bool = True
+) -> dict[str, typing.Any] | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse a single tool call.
+
+**Parameters:**
+
+<ParamField path="raw_tool_call" type="dict[str, Any]">
+The raw tool call to parse.
+</ParamField>
+
+<ParamField path="partial" type="bool" default="False">
+Whether to parse partial JSON.
+</ParamField>
+
+<ParamField path="strict" type="bool" default="False">
+Whether to allow non-JSON-compliant strings.
+</ParamField>
+
+<ParamField path="return_id" type="bool" default="True">
+Whether to return the tool call id.
+</ParamField>
+
+**Returns:** `dict[str, Any] | None`
+
+The parsed tool call.
+
+**Raises:**
+
+- `OutputParserException`: If the tool call is not valid JSON.
+
+
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-openai_tools-parse_tool_calls">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.openai_tools.parse_tool_calls(
+    raw_tool_calls: langchain_core.output_parsers.list[dict],
+    partial: bool = False,
+    strict: bool = False,
+    return_id: bool = True
+) -> langchain_core.output_parsers.list[dict[str, typing.Any]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse a list of tool calls.
+
+**Parameters:**
+
+<ParamField path="raw_tool_calls" type="list[dict]">
+The raw tool calls to parse.
+</ParamField>
+
+<ParamField path="partial" type="bool" default="False">
+Whether to parse partial JSON.
+</ParamField>
+
+<ParamField path="strict" type="bool" default="False">
+Whether to allow non-JSON-compliant strings.
+</ParamField>
+
+<ParamField path="return_id" type="bool" default="True">
+Whether to return the tool call id.
+</ParamField>
+
+**Returns:** `list[dict[str, Any]]`
+
+The parsed tool calls.
+
+**Raises:**
+
+- `OutputParserException`: If any of the tool calls are not valid JSON.
+
+
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-openai_tools-_MAX_TOKENS_ERROR">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.openai_tools._MAX_TOKENS_ERROR = 'Output parser received a `max_tokens` stop reason. The output is likely incompl...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-output_parsers-openai_tools-logger">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.openai_tools.logger = logging.getLogger(__name__)
+```
+
+</CodeBlock>
+</Anchor>
+

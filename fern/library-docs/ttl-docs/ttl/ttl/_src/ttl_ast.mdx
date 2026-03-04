@@ -1,0 +1,731 @@
+---
+layout: overview
+slug: ttl/ttl/_src/ttl_ast
+title: ttl._src.ttl_ast
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`CompilerContext`](#ttl-_src-ttl_ast-CompilerContext) | Immutable compilation context for TTL kernels. |
+| [`TTLGenericCompiler`](#ttl-_src-ttl_ast-TTLGenericCompiler) | Compiler that generates TTL dialect ops from Python AST. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_build_tensor_type`](#ttl-_src-ttl_ast-_build_tensor_type) | Build MLIR tensor type for a ttnn tensor with TTNNLayoutAttr. |
+| [`_get_annotation_name`](#ttl-_src-ttl_ast-_get_annotation_name) | Extract the type name from an annotation node. |
+| [`_make_file_loc`](#ttl-_src-ttl_ast-_make_file_loc) | Create an MLIR file location from an AST node. |
+| [`_raise_tensor_error`](#ttl-_src-ttl_ast-_raise_tensor_error) | Raise TTLangCompileError with tensor source location if available. |
+| [`syntax`](#ttl-_src-ttl_ast-syntax) | - |
+
+### API
+
+<Anchor id="ttl-_src-ttl_ast-CompilerContext">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class ttl._src.ttl_ast.CompilerContext(
+    grid: typing.List[int],
+    memory_space: str,
+    tiled: bool
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Dataclass</Badge>
+
+Immutable compilation context for TTL kernels.
+
+
+<ParamField path="grid" type="List[int]">
+</ParamField>
+
+<ParamField path="memory_space" type="str">
+</ParamField>
+
+<ParamField path="tiled" type="bool">
+</ParamField>
+</Indent>
+
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class ttl._src.ttl_ast.TTLGenericCompiler(
+    name,
+    kernel_type = None,
+    captures = {},
+    args = (),
+    kwargs = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `TTCompilerBase`
+
+Compiler that generates TTL dialect ops from Python AST.
+
+
+<ParamField path="_cb_info" type="List[dict] = []">
+</ParamField>
+
+<ParamField path="_fn_map" type="= &#123;&#125;">
+</ParamField>
+
+<ParamField path="_syntax" type="= &#123;&#125;">
+</ParamField>
+
+<ParamField path="auto_profile_enabled" type="= is_auto_profile_enabled()">
+</ParamField>
+
+<ParamField path="context">
+</ParamField>
+
+<ParamField path="debug_locations" type="= kwargs.get('debug_locations', False)">
+</ParamField>
+
+<ParamField path="fn_globals" type="= kwargs.get('_globals', &#123;&#125;)">
+</ParamField>
+
+<ParamField path="line_mapper">
+</ParamField>
+
+<ParamField path="line_offset" type="= kwargs.get('_line_offset', 0)">
+</ParamField>
+
+<ParamField path="loc" type="= Location.name(self.name)">
+</ParamField>
+
+<ParamField path="source_file" type="= kwargs.get('_source_file', '&lt;unknown&gt;')">
+</ParamField>
+
+<ParamField path="source_lines" type="= kwargs.get('_source_lines', [])">
+</ParamField>
+
+<ParamField path="streams" type="Set[str] = set()">
+</ParamField>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-_build_index_or_range">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler._build_index_or_range(
+    node
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert AST node to (start_value, is_range) tuple.
+
+For slice syntax (start:end), returns (start_value, True).
+For index syntax (value), returns (value, False).
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-_close_final_signpost">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler._close_final_signpost()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Close the final signpost at the end of function body.
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-_emit_cb_from_capture">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler._emit_cb_from_capture(
+    cb
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Emit ttl.bind_cb for a captured CircularBuffer instance.
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-_emit_entry">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler._emit_entry(
+    node
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-_emit_line_signpost_if_needed">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler._emit_line_signpost_if_needed(
+    node
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Emit signposts at line boundaries for auto-profiling.
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-_emit_op_signposts">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler._emit_op_signposts(
+    op_name: str,
+    node,
+    op_fn,
+    implicit = False
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Emit signposts for CB operations with op name included.
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-_emit_signpost">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler._emit_signpost(
+    name: str
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Emit a signpost operation into the MLIR.
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-_get_cb_tensor_type">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler._get_cb_tensor_type(
+    cb_val,
+    node = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Extract the tensor type from a TTL CB type.
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-_is_ttl_math_access">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler._is_ttl_math_access(
+    node
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if node is ttl.math.XXX access pattern.
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-_is_ttl_module_access">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler._is_ttl_module_access(
+    node
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if node is ttl.XXX access pattern.
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-_loc_for_node">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler._loc_for_node(
+    node
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return file location for node if debug_locations enabled, else name location.
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-_raise_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler._raise_error(
+    node,
+    message: str
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Raise a TTLangCompileError with source location from AST node.
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-_resolve_ttl_function">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler._resolve_ttl_function(
+    node,
+    func_args,
+    kwargs
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Resolve and call a ttl.XXX or ttl.math.XXX function.
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-_to_index_value">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler._to_index_value(
+    node
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert AST node to MLIR index Value.
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-_try_emit_auto_signposts">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler._try_emit_auto_signposts(
+    node,
+    visit_fn
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Emit line-based signposts if auto-profiling is enabled.
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-visit_Assign">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler.visit_Assign(
+    node
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Handle tuple unpacking for TTL functions like core(dims=2).
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-visit_AsyncFunctionDef">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler.visit_AsyncFunctionDef(
+    node
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-visit_Attribute">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler.visit_Attribute(
+    node,
+    func_args = [],
+    kwargs = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Override to set location context and catch errors for method calls.
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-visit_BinOp">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler.visit_BinOp(
+    node
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Override to inject auto-profiling and provide better error messages.
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-visit_Call">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler.visit_Call(
+    node
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Override to set location context, catch errors, and inject auto-profiling.
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-visit_Constant">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler.visit_Constant(
+    node
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-visit_FunctionDef">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler.visit_FunctionDef(
+    node
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-visit_List">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler.visit_List(
+    node
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse a list of constants. Returns a Python list, not MLIR values.
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-visit_Name">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler.visit_Name(
+    node
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Override to check function globals for simple constants.
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-visit_Subscript">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler.visit_Subscript(
+    node
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Handle tensor[row, col] or tensor[r0:r1, c0:c1] indexing.
+
+
+</Indent>
+<Anchor id="ttl-_src-ttl_ast-TTLGenericCompiler-visit_With">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.TTLGenericCompiler.visit_With(
+    node
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Handle 'with' for CircularBuffer acquire/release.
+
+Acquire ops (wait/reserve) are generated left-to-right.
+Release ops (pop/push) are generated in reverse order at scope end.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="ttl-_src-ttl_ast-_build_tensor_type">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast._build_tensor_type(
+    ctx,
+    tensor,
+    grid,
+    tiled,
+    memory_space
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Build MLIR tensor type for a ttnn tensor with TTNNLayoutAttr.
+
+
+</Indent>
+
+<Anchor id="ttl-_src-ttl_ast-_get_annotation_name">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast._get_annotation_name(
+    annotation
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Extract the type name from an annotation node.
+
+Handles both simple names (CircularBuffer) and qualified names (ttl.CircularBuffer).
+Returns the simple type name (e.g., 'CircularBuffer') in both cases.
+
+
+</Indent>
+
+<Anchor id="ttl-_src-ttl_ast-_make_file_loc">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast._make_file_loc(
+    ctx,
+    source_file: str,
+    node,
+    line_offset: int = 0
+) -> Location
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create an MLIR file location from an AST node.
+
+
+</Indent>
+
+<Anchor id="ttl-_src-ttl_ast-_raise_tensor_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast._raise_tensor_error(
+    tensor,
+    message: str
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Raise TTLangCompileError with tensor source location if available.
+
+
+</Indent>
+
+<Anchor id="ttl-_src-ttl_ast-syntax">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl._src.ttl_ast.syntax(
+    syntax_name
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>

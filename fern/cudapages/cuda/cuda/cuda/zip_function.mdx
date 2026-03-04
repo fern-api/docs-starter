@@ -1,0 +1,67 @@
+---
+title: "cuda::zip_function"
+description: "Adaptor that transforms a functor taking arguments of types `Ts`... into one accepting a `tuple<Ts...>`."
+---
+
+Adaptor that transforms a functor taking arguments of types `Ts`... into one accepting a `tuple<Ts...>`.
+
+```cpp showLineNumbers={false}
+#include <cuda/zip_function.h>
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="_Fn" type="class">
+The functor to wrap
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### zip_function <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+default construct a `zip_function`
+
+<CodeBlock links={{"zip_function": "/libcudacxx/api/cuda::zip_function"}}>
+```cpp showLineNumbers={false}
+template <class _Fn2>
+cuda::zip_function<_Fn>::zip_function() noexcept(::cuda::std::is_nothrow_default_constructible_v< _Fn2 >)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Copy">
+
+construct a `zip_function` from a functor
+
+<CodeBlock links={{"zip_function": "/libcudacxx/api/cuda::zip_function"}}>
+```cpp showLineNumbers={false}
+cuda::zip_function<_Fn>::zip_function(
+    const _Fn &__fun
+) noexcept(::cuda::std::is_nothrow_copy_constructible_v< _Fn >)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Move">
+
+construct a `zip_function` from a functor
+
+<CodeBlock links={{"zip_function": "/libcudacxx/api/cuda::zip_function"}}>
+```cpp showLineNumbers={false}
+cuda::zip_function<_Fn>::zip_function(
+    _Fn &&__fun
+) noexcept(::cuda::std::is_nothrow_move_constructible_v< _Fn >)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>

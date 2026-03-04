@@ -1,0 +1,211 @@
+---
+title: thrust::device_allocator
+description: "An allocator which creates new elements in memory accessible by devices."
+---
+
+An allocator which creates new elements in memory accessible by devices.
+
+```cpp showLineNumbers={false}
+#include <thrust/device_allocator.h>
+```
+
+**See also:**
+[https://en.cppreference.com/w/cpp/named_req/Allocator](https://en.cppreference.com/w/cpp/named_req/Allocator)
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="T" type="typename">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `thrust::mr::stateless_resource_allocator< T, device_ptr_memory_resource< device_memory_resource > >` (public)
+
+---
+
+## Constructors
+
+### device_allocator <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+Default constructor has no effect.
+
+<CodeBlock links={{"device_allocator": "/library/api/thrust::device_allocator"}}>
+```cpp showLineNumbers={false}
+thrust::device_allocator<T>::device_allocator()
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Copy">
+
+Copy constructor has no effect.
+
+<CodeBlock links={{"device_allocator": "/library/api/thrust::device_allocator"}}>
+```cpp showLineNumbers={false}
+thrust::device_allocator<T>::device_allocator(
+    const device_allocator &other
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Copy">
+
+Constructor from other `device_allocator` has no effect.
+
+<CodeBlock links={{"device_allocator": "/library/api/thrust::device_allocator"}}>
+```cpp showLineNumbers={false}
+template <typename U>
+thrust::device_allocator<T>::device_allocator(
+    const device_allocator<U> &other
+)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### Destructor
+
+### ~device_allocator <Badge intent="note" minimal>inline</Badge>
+
+Destructor has no effect.
+
+<CodeBlock links={{"device_allocator": "/library/api/thrust::device_allocator"}}>
+```cpp showLineNumbers={false}
+thrust::device_allocator<T>::~device_allocator()
+```
+</CodeBlock>
+
+---
+
+## Assignment operators
+
+### operator=
+
+<CodeBlock links={{"device_allocator": "/library/api/thrust::device_allocator"}}>
+```cpp showLineNumbers={false}
+device_allocator & thrust::device_allocator<T>::operator=(
+    const device_allocator &
+) = default
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### max_size <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Calculates the maximum number of elements allocated by this allocator.
+
+<CodeBlock links={{"device_allocator": "/library/api/thrust::device_allocator", "stateless_resource_allocator": "/library/api/thrust::mr::stateless_resource_allocator"}}>
+```cpp showLineNumbers={false}
+size_type thrust::mr::allocator<T, MR>::max_size() const
+```
+</CodeBlock>
+
+**Returns:** the maximum value of `std::size_t`, divided by the size of `T`.
+
+### allocate <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Allocates objects of type `T`.
+
+<CodeBlock links={{"device_allocator": "/library/api/thrust::device_allocator", "stateless_resource_allocator": "/library/api/thrust::mr::stateless_resource_allocator"}}>
+```cpp showLineNumbers={false}
+pointer thrust::mr::allocator<T, MR>::allocate(
+    size_type n
+)
+```
+</CodeBlock>
+
+**Returns:** a pointer to the newly allocated storage.
+
+**Parameters**
+
+<ParamField path="n" type="size_type">
+Number of elements to allocate
+</ParamField>
+
+### deallocate <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Deallocates objects of type `T`.
+
+<CodeBlock links={{"device_allocator": "/library/api/thrust::device_allocator", "stateless_resource_allocator": "/library/api/thrust::mr::stateless_resource_allocator"}}>
+```cpp showLineNumbers={false}
+void thrust::mr::allocator<T, MR>::deallocate(
+    pointer p,
+    size_type n
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="p" type="pointer">
+Pointer returned by a previous call to `allocate`
+</ParamField>
+
+<ParamField path="n" type="size_type">
+Number of elements, passed as an argument to the `allocate` call that produced `p`
+</ParamField>
+
+### resource <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Extracts the memory resource used by this allocator.
+
+<CodeBlock links={{"device_allocator": "/library/api/thrust::device_allocator", "stateless_resource_allocator": "/library/api/thrust::mr::stateless_resource_allocator"}}>
+```cpp showLineNumbers={false}
+MR * thrust::mr::allocator<T, MR>::resource() const
+```
+</CodeBlock>
+
+**Returns:** the memory resource used by this allocator.
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `base` | `thrust::mr::stateless_resource_allocator< T, device_ptr_memory_resource< device_memory_resource > >` | |
+| `void_pointer` | `typename MR::pointer` | The pointer to void type of this allocator. |
+| `value_type` | `T` | The value type allocated by this allocator. |
+| `pointer` | `typename thrust::detail::pointer_traits< void_pointer >::template rebind< T >::other` | The pointer type allocated by this allocator. |
+| `const_pointer` | `typename thrust::detail::pointer_traits< void_pointer >::template rebind< const T >::other` | The pointer to const type. |
+| `reference` | `typename thrust::detail::pointer_traits< pointer >::reference` | The reference to the type allocated by this allocator. |
+| `const_reference` | `typename thrust::detail::pointer_traits< const_pointer >::reference` | The const reference to the type allocated by this allocator. |
+| `size_type` | `std::size_t` | The size type of this allocator. |
+| `difference_type` | `typename thrust::detail::pointer_traits< pointer >::difference_type` | The difference type between pointers allocated by this allocator. |
+| `propagate_on_container_copy_assignment` | `detail::true_type` | Specifies that the allocator shall be propagated on container copy assignment. |
+| `propagate_on_container_move_assignment` | `detail::true_type` | Specifies that the allocator shall be propagated on container move assignment. |
+| `propagate_on_container_swap` | `detail::true_type` | Specifies that the allocator shall be propagated on container swap. |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `mem_res` | `MR *` | |
+
+---
+
+## Inner classes
+
+### rebind
+
+<CodeBlock links={{"device_allocator": "/library/api/thrust::device_allocator"}}>
+```cpp showLineNumbers={false}
+struct thrust::device_allocator::rebind
+```
+</CodeBlock>
+
+The `rebind` metafunction provides the type of a `device_allocator` instantiated with another type.

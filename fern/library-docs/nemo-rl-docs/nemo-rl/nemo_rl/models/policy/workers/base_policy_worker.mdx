@@ -1,0 +1,309 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/policy/workers/base_policy_worker
+title: nemo_rl.models.policy.workers.base_policy_worker
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`AbstractPolicyWorker`](#nemo_rl-models-policy-workers-base_policy_worker-AbstractPolicyWorker) | Base class for policy workers with shared functionality. |
+
+### API
+
+<Anchor id="nemo_rl-models-policy-workers-base_policy_worker-AbstractPolicyWorker">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.workers.base_policy_worker.AbstractPolicyWorker()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Base class for policy workers with shared functionality.
+
+
+<Anchor id="nemo_rl-models-policy-workers-base_policy_worker-AbstractPolicyWorker-finish_training">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.base_policy_worker.AbstractPolicyWorker.finish_training(
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-base_policy_worker-AbstractPolicyWorker-get_free_memory_bytes">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.base_policy_worker.AbstractPolicyWorker.get_free_memory_bytes() -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the available free memory.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-base_policy_worker-AbstractPolicyWorker-get_gpu_info">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.base_policy_worker.AbstractPolicyWorker.get_gpu_info() -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return information about the GPU being used by this worker.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-base_policy_worker-AbstractPolicyWorker-get_reference_policy_logprobs">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.models.policy.interfaces.ReferenceLogprobOutputSpec":"/nemo-rl/nemo_rl/models/policy/interfaces#nemo_rl-models-policy-interfaces-ReferenceLogprobOutputSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.base_policy_worker.AbstractPolicyWorker.get_reference_policy_logprobs(
+    data: nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any],
+    micro_batch_size: typing.Optional[int] = None
+) -> nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.policy.interfaces.ReferenceLogprobOutputSpec]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the logprobs from the reference policy for a batch of data.
+
+If micro_batch_size is provided, it will be used instead of the configured
+logprob_batch_size.
+
+**Returns:** `BatchedDataDict[ReferenceLogprobOutputSpec]`
+
+a BatchedDataDict with key "reference_logprobs" and shape [batch_size, sequence_length].
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-base_policy_worker-AbstractPolicyWorker-get_zmq_address">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.base_policy_worker.AbstractPolicyWorker.get_zmq_address() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the ZMQ address for the current device.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-base_policy_worker-AbstractPolicyWorker-init_collective">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.base_policy_worker.AbstractPolicyWorker.init_collective(
+    ip: str,
+    port: int,
+    world_size: int,
+    train_world_size: int
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Initialize the collective communication.
+
+**Parameters:**
+
+<ParamField path="ip" type="str">
+IP address for the process group
+</ParamField>
+
+<ParamField path="port" type="int">
+Port for the process group
+</ParamField>
+
+<ParamField path="world_size" type="int">
+Total world size (train_world_size + inference_world_size)
+</ParamField>
+
+<ParamField path="train_world_size" type="int">
+Number of training workers (used in inference cluster)
+</ParamField>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-base_policy_worker-AbstractPolicyWorker-is_alive">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.base_policy_worker.AbstractPolicyWorker.is_alive() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if the worker is alive.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-base_policy_worker-AbstractPolicyWorker-maybe_init_zmq">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.base_policy_worker.AbstractPolicyWorker.maybe_init_zmq() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Initialize the ZMQ socket if it doesn't exist.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-base_policy_worker-AbstractPolicyWorker-report_device_id">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.base_policy_worker.AbstractPolicyWorker.report_device_id() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Report the UUID of the current CUDA device using NVML.
+
+**Returns:** `str`
+
+UUID of the device in the format "GPU-xxxxx"
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-base_policy_worker-AbstractPolicyWorker-report_node_ip_and_gpu_id">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.base_policy_worker.AbstractPolicyWorker.report_node_ip_and_gpu_id() -> tuple[str, int]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Report the node IP and GPU ID of the current worker.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-base_policy_worker-AbstractPolicyWorker-reset_peak_memory_stats">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.base_policy_worker.AbstractPolicyWorker.reset_peak_memory_stats() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Reset peak memory statistics.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-base_policy_worker-AbstractPolicyWorker-shutdown">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.base_policy_worker.AbstractPolicyWorker.shutdown() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Shutdown the policy.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-base_policy_worker-AbstractPolicyWorker-start_gpu_profiling">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.base_policy_worker.AbstractPolicyWorker.start_gpu_profiling() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Start GPU profiling.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-workers-base_policy_worker-AbstractPolicyWorker-stop_gpu_profiling">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.workers.base_policy_worker.AbstractPolicyWorker.stop_gpu_profiling() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Stop GPU profiling.
+
+
+</Indent>
+</Indent>

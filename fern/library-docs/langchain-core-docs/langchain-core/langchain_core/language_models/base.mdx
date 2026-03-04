@@ -1,0 +1,608 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/language_models/base
+title: langchain_core.language_models.base
+---
+
+Base language models class.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`BaseLanguageModel`](#langchain_core-language_models-base-BaseLanguageModel) | Abstract base class for interfacing with language models. |
+| [`LangSmithParams`](#langchain_core-language_models-base-LangSmithParams) | LangSmith parameters for tracing. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_get_token_ids_default_method`](#langchain_core-language_models-base-_get_token_ids_default_method) | Encode the text into token IDs using the fallback GPT-2 tokenizer. |
+| [`_get_verbosity`](#langchain_core-language_models-base-_get_verbosity) | - |
+| [`get_tokenizer`](#langchain_core-language_models-base-get_tokenizer) | Get a GPT-2 tokenizer instance. |
+
+### Data
+
+[`LanguageModelInput`](#langchain_core-language_models-base-LanguageModelInput)
+
+[`LanguageModelLike`](#langchain_core-language_models-base-LanguageModelLike)
+
+[`LanguageModelOutput`](#langchain_core-language_models-base-LanguageModelOutput)
+
+[`LanguageModelOutputVar`](#langchain_core-language_models-base-LanguageModelOutputVar)
+
+[`_GPT2_TOKENIZER_WARNED`](#langchain_core-language_models-base-_GPT2_TOKENIZER_WARNED)
+
+[`_HAS_TRANSFORMERS`](#langchain_core-language_models-base-_HAS_TRANSFORMERS)
+
+### API
+
+<Anchor id="langchain_core-language_models-base-BaseLanguageModel">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.language_models.base.BaseLanguageModel()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+**Bases:** [RunnableSerializable[LanguageModelInput, LanguageModelOutputVar]](/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-RunnableSerializable)
+
+Abstract base class for interfacing with language models.
+
+All language model wrappers inherited from `BaseLanguageModel`.
+
+
+<ParamField path="InputType" type="TypeAlias">
+Get the input type for this `Runnable`.
+</ParamField>
+
+<ParamField path="_identifying_params" type="Mapping[str, Any]">
+Get the identifying parameters.
+</ParamField>
+
+<ParamField path="cache" type="BaseCache | bool | None = Field(default=None, exclude=True)">
+Whether to cache the response.
+
+* If `True`, will use the global cache.
+* If `False`, will not use a cache
+* If `None`, will use the global cache if it's set, otherwise no cache.
+* If instance of `BaseCache`, will use the provided cache.
+
+Caching is not currently supported for streaming methods of models.
+</ParamField>
+
+<ParamField path="callbacks" type="Callbacks = Field(default=None, exclude=True)">
+Callbacks to add to the run trace.
+</ParamField>
+
+<ParamField path="custom_get_token_ids" type="Callable[[str], list[int]] | None = Field(default=None, exclude=True)">
+Optional encoder to use for counting tokens.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None = Field(default=None, exclude=True)">
+Metadata to add to the run trace.
+</ParamField>
+
+<ParamField path="model_config" type="= ConfigDict(arbitrary_types_allowed=True)">
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None = Field(default=None, exclude=True)">
+Tags to add to the run trace.
+</ParamField>
+
+<ParamField path="verbose" type="bool">
+Whether to print out response text.
+</ParamField>
+<Anchor id="langchain_core-language_models-base-BaseLanguageModel-agenerate_prompt">
+
+<CodeBlock links={{"langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue","langchain_core.callbacks.Callbacks":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-Callbacks","langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.base.BaseLanguageModel.agenerate_prompt(
+    prompts: list[langchain_core.prompt_values.PromptValue],
+    stop: list[str] | None = None,
+    callbacks: langchain_core.callbacks.Callbacks = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.LLMResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge> <Badge>abstract</Badge>
+
+Asynchronously pass a sequence of prompts and return model generations.
+
+This method should make use of batched calls for models that expose a batched
+API.
+
+Use this method when you want to:
+
+1. Take advantage of batched calls,
+2. Need more output from the model than just the top generated value,
+3. Are building chains that are agnostic to the underlying language model
+    type (e.g., pure text completion models vs chat models).
+
+**Parameters:**
+
+<ParamField path="prompts" type="list[PromptValue]">
+List of `PromptValue` objects.
+
+A `PromptValue` is an object that can be converted to match the format
+of any language model (string for pure text generation models and
+`BaseMessage` objects for chat models).
+</ParamField>
+
+<ParamField path="stop" type="list[str] | None" default="None">
+Stop words to use when generating.
+
+Model output is cut off at the first occurrence of any of these
+substrings.
+</ParamField>
+
+<ParamField path="callbacks" type="Callbacks" default="None">
+`Callbacks` to pass through.
+
+Used for executing additional functionality, such as logging or
+streaming, throughout generation.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arbitrary additional keyword arguments.
+
+These are usually passed to the model provider API call.
+</ParamField>
+
+**Returns:** `LLMResult`
+
+An `LLMResult`, which contains a list of candidate `Generation` objects for
+each input prompt and additional model provider-specific output.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-base-BaseLanguageModel-generate_prompt">
+
+<CodeBlock links={{"langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue","langchain_core.callbacks.Callbacks":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-Callbacks","langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.base.BaseLanguageModel.generate_prompt(
+    prompts: list[langchain_core.prompt_values.PromptValue],
+    stop: list[str] | None = None,
+    callbacks: langchain_core.callbacks.Callbacks = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.LLMResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Pass a sequence of prompts to the model and return model generations.
+
+This method should make use of batched calls for models that expose a batched
+API.
+
+Use this method when you want to:
+
+1. Take advantage of batched calls,
+2. Need more output from the model than just the top generated value,
+3. Are building chains that are agnostic to the underlying language model
+    type (e.g., pure text completion models vs chat models).
+
+**Parameters:**
+
+<ParamField path="prompts" type="list[PromptValue]">
+List of `PromptValue` objects.
+
+A `PromptValue` is an object that can be converted to match the format
+of any language model (string for pure text generation models and
+`BaseMessage` objects for chat models).
+</ParamField>
+
+<ParamField path="stop" type="list[str] | None" default="None">
+Stop words to use when generating.
+
+Model output is cut off at the first occurrence of any of these
+substrings.
+</ParamField>
+
+<ParamField path="callbacks" type="Callbacks" default="None">
+`Callbacks` to pass through.
+
+Used for executing additional functionality, such as logging or
+streaming, throughout generation.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arbitrary additional keyword arguments.
+
+These are usually passed to the model provider API call.
+</ParamField>
+
+**Returns:** `LLMResult`
+
+An `LLMResult`, which contains a list of candidate `Generation` objects for
+each input prompt and additional model provider-specific output.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-base-BaseLanguageModel-get_num_tokens">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.base.BaseLanguageModel.get_num_tokens(
+    text: str
+) -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the number of tokens present in the text.
+
+Useful for checking if an input fits in a model's context window.
+
+This should be overridden by model-specific implementations to provide accurate
+token counts via model-specific tokenizers.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The string input to tokenize.
+</ParamField>
+
+**Returns:** `int`
+
+The integer number of tokens in the text.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-base-BaseLanguageModel-get_num_tokens_from_messages">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.base.BaseLanguageModel.get_num_tokens_from_messages(
+    messages: list[langchain_core.messages.BaseMessage],
+    tools: collections.abc.Sequence | None = None
+) -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the number of tokens in the messages.
+
+Useful for checking if an input fits in a model's context window.
+
+This should be overridden by model-specific implementations to provide accurate
+token counts via model-specific tokenizers.
+
+!!! note
+
+    * The base implementation of `get_num_tokens_from_messages` ignores tool
+        schemas.
+    * The base implementation of `get_num_tokens_from_messages` adds additional
+        prefixes to messages in represent user roles, which will add to the
+        overall token count. Model-specific implementations may choose to
+        handle this differently.
+
+**Parameters:**
+
+<ParamField path="messages" type="list[BaseMessage]">
+The message inputs to tokenize.
+</ParamField>
+
+<ParamField path="tools" type="Sequence | None" default="None">
+If provided, sequence of dict, `BaseModel`, function, or
+`BaseTool` objects to be converted to tool schemas.
+</ParamField>
+
+**Returns:** `int`
+
+The sum of the number of tokens across the messages.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-base-BaseLanguageModel-get_token_ids">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.base.BaseLanguageModel.get_token_ids(
+    text: str
+) -> list[int]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return the ordered IDs of the tokens in a text.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The string input to tokenize.
+</ParamField>
+
+**Returns:** `list[int]`
+
+A list of IDs corresponding to the tokens in the text, in order they occur
+in the text.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-base-BaseLanguageModel-set_verbose">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.base.BaseLanguageModel.set_verbose(
+    verbose: bool | None
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+If verbose is `None`, set it.
+
+This allows users to pass in `None` as verbose to access the global setting.
+
+**Parameters:**
+
+<ParamField path="verbose" type="bool | None">
+The verbosity setting to use.
+</ParamField>
+
+**Returns:** `bool`
+
+The verbosity setting to use.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-base-BaseLanguageModel-with_structured_output">
+
+<CodeBlock links={{"langchain_core.runnables.Runnable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-Runnable","langchain_core.language_models.base.LanguageModelInput":"#langchain_core-language_models-base-LanguageModelInput"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.base.BaseLanguageModel.with_structured_output(
+    schema: dict | type,
+    kwargs: typing.Any = {}
+) -> langchain_core.runnables.Runnable[langchain_core.language_models.base.LanguageModelInput, dict | pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Not implemented on this class.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-language_models-base-LangSmithParams">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.language_models.base.LangSmithParams
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+LangSmith parameters for tracing.
+
+<ParamField path="ls_max_tokens" type="int | None">
+Max tokens for generation.
+</ParamField>
+
+<ParamField path="ls_model_name" type="str">
+Name of the model.
+</ParamField>
+
+<ParamField path="ls_model_type" type="Literal['chat', 'llm']">
+Type of the model.
+
+Should be `'chat'` or `'llm'`.
+</ParamField>
+
+<ParamField path="ls_provider" type="str">
+Provider of the model.
+</ParamField>
+
+<ParamField path="ls_stop" type="list[str] | None">
+Stop words for generation.
+</ParamField>
+
+<ParamField path="ls_temperature" type="float | None">
+Temperature for generation.
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-base-_get_token_ids_default_method">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.base._get_token_ids_default_method(
+    text: str
+) -> list[int]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Encode the text into token IDs using the fallback GPT-2 tokenizer.
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-base-_get_verbosity">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.base._get_verbosity() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-base-get_tokenizer">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.base.get_tokenizer() -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get a GPT-2 tokenizer instance.
+
+This function is cached to avoid re-loading the tokenizer every time it is called.
+
+**Returns:** `Any`
+
+The GPT-2 tokenizer instance.
+
+**Raises:**
+
+- `ImportError`: If the transformers package is not installed.
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-base-LanguageModelInput">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.base.LanguageModelInput = PromptValue | str | Sequence[MessageLikeRepresentation]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Input to a language model.
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-base-LanguageModelLike">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.base.LanguageModelLike = Runnable[LanguageModelInput, LanguageModelOutput]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Input/output interface for a language model.
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-base-LanguageModelOutput">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.base.LanguageModelOutput = BaseMessage | str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Output from a language model.
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-base-LanguageModelOutputVar">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.base.LanguageModelOutputVar = TypeVar('LanguageModelOutputVar', AIMessage, str)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Type variable for the output of a language model.
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-base-_GPT2_TOKENIZER_WARNED">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.base._GPT2_TOKENIZER_WARNED = False
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-language_models-base-_HAS_TRANSFORMERS">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.base._HAS_TRANSFORMERS = True
+```
+
+</CodeBlock>
+</Anchor>
+

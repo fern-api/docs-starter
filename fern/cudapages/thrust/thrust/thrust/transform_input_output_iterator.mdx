@@ -1,0 +1,172 @@
+---
+title: thrust::transform_input_output_iterator
+description: "[`transform_input_output_iterator`](/library/api/thrust::transform_input_output_iterator) is a special kind of iterator which applies transform functions when reading from or writing to dereferenced values."
+---
+
+`transform_input_output_iterator` is a special kind of iterator which applies transform functions when reading from or writing to dereferenced values.
+
+This iterator is useful for algorithms that operate on a type that needs to be serialized/deserialized from values in another iterator, avoiding the need to materialize intermediate results in memory. This also enables the transform functions to be fused with the operations that read and write to the `transform_input_output_iterator`.
+
+The following code snippet demonstrates how to create a `transform_input_output_iterator` which performs different transformations when reading from and writing to the iterator.
+
+```cpp showLineNumbers={false}
+#include <thrust/transform_input_output_iterator.h>
+```
+
+**See also:**
+make_transform_input_output_iterator
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <thrust/iterator/transform_input_output_iterator.h>
+#include <thrust/device_vector.h>
+
+ int main()
+ {
+   const size_t size = 4;
+   thrust::device_vector<float> v(size);
+
+   // Write 1.0f, 2.0f, 3.0f, 4.0f to vector
+   thrust::sequence(v.begin(), v.end(), 1);
+
+   // Iterator that returns negated values and writes squared values
+   auto iter = thrust::make_transform_input_output_iterator(v.begin(),
+       ::cuda::std::negate<float>{}, thrust::square<float>{});
+
+   // Iterator negates values when reading
+   std::cout << iter[0] << " ";  // -1.0f;
+   std::cout << iter[1] << " ";  // -2.0f;
+   std::cout << iter[2] << " ";  // -3.0f;
+   std::cout << iter[3] << "\n"; // -4.0f;
+
+   // Write 1.0f, 2.0f, 3.0f, 4.0f to iterator
+   thrust::sequence(iter, iter + size, 1);
+
+   // Values were squared before writing to vector
+   std::cout << v[0] << " ";  // 1.0f;
+   std::cout << v[1] << " ";  // 4.0f;
+   std::cout << v[2] << " ";  // 9.0f;
+   std::cout << v[3] << "\n"; // 16.0f;
+
+ }
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="InputFunction" type="typename">
+</ParamField>
+
+<ParamField path="OutputFunction" type="typename">
+</ParamField>
+
+<ParamField path="Iterator" type="typename">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `thrust::iterator_adaptor< transform_input_output_iterator< InputFunction, OutputFunction, Iterator >, Iterator, invoke_result_t< InputFunction, iterator_value_type >, use_default, use_default, transform_input_output_iterator_proxy< InputFunction, OutputFunction, Iterator > >` (public)
+
+---
+
+## Constructors
+
+### transform_input_output_iterator
+
+<Tabs>
+<Tab title="Default">
+
+<CodeBlock links={{"transform_input_output_iterator": "/library/api/thrust::transform_input_output_iterator"}}>
+```cpp showLineNumbers={false}
+thrust::transform_input_output_iterator<InputFunction, OutputFunction, Iterator>::transform_input_output_iterator() = default
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="From iterator range">
+
+<Badge intent="note" minimal>inline</Badge>
+
+This constructor takes as argument a `Iterator` an `InputFunction` and an `OutputFunction` and copies them to a new `transform_input_output_iterator`.
+
+<CodeBlock links={{"transform_input_output_iterator": "/library/api/thrust::transform_input_output_iterator"}}>
+```cpp showLineNumbers={false}
+thrust::transform_input_output_iterator<InputFunction, OutputFunction, Iterator>::transform_input_output_iterator(
+    Iterator const &io,
+    InputFunction input_function,
+    OutputFunction output_function
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="io" type="Iterator const &">
+An `Iterator` pointing to where the input to `InputFunction` will be read from and the result of `OutputFunction` will be written to
+</ParamField>
+
+<ParamField path="input_function" type="InputFunction">
+An `InputFunction` to be executed on values read from the iterator
+</ParamField>
+
+<ParamField path="output_function" type="OutputFunction">
+An `OutputFunction` to be executed on values written to the iterator
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### base <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"transform_input_output_iterator": "/library/api/thrust::transform_input_output_iterator", "iterator_adaptor": "/library/api/thrust::iterator_adaptor"}}>
+```cpp showLineNumbers={false}
+Iterator const & thrust::iterator_adaptor<transform_input_output_iterator<InputFunction, OutputFunction, Iterator>, Iterator, invoke_result_t<InputFunction, iterator_value_type>, use_default, use_default, transform_input_output_iterator_proxy<InputFunction, OutputFunction, Iterator>, use_default>::base() const
+```
+</CodeBlock>
+
+**Returns:** A `const` reference to the `Base` iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) adapts.
+
+### base_reference <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+<CodeBlock links={{"transform_input_output_iterator": "/library/api/thrust::transform_input_output_iterator", "iterator_adaptor": "/library/api/thrust::iterator_adaptor"}}>
+```cpp showLineNumbers={false}
+Iterator & thrust::iterator_adaptor<transform_input_output_iterator<InputFunction, OutputFunction, Iterator>, Iterator, invoke_result_t<InputFunction, iterator_value_type>, use_default, use_default, transform_input_output_iterator_proxy<InputFunction, OutputFunction, Iterator>, use_default>::base_reference()
+```
+</CodeBlock>
+
+**Returns:** A mutable reference to the `Base` iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) adapts.
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"transform_input_output_iterator": "/library/api/thrust::transform_input_output_iterator", "iterator_adaptor": "/library/api/thrust::iterator_adaptor"}}>
+```cpp showLineNumbers={false}
+Iterator const & thrust::iterator_adaptor<transform_input_output_iterator<InputFunction, OutputFunction, Iterator>, Iterator, invoke_result_t<InputFunction, iterator_value_type>, use_default, use_default, transform_input_output_iterator_proxy<InputFunction, OutputFunction, Iterator>, use_default>::base_reference() const
+```
+</CodeBlock>
+
+**Returns:** A `const` reference to the `Base` iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) adapts.
+
+</Tab>
+</Tabs>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `base_type` | `Iterator` | The type of iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor)`'s` `adapts`. |

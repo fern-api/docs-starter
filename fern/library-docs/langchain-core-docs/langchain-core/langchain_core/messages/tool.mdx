@@ -1,0 +1,495 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/messages/tool
+title: langchain_core.messages.tool
+---
+
+Messages for tools.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`ToolCall`](#langchain_core-messages-tool-ToolCall) | Represents an AI's request to call a tool. |
+| [`ToolCallChunk`](#langchain_core-messages-tool-ToolCallChunk) | A chunk of a tool call (yielded when streaming). |
+| [`ToolMessage`](#langchain_core-messages-tool-ToolMessage) | Message for passing the result of executing a tool back to a model. |
+| [`ToolMessageChunk`](#langchain_core-messages-tool-ToolMessageChunk) | Tool Message chunk. |
+| [`ToolOutputMixin`](#langchain_core-messages-tool-ToolOutputMixin) | Mixin for objects that tools can return directly. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_merge_status`](#langchain_core-messages-tool-_merge_status) | - |
+| [`default_tool_chunk_parser`](#langchain_core-messages-tool-default_tool_chunk_parser) | Best-effort parsing of tool chunks. |
+| [`default_tool_parser`](#langchain_core-messages-tool-default_tool_parser) | Best-effort parsing of tools. |
+| [`invalid_tool_call`](#langchain_core-messages-tool-invalid_tool_call) | Create an invalid tool call. |
+| [`tool_call`](#langchain_core-messages-tool-tool_call) | Create a tool call. |
+| [`tool_call_chunk`](#langchain_core-messages-tool-tool_call_chunk) | Create a tool call chunk. |
+
+### API
+
+<Anchor id="langchain_core-messages-tool-ToolCall">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.messages.tool.ToolCall
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Represents an AI's request to call a tool.
+
+!!! note "Factory function"
+
+    `tool_call` may also be used as a factory to create a `ToolCall`. Benefits
+    include:
+
+    * Required arguments strictly validated at creation time
+
+<ParamField path="args" type="dict[str, Any]">
+The arguments to the tool call as a dictionary.
+</ParamField>
+
+<ParamField path="id" type="str | None">
+An identifier associated with the tool call.
+
+An identifier is needed to associate a tool call request with a tool
+call result in events when multiple concurrent tool calls are made.
+</ParamField>
+
+<ParamField path="name" type="str">
+The name of the tool to be called.
+</ParamField>
+
+<ParamField path="type" type="NotRequired[Literal['tool_call']]">
+Used for discrimination.
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-messages-tool-ToolCallChunk">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.messages.tool.ToolCallChunk
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+A chunk of a tool call (yielded when streaming).
+
+When merging `ToolCallChunk` objects (e.g., via `AIMessageChunk.__add__`), all
+string attributes are concatenated. Chunks are only merged if their values of
+`index` are equal and not `None`.
+
+Example:
+<CodeBlock showLineNumbers={false}>
+
+```python
+left_chunks = [ToolCallChunk(name="foo", args='{"a":', index=0)]
+right_chunks = [ToolCallChunk(name=None, args="1}", index=0)]
+
+(
+    AIMessageChunk(content="", tool_call_chunks=left_chunks)
+    + AIMessageChunk(content="", tool_call_chunks=right_chunks)
+).tool_call_chunks == [ToolCallChunk(name="foo", args='{"a":1}', index=0)]
+```
+
+</CodeBlock>
+
+<ParamField path="args" type="str | None">
+The arguments to the tool call as a JSON-parseable string.
+</ParamField>
+
+<ParamField path="id" type="str | None">
+An identifier associated with the tool call.
+
+An identifier is needed to associate a tool call request with a tool
+call result in events when multiple concurrent tool calls are made.
+</ParamField>
+
+<ParamField path="index" type="int | None">
+The index of the tool call in a sequence.
+
+Used for merging chunks.
+</ParamField>
+
+<ParamField path="name" type="str | None">
+The name of the tool to be called.
+</ParamField>
+
+<ParamField path="type" type="NotRequired[Literal['tool_call_chunk']]">
+Used for discrimination.
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-messages-tool-ToolMessage">
+
+<CodeBlock links={{"langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.messages.tool.ToolMessage(
+    content: str | list[str | dict] | None = None,
+    content_blocks: list[langchain_core.messages.content.ContentBlock] | None = None,
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseMessage](/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage), [ToolOutputMixin](#langchain_core-messages-tool-ToolOutputMixin)
+
+Message for passing the result of executing a tool back to a model.
+
+`ToolMessage` objects contain the result of a tool invocation. Typically, the result
+is encoded inside the `content` field.
+
+`tool_call_id` is used to associate the tool call request with the tool call
+response. Useful in situations where a chat model is able to request multiple tool
+calls in parallel.
+
+
+<ParamField path="additional_kwargs" type="dict = Field(default_factory=dict, repr=False)">
+Currently inherited from `BaseMessage`, but not used.
+</ParamField>
+
+<ParamField path="artifact" type="Any = None">
+Artifact of the Tool execution which is not meant to be sent to the model.
+
+Should only be specified if it is different from the message content, e.g. if only
+a subset of the full tool output is being passed as message content but the full
+output is needed in other parts of the code.
+</ParamField>
+
+<ParamField path="response_metadata" type="dict = Field(default_factory=dict, repr=False)">
+Currently inherited from `BaseMessage`, but not used.
+</ParamField>
+
+<ParamField path="status" type="Literal['success', 'error'] = 'success'">
+Status of the tool invocation.
+</ParamField>
+
+<ParamField path="tool_call_id" type="str">
+Tool call that this message is responding to.
+</ParamField>
+
+<ParamField path="type" type="Literal['tool'] = 'tool'">
+The type of the message (used for serialization).
+</ParamField>
+<Anchor id="langchain_core-messages-tool-ToolMessage-coerce_args">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.tool.ToolMessage.coerce_args(
+    values: dict
+) -> dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Coerce the model arguments to the correct types.
+
+**Parameters:**
+
+<ParamField path="values" type="dict">
+The model arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-messages-tool-ToolMessageChunk">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.messages.tool.ToolMessageChunk()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [ToolMessage](#langchain_core-messages-tool-ToolMessage), [BaseMessageChunk](/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessageChunk)
+
+Tool Message chunk.
+
+
+<ParamField path="type" type="Literal['ToolMessageChunk'] = 'ToolMessageChunk'">
+</ParamField>
+<Anchor id="langchain_core-messages-tool-ToolMessageChunk-__add__">
+
+<CodeBlock links={{"langchain_core.messages.base.BaseMessageChunk":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessageChunk"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.tool.ToolMessageChunk.__add__(
+    other: typing.Any
+) -> langchain_core.messages.base.BaseMessageChunk
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-messages-tool-ToolOutputMixin">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.messages.tool.ToolOutputMixin()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Mixin for objects that tools can return directly.
+
+If a custom BaseTool is invoked with a `ToolCall` and the output of custom code is
+not an instance of `ToolOutputMixin`, the output will automatically be coerced to
+a string and wrapped in a `ToolMessage`.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-tool-_merge_status">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.tool._merge_status(
+    left: typing.Literal['success', 'error'],
+    right: typing.Literal['success', 'error']
+) -> typing.Literal['success', 'error']
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-tool-default_tool_chunk_parser">
+
+<CodeBlock links={{"langchain_core.messages.tool.ToolCallChunk":"#langchain_core-messages-tool-ToolCallChunk"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.tool.default_tool_chunk_parser(
+    raw_tool_calls: list[dict]
+) -> list[langchain_core.messages.tool.ToolCallChunk]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Best-effort parsing of tool chunks.
+
+**Parameters:**
+
+<ParamField path="raw_tool_calls" type="list[dict]">
+List of raw tool call dicts to parse.
+</ParamField>
+
+**Returns:** `list[ToolCallChunk]`
+
+List of parsed ToolCallChunk objects.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-tool-default_tool_parser">
+
+<CodeBlock links={{"langchain_core.messages.tool.ToolCall":"#langchain_core-messages-tool-ToolCall","langchain_core.messages.content.InvalidToolCall":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-InvalidToolCall"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.tool.default_tool_parser(
+    raw_tool_calls: list[dict]
+) -> tuple[list[langchain_core.messages.tool.ToolCall], list[langchain_core.messages.content.InvalidToolCall]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Best-effort parsing of tools.
+
+**Parameters:**
+
+<ParamField path="raw_tool_calls" type="list[dict]">
+List of raw tool call dicts to parse.
+</ParamField>
+
+**Returns:** `tuple[list[ToolCall], list[InvalidToolCall]]`
+
+A list of tool calls and invalid tool calls.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-tool-invalid_tool_call">
+
+<CodeBlock links={{"langchain_core.messages.content.InvalidToolCall":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-InvalidToolCall"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.tool.invalid_tool_call(
+    name: str | None = None,
+    args: str | None = None,
+    id: str | None = None,
+    error: str | None = None
+) -> langchain_core.messages.content.InvalidToolCall
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create an invalid tool call.
+
+**Parameters:**
+
+<ParamField path="name" type="str | None" default="None">
+The name of the tool to be called.
+</ParamField>
+
+<ParamField path="args" type="str | None" default="None">
+The arguments to the tool call as a JSON string.
+</ParamField>
+
+<ParamField path="id" type="str | None" default="None">
+An identifier associated with the tool call.
+</ParamField>
+
+<ParamField path="error" type="str | None" default="None">
+An error message associated with the tool call.
+</ParamField>
+
+**Returns:** `InvalidToolCall`
+
+The created invalid tool call.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-tool-tool_call">
+
+<CodeBlock links={{"langchain_core.messages.tool.ToolCall":"#langchain_core-messages-tool-ToolCall"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.tool.tool_call(
+    name: str,
+    args: dict[str, typing.Any],
+    id: str | None
+) -> langchain_core.messages.tool.ToolCall
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a tool call.
+
+**Parameters:**
+
+<ParamField path="name" type="str">
+The name of the tool to be called.
+</ParamField>
+
+<ParamField path="args" type="dict[str, Any]">
+The arguments to the tool call as a dictionary.
+</ParamField>
+
+<ParamField path="id" type="str | None">
+An identifier associated with the tool call.
+</ParamField>
+
+**Returns:** `ToolCall`
+
+The created tool call.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-tool-tool_call_chunk">
+
+<CodeBlock links={{"langchain_core.messages.tool.ToolCallChunk":"#langchain_core-messages-tool-ToolCallChunk"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.tool.tool_call_chunk(
+    name: str | None = None,
+    args: str | None = None,
+    id: str | None = None,
+    index: int | None = None
+) -> langchain_core.messages.tool.ToolCallChunk
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a tool call chunk.
+
+**Parameters:**
+
+<ParamField path="name" type="str | None" default="None">
+The name of the tool to be called.
+</ParamField>
+
+<ParamField path="args" type="str | None" default="None">
+The arguments to the tool call as a JSON string.
+</ParamField>
+
+<ParamField path="id" type="str | None" default="None">
+An identifier associated with the tool call.
+</ParamField>
+
+<ParamField path="index" type="int | None" default="None">
+The index of the tool call in a sequence.
+</ParamField>
+
+**Returns:** `ToolCallChunk`
+
+The created tool call chunk.
+
+
+</Indent>

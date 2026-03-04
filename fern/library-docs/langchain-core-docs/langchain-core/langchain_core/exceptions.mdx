@@ -1,0 +1,204 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/exceptions
+title: langchain_core.exceptions
+---
+
+Custom **exceptions** for LangChain.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`ContextOverflowError`](#langchain_core-exceptions-ContextOverflowError) | Exception raised when input exceeds the model's context limit. |
+| [`ErrorCode`](#langchain_core-exceptions-ErrorCode) | Error codes. |
+| [`LangChainException`](#langchain_core-exceptions-LangChainException) | General LangChain exception. |
+| [`OutputParserException`](#langchain_core-exceptions-OutputParserException) | Exception that output parsers should raise to signify a parsing error. |
+| [`TracerException`](#langchain_core-exceptions-TracerException) | Base class for exceptions in tracers module. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`create_message`](#langchain_core-exceptions-create_message) | Create a message with a link to the LangChain troubleshooting guide. |
+
+### API
+
+<Anchor id="langchain_core-exceptions-ContextOverflowError">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.exceptions.ContextOverflowError()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Exception</Badge>
+
+**Bases:** [LangChainException](#langchain_core-exceptions-LangChainException)
+
+Exception raised when input exceeds the model's context limit.
+
+This exception is raised by chat models when the input tokens exceed
+the maximum context window supported by the model.
+
+
+</Indent>
+
+<Anchor id="langchain_core-exceptions-ErrorCode">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.exceptions.ErrorCode
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `enum.Enum`
+
+Error codes.
+
+<ParamField path="INVALID_PROMPT_INPUT" type="= 'INVALID_PROMPT_INPUT'">
+</ParamField>
+
+<ParamField path="INVALID_TOOL_RESULTS" type="= 'INVALID_TOOL_RESULTS'">
+</ParamField>
+
+<ParamField path="MESSAGE_COERCION_FAILURE" type="= 'MESSAGE_COERCION_FAILURE'">
+</ParamField>
+
+<ParamField path="MODEL_AUTHENTICATION" type="= 'MODEL_AUTHENTICATION'">
+</ParamField>
+
+<ParamField path="MODEL_NOT_FOUND" type="= 'MODEL_NOT_FOUND'">
+</ParamField>
+
+<ParamField path="MODEL_RATE_LIMIT" type="= 'MODEL_RATE_LIMIT'">
+</ParamField>
+
+<ParamField path="OUTPUT_PARSING_FAILURE" type="= 'OUTPUT_PARSING_FAILURE'">
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-exceptions-LangChainException">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.exceptions.LangChainException()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Exception</Badge>
+
+**Bases:** `Exception`
+
+General LangChain exception.
+
+
+</Indent>
+
+<Anchor id="langchain_core-exceptions-OutputParserException">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.exceptions.OutputParserException(
+    error: typing.Any,
+    observation: str | None = None,
+    llm_output: str | None = None,
+    send_to_llm: bool = False
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Exception</Badge>
+
+**Bases:** `ValueError`, [LangChainException](#langchain_core-exceptions-LangChainException)
+
+Exception that output parsers should raise to signify a parsing error.
+
+This exists to differentiate parsing errors from other code or execution errors
+that also may arise inside the output parser.
+
+`OutputParserException` will be available to catch and handle in ways to fix the
+parsing error, while other errors will be raised.
+
+
+</Indent>
+
+<Anchor id="langchain_core-exceptions-TracerException">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.exceptions.TracerException()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Exception</Badge>
+
+**Bases:** [LangChainException](#langchain_core-exceptions-LangChainException)
+
+Base class for exceptions in tracers module.
+
+
+</Indent>
+
+<Anchor id="langchain_core-exceptions-create_message">
+
+<CodeBlock links={{"langchain_core.exceptions.ErrorCode":"#langchain_core-exceptions-ErrorCode"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.exceptions.create_message(
+    message: str,
+    error_code: langchain_core.exceptions.ErrorCode
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a message with a link to the LangChain troubleshooting guide.
+
+**Parameters:**
+
+<ParamField path="message" type="str">
+The message to display.
+</ParamField>
+
+<ParamField path="error_code" type="ErrorCode">
+The error code to display.
+</ParamField>
+
+**Returns:** `str`
+
+The full message with the troubleshooting link.
+
+
+</Indent>

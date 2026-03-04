@@ -1,0 +1,81 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/chat_loaders
+title: langchain_core.chat_loaders
+---
+
+Chat loaders.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`BaseChatLoader`](#langchain_core-chat_loaders-BaseChatLoader) | Base class for chat loaders. |
+
+### API
+
+<Anchor id="langchain_core-chat_loaders-BaseChatLoader">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.chat_loaders.BaseChatLoader()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+Base class for chat loaders.
+
+
+<Anchor id="langchain_core-chat_loaders-BaseChatLoader-lazy_load">
+
+<CodeBlock links={{"langchain_core.chat_sessions.ChatSession":"/langchain-core/langchain_core/chat_sessions#langchain_core-chat_sessions-ChatSession"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.chat_loaders.BaseChatLoader.lazy_load() -> collections.abc.Iterator[langchain_core.chat_sessions.ChatSession]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Lazy load the chat sessions.
+
+**Returns:** `Iterator[ChatSession]`
+
+An iterator of chat sessions.
+
+
+</Indent>
+<Anchor id="langchain_core-chat_loaders-BaseChatLoader-load">
+
+<CodeBlock links={{"langchain_core.chat_sessions.ChatSession":"/langchain-core/langchain_core/chat_sessions#langchain_core-chat_sessions-ChatSession"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.chat_loaders.BaseChatLoader.load() -> list[langchain_core.chat_sessions.ChatSession]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Eagerly load the chat sessions into memory.
+
+**Returns:** `list[ChatSession]`
+
+A list of chat sessions.
+
+
+</Indent>
+</Indent>

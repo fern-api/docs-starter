@@ -1,0 +1,29 @@
+---
+title: cub::BlockRadixRankEmptyCallback
+description: "Empty callback implementation."
+---
+
+Empty callback implementation.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="BINS_PER_THREAD" type="int">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Methods
+
+### operator() <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"BlockRadixRankEmptyCallback": "/library/api/cub::BlockRadixRankEmptyCallback"}}>
+```cpp showLineNumbers={false}
+void cub::BlockRadixRankEmptyCallback<BINS_PER_THREAD>::operator()(
+    int (&bins)[BINS_PER_THREAD]
+)
+```
+</CodeBlock>

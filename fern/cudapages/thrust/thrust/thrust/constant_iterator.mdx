@@ -1,0 +1,217 @@
+---
+title: thrust::constant_iterator
+description: "[`constant_iterator`](/library/api/thrust::constant_iterator) is an iterator which represents a pointer into a range of constant values."
+---
+
+`constant_iterator` is an iterator which represents a pointer into a range of constant values.
+
+This iterator is useful for creating a range filled with the same value without explicitly storing it in memory. Using `constant_iterator` saves both memory capacity and bandwidth.
+
+The following code snippet demonstrates how to create a `constant_iterator` whose `value_type` is `int` and whose value is `10`.
+
+This next example demonstrates how to use a `constant_iterator` with the `thrust::transform` function to increment all elements of a sequence by the same value. We will create a temporary `constant_iterator` with the function `make_constant_iterator` function in order to avoid explicitly specifying its type:
+
+```cpp showLineNumbers={false}
+#include <thrust/constant_iterator.h>
+```
+
+**See also:**
+make_constant_iterator
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <thrust/iterator/constant_iterator.h>
+
+thrust::constant_iterator<int> iter(10);
+
+*iter;    // returns 10
+iter[0];  // returns 10
+iter[1];  // returns 10
+iter[13]; // returns 10
+
+// and so on...
+```
+
+```cpp showLineNumbers={false}
+#include <thrust/iterator/constant_iterator.h>
+#include <thrust/transform.h>
+#include <thrust/functional.h>
+#include <thrust/device_vector.h>
+
+int main()
+{
+  thrust::device_vector<int> data{3, 7, 2, 5};
+
+  // add 10 to all values in data
+  thrust::transform(data.begin(), data.end(),
+                    thrust::make_constant_iterator(10),
+                    data.begin(),
+                    ::cuda::std::plus<int>());
+
+  // data is now [13, 17, 12, 15]
+
+  return 0;
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="Value" type="typename">
+</ParamField>
+
+<ParamField path="Incrementable" type="typename" default="use_default">
+</ParamField>
+
+<ParamField path="System" type="typename" default="use_default">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `thrust::iterator_adaptor< constant_iterator< Value, use_default, use_default >, base_iterator, Value, iterator_system_t< base_iterator >, iterator_traversal_t< base_iterator >, Value >` (public)
+
+---
+
+## Constructors
+
+### constant_iterator
+
+<Tabs>
+<Tab title="Default">
+
+Default constructor initializes this `constant_iterator``'s` constant using its default constructor.
+
+<CodeBlock links={{"constant_iterator": "/library/api/thrust::constant_iterator"}}>
+```cpp showLineNumbers={false}
+thrust::constant_iterator<Value, Incrementable, System>::constant_iterator() = default
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="From other constant_iterator const type">
+
+<Badge intent="note" minimal>inline</Badge>
+
+Copy constructor copies the value of another `constant_iterator` with related System type.
+
+<CodeBlock links={{"constant_iterator": "/library/api/thrust::constant_iterator"}}>
+```cpp showLineNumbers={false}
+template <class OtherSystem>
+thrust::constant_iterator<Value, Incrementable, System>::constant_iterator(
+    constant_iterator<Value, Incrementable, OtherSystem> const &rhs
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="rhs" type="constant_iterator<Value, Incrementable, OtherSystem> const &">
+The `constant_iterator` to copy.
+</ParamField>
+
+</Tab>
+<Tab title="Copy">
+
+<Badge intent="note" minimal>inline</Badge>
+
+This constructor receives a value to use as the constant value of this `constant_iterator` and an index specifying the location of this `constant_iterator` in a sequence.
+
+`v` The value of this `constant_iterator``'s` constant value. `i` The index of this `constant_iterator` in a sequence. Defaults to the value returned by `Incrementable's` null constructor. For example, when `Incrementable == int`, `0`.
+
+<CodeBlock links={{"constant_iterator": "/library/api/thrust::constant_iterator"}}>
+```cpp showLineNumbers={false}
+thrust::constant_iterator<Value, Incrementable, System>::constant_iterator(
+    value_type const &v,
+    incrementable const &i = incrementable()
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="From other value const">
+
+<Badge intent="note" minimal>inline</Badge>
+
+This constructor is templated to allow construction from a value type and incrementable type related this this `constant_iterator``'s` respective types.
+
+`v` The value of this `constant_iterator``'s` constant value. `i` The index of this `constant_iterator` in a sequence. Defaults to the value returned by `Incrementable's` null constructor. For example, when `Incrementable == int`, `0`.
+
+<CodeBlock links={{"constant_iterator": "/library/api/thrust::constant_iterator"}}>
+```cpp showLineNumbers={false}
+template <typename OtherValue, typename OtherIncrementable>
+thrust::constant_iterator<Value, Incrementable, System>::constant_iterator(
+    OtherValue const &v,
+    OtherIncrementable const &i = incrementable()
+)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### value <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+This method returns the value of this `constant_iterator``'s` constant value.
+
+<CodeBlock links={{"constant_iterator": "/library/api/thrust::constant_iterator"}}>
+```cpp showLineNumbers={false}
+Value const  & thrust::constant_iterator<Value, Incrementable, System>::value() const
+```
+</CodeBlock>
+
+**Returns:** A `const` reference to this `constant_iterator``'s` constant value.
+
+### base <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"constant_iterator": "/library/api/thrust::constant_iterator", "iterator_adaptor": "/library/api/thrust::iterator_adaptor"}}>
+```cpp showLineNumbers={false}
+Base const  & thrust::iterator_adaptor<Derived, Base, Value, System, Traversal, Reference, Difference>::base() const
+```
+</CodeBlock>
+
+**Returns:** A `const` reference to the `Base` iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) adapts.
+
+### base_reference <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+<CodeBlock links={{"constant_iterator": "/library/api/thrust::constant_iterator", "iterator_adaptor": "/library/api/thrust::iterator_adaptor"}}>
+```cpp showLineNumbers={false}
+Base & thrust::iterator_adaptor<Derived, Base, Value, System, Traversal, Reference, Difference>::base_reference()
+```
+</CodeBlock>
+
+**Returns:** A mutable reference to the `Base` iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) adapts.
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"constant_iterator": "/library/api/thrust::constant_iterator", "iterator_adaptor": "/library/api/thrust::iterator_adaptor"}}>
+```cpp showLineNumbers={false}
+Base const  & thrust::iterator_adaptor<Derived, Base, Value, System, Traversal, Reference, Difference>::base_reference() const
+```
+</CodeBlock>
+
+**Returns:** A `const` reference to the `Base` iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) adapts.
+
+</Tab>
+</Tabs>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `base_type` | `Base` | The type of iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor)`'s` `adapts`. |

@@ -1,0 +1,272 @@
+---
+title: "cuda::heterogeneous_iterator"
+description: ""
+---
+
+`heterogeneous_iterator` provides a type safe access over heterogeneous memory. Depending on whether the memory is tagged as host-accessible and / or device-accessible the iterator restricts memory access. All operations that do not require memory access are always available on host and device.
+
+```cpp showLineNumbers={false}
+#include <cuda/heterogeneous_iterator.h>
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="_CvTp" type="class">
+</ParamField>
+
+<ParamField path="_Properties..." type="class...">
+The properties that the `heterogeneous_iterator` is tagged with.
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `cuda::__heterogeneous_iterator_access< ::cuda::std::remove_const_t< _CvTp >, ::cuda::std::is_const_v< _CvTp > ? __is_heterogeneous_const_iter::__yes :__is_heterogeneous_const_iter::__no, ::cuda::mr::__memory_accessability_from_properties< _Properties... >::value >` (public)
+
+---
+
+## Constructors
+
+### heterogeneous_iterator
+
+<Tabs>
+<Tab title="Default">
+
+<CodeBlock links={{"heterogeneous_iterator": "/libcudacxx/api/cuda::heterogeneous_iterator"}}>
+```cpp showLineNumbers={false}
+cuda::heterogeneous_iterator<_CvTp, _Properties>::heterogeneous_iterator() = default
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Overload 2">
+
+<Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Construct a `heterogeneous_iterator` from a pointer to the underlying memory.
+
+<CodeBlock links={{"heterogeneous_iterator": "/libcudacxx/api/cuda::heterogeneous_iterator"}}>
+```cpp showLineNumbers={false}
+cuda::heterogeneous_iterator<_CvTp, _Properties>::heterogeneous_iterator(
+    pointer __ptr
+) noexcept
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Overload 3">
+
+<Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Constructs an immutable `heterogeneous_iterator` from a mutable one.
+
+<CodeBlock links={{"heterogeneous_iterator": "/libcudacxx/api/cuda::heterogeneous_iterator"}}>
+```cpp showLineNumbers={false}
+template <class _OtherTp, class _CvTp2>
+cuda::heterogeneous_iterator<_CvTp, _Properties>::heterogeneous_iterator(
+    heterogeneous_iterator<_OtherTp, _Properties...> __other
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__other" type="heterogeneous_iterator<_OtherTp, _Properties...>">
+The mutable `heterogeneous_iterator`
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### operator++ <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Pre-increment">
+
+Increment of a `heterogeneous_iterator`.
+
+<CodeBlock links={{"heterogeneous_iterator": "/libcudacxx/api/cuda::heterogeneous_iterator"}}>
+```cpp showLineNumbers={false}
+heterogeneous_iterator & cuda::heterogeneous_iterator<_CvTp, _Properties>::operator++() noexcept
+```
+</CodeBlock>
+
+**Returns:** The `heterogeneous_iterator` pointing to the next element
+
+</Tab>
+<Tab title="Post-increment">
+
+Post-increment of a `heterogeneous_iterator`.
+
+<CodeBlock links={{"heterogeneous_iterator": "/libcudacxx/api/cuda::heterogeneous_iterator"}}>
+```cpp showLineNumbers={false}
+heterogeneous_iterator cuda::heterogeneous_iterator<_CvTp, _Properties>::operator++(
+    int
+) noexcept
+```
+</CodeBlock>
+
+**Returns:** A copy of the `heterogeneous_iterator` pointing to the next element
+
+</Tab>
+</Tabs>
+
+### operator-- <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Pre-decrement">
+
+Decrement of a `heterogeneous_iterator`.
+
+<CodeBlock links={{"heterogeneous_iterator": "/libcudacxx/api/cuda::heterogeneous_iterator"}}>
+```cpp showLineNumbers={false}
+heterogeneous_iterator & cuda::heterogeneous_iterator<_CvTp, _Properties>::operator--() noexcept
+```
+</CodeBlock>
+
+**Returns:** The `heterogeneous_iterator` pointing to the previous element
+
+</Tab>
+<Tab title="Post-decrement">
+
+Post-decrement of a `heterogeneous_iterator`.
+
+<CodeBlock links={{"heterogeneous_iterator": "/libcudacxx/api/cuda::heterogeneous_iterator"}}>
+```cpp showLineNumbers={false}
+heterogeneous_iterator cuda::heterogeneous_iterator<_CvTp, _Properties>::operator--(
+    int
+) noexcept
+```
+</CodeBlock>
+
+**Returns:** A copy of the `heterogeneous_iterator` pointing to the previous element
+
+</Tab>
+</Tabs>
+
+### operator+= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Advance a `heterogeneous_iterator`.
+
+<CodeBlock links={{"heterogeneous_iterator": "/libcudacxx/api/cuda::heterogeneous_iterator"}}>
+```cpp showLineNumbers={false}
+heterogeneous_iterator & cuda::heterogeneous_iterator<_CvTp, _Properties>::operator+=(
+    const difference_type __count
+) noexcept
+```
+</CodeBlock>
+
+**Returns:** The `heterogeneous_iterator` advanced by `__count`
+
+**Parameters**
+
+<ParamField path="__count" type="const difference_type">
+The number of elements to advance.
+</ParamField>
+
+### operator+ <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Advance a `heterogeneous_iterator`.
+
+<CodeBlock links={{"heterogeneous_iterator": "/libcudacxx/api/cuda::heterogeneous_iterator"}}>
+```cpp showLineNumbers={false}
+heterogeneous_iterator cuda::heterogeneous_iterator<_CvTp, _Properties>::operator+(
+    const difference_type __count
+) const noexcept
+```
+</CodeBlock>
+
+**Returns:** A copy of this `heterogeneous_iterator` advanced by `__count`
+
+**Parameters**
+
+<ParamField path="__count" type="const difference_type">
+The number of elements to advance.
+</ParamField>
+
+### operator-= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Advance a `heterogeneous_iterator` by the negative value of `__count`.
+
+<CodeBlock links={{"heterogeneous_iterator": "/libcudacxx/api/cuda::heterogeneous_iterator"}}>
+```cpp showLineNumbers={false}
+heterogeneous_iterator & cuda::heterogeneous_iterator<_CvTp, _Properties>::operator-=(
+    const difference_type __count
+) noexcept
+```
+</CodeBlock>
+
+**Returns:** The `heterogeneous_iterator` advanced by the negative value of `__count`
+
+**Parameters**
+
+<ParamField path="__count" type="const difference_type">
+The number of elements to advance.
+</ParamField>
+
+### operator- <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<Tabs>
+<Tab title="Const">
+
+Advance a `heterogeneous_iterator` by the negative value of `__count`.
+
+<CodeBlock links={{"heterogeneous_iterator": "/libcudacxx/api/cuda::heterogeneous_iterator"}}>
+```cpp showLineNumbers={false}
+heterogeneous_iterator cuda::heterogeneous_iterator<_CvTp, _Properties>::operator-(
+    const difference_type __count
+) const noexcept
+```
+</CodeBlock>
+
+**Returns:** A copy of this `heterogeneous_iterator` advanced by the negative value of `__count`
+
+**Parameters**
+
+<ParamField path="__count" type="const difference_type">
+The number of elements to advance.
+</ParamField>
+
+</Tab>
+<Tab title="Const">
+
+Distance between two `heterogeneous_iterator`.
+
+<CodeBlock links={{"heterogeneous_iterator": "/libcudacxx/api/cuda::heterogeneous_iterator"}}>
+```cpp showLineNumbers={false}
+difference_type cuda::heterogeneous_iterator<_CvTp, _Properties>::operator-(
+    const heterogeneous_iterator &__other
+) const noexcept
+```
+</CodeBlock>
+
+**Returns:** The distance between the two elements the `heterogeneous_iterator` point to
+
+**Parameters**
+
+<ParamField path="__other" type="const heterogeneous_iterator &">
+The other `heterogeneous_iterator`.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `iterator_concept` | `::cuda::std::contiguous_iterator_tag` |
+| `iterator_category` | `::cuda::std::random_access_iterator_tag` |
+| `value_type` | `::cuda::std::remove_const_t< _CvTp >` |
+| `difference_type` | `::cuda::std::ptrdiff_t` |
+| `pointer` | `_CvTp *` |
+| `reference` | `_CvTp &` |

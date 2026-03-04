@@ -1,0 +1,21 @@
+---
+title: cub::ReduceByKeyScanTileState
+description: "Tile status interface for reduction by key."
+---
+
+Tile status interface for reduction by key.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="ValueT" type="typename">
+</ParamField>
+
+<ParamField path="KeyT" type="typename">
+</ParamField>
+
+<ParamField path="SingleWord" type="bool" default="(detail::is_primitive<ValueT>::value || ::cuda::std::is_trivially_copyable_v<ValueT>) && (sizeof(ValueT) + sizeof(KeyT) < detail::largest_atomic_message_size)">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>

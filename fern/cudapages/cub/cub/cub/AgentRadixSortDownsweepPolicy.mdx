@@ -1,0 +1,61 @@
+---
+title: cub::AgentRadixSortDownsweepPolicy
+description: "Parameterizable tuning policy type for AgentRadixSortDownsweep."
+---
+
+Parameterizable tuning policy type for AgentRadixSortDownsweep.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="NominalBlockThreads4B" type="int">
+Threads per thread block
+</ParamField>
+
+<ParamField path="NominalItemsPerThread4B" type="int">
+Items per thread (per tile of input)
+</ParamField>
+
+<ParamField path="ComputeT" type="typename">
+Dominant compute type
+</ParamField>
+
+<ParamField path="LoadAlgorithm" type="BlockLoadAlgorithm">
+The [BlockLoad](/library/api/cub::_block_load) algorithm to use
+</ParamField>
+
+<ParamField path="LoadModifier" type="CacheLoadModifier">
+Cache load modifier for reading keys (and values)
+</ParamField>
+
+<ParamField path="RankAlgorithm" type="RadixRankAlgorithm">
+The radix ranking algorithm to use
+</ParamField>
+
+<ParamField path="ScanAlgorithm" type="BlockScanAlgorithm">
+The block scan algorithm to use
+</ParamField>
+
+<ParamField path="RadixBits" type="int">
+The number of radix bits, i.e., log2(bins)
+</ParamField>
+
+<ParamField path="ScalingType" type="typename" default="detail::RegBoundScaling<NominalBlockThreads4B, NominalItemsPerThread4B, ComputeT>">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `detail::RegBoundScaling< NominalBlockThreads4B, NominalItemsPerThread4B, ComputeT >` (public)
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `RADIX_BITS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | The number of radix bits, i.e., log2(bins). |
+| `LOAD_ALGORITHM` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `BlockLoadAlgorithm` | The [BlockLoad](/library/api/cub::_block_load) algorithm to use. |
+| `LOAD_MODIFIER` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `CacheLoadModifier` | Cache load modifier for reading keys (and values). |
+| `RANK_ALGORITHM` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `RadixRankAlgorithm` | The radix ranking algorithm to use. |
+| `SCAN_ALGORITHM` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `BlockScanAlgorithm` | The [BlockScan](/library/api/cub::_block_scan) algorithm to use. |

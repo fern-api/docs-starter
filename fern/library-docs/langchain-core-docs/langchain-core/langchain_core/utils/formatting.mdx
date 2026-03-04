@@ -1,0 +1,145 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/utils/formatting
+title: langchain_core.utils.formatting
+---
+
+Utilities for formatting strings.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`StrictFormatter`](#langchain_core-utils-formatting-StrictFormatter) | A string formatter that enforces keyword-only argument substitution. |
+
+### Data
+
+[`formatter`](#langchain_core-utils-formatting-formatter)
+
+### API
+
+<Anchor id="langchain_core-utils-formatting-StrictFormatter">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.utils.formatting.StrictFormatter()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `Formatter`
+
+A string formatter that enforces keyword-only argument substitution.
+
+This formatter extends Python's built-in `string.Formatter` to provide stricter
+validation for prompt template formatting. It ensures that all variable
+substitutions use keyword arguments rather than positional arguments, which improves
+clarity and reduces errors when formatting prompt templates.
+
+
+<Anchor id="langchain_core-utils-formatting-StrictFormatter-validate_input_variables">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.formatting.StrictFormatter.validate_input_variables(
+    format_string: str,
+    input_variables: list[str]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Validate that input variables match the placeholders in a format string.
+
+Checks that the provided input variables can be used to format the given string
+without missing or extra keys. This is useful for validating prompt templates
+before runtime.
+
+**Parameters:**
+
+<ParamField path="format_string" type="str">
+A string containing replacement fields to validate
+against (e.g., `'Hello, &#123;name&#125;!'`).
+</ParamField>
+
+<ParamField path="input_variables" type="list[str]">
+List of variable names expected to fill the
+replacement fields.
+</ParamField>
+
+**Raises:**
+
+- `KeyError`: If the format string contains placeholders not present
+in input_variables.
+
+
+</Indent>
+<Anchor id="langchain_core-utils-formatting-StrictFormatter-vformat">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.formatting.StrictFormatter.vformat(
+    format_string: str,
+    args: collections.abc.Sequence,
+    kwargs: collections.abc.Mapping[str, typing.Any]
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format a string using only keyword arguments.
+
+Overrides the base `vformat` to reject positional arguments, ensuring all
+substitutions are explicit and named.
+
+**Parameters:**
+
+<ParamField path="format_string" type="str">
+A string containing replacement fields (e.g., `'&#123;name&#125;'`).
+</ParamField>
+
+<ParamField path="args" type="Sequence">
+Positional arguments (must be empty).
+</ParamField>
+
+<ParamField path="kwargs" type="Mapping[str, Any]">
+Keyword arguments for substitution into the format string.
+</ParamField>
+
+**Returns:** `str`
+
+The formatted string with all replacement fields substituted.
+
+**Raises:**
+
+- `ValueError`: If any positional arguments are provided.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-utils-formatting-formatter">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.formatting.formatter = StrictFormatter()
+```
+
+</CodeBlock>
+</Anchor>
+

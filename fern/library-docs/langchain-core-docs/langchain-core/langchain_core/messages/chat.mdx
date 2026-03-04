@@ -1,0 +1,85 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/messages/chat
+title: langchain_core.messages.chat
+---
+
+Chat Message.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`ChatMessage`](#langchain_core-messages-chat-ChatMessage) | Message that can be assigned an arbitrary speaker (i.e. role). |
+| [`ChatMessageChunk`](#langchain_core-messages-chat-ChatMessageChunk) | Chat Message chunk. |
+
+### API
+
+<Anchor id="langchain_core-messages-chat-ChatMessage">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.messages.chat.ChatMessage()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseMessage](/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage)
+
+Message that can be assigned an arbitrary speaker (i.e. role).
+
+
+<ParamField path="role" type="str">
+The speaker / role of the Message.
+</ParamField>
+
+<ParamField path="type" type="Literal['chat'] = 'chat'">
+The type of the message (used during serialization).
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-messages-chat-ChatMessageChunk">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.messages.chat.ChatMessageChunk()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [ChatMessage](#langchain_core-messages-chat-ChatMessage), [BaseMessageChunk](/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessageChunk)
+
+Chat Message chunk.
+
+
+<ParamField path="type" type="Literal['ChatMessageChunk'] = 'ChatMessageChunk'">
+The type of the message (used during serialization).
+</ParamField>
+<Anchor id="langchain_core-messages-chat-ChatMessageChunk-__add__">
+
+<CodeBlock links={{"langchain_core.messages.base.BaseMessageChunk":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessageChunk"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.chat.ChatMessageChunk.__add__(
+    other: typing.Any
+) -> langchain_core.messages.base.BaseMessageChunk
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>

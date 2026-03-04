@@ -1,0 +1,307 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/generation/sglang/sglang_copied_utils
+title: nemo_rl.models.generation.sglang.sglang_copied_utils
+---
+
+Standalone utility functions copied from the SGLang project.
+
+This module contains utility functions that were originally part of the SGLang
+repository (https://github.com/sgl-project/sglang). They have been copied here
+to avoid requiring sglang as a runtime dependency for weight refitting functionality.
+
+IMPORTANT: This module should NOT contain any imports from the sglang package.
+All functions are standalone and self-contained.
+
+Each function includes a permalink to its original source in the SGLang repository.
+These functions were copied from sglang version 0.5.2.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`MultiprocessingSerializer`](#nemo_rl-models-generation-sglang-sglang_copied_utils-MultiprocessingSerializer) | Serialize/deserialize Python objects using ForkingPickler for IPC. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_device_from_maybe_uuid`](#nemo_rl-models-generation-sglang-sglang_copied_utils-_device_from_maybe_uuid) | Convert a device UUID string or index to a device index. |
+| [`_device_to_uuid`](#nemo_rl-models-generation-sglang-sglang_copied_utils-_device_to_uuid) | Convert a device index to its UUID string. |
+| [`_modify_tuple`](#nemo_rl-models-generation-sglang-sglang_copied_utils-_modify_tuple) | Create a new tuple with one element modified by a function. |
+| [`_rebuild_cuda_tensor_modified`](#nemo_rl-models-generation-sglang-sglang_copied_utils-_rebuild_cuda_tensor_modified) | Modified rebuild_cuda_tensor that accepts GPU UUID or device index. |
+| [`_reduce_tensor_modified`](#nemo_rl-models-generation-sglang-sglang_copied_utils-_reduce_tensor_modified) | Modified reduce_tensor that stores GPU UUID instead of device index. |
+| [`monkey_patch_torch_reductions`](#nemo_rl-models-generation-sglang-sglang_copied_utils-monkey_patch_torch_reductions) | Monkey patch torch multiprocessing reductions to use GPU UUIDs. |
+
+### Data
+
+[`_REDUCE_TENSOR_ARG_DEVICE_INDEX`](#nemo_rl-models-generation-sglang-sglang_copied_utils-_REDUCE_TENSOR_ARG_DEVICE_INDEX)
+
+### API
+
+<Anchor id="nemo_rl-models-generation-sglang-sglang_copied_utils-MultiprocessingSerializer">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.generation.sglang.sglang_copied_utils.MultiprocessingSerializer()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Serialize/deserialize Python objects using ForkingPickler for IPC.
+
+This class enables serialization of objects (including CUDA tensors with IPC
+handles) for transfer between processes via HTTP or other mechanisms.
+
+Original source (sglang v0.5.2):
+https://github.com/sgl-project/sglang/blob/v0.5.2/python/sglang/srt/utils.py#L589-L623
+
+
+<Anchor id="nemo_rl-models-generation-sglang-sglang_copied_utils-MultiprocessingSerializer-deserialize">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_copied_utils.MultiprocessingSerializer.deserialize(
+    data
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+Deserialize a previously serialized object.
+
+**Parameters:**
+
+<ParamField path="data" type="bytes or str">
+The serialized data, optionally base64-encoded.
+</ParamField>
+
+**Returns:**
+
+The deserialized Python object.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-sglang-sglang_copied_utils-MultiprocessingSerializer-serialize">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_copied_utils.MultiprocessingSerializer.serialize(
+    obj,
+    output_str: bool = False
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+Serialize a Python object using ForkingPickler.
+
+**Parameters:**
+
+<ParamField path="obj">
+The object to serialize.
+</ParamField>
+
+<ParamField path="output_str" type="bool" default="False">
+If True, return a base64-encoded string instead of raw bytes.
+</ParamField>
+
+**Returns:**
+
+bytes or str: The serialized object.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-models-generation-sglang-sglang_copied_utils-_device_from_maybe_uuid">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_copied_utils._device_from_maybe_uuid(
+    device_maybe_uuid: typing.Union[int, str]
+) -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert a device UUID string or index to a device index.
+
+Original source (sglang v0.5.2):
+https://github.com/sgl-project/sglang/blob/v0.5.2/python/sglang/srt/patch_torch.py#L55-L65
+
+**Parameters:**
+
+<ParamField path="device_maybe_uuid" type="Union[int, str]">
+Either an integer device index or a UUID string.
+</ParamField>
+
+**Returns:** `int`
+
+The integer device index.
+
+**Raises:**
+
+- `Exception`: If the UUID doesn't match any available device.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-generation-sglang-sglang_copied_utils-_device_to_uuid">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_copied_utils._device_to_uuid(
+    device: int
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert a device index to its UUID string.
+
+Original source (sglang v0.5.2):
+https://github.com/sgl-project/sglang/blob/v0.5.2/python/sglang/srt/patch_torch.py#L51-L52
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-generation-sglang-sglang_copied_utils-_modify_tuple">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_copied_utils._modify_tuple(
+    t,
+    index: int,
+    modifier: typing.Callable
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a new tuple with one element modified by a function.
+
+Original source (sglang v0.5.2):
+https://github.com/sgl-project/sglang/blob/v0.5.2/python/sglang/srt/patch_torch.py#L68-L69
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-generation-sglang-sglang_copied_utils-_rebuild_cuda_tensor_modified">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_copied_utils._rebuild_cuda_tensor_modified(
+    args = ()
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Modified rebuild_cuda_tensor that accepts GPU UUID or device index.
+
+Original source (sglang v0.5.2):
+https://github.com/sgl-project/sglang/blob/v0.5.2/python/sglang/srt/patch_torch.py#L46-L48
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-generation-sglang-sglang_copied_utils-_reduce_tensor_modified">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_copied_utils._reduce_tensor_modified(
+    args = (),
+    kwargs = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Modified reduce_tensor that stores GPU UUID instead of device index.
+
+Original source (sglang v0.5.2):
+https://github.com/sgl-project/sglang/blob/v0.5.2/python/sglang/srt/patch_torch.py#L39-L43
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-generation-sglang-sglang_copied_utils-monkey_patch_torch_reductions">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_copied_utils.monkey_patch_torch_reductions()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Monkey patch torch multiprocessing reductions to use GPU UUIDs.
+
+This patch modifies PyTorch's CUDA tensor IPC mechanism to use GPU UUIDs
+instead of device indices. This enables proper weight transfer between
+processes that may have different CUDA_VISIBLE_DEVICES configurations.
+
+The patch is idempotent - calling it multiple times is safe.
+
+This is a workaround before PyTorch https://github.com/pytorch/pytorch/pull/149248
+is merged and released.
+
+Original source (sglang v0.5.2):
+https://github.com/sgl-project/sglang/blob/v0.5.2/python/sglang/srt/patch_torch.py#L20-L33
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-generation-sglang-sglang_copied_utils-_REDUCE_TENSOR_ARG_DEVICE_INDEX">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.sglang.sglang_copied_utils._REDUCE_TENSOR_ARG_DEVICE_INDEX = 6
+```
+
+</CodeBlock>
+</Anchor>
+

@@ -1,0 +1,777 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/runnables/config
+title: langchain_core.runnables.config
+---
+
+Configuration utilities for `Runnable` objects.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`ContextThreadPoolExecutor`](#langchain_core-runnables-config-ContextThreadPoolExecutor) | ThreadPoolExecutor that copies the context to the child thread. |
+| [`EmptyDict`](#langchain_core-runnables-config-EmptyDict) | Empty dict type. |
+| [`RunnableConfig`](#langchain_core-runnables-config-RunnableConfig) | Configuration for a `Runnable`. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_set_config_context`](#langchain_core-runnables-config-_set_config_context) | Set the child Runnable config + tracing context. |
+| [`acall_func_with_variable_args`](#langchain_core-runnables-config-acall_func_with_variable_args) | Async call function that may optionally accept a run_manager and/or config. |
+| [`call_func_with_variable_args`](#langchain_core-runnables-config-call_func_with_variable_args) | Call function that may optionally accept a run_manager and/or config. |
+| [`ensure_config`](#langchain_core-runnables-config-ensure_config) | Ensure that a config is a dict with all keys present. |
+| [`get_async_callback_manager_for_config`](#langchain_core-runnables-config-get_async_callback_manager_for_config) | Get an async callback manager for a config. |
+| [`get_callback_manager_for_config`](#langchain_core-runnables-config-get_callback_manager_for_config) | Get a callback manager for a config. |
+| [`get_config_list`](#langchain_core-runnables-config-get_config_list) | Get a list of configs from a single config or a list of configs. |
+| [`get_executor_for_config`](#langchain_core-runnables-config-get_executor_for_config) | Get an executor for a config. |
+| [`merge_configs`](#langchain_core-runnables-config-merge_configs) | Merge multiple configs into one. |
+| [`patch_config`](#langchain_core-runnables-config-patch_config) | Patch a config with new values. |
+| [`run_in_executor`](#langchain_core-runnables-config-run_in_executor) | Run a function in an executor. |
+| [`set_config_context`](#langchain_core-runnables-config-set_config_context) | Set the child Runnable config + tracing context. |
+
+### Data
+
+[`CONFIG_KEYS`](#langchain_core-runnables-config-CONFIG_KEYS)
+
+[`COPIABLE_KEYS`](#langchain_core-runnables-config-COPIABLE_KEYS)
+
+[`DEFAULT_RECURSION_LIMIT`](#langchain_core-runnables-config-DEFAULT_RECURSION_LIMIT)
+
+[`P`](#langchain_core-runnables-config-P)
+
+[`T`](#langchain_core-runnables-config-T)
+
+[`var_child_runnable_config`](#langchain_core-runnables-config-var_child_runnable_config)
+
+### API
+
+<Anchor id="langchain_core-runnables-config-ContextThreadPoolExecutor">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.config.ContextThreadPoolExecutor()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `ThreadPoolExecutor`
+
+ThreadPoolExecutor that copies the context to the child thread.
+
+
+<Anchor id="langchain_core-runnables-config-ContextThreadPoolExecutor-map">
+
+<CodeBlock links={{"langchain_core.runnables.config.T":"#langchain_core-runnables-config-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.config.ContextThreadPoolExecutor.map(
+    fn: collections.abc.Callable[..., langchain_core.runnables.config.T],
+    iterables: collections.abc.Iterable[typing.Any] = (),
+    kwargs: typing.Any = {}
+) -> collections.abc.Iterator[langchain_core.runnables.config.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Map a function to multiple iterables.
+
+**Parameters:**
+
+<ParamField path="fn" type="Callable[..., T]">
+The function to map.
+</ParamField>
+
+<ParamField path="*iterables" type="Iterable[Any]" default="()">
+The iterables to map over.
+</ParamField>
+
+<ParamField path="timeout">
+The timeout for the map.
+</ParamField>
+
+<ParamField path="chunksize">
+The chunksize for the map.
+</ParamField>
+
+**Returns:** `Iterator[T]`
+
+The iterator for the mapped function.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-config-ContextThreadPoolExecutor-submit">
+
+<CodeBlock links={{"langchain_core.runnables.config.P":"#langchain_core-runnables-config-P","langchain_core.runnables.config.T":"#langchain_core-runnables-config-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.config.ContextThreadPoolExecutor.submit(
+    func: collections.abc.Callable[langchain_core.runnables.config.P, langchain_core.runnables.config.T],
+    args: langchain_core.runnables.config.P.args = (),
+    kwargs: langchain_core.runnables.config.P.kwargs = {}
+) -> concurrent.futures.Future[langchain_core.runnables.config.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Submit a function to the executor.
+
+**Parameters:**
+
+<ParamField path="func" type="Callable[P, T]">
+The function to submit.
+</ParamField>
+
+<ParamField path="*args" type="P.args" default="()">
+The positional arguments to the function.
+</ParamField>
+
+<ParamField path="**kwargs" type="P.kwargs" default="&#123;&#125;">
+The keyword arguments to the function.
+</ParamField>
+
+**Returns:** `Future[T]`
+
+The future for the function.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-config-EmptyDict">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.config.EmptyDict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Empty dict type.
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-config-RunnableConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.config.RunnableConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Configuration for a `Runnable`.
+
+!!! note Custom values
+
+    The `TypedDict` has `total=False` set intentionally to:
+
+    - Allow partial configs to be created and merged together via `merge_configs`
+    - Support config propagation from parent to child runnables via
+        `var_child_runnable_config` (a `ContextVar` that automatically passes
+        config down the call stack without explicit parameter passing), where
+        configs are merged rather than replaced
+
+    !!! example
+
+        ```python
+        # Parent sets tags
+        chain.invoke(input, config={"tags": ["parent"]})
+        # Child automatically inherits and can add:
+        # ensure_config({"tags": ["child"]}) -> {"tags": ["parent", "child"]}
+        ```
+
+<ParamField path="callbacks" type="Callbacks">
+Callbacks for this call and any sub-calls (e.g. a Chain calling an LLM).
+
+Tags are passed to all callbacks, metadata is passed to handle*Start callbacks.
+</ParamField>
+
+<ParamField path="configurable" type="dict[str, Any]">
+Runtime values for attributes previously made configurable on this `Runnable`,
+or sub-`Runnable` objects, through `configurable_fields` or
+`configurable_alternatives`.
+
+Check `output_schema` for a description of the attributes that have been made
+configurable.
+</ParamField>
+
+<ParamField path="max_concurrency" type="int | None">
+Maximum number of parallel calls to make.
+
+If not provided, defaults to `ThreadPoolExecutor`'s default.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any]">
+Metadata for this call and any sub-calls (e.g. a Chain calling an LLM).
+
+Keys should be strings, values should be JSON-serializable.
+</ParamField>
+
+<ParamField path="recursion_limit" type="int">
+Maximum number of times a call can recurse.
+
+If not provided, defaults to `25`.
+</ParamField>
+
+<ParamField path="run_id" type="UUID | None">
+Unique identifier for the tracer run for this call.
+
+If not provided, a new UUID will be generated.
+</ParamField>
+
+<ParamField path="run_name" type="str">
+Name for the tracer run for this call.
+
+Defaults to the name of the class.
+</ParamField>
+
+<ParamField path="tags" type="list[str]">
+Tags for this call and any sub-calls (e.g. a Chain calling an LLM).
+
+You can use these to filter calls.
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-config-_set_config_context">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.config._set_config_context(
+    config: langchain_core.runnables.config.RunnableConfig
+) -> tuple[contextvars.Token[langchain_core.runnables.config.RunnableConfig | None], dict[str, typing.Any] | None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Set the child Runnable config + tracing context.
+
+**Parameters:**
+
+<ParamField path="config" type="RunnableConfig">
+The config to set.
+</ParamField>
+
+**Returns:** `tuple[Token[RunnableConfig | None], dict[str, Any] | None]`
+
+The token to reset the config and the previous tracing context.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-config-acall_func_with_variable_args">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output","langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"#langchain_core-runnables-config-RunnableConfig","langchain_core.callbacks.manager.AsyncCallbackManagerForChainRun":"/langchain-core/langchain_core/callbacks/manager#langchain_core-callbacks-manager-AsyncCallbackManagerForChainRun"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.config.acall_func_with_variable_args(
+    func: collections.abc.Callable[[Input], collections.abc.Awaitable[langchain_core.runnables.utils.Output]] | collections.abc.Callable[[Input, RunnableConfig], collections.abc.Awaitable[langchain_core.runnables.utils.Output]] | collections.abc.Callable[[Input, AsyncCallbackManagerForChainRun], collections.abc.Awaitable[langchain_core.runnables.utils.Output]] | collections.abc.Callable[[Input, AsyncCallbackManagerForChainRun, RunnableConfig], collections.abc.Awaitable[langchain_core.runnables.utils.Output]],
+    input: langchain_core.runnables.utils.Input,
+    config: langchain_core.runnables.config.RunnableConfig,
+    run_manager: langchain_core.callbacks.manager.AsyncCallbackManagerForChainRun | None = None,
+    kwargs: typing.Any = {}
+) -> collections.abc.Awaitable[langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Async call function that may optionally accept a run_manager and/or config.
+
+**Parameters:**
+
+<ParamField path="func" type="Callable[[Input], Awaitable[Output]] | Callable[[Input, RunnableConfig], Awaitable[Output]] | Callable[[Input, AsyncCallbackManagerForChainRun], Awaitable[Output]] | Callable[[Input, AsyncCallbackManagerForChainRun, RunnableConfig], Awaitable[Output]]">
+The function to call.
+</ParamField>
+
+<ParamField path="input" type="Input">
+The input to the function.
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig">
+The config to pass to the function.
+</ParamField>
+
+<ParamField path="run_manager" type="AsyncCallbackManagerForChainRun | None" default="None">
+The run manager to pass to the function.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+The keyword arguments to pass to the function.
+</ParamField>
+
+**Returns:** `Awaitable[Output]`
+
+The output of the function.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-config-call_func_with_variable_args">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output","langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"#langchain_core-runnables-config-RunnableConfig","langchain_core.callbacks.manager.CallbackManagerForChainRun":"/langchain-core/langchain_core/callbacks/manager#langchain_core-callbacks-manager-CallbackManagerForChainRun"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.config.call_func_with_variable_args(
+    func: collections.abc.Callable[[Input], langchain_core.runnables.utils.Output] | collections.abc.Callable[[Input, RunnableConfig], langchain_core.runnables.utils.Output] | collections.abc.Callable[[Input, CallbackManagerForChainRun], langchain_core.runnables.utils.Output] | collections.abc.Callable[[Input, CallbackManagerForChainRun, RunnableConfig], langchain_core.runnables.utils.Output],
+    input: langchain_core.runnables.utils.Input,
+    config: langchain_core.runnables.config.RunnableConfig,
+    run_manager: langchain_core.callbacks.manager.CallbackManagerForChainRun | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.runnables.utils.Output
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Call function that may optionally accept a run_manager and/or config.
+
+**Parameters:**
+
+<ParamField path="func" type="Callable[[Input], Output] | Callable[[Input, RunnableConfig], Output] | Callable[[Input, CallbackManagerForChainRun], Output] | Callable[[Input, CallbackManagerForChainRun, RunnableConfig], Output]">
+The function to call.
+</ParamField>
+
+<ParamField path="input" type="Input">
+The input to the function.
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig">
+The config to pass to the function.
+</ParamField>
+
+<ParamField path="run_manager" type="CallbackManagerForChainRun | None" default="None">
+The run manager to pass to the function.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+The keyword arguments to pass to the function.
+</ParamField>
+
+**Returns:** `Output`
+
+The output of the function.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-config-ensure_config">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.config.ensure_config(
+    config: langchain_core.runnables.config.RunnableConfig | None = None
+) -> langchain_core.runnables.config.RunnableConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Ensure that a config is a dict with all keys present.
+
+**Parameters:**
+
+<ParamField path="config" type="RunnableConfig | None" default="None">
+The config to ensure.
+</ParamField>
+
+**Returns:** `RunnableConfig`
+
+The ensured config.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-config-get_async_callback_manager_for_config">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"#langchain_core-runnables-config-RunnableConfig","langchain_core.callbacks.manager.AsyncCallbackManager":"/langchain-core/langchain_core/callbacks/manager#langchain_core-callbacks-manager-AsyncCallbackManager"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.config.get_async_callback_manager_for_config(
+    config: langchain_core.runnables.config.RunnableConfig
+) -> langchain_core.callbacks.manager.AsyncCallbackManager
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get an async callback manager for a config.
+
+**Parameters:**
+
+<ParamField path="config" type="RunnableConfig">
+The config.
+</ParamField>
+
+**Returns:** `AsyncCallbackManager`
+
+The async callback manager.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-config-get_callback_manager_for_config">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"#langchain_core-runnables-config-RunnableConfig","langchain_core.callbacks.manager.CallbackManager":"/langchain-core/langchain_core/callbacks/manager#langchain_core-callbacks-manager-CallbackManager"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.config.get_callback_manager_for_config(
+    config: langchain_core.runnables.config.RunnableConfig
+) -> langchain_core.callbacks.manager.CallbackManager
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get a callback manager for a config.
+
+**Parameters:**
+
+<ParamField path="config" type="RunnableConfig">
+The config.
+</ParamField>
+
+**Returns:** `CallbackManager`
+
+The callback manager.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-config-get_config_list">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.config.get_config_list(
+    config: langchain_core.runnables.config.RunnableConfig | collections.abc.Sequence[langchain_core.runnables.config.RunnableConfig] | None,
+    length: int
+) -> list[langchain_core.runnables.config.RunnableConfig]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get a list of configs from a single config or a list of configs.
+
+ It is useful for subclasses overriding batch() or abatch().
+
+**Parameters:**
+
+<ParamField path="config" type="RunnableConfig | Sequence[RunnableConfig] | None">
+The config or list of configs.
+</ParamField>
+
+<ParamField path="length" type="int">
+The length of the list.
+</ParamField>
+
+**Returns:** `list[RunnableConfig]`
+
+The list of configs.
+
+**Raises:**
+
+- `ValueError`: If the length of the list is not equal to the length of the inputs.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-config-get_executor_for_config">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.config.get_executor_for_config(
+    config: langchain_core.runnables.config.RunnableConfig | None
+) -> collections.abc.Generator[concurrent.futures.Executor, None, None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get an executor for a config.
+
+**Parameters:**
+
+<ParamField path="config" type="RunnableConfig | None">
+The config.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-config-merge_configs">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.config.merge_configs(
+    configs: langchain_core.runnables.config.RunnableConfig | None = ()
+) -> langchain_core.runnables.config.RunnableConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Merge multiple configs into one.
+
+**Parameters:**
+
+<ParamField path="*configs" type="RunnableConfig | None" default="()">
+The configs to merge.
+</ParamField>
+
+**Returns:** `RunnableConfig`
+
+The merged config.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-config-patch_config">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"#langchain_core-runnables-config-RunnableConfig","langchain_core.callbacks.base.BaseCallbackManager":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-BaseCallbackManager"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.config.patch_config(
+    config: langchain_core.runnables.config.RunnableConfig | None,
+    callbacks: langchain_core.callbacks.base.BaseCallbackManager | None = None,
+    recursion_limit: int | None = None,
+    max_concurrency: int | None = None,
+    run_name: str | None = None,
+    configurable: dict[str, typing.Any] | None = None
+) -> langchain_core.runnables.config.RunnableConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Patch a config with new values.
+
+**Parameters:**
+
+<ParamField path="config" type="RunnableConfig | None">
+The config to patch.
+</ParamField>
+
+<ParamField path="callbacks" type="BaseCallbackManager | None" default="None">
+The callbacks to set.
+</ParamField>
+
+<ParamField path="recursion_limit" type="int | None" default="None">
+The recursion limit to set.
+</ParamField>
+
+<ParamField path="max_concurrency" type="int | None" default="None">
+The max concurrency to set.
+</ParamField>
+
+<ParamField path="run_name" type="str | None" default="None">
+The run name to set.
+</ParamField>
+
+<ParamField path="configurable" type="dict[str, Any] | None" default="None">
+The configurable to set.
+</ParamField>
+
+**Returns:** `RunnableConfig`
+
+The patched config.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-config-run_in_executor">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.config.P":"#langchain_core-runnables-config-P","langchain_core.runnables.config.T":"#langchain_core-runnables-config-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.config.run_in_executor(
+    executor_or_config: concurrent.futures.Executor | langchain_core.runnables.config.RunnableConfig | None,
+    func: collections.abc.Callable[langchain_core.runnables.config.P, langchain_core.runnables.config.T],
+    args: langchain_core.runnables.config.P.args = (),
+    kwargs: langchain_core.runnables.config.P.kwargs = {}
+) -> langchain_core.runnables.config.T
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run a function in an executor.
+
+**Parameters:**
+
+<ParamField path="executor_or_config" type="Executor | RunnableConfig | None">
+The executor or config to run in.
+</ParamField>
+
+<ParamField path="func" type="Callable[P, T]">
+The function.
+</ParamField>
+
+<ParamField path="*args" type="P.args" default="()">
+The positional arguments to the function.
+</ParamField>
+
+<ParamField path="**kwargs" type="P.kwargs" default="&#123;&#125;">
+The keyword arguments to the function.
+</ParamField>
+
+**Returns:** `T`
+
+The output of the function.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-config-set_config_context">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.config.set_config_context(
+    config: langchain_core.runnables.config.RunnableConfig
+) -> collections.abc.Generator[contextvars.Context, None, None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Set the child Runnable config + tracing context.
+
+**Parameters:**
+
+<ParamField path="config" type="RunnableConfig">
+The config to set.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-config-CONFIG_KEYS">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.config.CONFIG_KEYS = ['tags', 'metadata', 'callbacks', 'run_name', 'max_concurrency', 'recursion_limi...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-runnables-config-COPIABLE_KEYS">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.config.COPIABLE_KEYS = ['tags', 'metadata', 'callbacks', 'configurable']
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-runnables-config-DEFAULT_RECURSION_LIMIT">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.config.DEFAULT_RECURSION_LIMIT = 25
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-runnables-config-P">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.config.P = ParamSpec('P')
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-runnables-config-T">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.config.T = TypeVar('T')
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-runnables-config-var_child_runnable_config">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.config.var_child_runnable_config: ContextVar[RunnableConfig | None] = ContextVar('child_runnable_config', default=None)
+```
+
+</CodeBlock>
+</Anchor>
+

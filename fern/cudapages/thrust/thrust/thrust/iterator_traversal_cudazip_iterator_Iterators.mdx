@@ -1,0 +1,29 @@
+---
+title: "thrust::iterator_traversal<::cuda::zip_iterator< Iterators... > >"
+description: ""
+---
+
+```cpp showLineNumbers={false}
+#include <thrust/iterator_traits.h>
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="Iterators..." type="class...">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `detail::iterator_category_to_traversal< iterator_traits< ::cuda::zip_iterator< Iterators... > >::iterator_category >` (public)
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `type` | `detail::minimum_type< iterator_traversal_t< Iterators >... >` |

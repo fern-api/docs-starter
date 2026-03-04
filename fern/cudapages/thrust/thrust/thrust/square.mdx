@@ -1,0 +1,57 @@
+---
+title: thrust::square
+description: "`square` is a function object."
+---
+
+`square` is a function object.
+
+Specifically, it is an Adaptable Unary Function. If `f` is an object of class `square<T>`, and `x` is an object of class `T`, then `f(x)` returns `x*x`.
+
+The following code snippet demonstrates how to use `square` to square the elements of a [device_vector](/library/api/thrust::device_vector) of `floats`.
+
+```cpp showLineNumbers={false}
+#include <thrust/functional.h>
+```
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <thrust/device_vector.h>
+#include <thrust/functional.h>
+#include <thrust/sequence.h>
+#include <thrust/transform.h>
+...
+const int N = 1000;
+thrust::device_vector<float> V1(N);
+thrust::device_vector<float> V2(N);
+
+thrust::sequence(V1.begin(), V1.end(), 1);
+
+thrust::transform(V1.begin(), V1.end(), V2.begin(),
+                  thrust::square<float>());
+// V2 is now {1, 4, 9, ..., 1000000}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="T" type="typename" default="void">
+Is a model of [Assignable](https://en.cppreference.com/w/cpp/named_req/CopyAssignable), and if `x` is an object of type `T`, then `x*x` must be defined and must have a return type that is convertible to `T`.
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Methods
+
+### operator() <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"square": "/library/api/thrust::square"}}>
+```cpp showLineNumbers={false}
+T thrust::square<T>::operator()(
+    const T &x
+) const
+```
+</CodeBlock>

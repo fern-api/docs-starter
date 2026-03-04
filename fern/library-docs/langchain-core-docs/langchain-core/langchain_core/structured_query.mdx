@@ -1,0 +1,426 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/structured_query
+title: langchain_core.structured_query
+---
+
+Internal representation of a structured query language.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`Comparator`](#langchain_core-structured_query-Comparator) | Enumerator of the comparison operators. |
+| [`Comparison`](#langchain_core-structured_query-Comparison) | Comparison to a value. |
+| [`Expr`](#langchain_core-structured_query-Expr) | Base class for all expressions. |
+| [`FilterDirective`](#langchain_core-structured_query-FilterDirective) | Filtering expression. |
+| [`Operation`](#langchain_core-structured_query-Operation) | Logical operation over other directives. |
+| [`Operator`](#langchain_core-structured_query-Operator) | Enumerator of the operations. |
+| [`StructuredQuery`](#langchain_core-structured_query-StructuredQuery) | Structured query. |
+| [`Visitor`](#langchain_core-structured_query-Visitor) | Defines interface for IR translation using a visitor pattern. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_to_snake_case`](#langchain_core-structured_query-_to_snake_case) | Convert a name into snake_case. |
+
+### API
+
+<Anchor id="langchain_core-structured_query-Comparator">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.structured_query.Comparator
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `enum.Enum`
+
+Enumerator of the comparison operators.
+
+<ParamField path="CONTAIN" type="= 'contain'">
+</ParamField>
+
+<ParamField path="EQ" type="= 'eq'">
+</ParamField>
+
+<ParamField path="GT" type="= 'gt'">
+</ParamField>
+
+<ParamField path="GTE" type="= 'gte'">
+</ParamField>
+
+<ParamField path="IN" type="= 'in'">
+</ParamField>
+
+<ParamField path="LIKE" type="= 'like'">
+</ParamField>
+
+<ParamField path="LT" type="= 'lt'">
+</ParamField>
+
+<ParamField path="LTE" type="= 'lte'">
+</ParamField>
+
+<ParamField path="NE" type="= 'ne'">
+</ParamField>
+
+<ParamField path="NIN" type="= 'nin'">
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-structured_query-Comparison">
+
+<CodeBlock links={{"langchain_core.structured_query.Comparator":"#langchain_core-structured_query-Comparator"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.structured_query.Comparison(
+    comparator: langchain_core.structured_query.Comparator,
+    attribute: str,
+    value: typing.Any,
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [FilterDirective](#langchain_core-structured_query-FilterDirective)
+
+Comparison to a value.
+
+
+<ParamField path="attribute" type="str">
+The attribute to compare.
+</ParamField>
+
+<ParamField path="comparator" type="Comparator">
+The comparator to use.
+</ParamField>
+
+<ParamField path="value" type="Any">
+The value to compare to.
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-structured_query-Expr">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.structured_query.Expr()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `BaseModel`
+
+Base class for all expressions.
+
+
+<Anchor id="langchain_core-structured_query-Expr-accept">
+
+<CodeBlock links={{"langchain_core.structured_query.Visitor":"#langchain_core-structured_query-Visitor"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.structured_query.Expr.accept(
+    visitor: langchain_core.structured_query.Visitor
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Accept a visitor.
+
+**Parameters:**
+
+<ParamField path="visitor" type="Visitor">
+visitor to accept.
+</ParamField>
+
+**Returns:** `Any`
+
+result of visiting.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-structured_query-FilterDirective">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.structured_query.FilterDirective()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+**Bases:** [Expr](#langchain_core-structured_query-Expr)
+
+Filtering expression.
+
+
+</Indent>
+
+<Anchor id="langchain_core-structured_query-Operation">
+
+<CodeBlock links={{"langchain_core.structured_query.Operator":"#langchain_core-structured_query-Operator","langchain_core.structured_query.FilterDirective":"#langchain_core-structured_query-FilterDirective"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.structured_query.Operation(
+    operator: langchain_core.structured_query.Operator,
+    arguments: list[langchain_core.structured_query.FilterDirective],
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [FilterDirective](#langchain_core-structured_query-FilterDirective)
+
+Logical operation over other directives.
+
+
+<ParamField path="arguments" type="list[FilterDirective]">
+The arguments to the operator.
+</ParamField>
+
+<ParamField path="operator" type="Operator">
+The operator to use.
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-structured_query-Operator">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.structured_query.Operator
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `enum.Enum`
+
+Enumerator of the operations.
+
+<ParamField path="AND" type="= 'and'">
+</ParamField>
+
+<ParamField path="NOT" type="= 'not'">
+</ParamField>
+
+<ParamField path="OR" type="= 'or'">
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-structured_query-StructuredQuery">
+
+<CodeBlock links={{"langchain_core.structured_query.FilterDirective":"#langchain_core-structured_query-FilterDirective"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.structured_query.StructuredQuery(
+    query: str,
+    filter: langchain_core.structured_query.FilterDirective | None,
+    limit: int | None = None,
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [Expr](#langchain_core-structured_query-Expr)
+
+Structured query.
+
+
+<ParamField path="filter" type="FilterDirective | None">
+Filtering expression.
+</ParamField>
+
+<ParamField path="limit" type="int | None">
+Limit on the number of results.
+</ParamField>
+
+<ParamField path="query" type="str">
+Query string.
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-structured_query-Visitor">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.structured_query.Visitor()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+Defines interface for IR translation using a visitor pattern.
+
+
+<ParamField path="allowed_comparators" type="Sequence[Comparator] | None = None">
+Allowed comparators for the visitor.
+</ParamField>
+
+<ParamField path="allowed_operators" type="Sequence[Operator] | None = None">
+Allowed operators for the visitor.
+</ParamField>
+<Anchor id="langchain_core-structured_query-Visitor-_validate_func">
+
+<CodeBlock links={{"langchain_core.structured_query.Operator":"#langchain_core-structured_query-Operator","langchain_core.structured_query.Comparator":"#langchain_core-structured_query-Comparator"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.structured_query.Visitor._validate_func(
+    func: langchain_core.structured_query.Operator | langchain_core.structured_query.Comparator
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-structured_query-Visitor-visit_comparison">
+
+<CodeBlock links={{"langchain_core.structured_query.Comparison":"#langchain_core-structured_query-Comparison"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.structured_query.Visitor.visit_comparison(
+    comparison: langchain_core.structured_query.Comparison
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Translate a Comparison.
+
+**Parameters:**
+
+<ParamField path="comparison" type="Comparison">
+Comparison to translate.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-structured_query-Visitor-visit_operation">
+
+<CodeBlock links={{"langchain_core.structured_query.Operation":"#langchain_core-structured_query-Operation"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.structured_query.Visitor.visit_operation(
+    operation: langchain_core.structured_query.Operation
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Translate an Operation.
+
+**Parameters:**
+
+<ParamField path="operation" type="Operation">
+Operation to translate.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-structured_query-Visitor-visit_structured_query">
+
+<CodeBlock links={{"langchain_core.structured_query.StructuredQuery":"#langchain_core-structured_query-StructuredQuery"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.structured_query.Visitor.visit_structured_query(
+    structured_query: langchain_core.structured_query.StructuredQuery
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Translate a StructuredQuery.
+
+**Parameters:**
+
+<ParamField path="structured_query" type="StructuredQuery">
+StructuredQuery to translate.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-structured_query-_to_snake_case">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.structured_query._to_snake_case(
+    name: str
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert a name into snake_case.
+
+
+</Indent>

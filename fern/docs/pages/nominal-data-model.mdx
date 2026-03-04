@@ -1,0 +1,150 @@
+---
+title: Set up your data in Nominal
+sidebar-title: Get started
+description: Example recipes of using Nominal's data model for specific applications.
+slug: nominal-data-model
+---
+
+Learn how to set up your data for performant data ingestion in Nominal.
+
+## Assess your testing phase
+
+When setting up your data in Nominal, the recommended structure depends on the type and phase of testing you are performing:
+
+<AccordionGroup>
+  <Accordion title="Test the performance of a fully integrated system.
+">
+    If you need a historical record for long-lasting hardware systems, use this approach.
+
+    Use cases:
+    * Test each complete drone's performance with a new software version.
+    * Test different maneuvers of an aircraft under edge cases to verify handling difficult situations.
+
+    Get started with [System-level testing](#system-level-testing).
+  </Accordion>
+  <Accordion title="Regression testing / HITL testing">
+    Ensure software behaves correctly on physical hardware.
+
+    Use cases:
+    * Automated development workflow where software versions are continuously tested on hardware to prevent regressions.
+    * Running 1,000+ simulations simultaneously where similar scenarios are run against different software versions.
+
+    Get started with [Large-scale simulation testing](#large-scale-simulation-testing).
+  </Accordion>
+</AccordionGroup>
+
+## Structure your data
+
+Add data to Nominal depending on the type of testing you are performing.
+
+### System-level testing
+
+This example shows how to test a drone by consolidating telemetry files from multiple sources into an asset:
+
+<Steps toc={true} tocDepth="4">
+  <Step title="Define your system">
+    Use assets in Nominal as the organizing unit for ingesting, labeling, and analyzing time-synchronized data.
+
+    <AccordionGroup>
+        <Accordion title="Create an asset representing a drone">
+        1. From the **Assets** page, create a new asset for the drone by clicking the **Create asset** button in the top right of the page.
+        1. Add a name to identify your asset. In this example, we use `Drone S001`
+        1. Add any other identifiers for filtering or sorting by these identifiers. For example:
+
+            | Asset Name    | Properties                               | Labels                            |
+            | ------------- | ---------------------------------------- | --------------------------------- |
+            | Drone Alpha   | `serial_num: QC-001`, `firmware: v2.3.1` | `quadcopter`, `prototype`         |
+            | Drone Bravo   | `serial_num: QC-002`, `firmware: v2.3.1` | `quadcopter`, `prototype`         |
+            | Drone Charlie | `serial_num: QC-003`, `firmware: v2.3.0` | `quadcopter`, `outdoor-certified` |
+            | Drone Delta   | `serial_num: QC-004`, `firmware: v2.3.1` | `quadcopter`, `outdoor-certified` |
+            | Drone Echo    | `serial_num: QC-005`, `firmware: v2.3.1` | `quadcopter`, `prototype`         |
+        1. Click **Create asset** to save your asset.
+        </Accordion>
+    </AccordionGroup>
+  </Step>
+  <Step title="Set up your data">
+    Upload files, attach videos, or stream live telemetry directly to this dataset for ongoing management.
+
+    <AccordionGroup>
+        <Accordion title="Centralize all drone data in one place">
+        Centralize your drone data by creating a dataset that holds all your drone data.
+        </Accordion>
+        <Accordion title="Organize your data by data source">
+        In this example:
+        * The `dron-s001-data-drone.csv` file includes the data from the drone.
+        * The `dron-s001-data-remote-control.csv` file includes the data from the remote control.
+
+        To upload both files to the same dataset without losing context where data is coming from:
+            1. In the dataset, upload data from the drone by clicking **Upload files** and upload `dron-s001-data-drone.csv`.
+                1. Make sure the timestamp information is correct.
+                1. To identify the source of the data, add a tag to the file:
+                    1. Click **Add tags**.
+                    1. Create a `source` tag with the value `drone`.
+
+                    This allows you to filter the data by source.
+                1. Click **Upload**.
+            1. Repeat the process for the `dron-s001-data-remote-control.csv` file, and create a `source` tag with the value `remote`.
+            1. Verify data is uploaded correctly by checking the following in your dataset:
+                1. Click on the **Channels** tab, and verify the channels from your CSV file populated into the dataset.
+                1. Click on the **Recent tags** tab, and verify the tag key and tag value matches expectations.
+
+        Now you can filter by source to switch between data from the remote control and the drone.
+        </Accordion>
+        <Accordion title="Connect your data to your asset">
+
+            1. Open your asset page and click on the **Data sources** tab.
+            1. Add data from the drone to the asset:
+                1. Search existing dataset, select `ASSET_NAME dataset` dataset.
+                1. Use the `drone` refname to identify the source of data.
+
+                    Specifying a ref name identifies the source when there's overlapping signal names in a dataset. For example, if both your `remote` and `drone` computers log a channel called `altitude`, the ref name creates fully-qualified channel names like `remote.altitude` and `drone.altitude`.
+                1. Add tag filter `drone`to filter the data from the dataset to just data from the drone.
+            1. Add data from the remote control to the asset:
+                1. Search existing dataset, select `ASSET_NAME dataset` dataset.
+                1. Use refname `remote` to identify the source of data.
+                1. Add tag filter `remote` to filter the data from the dataset to just data from the remote control.
+
+            Now all files that you add to the asset uses these ref names and filters automatically.
+        </Accordion>
+    </AccordionGroup>
+  </Step>
+
+  <Step title="Upload data">
+  Now that your data is set up, you can set up livestreaming for your data or upload one-off data to your asset:
+
+  <AccordionGroup>
+
+<Accordion title="Live monitoring">
+    Programmatic setups allow scripts to send data to Nominal from any source (examples: NAS devices, DAQ-connected computers, or cloud lambdas). Whether streaming or batch processing, these scripts automatically tag data with metadata and asset identifiers based on your organization's logic.
+
+    This approach is most effective when data formats and locations remain stable, allowing ingest scripts to persist even as test configurations evolve.
+  </Accordion>
+  <Accordion title="One-off uploads">
+    Use manual uploads with the Nominal app for one-off loads, exploratory testing, or early-stage prototypes where data formats are still evolving:
+
+    1. Upload files to the asset's dataset with tags.
+    1. Make sure the correct data source tag applies to all files before uploading.
+  </Accordion>
+  </AccordionGroup>
+
+    </Step>
+</Steps>
+
+
+### Additional examples
+
+See the following for additional examples:
+<AccordionGroup>
+<Accordion title="Live monitoring">
+<span id="live-monitoring" />
+
+For monitoring live data from operational assets to Nominal, it's recommended to setup a single dataset where all hardware devices stream to with unique asset tags. Follow the same steps under **Offline field testing** (Setting up the asset) to create separate Nominal Assets with its appropriate asset tag filter.
+
+</Accordion>
+<Accordion title="Large-scale simulation testing">
+<span id="large-scale-simulation-testing" />
+
+Since multiple simulation runs can run in parallel (often in relative time), we'll want to ingest data from each simulation with a unique `sim_id` that can be used to filter the run with only data from the appropriate simulation run.
+
+</Accordion>
+</AccordionGroup>

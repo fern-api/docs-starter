@@ -1,0 +1,201 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/utils/html
+title: langchain_core.utils.html
+---
+
+Utilities for working with HTML.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`extract_sub_links`](#langchain_core-utils-html-extract_sub_links) | Extract all links from a raw HTML string and convert into absolute paths. |
+| [`find_all_links`](#langchain_core-utils-html-find_all_links) | Extract all links from a raw HTML string. |
+
+### Data
+
+[`DEFAULT_LINK_REGEX`](#langchain_core-utils-html-DEFAULT_LINK_REGEX)
+
+[`PREFIXES_TO_IGNORE`](#langchain_core-utils-html-PREFIXES_TO_IGNORE)
+
+[`PREFIXES_TO_IGNORE_REGEX`](#langchain_core-utils-html-PREFIXES_TO_IGNORE_REGEX)
+
+[`SUFFIXES_TO_IGNORE`](#langchain_core-utils-html-SUFFIXES_TO_IGNORE)
+
+[`SUFFIXES_TO_IGNORE_REGEX`](#langchain_core-utils-html-SUFFIXES_TO_IGNORE_REGEX)
+
+[`logger`](#langchain_core-utils-html-logger)
+
+### API
+
+<Anchor id="langchain_core-utils-html-extract_sub_links">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.html.extract_sub_links(
+    raw_html: str,
+    url: str,
+    base_url: str | None = None,
+    pattern: str | re.Pattern | None = None,
+    prevent_outside: bool = True,
+    exclude_prefixes: collections.abc.Sequence[str] = (),
+    continue_on_failure: bool = False
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Extract all links from a raw HTML string and convert into absolute paths.
+
+**Parameters:**
+
+<ParamField path="raw_html" type="str">
+Original HTML.
+</ParamField>
+
+<ParamField path="url" type="str">
+The url of the HTML.
+</ParamField>
+
+<ParamField path="base_url" type="str | None" default="None">
+the base URL to check for outside links against.
+</ParamField>
+
+<ParamField path="pattern" type="str | re.Pattern | None" default="None">
+Regex to use for extracting links from raw HTML.
+</ParamField>
+
+<ParamField path="prevent_outside" type="bool" default="True">
+If `True`, ignore external links which are not children
+of the base URL.
+</ParamField>
+
+<ParamField path="exclude_prefixes" type="Sequence[str]" default="()">
+Exclude any URLs that start with one of these prefixes.
+</ParamField>
+
+<ParamField path="continue_on_failure" type="bool" default="False">
+If `True`, continue if parsing a specific link raises an
+exception. Otherwise, raise the exception.
+</ParamField>
+
+**Returns:** `list[str]`
+
+A list of absolute paths to sub links.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-html-find_all_links">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.html.find_all_links(
+    raw_html: str,
+    pattern: str | re.Pattern | None = None
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Extract all links from a raw HTML string.
+
+**Parameters:**
+
+<ParamField path="raw_html" type="str">
+original HTML.
+</ParamField>
+
+<ParamField path="pattern" type="str | re.Pattern | None" default="None">
+Regex to use for extracting links from raw HTML.
+</ParamField>
+
+**Returns:** `list[str]`
+
+A list of all links found in the HTML.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-html-DEFAULT_LINK_REGEX">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.html.DEFAULT_LINK_REGEX = f'href=[\"']{PREFIXES_TO_IGNORE_REGEX}((?:{SUFFIXES_TO_IGNORE_REGEX}.)*?)[\#'\"]...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-html-PREFIXES_TO_IGNORE">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.html.PREFIXES_TO_IGNORE = ('javascript:', 'mailto:', '#')
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-html-PREFIXES_TO_IGNORE_REGEX">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.html.PREFIXES_TO_IGNORE_REGEX = '(?!' + '|'.join([(re.escape(s)) for s in PREFIXES_TO_IGNORE]) + ')'
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-html-SUFFIXES_TO_IGNORE">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.html.SUFFIXES_TO_IGNORE = ('.css', '.js', '.ico', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.csv', '.bz2',...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-html-SUFFIXES_TO_IGNORE_REGEX">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.html.SUFFIXES_TO_IGNORE_REGEX = '(?!' + '|'.join([(re.escape(s) + '[\\#\'\\"]') for s in SUFFIXES_TO_IGNORE]) + ...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-html-logger">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.html.logger = logging.getLogger(__name__)
+```
+
+</CodeBlock>
+</Anchor>
+

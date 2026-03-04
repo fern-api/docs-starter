@@ -1,0 +1,304 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/tools/structured
+title: langchain_core.tools.structured
+---
+
+Structured tool.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`StructuredTool`](#langchain_core-tools-structured-StructuredTool) | Tool that can operate on any number of inputs. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_filter_schema_args`](#langchain_core-tools-structured-_filter_schema_args) | - |
+
+### API
+
+<Anchor id="langchain_core-tools-structured-StructuredTool">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tools.structured.StructuredTool()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseTool](/langchain-core/langchain_core/tools/base#langchain_core-tools-base-BaseTool)
+
+Tool that can operate on any number of inputs.
+
+
+<ParamField path="_injected_args_keys" type="frozenset[str]">
+</ParamField>
+
+<ParamField path="args_schema" type="Annotated[ArgsSchema, SkipValidation()] = Field(..., description='The tool schema.')">
+The input arguments' schema.
+</ParamField>
+
+<ParamField path="coroutine" type="Callable[..., Awaitable[Any]] | None = None">
+The asynchronous version of the function.
+</ParamField>
+
+<ParamField path="description" type="str = ''">
+</ParamField>
+
+<ParamField path="func" type="Callable[..., Any] | None = None">
+The function to run when the tool is called.
+</ParamField>
+<Anchor id="langchain_core-tools-structured-StructuredTool-_arun">
+
+<CodeBlock links={{"langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.structured.StructuredTool._arun(
+    args: typing.Any = (),
+    config: langchain_core.runnables.RunnableConfig,
+    run_manager: langchain_core.callbacks.AsyncCallbackManagerForToolRun | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Use the tool asynchronously.
+
+**Parameters:**
+
+<ParamField path="*args" type="Any" default="()">
+Positional arguments to pass to the tool
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig">
+Configuration for the run
+</ParamField>
+
+<ParamField path="run_manager" type="AsyncCallbackManagerForToolRun | None" default="None">
+Optional callback manager to use for the run
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to pass to the tool
+</ParamField>
+
+**Returns:** `Any`
+
+The result of the tool execution
+
+
+</Indent>
+<Anchor id="langchain_core-tools-structured-StructuredTool-_run">
+
+<CodeBlock links={{"langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.structured.StructuredTool._run(
+    args: typing.Any = (),
+    config: langchain_core.runnables.RunnableConfig,
+    run_manager: langchain_core.callbacks.CallbackManagerForToolRun | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Use the tool.
+
+**Parameters:**
+
+<ParamField path="*args" type="Any" default="()">
+Positional arguments to pass to the tool
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig">
+Configuration for the run
+</ParamField>
+
+<ParamField path="run_manager" type="CallbackManagerForToolRun | None" default="None">
+Optional callback manager to use for the run
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to pass to the tool
+</ParamField>
+
+**Returns:** `Any`
+
+The result of the tool execution
+
+
+</Indent>
+<Anchor id="langchain_core-tools-structured-StructuredTool-ainvoke">
+
+<CodeBlock links={{"langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.structured.StructuredTool.ainvoke(
+    input: str | dict | langchain_core.messages.ToolCall,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-tools-structured-StructuredTool-from_function">
+
+<CodeBlock links={{"langchain_core.tools.base.ArgsSchema":"/langchain-core/langchain_core/tools/base#langchain_core-tools-base-ArgsSchema","langchain_core.tools.structured.StructuredTool":"#langchain_core-tools-structured-StructuredTool"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.structured.StructuredTool.from_function(
+    func: collections.abc.Callable | None = None,
+    coroutine: collections.abc.Callable[..., collections.abc.Awaitable[typing.Any]] | None = None,
+    name: str | None = None,
+    description: str | None = None,
+    return_direct: bool = False,
+    args_schema: langchain_core.tools.base.ArgsSchema | None = None,
+    infer_schema: bool = True,
+    response_format: typing.Literal['content', 'content_and_artifact'] = 'content',
+    parse_docstring: bool = False,
+    error_on_invalid_docstring: bool = False,
+    kwargs: typing.Any = {}
+) -> langchain_core.tools.structured.StructuredTool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Create tool from a given function.
+
+A classmethod that helps to create a tool from a function.
+
+**Parameters:**
+
+<ParamField path="func" type="Callable | None" default="None">
+The function from which to create a tool.
+</ParamField>
+
+<ParamField path="coroutine" type="Callable[..., Awaitable[Any]] | None" default="None">
+The async function from which to create a tool.
+</ParamField>
+
+<ParamField path="name" type="str | None" default="None">
+The name of the tool.
+
+Defaults to the function name.
+</ParamField>
+
+<ParamField path="description" type="str | None" default="None">
+The description of the tool.
+
+Defaults to the function docstring.
+</ParamField>
+
+<ParamField path="return_direct" type="bool" default="False">
+Whether to return the result directly or as a callback.
+</ParamField>
+
+<ParamField path="args_schema" type="ArgsSchema | None" default="None">
+The schema of the tool's input arguments.
+</ParamField>
+
+<ParamField path="infer_schema" type="bool" default="True">
+Whether to infer the schema from the function's signature.
+</ParamField>
+
+<ParamField path="response_format" type="Literal['content', 'content_and_artifact']" default="'content'">
+The tool response format.
+
+If `'content'` then the output of the tool is interpreted as the
+contents of a `ToolMessage`. If `'content_and_artifact'` then the output
+is expected to be a two-tuple corresponding to the `(content, artifact)`
+of a `ToolMessage`.
+</ParamField>
+
+<ParamField path="parse_docstring" type="bool" default="False">
+If `infer_schema` and `parse_docstring`, will attempt
+to parse parameter descriptions from Google Style function docstrings.
+</ParamField>
+
+<ParamField path="error_on_invalid_docstring" type="bool" default="False">
+if `parse_docstring` is provided, configure
+whether to raise `ValueError` on invalid Google Style docstrings.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments to pass to the tool
+</ParamField>
+
+**Returns:** `StructuredTool`
+
+The tool.
+
+**Raises:**
+
+- `ValueError`: If the function is not provided.
+- `ValueError`: If the function does not have a docstring and description
+is not provided.
+- `TypeError`: If the `args_schema` is not a `BaseModel` or dict.
+
+**Examples:**
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+def add(a: int, b: int) -> int:
+    """Add two numbers"""
+    return a + b
+tool = StructuredTool.from_function(add)
+tool.run(1, 2) # 3
+```
+
+</CodeBlock>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-tools-structured-_filter_schema_args">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.structured._filter_schema_args(
+    func: collections.abc.Callable
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>

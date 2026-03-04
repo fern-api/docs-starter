@@ -1,0 +1,486 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/messages/ai
+title: langchain_core.messages.ai
+---
+
+AI message.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`AIMessage`](#langchain_core-messages-ai-AIMessage) | Message from an AI. |
+| [`AIMessageChunk`](#langchain_core-messages-ai-AIMessageChunk) | Message chunk from an AI (yielded when streaming). |
+| [`InputTokenDetails`](#langchain_core-messages-ai-InputTokenDetails) | Breakdown of input token counts. |
+| [`OutputTokenDetails`](#langchain_core-messages-ai-OutputTokenDetails) | Breakdown of output token counts. |
+| [`UsageMetadata`](#langchain_core-messages-ai-UsageMetadata) | Usage metadata for a message, such as token counts. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`add_ai_message_chunks`](#langchain_core-messages-ai-add_ai_message_chunks) | Add multiple `AIMessageChunk`s together. |
+| [`add_usage`](#langchain_core-messages-ai-add_usage) | Recursively add two UsageMetadata objects. |
+| [`subtract_usage`](#langchain_core-messages-ai-subtract_usage) | Recursively subtract two `UsageMetadata` objects. |
+
+### Data
+
+[`logger`](#langchain_core-messages-ai-logger)
+
+### API
+
+<Anchor id="langchain_core-messages-ai-AIMessage">
+
+<CodeBlock links={{"langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.messages.ai.AIMessage(
+    content: str | list[str | dict] | None = None,
+    content_blocks: list[langchain_core.messages.content.ContentBlock] | None = None,
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseMessage](/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage)
+
+Message from an AI.
+
+An `AIMessage` is returned from a chat model as a response to a prompt.
+
+This message represents the output of the model and consists of both
+the raw output as returned by the model and standardized fields
+(e.g., tool calls, usage metadata) added by the LangChain framework.
+
+
+<ParamField path="content_blocks" type="list[ContentBlock]">
+Return standard, typed `ContentBlock` dicts from the message.
+
+If the message has a known model provider, use the provider-specific translator
+first before falling back to best-effort parsing. For details, see the property
+on `BaseMessage`.
+</ParamField>
+
+<ParamField path="invalid_tool_calls" type="list[InvalidToolCall] = Field(default_factory=list)">
+If present, tool calls with parsing errors associated with the message.
+</ParamField>
+
+<ParamField path="lc_attributes" type="dict">
+Attributes to be serialized.
+
+Includes all attributes, even if they are derived from other initialization
+arguments.
+</ParamField>
+
+<ParamField path="tool_calls" type="list[ToolCall] = Field(default_factory=list)">
+If present, tool calls associated with the message.
+</ParamField>
+
+<ParamField path="type" type="Literal['ai'] = 'ai'">
+The type of the message (used for deserialization).
+</ParamField>
+
+<ParamField path="usage_metadata" type="UsageMetadata | None = None">
+If present, usage metadata for a message, such as token counts.
+
+This is a standard representation of token usage that is consistent across models.
+</ParamField>
+<Anchor id="langchain_core-messages-ai-AIMessage-_backwards_compat_tool_calls">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.ai.AIMessage._backwards_compat_tool_calls(
+    values: dict
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-messages-ai-AIMessage-pretty_repr">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.ai.AIMessage.pretty_repr(
+    html: bool = False
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return a pretty representation of the message for display.
+
+**Parameters:**
+
+<ParamField path="html" type="bool" default="False">
+Whether to return an HTML-formatted string.
+</ParamField>
+
+**Returns:** `str`
+
+A pretty representation of the message.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-messages-ai-AIMessageChunk">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.messages.ai.AIMessageChunk()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [AIMessage](#langchain_core-messages-ai-AIMessage), [BaseMessageChunk](/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessageChunk)
+
+Message chunk from an AI (yielded when streaming).
+
+
+<ParamField path="chunk_position" type="Literal['last'] | None = None">
+Optional span represented by an aggregated `AIMessageChunk`.
+
+If a chunk with `chunk_position="last"` is aggregated into a stream,
+`tool_call_chunks` in message content will be parsed into `tool_calls`.
+</ParamField>
+
+<ParamField path="content_blocks" type="list[ContentBlock]">
+Return standard, typed `ContentBlock` dicts from the message.
+</ParamField>
+
+<ParamField path="lc_attributes" type="dict">
+</ParamField>
+
+<ParamField path="tool_call_chunks" type="list[ToolCallChunk] = Field(default_factory=list)">
+If provided, tool call chunks associated with the message.
+</ParamField>
+
+<ParamField path="type" type="Literal['AIMessageChunk'] = 'AIMessageChunk'">
+The type of the message (used for deserialization).
+</ParamField>
+<Anchor id="langchain_core-messages-ai-AIMessageChunk-__add__">
+
+<CodeBlock links={{"langchain_core.messages.base.BaseMessageChunk":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessageChunk"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.ai.AIMessageChunk.__add__(
+    other: typing.Any
+) -> langchain_core.messages.base.BaseMessageChunk
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-messages-ai-AIMessageChunk-init_server_tool_calls">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.ai.AIMessageChunk.init_server_tool_calls() -> typing_extensions.Self
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Initialize server tool calls.
+
+Parse `server_tool_call_chunks` from
+[`ServerToolCallChunk`][langchain.messages.ServerToolCallChunk] objects.
+
+
+</Indent>
+<Anchor id="langchain_core-messages-ai-AIMessageChunk-init_tool_calls">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.ai.AIMessageChunk.init_tool_calls() -> typing_extensions.Self
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Initialize tool calls from tool call chunks.
+
+**Returns:** `Self`
+
+The values with tool calls initialized.
+
+**Raises:**
+
+- `ValueError`: If the tool call chunks are malformed.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-messages-ai-InputTokenDetails">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.messages.ai.InputTokenDetails
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Breakdown of input token counts.
+
+Does *not* need to sum to full input token count. Does *not* need to have all keys.
+
+May also hold extra provider-specific keys.
+
+!!! version-added "Added in `langchain-core` 0.3.9"
+
+<ParamField path="audio" type="int">
+Audio input tokens.
+</ParamField>
+
+<ParamField path="cache_creation" type="int">
+Input tokens that were cached and there was a cache miss.
+
+Since there was a cache miss, the cache was created from these tokens.
+</ParamField>
+
+<ParamField path="cache_read" type="int">
+Input tokens that were cached and there was a cache hit.
+
+Since there was a cache hit, the tokens were read from the cache. More precisely,
+the model state given these tokens was read from the cache.
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-messages-ai-OutputTokenDetails">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.messages.ai.OutputTokenDetails
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Breakdown of output token counts.
+
+Does *not* need to sum to full output token count. Does *not* need to have all keys.
+
+May also hold extra provider-specific keys.
+
+!!! version-added "Added in `langchain-core` 0.3.9"
+
+<ParamField path="audio" type="int">
+Audio output tokens.
+</ParamField>
+
+<ParamField path="reasoning" type="int">
+Reasoning output tokens.
+
+Tokens generated by the model in a chain of thought process (i.e. by OpenAI's o1
+models) that are not returned as part of model output.
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-messages-ai-UsageMetadata">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.messages.ai.UsageMetadata
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Usage metadata for a message, such as token counts.
+
+This is a standard representation of token usage that is consistent across models.
+
+!!! warning "Behavior changed in `langchain-core` 0.3.9"
+
+    Added `input_token_details` and `output_token_details`.
+
+!!! note "LangSmith SDK"
+
+    The LangSmith SDK also has a `UsageMetadata` class. While the two share fields,
+    LangSmith's `UsageMetadata` has additional fields to capture cost information
+    used by the LangSmith platform.
+
+<ParamField path="input_token_details" type="NotRequired[InputTokenDetails]">
+Breakdown of input token counts.
+
+Does *not* need to sum to full input token count. Does *not* need to have all keys.
+</ParamField>
+
+<ParamField path="input_tokens" type="int">
+Count of input (or prompt) tokens. Sum of all input token types.
+</ParamField>
+
+<ParamField path="output_token_details" type="NotRequired[OutputTokenDetails]">
+Breakdown of output token counts.
+
+Does *not* need to sum to full output token count. Does *not* need to have all keys.
+</ParamField>
+
+<ParamField path="output_tokens" type="int">
+Count of output (or completion) tokens. Sum of all output token types.
+</ParamField>
+
+<ParamField path="total_tokens" type="int">
+Total token count. Sum of `input_tokens` + `output_tokens`.
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-messages-ai-add_ai_message_chunks">
+
+<CodeBlock links={{"langchain_core.messages.ai.AIMessageChunk":"#langchain_core-messages-ai-AIMessageChunk"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.ai.add_ai_message_chunks(
+    left: langchain_core.messages.ai.AIMessageChunk,
+    others: langchain_core.messages.ai.AIMessageChunk = ()
+) -> langchain_core.messages.ai.AIMessageChunk
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add multiple `AIMessageChunk`s together.
+
+**Parameters:**
+
+<ParamField path="left" type="AIMessageChunk">
+The first `AIMessageChunk`.
+</ParamField>
+
+<ParamField path="*others" type="AIMessageChunk" default="()">
+Other `AIMessageChunk`s to add.
+</ParamField>
+
+**Returns:** `AIMessageChunk`
+
+The resulting `AIMessageChunk`.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-ai-add_usage">
+
+<CodeBlock links={{"langchain_core.messages.ai.UsageMetadata":"#langchain_core-messages-ai-UsageMetadata"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.ai.add_usage(
+    left: langchain_core.messages.ai.UsageMetadata | None,
+    right: langchain_core.messages.ai.UsageMetadata | None
+) -> langchain_core.messages.ai.UsageMetadata
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Recursively add two UsageMetadata objects.
+
+Args:
+    left: The first `UsageMetadata` object.
+    right: The second `UsageMetadata` object.
+
+**Returns:** `UsageMetadata`
+
+The sum of the two `UsageMetadata` objects.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-ai-subtract_usage">
+
+<CodeBlock links={{"langchain_core.messages.ai.UsageMetadata":"#langchain_core-messages-ai-UsageMetadata"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.ai.subtract_usage(
+    left: langchain_core.messages.ai.UsageMetadata | None,
+    right: langchain_core.messages.ai.UsageMetadata | None
+) -> langchain_core.messages.ai.UsageMetadata
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Recursively subtract two `UsageMetadata` objects.
+
+Token counts cannot be negative so the actual operation is `max(left - right, 0)`.
+
+Args:
+    left: The first `UsageMetadata` object.
+    right: The second `UsageMetadata` object.
+
+**Returns:** `UsageMetadata`
+
+The resulting `UsageMetadata` after subtraction.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-ai-logger">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.ai.logger = logging.getLogger(__name__)
+```
+
+</CodeBlock>
+</Anchor>
+

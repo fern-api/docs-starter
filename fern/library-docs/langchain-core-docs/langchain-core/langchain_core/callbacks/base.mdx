@@ -1,0 +1,2445 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/callbacks/base
+title: langchain_core.callbacks.base
+---
+
+Base callback handler for LangChain.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`AsyncCallbackHandler`](#langchain_core-callbacks-base-AsyncCallbackHandler) | Base async callback handler. |
+| [`BaseCallbackHandler`](#langchain_core-callbacks-base-BaseCallbackHandler) | Base callback handler. |
+| [`BaseCallbackManager`](#langchain_core-callbacks-base-BaseCallbackManager) | Base callback manager. |
+| [`CallbackManagerMixin`](#langchain_core-callbacks-base-CallbackManagerMixin) | Mixin for callback manager. |
+| [`ChainManagerMixin`](#langchain_core-callbacks-base-ChainManagerMixin) | Mixin for chain callbacks. |
+| [`LLMManagerMixin`](#langchain_core-callbacks-base-LLMManagerMixin) | Mixin for LLM callbacks. |
+| [`RetrieverManagerMixin`](#langchain_core-callbacks-base-RetrieverManagerMixin) | Mixin for `Retriever` callbacks. |
+| [`RunManagerMixin`](#langchain_core-callbacks-base-RunManagerMixin) | Mixin for run manager. |
+| [`ToolManagerMixin`](#langchain_core-callbacks-base-ToolManagerMixin) | Mixin for tool callbacks. |
+
+### Data
+
+[`Callbacks`](#langchain_core-callbacks-base-Callbacks)
+
+[`_LOGGER`](#langchain_core-callbacks-base-_LOGGER)
+
+### API
+
+<Anchor id="langchain_core-callbacks-base-AsyncCallbackHandler">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.base.AsyncCallbackHandler()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseCallbackHandler](#langchain_core-callbacks-base-BaseCallbackHandler)
+
+Base async callback handler.
+
+
+<Anchor id="langchain_core-callbacks-base-AsyncCallbackHandler-on_agent_action">
+
+<CodeBlock links={{"langchain_core.agents.AgentAction":"/langchain-core/langchain_core/agents#langchain_core-agents-AgentAction"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.AsyncCallbackHandler.on_agent_action(
+    action: langchain_core.agents.AgentAction,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run on agent action.
+
+**Parameters:**
+
+<ParamField path="action" type="AgentAction">
+The agent action.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-AsyncCallbackHandler-on_agent_finish">
+
+<CodeBlock links={{"langchain_core.agents.AgentFinish":"/langchain-core/langchain_core/agents#langchain_core-agents-AgentFinish"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.AsyncCallbackHandler.on_agent_finish(
+    finish: langchain_core.agents.AgentFinish,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run on the agent end.
+
+**Parameters:**
+
+<ParamField path="finish" type="AgentFinish">
+The agent finish.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-AsyncCallbackHandler-on_chain_end">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.AsyncCallbackHandler.on_chain_end(
+    outputs: dict[str, typing.Any],
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when a chain ends running.
+
+**Parameters:**
+
+<ParamField path="outputs" type="dict[str, Any]">
+The outputs of the chain.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-AsyncCallbackHandler-on_chain_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.AsyncCallbackHandler.on_chain_error(
+    error: BaseException,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when chain errors.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error that occurred.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-AsyncCallbackHandler-on_chain_start">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.AsyncCallbackHandler.on_chain_start(
+    serialized: dict[str, typing.Any],
+    inputs: dict[str, typing.Any],
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when a chain starts running.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any]">
+The serialized chain.
+</ParamField>
+
+<ParamField path="inputs" type="dict[str, Any]">
+The inputs.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+The metadata.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-AsyncCallbackHandler-on_chat_model_start">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.AsyncCallbackHandler.on_chat_model_start(
+    serialized: dict[str, typing.Any],
+    messages: list[list[langchain_core.messages.BaseMessage]],
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when a chat model starts running.
+
+!!! warning
+
+    This method is called for chat models. If you're implementing a handler for
+    a non-chat model, you should use `on_llm_start` instead.
+
+!!! note
+
+    When overriding this method, the signature **must** include the two
+    required positional arguments ``serialized`` and ``messages``.  Avoid
+    using ``*args`` in your override — doing so causes an ``IndexError``
+    in the fallback path when the callback system converts ``messages``
+    to prompt strings for ``on_llm_start``.  Always declare the
+    signature explicitly:
+
+    .. code-block:: python
+
+        async def on_chat_model_start(
+            self,
+            serialized: dict[str, Any],
+            messages: list[list[BaseMessage]],
+            **kwargs: Any,
+        ) -&gt; None:
+            raise NotImplementedError  # triggers fallback to on_llm_start
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any]">
+The serialized chat model.
+</ParamField>
+
+<ParamField path="messages" type="list[list[BaseMessage]]">
+The messages. Must be a list of message lists — this is a
+required positional argument and must be present in any override.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+The metadata.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-AsyncCallbackHandler-on_custom_event">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.AsyncCallbackHandler.on_custom_event(
+    name: str,
+    data: typing.Any,
+    run_id: uuid.UUID,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Override to define a handler for custom events.
+
+**Parameters:**
+
+<ParamField path="name" type="str">
+The name of the custom event.
+</ParamField>
+
+<ParamField path="data" type="Any">
+The data for the custom event.
+
+Format will match the format specified by the user.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags associated with the custom event (includes inherited tags).
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+The metadata associated with the custom event (includes inherited
+metadata).
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-AsyncCallbackHandler-on_llm_end">
+
+<CodeBlock links={{"langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.AsyncCallbackHandler.on_llm_end(
+    response: langchain_core.outputs.LLMResult,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when the model ends running.
+
+**Parameters:**
+
+<ParamField path="response" type="LLMResult">
+The response which was generated.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-AsyncCallbackHandler-on_llm_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.AsyncCallbackHandler.on_llm_error(
+    error: BaseException,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when LLM errors.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error that occurred.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+
+- response (LLMResult): The response which was generated before
+    the error occurred.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-AsyncCallbackHandler-on_llm_new_token">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.AsyncCallbackHandler.on_llm_new_token(
+    token: str,
+    chunk: langchain_core.outputs.GenerationChunk | langchain_core.outputs.ChatGenerationChunk | None = None,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run on new output token. Only available when streaming is enabled.
+
+For both chat models and non-chat models (legacy text completion LLMs).
+
+**Parameters:**
+
+<ParamField path="token" type="str">
+The new token.
+</ParamField>
+
+<ParamField path="chunk" type="GenerationChunk | ChatGenerationChunk | None" default="None">
+The new generated chunk, containing content and other information.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-AsyncCallbackHandler-on_llm_start">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.AsyncCallbackHandler.on_llm_start(
+    serialized: dict[str, typing.Any],
+    prompts: list[str],
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when the model starts running.
+
+!!! warning
+
+    This method is called for non-chat models (regular text completion LLMs). If
+    you're implementing a handler for a chat model, you should use
+    `on_chat_model_start` instead.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any]">
+The serialized LLM.
+</ParamField>
+
+<ParamField path="prompts" type="list[str]">
+The prompts.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+The metadata.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-AsyncCallbackHandler-on_retriever_end">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.AsyncCallbackHandler.on_retriever_end(
+    documents: collections.abc.Sequence[langchain_core.documents.Document],
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run on the retriever end.
+
+**Parameters:**
+
+<ParamField path="documents" type="Sequence[Document]">
+The documents retrieved.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-AsyncCallbackHandler-on_retriever_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.AsyncCallbackHandler.on_retriever_error(
+    error: BaseException,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run on retriever error.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error that occurred.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-AsyncCallbackHandler-on_retriever_start">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.AsyncCallbackHandler.on_retriever_start(
+    serialized: dict[str, typing.Any],
+    query: str,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run on the retriever start.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any]">
+The serialized retriever.
+</ParamField>
+
+<ParamField path="query" type="str">
+The query.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+The metadata.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-AsyncCallbackHandler-on_retry">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.AsyncCallbackHandler.on_retry(
+    retry_state: tenacity.RetryCallState,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run on a retry event.
+
+**Parameters:**
+
+<ParamField path="retry_state" type="RetryCallState">
+The retry state.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-AsyncCallbackHandler-on_text">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.AsyncCallbackHandler.on_text(
+    text: str,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run on an arbitrary text.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The text.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-AsyncCallbackHandler-on_tool_end">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.AsyncCallbackHandler.on_tool_end(
+    output: typing.Any,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when the tool ends running.
+
+**Parameters:**
+
+<ParamField path="output" type="Any">
+The output of the tool.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-AsyncCallbackHandler-on_tool_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.AsyncCallbackHandler.on_tool_error(
+    error: BaseException,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when tool errors.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error that occurred.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-AsyncCallbackHandler-on_tool_start">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.AsyncCallbackHandler.on_tool_start(
+    serialized: dict[str, typing.Any],
+    input_str: str,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    inputs: dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when the tool starts running.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any]">
+The serialized tool.
+</ParamField>
+
+<ParamField path="input_str" type="str">
+The input string.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+The metadata.
+</ParamField>
+
+<ParamField path="inputs" type="dict[str, Any] | None" default="None">
+The inputs.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-base-BaseCallbackHandler">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.base.BaseCallbackHandler()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [LLMManagerMixin](#langchain_core-callbacks-base-LLMManagerMixin), [ChainManagerMixin](#langchain_core-callbacks-base-ChainManagerMixin), [ToolManagerMixin](#langchain_core-callbacks-base-ToolManagerMixin), [RetrieverManagerMixin](#langchain_core-callbacks-base-RetrieverManagerMixin), [CallbackManagerMixin](#langchain_core-callbacks-base-CallbackManagerMixin), [RunManagerMixin](#langchain_core-callbacks-base-RunManagerMixin)
+
+Base callback handler.
+
+
+<ParamField path="ignore_agent" type="bool">
+Whether to ignore agent callbacks.
+</ParamField>
+
+<ParamField path="ignore_chain" type="bool">
+Whether to ignore chain callbacks.
+</ParamField>
+
+<ParamField path="ignore_chat_model" type="bool">
+Whether to ignore chat model callbacks.
+</ParamField>
+
+<ParamField path="ignore_custom_event" type="bool">
+Ignore custom event.
+</ParamField>
+
+<ParamField path="ignore_llm" type="bool">
+Whether to ignore LLM callbacks.
+</ParamField>
+
+<ParamField path="ignore_retriever" type="bool">
+Whether to ignore retriever callbacks.
+</ParamField>
+
+<ParamField path="ignore_retry" type="bool">
+Whether to ignore retry callbacks.
+</ParamField>
+
+<ParamField path="raise_error" type="bool = False">
+Whether to raise an error if an exception occurs.
+</ParamField>
+
+<ParamField path="run_inline" type="bool = False">
+Whether to run the callback inline.
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-base-BaseCallbackManager">
+
+<CodeBlock links={{"langchain_core.callbacks.base.BaseCallbackHandler":"#langchain_core-callbacks-base-BaseCallbackHandler"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.base.BaseCallbackManager(
+    handlers: list[langchain_core.callbacks.base.BaseCallbackHandler],
+    inheritable_handlers: list[langchain_core.callbacks.base.BaseCallbackHandler] | None = None,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    inheritable_tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    inheritable_metadata: dict[str, typing.Any] | None = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [CallbackManagerMixin](#langchain_core-callbacks-base-CallbackManagerMixin)
+
+Base callback manager.
+
+
+<ParamField path="inheritable_handlers" type="list[BaseCallbackHandler] = inheritable_handlers or []">
+</ParamField>
+
+<ParamField path="inheritable_metadata" type="= inheritable_metadata or &#123;&#125;">
+</ParamField>
+
+<ParamField path="inheritable_tags" type="= inheritable_tags or []">
+</ParamField>
+
+<ParamField path="is_async" type="bool">
+Whether the callback manager is async.
+</ParamField>
+
+<ParamField path="metadata" type="= metadata or &#123;&#125;">
+</ParamField>
+
+<ParamField path="tags" type="= tags or []">
+</ParamField>
+<Anchor id="langchain_core-callbacks-base-BaseCallbackManager-add_handler">
+
+<CodeBlock links={{"langchain_core.callbacks.base.BaseCallbackHandler":"#langchain_core-callbacks-base-BaseCallbackHandler"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.BaseCallbackManager.add_handler(
+    handler: langchain_core.callbacks.base.BaseCallbackHandler,
+    inherit: bool = True
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add a handler to the callback manager.
+
+**Parameters:**
+
+<ParamField path="handler" type="BaseCallbackHandler">
+The handler to add.
+</ParamField>
+
+<ParamField path="inherit" type="bool" default="True">
+Whether to inherit the handler.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-BaseCallbackManager-add_metadata">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.BaseCallbackManager.add_metadata(
+    metadata: dict[str, typing.Any],
+    inherit: bool = True
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add metadata to the callback manager.
+
+**Parameters:**
+
+<ParamField path="metadata" type="dict[str, Any]">
+The metadata to add.
+</ParamField>
+
+<ParamField path="inherit" type="bool" default="True">
+Whether to inherit the metadata.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-BaseCallbackManager-add_tags">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.BaseCallbackManager.add_tags(
+    tags: list[str],
+    inherit: bool = True
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add tags to the callback manager.
+
+**Parameters:**
+
+<ParamField path="tags" type="list[str]">
+The tags to add.
+</ParamField>
+
+<ParamField path="inherit" type="bool" default="True">
+Whether to inherit the tags.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-BaseCallbackManager-copy">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.BaseCallbackManager.copy() -> typing_extensions.Self
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return a copy of the callback manager.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-BaseCallbackManager-merge">
+
+<CodeBlock links={{"langchain_core.callbacks.base.BaseCallbackManager":"#langchain_core-callbacks-base-BaseCallbackManager"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.BaseCallbackManager.merge(
+    other: langchain_core.callbacks.base.BaseCallbackManager
+) -> typing_extensions.Self
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Merge the callback manager with another callback manager.
+
+May be overwritten in subclasses.
+
+Primarily used internally within `merge_configs`.
+
+**Returns:** `Self`
+
+The merged callback manager of the same type as the current object.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-BaseCallbackManager-remove_handler">
+
+<CodeBlock links={{"langchain_core.callbacks.base.BaseCallbackHandler":"#langchain_core-callbacks-base-BaseCallbackHandler"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.BaseCallbackManager.remove_handler(
+    handler: langchain_core.callbacks.base.BaseCallbackHandler
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Remove a handler from the callback manager.
+
+**Parameters:**
+
+<ParamField path="handler" type="BaseCallbackHandler">
+The handler to remove.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-BaseCallbackManager-remove_metadata">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.BaseCallbackManager.remove_metadata(
+    keys: list[str]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Remove metadata from the callback manager.
+
+**Parameters:**
+
+<ParamField path="keys" type="list[str]">
+The keys to remove.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-BaseCallbackManager-remove_tags">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.BaseCallbackManager.remove_tags(
+    tags: list[str]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Remove tags from the callback manager.
+
+**Parameters:**
+
+<ParamField path="tags" type="list[str]">
+The tags to remove.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-BaseCallbackManager-set_handler">
+
+<CodeBlock links={{"langchain_core.callbacks.base.BaseCallbackHandler":"#langchain_core-callbacks-base-BaseCallbackHandler"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.BaseCallbackManager.set_handler(
+    handler: langchain_core.callbacks.base.BaseCallbackHandler,
+    inherit: bool = True
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Set handler as the only handler on the callback manager.
+
+**Parameters:**
+
+<ParamField path="handler" type="BaseCallbackHandler">
+The handler to set.
+</ParamField>
+
+<ParamField path="inherit" type="bool" default="True">
+Whether to inherit the handler.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-BaseCallbackManager-set_handlers">
+
+<CodeBlock links={{"langchain_core.callbacks.base.BaseCallbackHandler":"#langchain_core-callbacks-base-BaseCallbackHandler"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.BaseCallbackManager.set_handlers(
+    handlers: list[langchain_core.callbacks.base.BaseCallbackHandler],
+    inherit: bool = True
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Set handlers as the only handlers on the callback manager.
+
+**Parameters:**
+
+<ParamField path="handlers" type="list[BaseCallbackHandler]">
+The handlers to set.
+</ParamField>
+
+<ParamField path="inherit" type="bool" default="True">
+Whether to inherit the handlers.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-base-CallbackManagerMixin">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.base.CallbackManagerMixin()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Mixin for callback manager.
+
+
+<Anchor id="langchain_core-callbacks-base-CallbackManagerMixin-on_chain_start">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.CallbackManagerMixin.on_chain_start(
+    serialized: dict[str, typing.Any],
+    inputs: dict[str, typing.Any],
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when a chain starts running.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any]">
+The serialized chain.
+</ParamField>
+
+<ParamField path="inputs" type="dict[str, Any]">
+The inputs.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+The metadata.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-CallbackManagerMixin-on_chat_model_start">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.CallbackManagerMixin.on_chat_model_start(
+    serialized: dict[str, typing.Any],
+    messages: list[list[langchain_core.messages.BaseMessage]],
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when a chat model starts running.
+
+!!! warning
+
+    This method is called for chat models. If you're implementing a handler for
+    a non-chat model, you should use `on_llm_start` instead.
+
+!!! note
+
+    When overriding this method, the signature **must** include the two
+    required positional arguments ``serialized`` and ``messages``.  Avoid
+    using ``*args`` in your override — doing so causes an ``IndexError``
+    in the fallback path when the callback system converts ``messages``
+    to prompt strings for ``on_llm_start``.  Always declare the
+    signature explicitly:
+
+    .. code-block:: python
+
+        def on_chat_model_start(
+            self,
+            serialized: dict[str, Any],
+            messages: list[list[BaseMessage]],
+            **kwargs: Any,
+        ) -&gt; None:
+            raise NotImplementedError  # triggers fallback to on_llm_start
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any]">
+The serialized chat model.
+</ParamField>
+
+<ParamField path="messages" type="list[list[BaseMessage]]">
+The messages. Must be a list of message lists — this is a
+required positional argument and must be present in any override.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+The metadata.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-CallbackManagerMixin-on_llm_start">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.CallbackManagerMixin.on_llm_start(
+    serialized: dict[str, typing.Any],
+    prompts: list[str],
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when LLM starts running.
+
+!!! warning
+
+    This method is called for non-chat models (regular text completion LLMs). If
+    you're implementing a handler for a chat model, you should use
+    `on_chat_model_start` instead.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any]">
+The serialized LLM.
+</ParamField>
+
+<ParamField path="prompts" type="list[str]">
+The prompts.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+The metadata.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-CallbackManagerMixin-on_retriever_start">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.CallbackManagerMixin.on_retriever_start(
+    serialized: dict[str, typing.Any],
+    query: str,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when the `Retriever` starts running.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any]">
+The serialized `Retriever`.
+</ParamField>
+
+<ParamField path="query" type="str">
+The query.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+The metadata.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-CallbackManagerMixin-on_tool_start">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.CallbackManagerMixin.on_tool_start(
+    serialized: dict[str, typing.Any],
+    input_str: str,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    inputs: dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when the tool starts running.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any]">
+The serialized chain.
+</ParamField>
+
+<ParamField path="input_str" type="str">
+The input string.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+The metadata.
+</ParamField>
+
+<ParamField path="inputs" type="dict[str, Any] | None" default="None">
+The inputs.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-base-ChainManagerMixin">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.base.ChainManagerMixin()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Mixin for chain callbacks.
+
+
+<Anchor id="langchain_core-callbacks-base-ChainManagerMixin-on_agent_action">
+
+<CodeBlock links={{"langchain_core.agents.AgentAction":"/langchain-core/langchain_core/agents#langchain_core-agents-AgentAction"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.ChainManagerMixin.on_agent_action(
+    action: langchain_core.agents.AgentAction,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run on agent action.
+
+**Parameters:**
+
+<ParamField path="action" type="AgentAction">
+The agent action.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-ChainManagerMixin-on_agent_finish">
+
+<CodeBlock links={{"langchain_core.agents.AgentFinish":"/langchain-core/langchain_core/agents#langchain_core-agents-AgentFinish"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.ChainManagerMixin.on_agent_finish(
+    finish: langchain_core.agents.AgentFinish,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run on the agent end.
+
+**Parameters:**
+
+<ParamField path="finish" type="AgentFinish">
+The agent finish.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-ChainManagerMixin-on_chain_end">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.ChainManagerMixin.on_chain_end(
+    outputs: dict[str, typing.Any],
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when chain ends running.
+
+**Parameters:**
+
+<ParamField path="outputs" type="dict[str, Any]">
+The outputs of the chain.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-ChainManagerMixin-on_chain_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.ChainManagerMixin.on_chain_error(
+    error: BaseException,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when chain errors.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error that occurred.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-base-LLMManagerMixin">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.base.LLMManagerMixin()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Mixin for LLM callbacks.
+
+
+<Anchor id="langchain_core-callbacks-base-LLMManagerMixin-on_llm_end">
+
+<CodeBlock links={{"langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.LLMManagerMixin.on_llm_end(
+    response: langchain_core.outputs.LLMResult,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when LLM ends running.
+
+**Parameters:**
+
+<ParamField path="response" type="LLMResult">
+The response which was generated.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-LLMManagerMixin-on_llm_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.LLMManagerMixin.on_llm_error(
+    error: BaseException,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when LLM errors.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error that occurred.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-LLMManagerMixin-on_llm_new_token">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.LLMManagerMixin.on_llm_new_token(
+    token: str,
+    chunk: langchain_core.outputs.GenerationChunk | langchain_core.outputs.ChatGenerationChunk | None = None,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run on new output token.
+
+Only available when streaming is enabled.
+
+For both chat models and non-chat models (legacy text completion LLMs).
+
+**Parameters:**
+
+<ParamField path="token" type="str">
+The new token.
+</ParamField>
+
+<ParamField path="chunk" type="GenerationChunk | ChatGenerationChunk | None" default="None">
+The new generated chunk, containing content and other information.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-base-RetrieverManagerMixin">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.base.RetrieverManagerMixin()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Mixin for `Retriever` callbacks.
+
+
+<Anchor id="langchain_core-callbacks-base-RetrieverManagerMixin-on_retriever_end">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.RetrieverManagerMixin.on_retriever_end(
+    documents: collections.abc.Sequence[langchain_core.documents.Document],
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when `Retriever` ends running.
+
+**Parameters:**
+
+<ParamField path="documents" type="Sequence[Document]">
+The documents retrieved.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-RetrieverManagerMixin-on_retriever_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.RetrieverManagerMixin.on_retriever_error(
+    error: BaseException,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when `Retriever` errors.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error that occurred.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-base-RunManagerMixin">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.base.RunManagerMixin()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Mixin for run manager.
+
+
+<Anchor id="langchain_core-callbacks-base-RunManagerMixin-on_custom_event">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.RunManagerMixin.on_custom_event(
+    name: str,
+    data: typing.Any,
+    run_id: uuid.UUID,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Override to define a handler for a custom event.
+
+**Parameters:**
+
+<ParamField path="name" type="str">
+The name of the custom event.
+</ParamField>
+
+<ParamField path="data" type="Any">
+The data for the custom event.
+
+Format will match the format specified by the user.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags associated with the custom event (includes inherited tags).
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+The metadata associated with the custom event (includes inherited
+metadata).
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-RunManagerMixin-on_retry">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.RunManagerMixin.on_retry(
+    retry_state: tenacity.RetryCallState,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run on a retry event.
+
+**Parameters:**
+
+<ParamField path="retry_state" type="RetryCallState">
+The retry state.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-RunManagerMixin-on_text">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.RunManagerMixin.on_text(
+    text: str,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run on an arbitrary text.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The text.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-base-ToolManagerMixin">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.base.ToolManagerMixin()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Mixin for tool callbacks.
+
+
+<Anchor id="langchain_core-callbacks-base-ToolManagerMixin-on_tool_end">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.ToolManagerMixin.on_tool_end(
+    output: typing.Any,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when the tool ends running.
+
+**Parameters:**
+
+<ParamField path="output" type="Any">
+The output of the tool.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-base-ToolManagerMixin-on_tool_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.ToolManagerMixin.on_tool_error(
+    error: BaseException,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when tool errors.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error that occurred.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The ID of the current run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-base-Callbacks">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base.Callbacks = list[BaseCallbackHandler] | BaseCallbackManager | None
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-callbacks-base-_LOGGER">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.base._LOGGER = logging.getLogger(__name__)
+```
+
+</CodeBlock>
+</Anchor>
+

@@ -1,0 +1,442 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/chat_history
+title: langchain_core.chat_history
+---
+
+Chat message history stores a history of the message interactions in a chat.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`BaseChatMessageHistory`](#langchain_core-chat_history-BaseChatMessageHistory) | Abstract base class for storing chat message history. |
+| [`InMemoryChatMessageHistory`](#langchain_core-chat_history-InMemoryChatMessageHistory) | In memory implementation of chat message history. |
+
+### API
+
+<Anchor id="langchain_core-chat_history-BaseChatMessageHistory">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.chat_history.BaseChatMessageHistory()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+Abstract base class for storing chat message history.
+
+Implementations guidelines:
+
+Implementations are expected to over-ride all or some of the following methods:
+
+* `add_messages`: sync variant for bulk addition of messages
+* `aadd_messages`: async variant for bulk addition of messages
+* `messages`: sync variant for getting messages
+* `aget_messages`: async variant for getting messages
+* `clear`: sync variant for clearing messages
+* `aclear`: async variant for clearing messages
+
+`add_messages` contains a default implementation that calls `add_message`
+for each message in the sequence. This is provided for backwards compatibility
+with existing implementations which only had `add_message`.
+
+Async variants all have default implementations that call the sync variants.
+Implementers can choose to override the async implementations to provide
+truly async implementations.
+
+Usage guidelines:
+
+When used for updating history, users should favor usage of `add_messages`
+over `add_message` or other variants like `add_user_message` and `add_ai_message`
+to avoid unnecessary round-trips to the underlying persistence layer.
+
+
+<ParamField path="messages" type="list[BaseMessage]">
+A property or attribute that returns a list of messages.
+
+In general, getting the messages may involve IO to the underlying persistence
+layer, so this operation is expected to incur some latency.
+</ParamField>
+<Anchor id="langchain_core-chat_history-BaseChatMessageHistory-__str__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.chat_history.BaseChatMessageHistory.__str__() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return a string representation of the chat history.
+
+
+</Indent>
+<Anchor id="langchain_core-chat_history-BaseChatMessageHistory-aadd_messages">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.chat_history.BaseChatMessageHistory.aadd_messages(
+    messages: collections.abc.Sequence[langchain_core.messages.BaseMessage]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async add a list of messages.
+
+**Parameters:**
+
+<ParamField path="messages" type="Sequence[BaseMessage]">
+A sequence of `BaseMessage` objects to store.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-chat_history-BaseChatMessageHistory-aclear">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.chat_history.BaseChatMessageHistory.aclear() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async remove all messages from the store.
+
+
+</Indent>
+<Anchor id="langchain_core-chat_history-BaseChatMessageHistory-add_ai_message">
+
+<CodeBlock links={{"langchain_core.messages.AIMessage":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.chat_history.BaseChatMessageHistory.add_ai_message(
+    message: langchain_core.messages.AIMessage | str
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convenience method for adding an `AIMessage` string to the store.
+
+!!! note
+
+    This is a convenience method. Code should favor the bulk `add_messages`
+    interface instead to save on round-trips to the persistence layer.
+
+This method may be deprecated in a future release.
+
+**Parameters:**
+
+<ParamField path="message" type="AIMessage | str">
+The `AIMessage` to add.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-chat_history-BaseChatMessageHistory-add_message">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.chat_history.BaseChatMessageHistory.add_message(
+    message: langchain_core.messages.BaseMessage
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add a Message object to the store.
+
+**Parameters:**
+
+<ParamField path="message" type="BaseMessage">
+A `BaseMessage` object to store.
+</ParamField>
+
+**Raises:**
+
+- `NotImplementedError`: If the sub-class has not implemented an efficient
+`add_messages` method.
+
+
+</Indent>
+<Anchor id="langchain_core-chat_history-BaseChatMessageHistory-add_messages">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.chat_history.BaseChatMessageHistory.add_messages(
+    messages: collections.abc.Sequence[langchain_core.messages.BaseMessage]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add a list of messages.
+
+Implementations should over-ride this method to handle bulk addition of messages
+in an efficient manner to avoid unnecessary round-trips to the underlying store.
+
+**Parameters:**
+
+<ParamField path="messages" type="Sequence[BaseMessage]">
+A sequence of `BaseMessage` objects to store.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-chat_history-BaseChatMessageHistory-add_user_message">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.chat_history.BaseChatMessageHistory.add_user_message(
+    message: langchain_core.messages.HumanMessage | str
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convenience method for adding a human message string to the store.
+
+!!! note
+
+    This is a convenience method. Code should favor the bulk `add_messages`
+    interface instead to save on round-trips to the persistence layer.
+
+This method may be deprecated in a future release.
+
+**Parameters:**
+
+<ParamField path="message" type="HumanMessage | str">
+The `HumanMessage` to add to the store.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-chat_history-BaseChatMessageHistory-aget_messages">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.chat_history.BaseChatMessageHistory.aget_messages() -> list[langchain_core.messages.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async version of getting messages.
+
+Can over-ride this method to provide an efficient async implementation.
+
+In general, fetching messages may involve IO to the underlying persistence
+layer.
+
+**Returns:** `list[BaseMessage]`
+
+The messages.
+
+
+</Indent>
+<Anchor id="langchain_core-chat_history-BaseChatMessageHistory-clear">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.chat_history.BaseChatMessageHistory.clear() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Remove all messages from the store.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-chat_history-InMemoryChatMessageHistory">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.chat_history.InMemoryChatMessageHistory()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseChatMessageHistory](#langchain_core-chat_history-BaseChatMessageHistory), `BaseModel`
+
+In memory implementation of chat message history.
+
+Stores messages in a memory list.
+
+
+<ParamField path="messages" type="list[BaseMessage] = Field(default_factory=list)">
+A list of messages stored in memory.
+</ParamField>
+<Anchor id="langchain_core-chat_history-InMemoryChatMessageHistory-aadd_messages">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.chat_history.InMemoryChatMessageHistory.aadd_messages(
+    messages: collections.abc.Sequence[langchain_core.messages.BaseMessage]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async add messages to the store.
+
+**Parameters:**
+
+<ParamField path="messages" type="Sequence[BaseMessage]">
+The messages to add.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-chat_history-InMemoryChatMessageHistory-aclear">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.chat_history.InMemoryChatMessageHistory.aclear() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async clear all messages from the store.
+
+
+</Indent>
+<Anchor id="langchain_core-chat_history-InMemoryChatMessageHistory-add_message">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.chat_history.InMemoryChatMessageHistory.add_message(
+    message: langchain_core.messages.BaseMessage
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add a self-created message to the store.
+
+**Parameters:**
+
+<ParamField path="message" type="BaseMessage">
+The message to add.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-chat_history-InMemoryChatMessageHistory-aget_messages">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.chat_history.InMemoryChatMessageHistory.aget_messages() -> list[langchain_core.messages.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async version of getting messages.
+
+Can over-ride this method to provide an efficient async implementation.
+
+In general, fetching messages may involve IO to the underlying persistence
+layer.
+
+**Returns:** `list[BaseMessage]`
+
+List of messages.
+
+
+</Indent>
+<Anchor id="langchain_core-chat_history-InMemoryChatMessageHistory-clear">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.chat_history.InMemoryChatMessageHistory.clear() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Clear all messages from the store.
+
+
+</Indent>
+</Indent>

@@ -1,0 +1,70 @@
+---
+title: cub::RadixSortTwiddle
+description: "Twiddling keys for radix sort."
+---
+
+Twiddling keys for radix sort.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="IS_DESCENDING" type="bool">
+</ParamField>
+
+<ParamField path="KeyT" type="typename">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Static methods
+
+### In <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"RadixSortTwiddle": "/library/api/cub::RadixSortTwiddle"}}>
+```cpp showLineNumbers={false}
+template <class DecomposerT>
+static bit_ordered_type cub::RadixSortTwiddle<IS_DESCENDING, KeyT>::In(
+    bit_ordered_type key,
+    DecomposerT decomposer = {}
+)
+```
+</CodeBlock>
+
+### Out <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"RadixSortTwiddle": "/library/api/cub::RadixSortTwiddle"}}>
+```cpp showLineNumbers={false}
+template <class DecomposerT>
+static bit_ordered_type cub::RadixSortTwiddle<IS_DESCENDING, KeyT>::Out(
+    bit_ordered_type key,
+    DecomposerT decomposer = {}
+)
+```
+</CodeBlock>
+
+### DefaultKey <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"RadixSortTwiddle": "/library/api/cub::RadixSortTwiddle"}}>
+```cpp showLineNumbers={false}
+template <class DecomposerT>
+static bit_ordered_type cub::RadixSortTwiddle<IS_DESCENDING, KeyT>::DefaultKey(
+    DecomposerT decomposer = {}
+)
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `traits` | `detail::radix::traits_t< KeyT >` |
+| `bit_ordered_type` | `typename traits::bit_ordered_type` |
+| `bit_ordered_conversion_policy` | `typename traits::bit_ordered_conversion_policy` |
+| `bit_ordered_inversion_policy` | `typename traits::bit_ordered_inversion_policy` |

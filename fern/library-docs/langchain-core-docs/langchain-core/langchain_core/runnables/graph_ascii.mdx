@@ -1,0 +1,391 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/runnables/graph_ascii
+title: langchain_core.runnables.graph_ascii
+---
+
+Draws DAG in ASCII.
+
+Adapted from https://github.com/iterative/dvc/blob/main/dvc/dagascii.py.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`AsciiCanvas`](#langchain_core-runnables-graph_ascii-AsciiCanvas) | Class for drawing in ASCII. |
+| [`VertexViewer`](#langchain_core-runnables-graph_ascii-VertexViewer) | VertexViewer class. |
+| [`_EdgeViewer`](#langchain_core-runnables-graph_ascii-_EdgeViewer) | - |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_build_sugiyama_layout`](#langchain_core-runnables-graph_ascii-_build_sugiyama_layout) | - |
+| [`draw_ascii`](#langchain_core-runnables-graph_ascii-draw_ascii) | Build a DAG and draw it in ASCII. |
+
+### Data
+
+[`_HAS_GRANDALF`](#langchain_core-runnables-graph_ascii-_HAS_GRANDALF)
+
+### API
+
+<Anchor id="langchain_core-runnables-graph_ascii-AsciiCanvas">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.graph_ascii.AsciiCanvas(
+    cols: int,
+    lines: int
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Class for drawing in ASCII.
+
+
+<ParamField path="TIMEOUT" type="= 10">
+</ParamField>
+
+<ParamField path="canvas" type="= [([' '] * cols) for line in (range(lines))]">
+</ParamField>
+<Anchor id="langchain_core-runnables-graph_ascii-AsciiCanvas-box">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph_ascii.AsciiCanvas.box(
+    x0: int,
+    y0: int,
+    width: int,
+    height: int
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a box on ASCII canvas.
+
+**Parameters:**
+
+<ParamField path="x0" type="int">
+x coordinate of the box corner.
+</ParamField>
+
+<ParamField path="y0" type="int">
+y coordinate of the box corner.
+</ParamField>
+
+<ParamField path="width" type="int">
+box width.
+</ParamField>
+
+<ParamField path="height" type="int">
+box height.
+</ParamField>
+
+**Raises:**
+
+- `ValueError`: if box dimensions are invalid.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph_ascii-AsciiCanvas-draw">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph_ascii.AsciiCanvas.draw() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Draws ASCII canvas on the screen.
+
+**Returns:** `str`
+
+The ASCII canvas string.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph_ascii-AsciiCanvas-line">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph_ascii.AsciiCanvas.line(
+    x0: int,
+    y0: int,
+    x1: int,
+    y1: int,
+    char: str
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a line on ASCII canvas.
+
+**Parameters:**
+
+<ParamField path="x0" type="int">
+x coordinate where the line should start.
+</ParamField>
+
+<ParamField path="y0" type="int">
+y coordinate where the line should start.
+</ParamField>
+
+<ParamField path="x1" type="int">
+x coordinate where the line should end.
+</ParamField>
+
+<ParamField path="y1" type="int">
+y coordinate where the line should end.
+</ParamField>
+
+<ParamField path="char" type="str">
+character to draw the line with.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph_ascii-AsciiCanvas-point">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph_ascii.AsciiCanvas.point(
+    x: int,
+    y: int,
+    char: str
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a point on ASCII canvas.
+
+**Parameters:**
+
+<ParamField path="x" type="int">
+x coordinate. Should be `&gt;= 0` and `&lt;` number of columns in
+the canvas.
+</ParamField>
+
+<ParamField path="y" type="int">
+y coordinate. Should be `&gt;= 0` an `&lt;` number of lines in the
+canvas.
+</ParamField>
+
+<ParamField path="char" type="str">
+character to place in the specified point on the
+canvas.
+</ParamField>
+
+**Raises:**
+
+- `ValueError`: if char is not a single character or if
+coordinates are out of bounds.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph_ascii-AsciiCanvas-text">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph_ascii.AsciiCanvas.text(
+    x: int,
+    y: int,
+    text: str
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Print a text on ASCII canvas.
+
+**Parameters:**
+
+<ParamField path="x" type="int">
+x coordinate where the text should start.
+</ParamField>
+
+<ParamField path="y" type="int">
+y coordinate where the text should start.
+</ParamField>
+
+<ParamField path="text" type="str">
+string that should be printed.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-graph_ascii-VertexViewer">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.graph_ascii.VertexViewer(
+    name: str
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+VertexViewer class.
+
+Class to define vertex box boundaries that will be accounted for during
+graph building by grandalf.
+
+
+<ParamField path="HEIGHT" type="= 3">
+Height of the box.
+</ParamField>
+
+<ParamField path="_h" type="= self.HEIGHT">
+</ParamField>
+
+<ParamField path="_w" type="= len(name) + 2">
+</ParamField>
+
+<ParamField path="h" type="int">
+Height of the box.
+</ParamField>
+
+<ParamField path="w" type="int">
+Width of the box.
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-runnables-graph_ascii-_EdgeViewer">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.graph_ascii._EdgeViewer()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<ParamField path="pts" type="list[tuple[float]] = []">
+</ParamField>
+<Anchor id="langchain_core-runnables-graph_ascii-_EdgeViewer-setpath">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph_ascii._EdgeViewer.setpath(
+    pts: list[tuple[float]]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-graph_ascii-_build_sugiyama_layout">
+
+<CodeBlock links={{"langchain_core.runnables.graph.Edge":"/langchain-core/langchain_core/runnables/graph#langchain_core-runnables-graph-Edge"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph_ascii._build_sugiyama_layout(
+    vertices: collections.abc.Mapping[str, str],
+    edges: collections.abc.Sequence[langchain_core.runnables.graph.Edge]
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-graph_ascii-draw_ascii">
+
+<CodeBlock links={{"langchain_core.runnables.graph.Edge":"/langchain-core/langchain_core/runnables/graph#langchain_core-runnables-graph-Edge"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph_ascii.draw_ascii(
+    vertices: collections.abc.Mapping[str, str],
+    edges: collections.abc.Sequence[langchain_core.runnables.graph.Edge]
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Build a DAG and draw it in ASCII.
+
+**Parameters:**
+
+<ParamField path="vertices" type="Mapping[str, str]">
+list of graph vertices.
+</ParamField>
+
+<ParamField path="edges" type="Sequence[LangEdge]">
+list of graph edges.
+</ParamField>
+
+**Returns:** `str`
+
+ASCII representation
+
+**Raises:**
+
+- `ValueError`: if the canvas dimensions are invalid or if
+edge coordinates are invalid.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-graph_ascii-_HAS_GRANDALF">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph_ascii._HAS_GRANDALF = True
+```
+
+</CodeBlock>
+</Anchor>
+

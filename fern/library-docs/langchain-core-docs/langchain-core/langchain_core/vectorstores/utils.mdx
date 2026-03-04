@@ -1,0 +1,171 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/vectorstores/utils
+title: langchain_core.vectorstores.utils
+---
+
+Internal utilities for the in memory implementation of `VectorStore`.
+
+!!! warning
+
+    These are part of a private API, and users should not use them directly as they can
+    change without notice.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_cosine_similarity`](#langchain_core-vectorstores-utils-_cosine_similarity) | Row-wise cosine similarity between two equal-width matrices. |
+| [`maximal_marginal_relevance`](#langchain_core-vectorstores-utils-maximal_marginal_relevance) | Calculate maximal marginal relevance. |
+
+### Data
+
+[`Matrix`](#langchain_core-vectorstores-utils-Matrix)
+
+[`_HAS_NUMPY`](#langchain_core-vectorstores-utils-_HAS_NUMPY)
+
+[`_HAS_SIMSIMD`](#langchain_core-vectorstores-utils-_HAS_SIMSIMD)
+
+[`logger`](#langchain_core-vectorstores-utils-logger)
+
+### API
+
+<Anchor id="langchain_core-vectorstores-utils-_cosine_similarity">
+
+<CodeBlock links={{"langchain_core.vectorstores.utils.Matrix":"#langchain_core-vectorstores-utils-Matrix"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.utils._cosine_similarity(
+    x: langchain_core.vectorstores.utils.Matrix,
+    y: langchain_core.vectorstores.utils.Matrix
+) -> numpy.ndarray
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Row-wise cosine similarity between two equal-width matrices.
+
+**Parameters:**
+
+<ParamField path="x" type="Matrix">
+A matrix of shape `(n, m)`.
+</ParamField>
+
+<ParamField path="y" type="Matrix">
+A matrix of shape `(k, m)`.
+</ParamField>
+
+**Returns:** `np.ndarray`
+
+A matrix of shape `(n, k)` where each element `(i, j)` is the cosine similarity
+between the `i`th row of `x` and the `j`th row of `y`.
+
+**Raises:**
+
+- `ValueError`: If the number of columns in `x` and `y` are not the same.
+- `ImportError`: If numpy is not installed.
+
+
+</Indent>
+
+<Anchor id="langchain_core-vectorstores-utils-maximal_marginal_relevance">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.utils.maximal_marginal_relevance(
+    query_embedding: numpy.ndarray,
+    embedding_list: list,
+    lambda_mult: float = 0.5,
+    k: int = 4
+) -> list[int]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Calculate maximal marginal relevance.
+
+**Parameters:**
+
+<ParamField path="query_embedding" type="np.ndarray">
+The query embedding.
+</ParamField>
+
+<ParamField path="embedding_list" type="list">
+A list of embeddings.
+</ParamField>
+
+<ParamField path="lambda_mult" type="float" default="0.5">
+The lambda parameter for MMR.
+</ParamField>
+
+<ParamField path="k" type="int" default="4">
+The number of embeddings to return.
+</ParamField>
+
+**Returns:** `list[int]`
+
+A list of indices of the embeddings to return.
+
+**Raises:**
+
+- `ImportError`: If numpy is not installed.
+
+
+</Indent>
+
+<Anchor id="langchain_core-vectorstores-utils-Matrix">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.utils.Matrix = list[list[float]] | list[np.ndarray] | np.ndarray
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-vectorstores-utils-_HAS_NUMPY">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.utils._HAS_NUMPY = True
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-vectorstores-utils-_HAS_SIMSIMD">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.utils._HAS_SIMSIMD = True
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-vectorstores-utils-logger">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.utils.logger = logging.getLogger(__name__)
+```
+
+</CodeBlock>
+</Anchor>
+

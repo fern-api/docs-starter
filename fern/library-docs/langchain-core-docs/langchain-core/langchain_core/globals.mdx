@@ -1,0 +1,210 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/globals
+title: langchain_core.globals
+---
+
+Global values and configuration that apply to all of LangChain.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`get_debug`](#langchain_core-globals-get_debug) | Get the value of the `debug` global setting. |
+| [`get_llm_cache`](#langchain_core-globals-get_llm_cache) | Get the value of the `llm_cache` global setting. |
+| [`get_verbose`](#langchain_core-globals-get_verbose) | Get the value of the `verbose` global setting. |
+| [`set_debug`](#langchain_core-globals-set_debug) | Set a new value for the `debug` global setting. |
+| [`set_llm_cache`](#langchain_core-globals-set_llm_cache) | Set a new LLM cache, overwriting the previous value, if any. |
+| [`set_verbose`](#langchain_core-globals-set_verbose) | Set a new value for the `verbose` global setting. |
+
+### Data
+
+[`_debug`](#langchain_core-globals-_debug)
+
+[`_llm_cache`](#langchain_core-globals-_llm_cache)
+
+[`_verbose`](#langchain_core-globals-_verbose)
+
+### API
+
+<Anchor id="langchain_core-globals-get_debug">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.globals.get_debug() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the value of the `debug` global setting.
+
+**Returns:** `bool`
+
+The value of the `debug` global setting.
+
+
+</Indent>
+
+<Anchor id="langchain_core-globals-get_llm_cache">
+
+<CodeBlock links={{"langchain_core.caches.BaseCache":"/langchain-core/langchain_core/caches#langchain_core-caches-BaseCache"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.globals.get_llm_cache() -> typing.Optional[langchain_core.caches.BaseCache]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the value of the `llm_cache` global setting.
+
+**Returns:** `Optional[BaseCache]`
+
+The value of the `llm_cache` global setting.
+
+
+</Indent>
+
+<Anchor id="langchain_core-globals-get_verbose">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.globals.get_verbose() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the value of the `verbose` global setting.
+
+**Returns:** `bool`
+
+The value of the `verbose` global setting.
+
+
+</Indent>
+
+<Anchor id="langchain_core-globals-set_debug">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.globals.set_debug(
+    value: bool
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Set a new value for the `debug` global setting.
+
+**Parameters:**
+
+<ParamField path="value" type="bool">
+The new value for the `debug` global setting.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="langchain_core-globals-set_llm_cache">
+
+<CodeBlock links={{"langchain_core.caches.BaseCache":"/langchain-core/langchain_core/caches#langchain_core-caches-BaseCache"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.globals.set_llm_cache(
+    value: typing.Optional[langchain_core.caches.BaseCache]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Set a new LLM cache, overwriting the previous value, if any.
+
+**Parameters:**
+
+<ParamField path="value" type="Optional[BaseCache]">
+The new LLM cache to use. If `None`, the LLM cache is disabled.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="langchain_core-globals-set_verbose">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.globals.set_verbose(
+    value: bool
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Set a new value for the `verbose` global setting.
+
+**Parameters:**
+
+<ParamField path="value" type="bool">
+The new value for the `verbose` global setting.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="langchain_core-globals-_debug">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.globals._debug: bool = False
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-globals-_llm_cache">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.globals._llm_cache: Optional[BaseCache] = None
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-globals-_verbose">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.globals._verbose: bool = False
+```
+
+</CodeBlock>
+</Anchor>
+

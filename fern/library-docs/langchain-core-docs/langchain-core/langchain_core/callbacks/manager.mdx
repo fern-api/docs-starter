@@ -1,0 +1,2935 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/callbacks/manager
+title: langchain_core.callbacks.manager
+---
+
+Run managers.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`AsyncCallbackManager`](#langchain_core-callbacks-manager-AsyncCallbackManager) | Async callback manager that handles callbacks from LangChain. |
+| [`AsyncCallbackManagerForChainGroup`](#langchain_core-callbacks-manager-AsyncCallbackManagerForChainGroup) | Async callback manager for the chain group. |
+| [`AsyncCallbackManagerForChainRun`](#langchain_core-callbacks-manager-AsyncCallbackManagerForChainRun) | Async callback manager for chain run. |
+| [`AsyncCallbackManagerForLLMRun`](#langchain_core-callbacks-manager-AsyncCallbackManagerForLLMRun) | Async callback manager for LLM run. |
+| [`AsyncCallbackManagerForRetrieverRun`](#langchain_core-callbacks-manager-AsyncCallbackManagerForRetrieverRun) | Async callback manager for retriever run. |
+| [`AsyncCallbackManagerForToolRun`](#langchain_core-callbacks-manager-AsyncCallbackManagerForToolRun) | Async callback manager for tool run. |
+| [`AsyncParentRunManager`](#langchain_core-callbacks-manager-AsyncParentRunManager) | Async parent run manager. |
+| [`AsyncRunManager`](#langchain_core-callbacks-manager-AsyncRunManager) | Async run manager. |
+| [`BaseRunManager`](#langchain_core-callbacks-manager-BaseRunManager) | Base class for run manager (a bound callback manager). |
+| [`CallbackManager`](#langchain_core-callbacks-manager-CallbackManager) | Callback manager for LangChain. |
+| [`CallbackManagerForChainGroup`](#langchain_core-callbacks-manager-CallbackManagerForChainGroup) | Callback manager for the chain group. |
+| [`CallbackManagerForChainRun`](#langchain_core-callbacks-manager-CallbackManagerForChainRun) | Callback manager for chain run. |
+| [`CallbackManagerForLLMRun`](#langchain_core-callbacks-manager-CallbackManagerForLLMRun) | Callback manager for LLM run. |
+| [`CallbackManagerForRetrieverRun`](#langchain_core-callbacks-manager-CallbackManagerForRetrieverRun) | Callback manager for retriever run. |
+| [`CallbackManagerForToolRun`](#langchain_core-callbacks-manager-CallbackManagerForToolRun) | Callback manager for tool run. |
+| [`ParentRunManager`](#langchain_core-callbacks-manager-ParentRunManager) | Synchronous parent run manager. |
+| [`RunManager`](#langchain_core-callbacks-manager-RunManager) | Synchronous run manager. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_ahandle_event_for_handler`](#langchain_core-callbacks-manager-_ahandle_event_for_handler) | - |
+| [`_configure`](#langchain_core-callbacks-manager-_configure) | Configure the callback manager. |
+| [`_executor`](#langchain_core-callbacks-manager-_executor) | - |
+| [`_get_debug`](#langchain_core-callbacks-manager-_get_debug) | - |
+| [`_run_coros`](#langchain_core-callbacks-manager-_run_coros) | - |
+| [`adispatch_custom_event`](#langchain_core-callbacks-manager-adispatch_custom_event) | Dispatch an adhoc event to the handlers. |
+| [`ahandle_event`](#langchain_core-callbacks-manager-ahandle_event) | Async generic event handler for `AsyncCallbackManager`. |
+| [`atrace_as_chain_group`](#langchain_core-callbacks-manager-atrace_as_chain_group) | Get an async callback manager for a chain group in a context manager. |
+| [`dispatch_custom_event`](#langchain_core-callbacks-manager-dispatch_custom_event) | Dispatch an adhoc event. |
+| [`handle_event`](#langchain_core-callbacks-manager-handle_event) | Generic event handler for `CallbackManager`. |
+| [`shielded`](#langchain_core-callbacks-manager-shielded) | Makes so an awaitable method is always shielded from cancellation. |
+| [`trace_as_chain_group`](#langchain_core-callbacks-manager-trace_as_chain_group) | Get a callback manager for a chain group in a context manager. |
+
+### Data
+
+[`Func`](#langchain_core-callbacks-manager-Func)
+
+[`T`](#langchain_core-callbacks-manager-T)
+
+[`logger`](#langchain_core-callbacks-manager-logger)
+
+### API
+
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManager">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.manager.AsyncCallbackManager()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseCallbackManager](/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-BaseCallbackManager)
+
+Async callback manager that handles callbacks from LangChain.
+
+
+<ParamField path="is_async" type="bool">
+Return whether the handler is async.
+</ParamField>
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManager-configure">
+
+<CodeBlock links={{"langchain_core.callbacks.base.Callbacks":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-Callbacks","langchain_core.callbacks.manager.AsyncCallbackManager":"#langchain_core-callbacks-manager-AsyncCallbackManager"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManager.configure(
+    inheritable_callbacks: langchain_core.callbacks.base.Callbacks = None,
+    local_callbacks: langchain_core.callbacks.base.Callbacks = None,
+    verbose: bool = False,
+    inheritable_tags: list[str] | None = None,
+    local_tags: list[str] | None = None,
+    inheritable_metadata: dict[str, typing.Any] | None = None,
+    local_metadata: dict[str, typing.Any] | None = None
+) -> langchain_core.callbacks.manager.AsyncCallbackManager
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Configure the async callback manager.
+
+**Parameters:**
+
+<ParamField path="inheritable_callbacks" type="Callbacks" default="None">
+The inheritable callbacks.
+</ParamField>
+
+<ParamField path="local_callbacks" type="Callbacks" default="None">
+The local callbacks.
+</ParamField>
+
+<ParamField path="verbose" type="bool" default="False">
+Whether to enable verbose mode.
+</ParamField>
+
+<ParamField path="inheritable_tags" type="list[str] | None" default="None">
+The inheritable tags.
+</ParamField>
+
+<ParamField path="local_tags" type="list[str] | None" default="None">
+The local tags.
+</ParamField>
+
+<ParamField path="inheritable_metadata" type="dict[str, Any] | None" default="None">
+The inheritable metadata.
+</ParamField>
+
+<ParamField path="local_metadata" type="dict[str, Any] | None" default="None">
+The local metadata.
+</ParamField>
+
+**Returns:** `AsyncCallbackManager`
+
+The configured async callback manager.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManager-on_chain_start">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.AsyncCallbackManagerForChainRun":"#langchain_core-callbacks-manager-AsyncCallbackManagerForChainRun"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManager.on_chain_start(
+    serialized: dict[str, typing.Any] | None,
+    inputs: dict[str, typing.Any] | typing.Any,
+    run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.callbacks.manager.AsyncCallbackManagerForChainRun
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async run when chain starts running.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any] | None">
+The serialized chain.
+</ParamField>
+
+<ParamField path="inputs" type="dict[str, Any] | Any">
+The inputs to the chain.
+</ParamField>
+
+<ParamField path="run_id" type="UUID | None" default="None">
+The ID of the run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+**Returns:** `AsyncCallbackManagerForChainRun`
+
+The async callback manager for the chain run.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManager-on_chat_model_start">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.callbacks.manager.AsyncCallbackManagerForLLMRun":"#langchain_core-callbacks-manager-AsyncCallbackManagerForLLMRun"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManager.on_chat_model_start(
+    serialized: dict[str, typing.Any],
+    messages: list[list[langchain_core.messages.BaseMessage]],
+    run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.callbacks.manager.AsyncCallbackManagerForLLMRun]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async run when LLM starts running.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any]">
+The serialized LLM.
+</ParamField>
+
+<ParamField path="messages" type="list[list[BaseMessage]]">
+The list of messages.
+</ParamField>
+
+<ParamField path="run_id" type="UUID | None" default="None">
+The ID of the run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+**Returns:** `list[AsyncCallbackManagerForLLMRun]`
+
+The list of async callback managers, one for each LLM run corresponding to
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManager-on_custom_event">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManager.on_custom_event(
+    name: str,
+    data: typing.Any,
+    run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Dispatch an adhoc event to the handlers (async version).
+
+This event should NOT be used in any internal LangChain code. The event is meant
+specifically for users of the library to dispatch custom events that are
+tailored to their application.
+
+**Parameters:**
+
+<ParamField path="name" type="str">
+The name of the adhoc event.
+</ParamField>
+
+<ParamField path="data" type="Any">
+The data for the adhoc event.
+</ParamField>
+
+<ParamField path="run_id" type="UUID | None" default="None">
+The ID of the run.
+</ParamField>
+
+**Raises:**
+
+- `ValueError`: If additional keyword arguments are passed.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManager-on_llm_start">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.AsyncCallbackManagerForLLMRun":"#langchain_core-callbacks-manager-AsyncCallbackManagerForLLMRun"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManager.on_llm_start(
+    serialized: dict[str, typing.Any],
+    prompts: list[str],
+    run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.callbacks.manager.AsyncCallbackManagerForLLMRun]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when LLM starts running.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any]">
+The serialized LLM.
+</ParamField>
+
+<ParamField path="prompts" type="list[str]">
+The list of prompts.
+</ParamField>
+
+<ParamField path="run_id" type="UUID | None" default="None">
+The ID of the run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+**Returns:** `list[AsyncCallbackManagerForLLMRun]`
+
+The list of async callback managers, one for each LLM run corresponding to
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManager-on_retriever_start">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.AsyncCallbackManagerForRetrieverRun":"#langchain_core-callbacks-manager-AsyncCallbackManagerForRetrieverRun"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManager.on_retriever_start(
+    serialized: dict[str, typing.Any] | None,
+    query: str,
+    run_id: uuid.UUID | None = None,
+    parent_run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.callbacks.manager.AsyncCallbackManagerForRetrieverRun
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when the retriever starts running.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any] | None">
+The serialized retriever.
+</ParamField>
+
+<ParamField path="query" type="str">
+The query.
+</ParamField>
+
+<ParamField path="run_id" type="UUID | None" default="None">
+The ID of the run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+**Returns:** `AsyncCallbackManagerForRetrieverRun`
+
+The async callback manager for the retriever run.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManager-on_tool_start">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.AsyncCallbackManagerForToolRun":"#langchain_core-callbacks-manager-AsyncCallbackManagerForToolRun"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManager.on_tool_start(
+    serialized: dict[str, typing.Any] | None,
+    input_str: str,
+    run_id: uuid.UUID | None = None,
+    parent_run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.callbacks.manager.AsyncCallbackManagerForToolRun
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when the tool starts running.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any] | None">
+The serialized tool.
+</ParamField>
+
+<ParamField path="input_str" type="str">
+The input to the tool.
+</ParamField>
+
+<ParamField path="run_id" type="UUID | None" default="None">
+The ID of the run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+**Returns:** `AsyncCallbackManagerForToolRun`
+
+The async callback manager for the tool run.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForChainGroup">
+
+<CodeBlock links={{"langchain_core.callbacks.base.BaseCallbackHandler":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-BaseCallbackHandler","langchain_core.callbacks.manager.AsyncCallbackManagerForChainRun":"#langchain_core-callbacks-manager-AsyncCallbackManagerForChainRun"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.manager.AsyncCallbackManagerForChainGroup(
+    handlers: list[langchain_core.callbacks.base.BaseCallbackHandler],
+    inheritable_handlers: list[langchain_core.callbacks.base.BaseCallbackHandler] | None = None,
+    parent_run_id: uuid.UUID | None = None,
+    parent_run_manager: langchain_core.callbacks.manager.AsyncCallbackManagerForChainRun,
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [AsyncCallbackManager](#langchain_core-callbacks-manager-AsyncCallbackManager)
+
+Async callback manager for the chain group.
+
+
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForChainGroup-copy">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.AsyncCallbackManagerForChainGroup":"#langchain_core-callbacks-manager-AsyncCallbackManagerForChainGroup"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManagerForChainGroup.copy() -> langchain_core.callbacks.manager.AsyncCallbackManagerForChainGroup
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return a copy the async callback manager.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForChainGroup-merge">
+
+<CodeBlock links={{"langchain_core.callbacks.base.BaseCallbackManager":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-BaseCallbackManager","langchain_core.callbacks.manager.AsyncCallbackManagerForChainGroup":"#langchain_core-callbacks-manager-AsyncCallbackManagerForChainGroup"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManagerForChainGroup.merge(
+    other: langchain_core.callbacks.base.BaseCallbackManager
+) -> langchain_core.callbacks.manager.AsyncCallbackManagerForChainGroup
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Merge the group callback manager with another callback manager.
+
+Overwrites the merge method in the base class to ensure that the parent run
+manager is preserved. Keeps the `parent_run_manager` from the current object.
+
+**Returns:** `AsyncCallbackManagerForChainGroup`
+
+A copy of the current `AsyncCallbackManagerForChainGroup` with the handlers,
+tags, etc. of the other callback manager merged in.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForChainGroup-on_chain_end">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManagerForChainGroup.on_chain_end(
+    outputs: dict[str, typing.Any] | typing.Any,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when traced chain group ends.
+
+**Parameters:**
+
+<ParamField path="outputs" type="dict[str, Any] | Any">
+The outputs of the chain.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForChainGroup-on_chain_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManagerForChainGroup.on_chain_error(
+    error: BaseException,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when chain errors.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForChainRun">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.manager.AsyncCallbackManagerForChainRun()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [AsyncParentRunManager](#langchain_core-callbacks-manager-AsyncParentRunManager), [ChainManagerMixin](/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-ChainManagerMixin)
+
+Async callback manager for chain run.
+
+
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForChainRun-get_sync">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.CallbackManagerForChainRun":"#langchain_core-callbacks-manager-CallbackManagerForChainRun"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManagerForChainRun.get_sync() -> langchain_core.callbacks.manager.CallbackManagerForChainRun
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the equivalent sync `RunManager`.
+
+**Returns:** `CallbackManagerForChainRun`
+
+The sync `RunManager`.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForChainRun-on_agent_action">
+
+<CodeBlock links={{"langchain_core.agents.AgentAction":"/langchain-core/langchain_core/agents#langchain_core-agents-AgentAction"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManagerForChainRun.on_agent_action(
+    action: langchain_core.agents.AgentAction,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when agent action is received.
+
+**Parameters:**
+
+<ParamField path="action" type="AgentAction">
+The agent action.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForChainRun-on_agent_finish">
+
+<CodeBlock links={{"langchain_core.agents.AgentFinish":"/langchain-core/langchain_core/agents#langchain_core-agents-AgentFinish"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManagerForChainRun.on_agent_finish(
+    finish: langchain_core.agents.AgentFinish,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when agent finish is received.
+
+**Parameters:**
+
+<ParamField path="finish" type="AgentFinish">
+The agent finish.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForChainRun-on_chain_end">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManagerForChainRun.on_chain_end(
+    outputs: dict[str, typing.Any] | typing.Any,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when a chain ends running.
+
+**Parameters:**
+
+<ParamField path="outputs" type="dict[str, Any] | Any">
+The outputs of the chain.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForChainRun-on_chain_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManagerForChainRun.on_chain_error(
+    error: BaseException,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when chain errors.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForLLMRun">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.manager.AsyncCallbackManagerForLLMRun()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [AsyncRunManager](#langchain_core-callbacks-manager-AsyncRunManager), [LLMManagerMixin](/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-LLMManagerMixin)
+
+Async callback manager for LLM run.
+
+
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForLLMRun-get_sync">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.CallbackManagerForLLMRun":"#langchain_core-callbacks-manager-CallbackManagerForLLMRun"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManagerForLLMRun.get_sync() -> langchain_core.callbacks.manager.CallbackManagerForLLMRun
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the equivalent sync `RunManager`.
+
+**Returns:** `CallbackManagerForLLMRun`
+
+The sync `RunManager`.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForLLMRun-on_llm_end">
+
+<CodeBlock links={{"langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManagerForLLMRun.on_llm_end(
+    response: langchain_core.outputs.LLMResult,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when LLM ends running.
+
+**Parameters:**
+
+<ParamField path="response" type="LLMResult">
+The LLM result.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForLLMRun-on_llm_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManagerForLLMRun.on_llm_error(
+    error: BaseException,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when LLM errors.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+
+- response (LLMResult): The response which was generated before
+    the error occurred.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForLLMRun-on_llm_new_token">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManagerForLLMRun.on_llm_new_token(
+    token: str,
+    chunk: langchain_core.outputs.GenerationChunk | langchain_core.outputs.ChatGenerationChunk | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when LLM generates a new token.
+
+**Parameters:**
+
+<ParamField path="token" type="str">
+The new token.
+</ParamField>
+
+<ParamField path="chunk" type="GenerationChunk | ChatGenerationChunk | None" default="None">
+The chunk.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForRetrieverRun">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.manager.AsyncCallbackManagerForRetrieverRun()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [AsyncParentRunManager](#langchain_core-callbacks-manager-AsyncParentRunManager), [RetrieverManagerMixin](/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-RetrieverManagerMixin)
+
+Async callback manager for retriever run.
+
+
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForRetrieverRun-get_sync">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.CallbackManagerForRetrieverRun":"#langchain_core-callbacks-manager-CallbackManagerForRetrieverRun"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManagerForRetrieverRun.get_sync() -> langchain_core.callbacks.manager.CallbackManagerForRetrieverRun
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the equivalent sync `RunManager`.
+
+**Returns:** `CallbackManagerForRetrieverRun`
+
+The sync `RunManager`.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForRetrieverRun-on_retriever_end">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManagerForRetrieverRun.on_retriever_end(
+    documents: collections.abc.Sequence[langchain_core.documents.Document],
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when the retriever ends running.
+
+**Parameters:**
+
+<ParamField path="documents" type="Sequence[Document]">
+The retrieved documents.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForRetrieverRun-on_retriever_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManagerForRetrieverRun.on_retriever_error(
+    error: BaseException,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when retriever errors.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForToolRun">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.manager.AsyncCallbackManagerForToolRun()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [AsyncParentRunManager](#langchain_core-callbacks-manager-AsyncParentRunManager), [ToolManagerMixin](/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-ToolManagerMixin)
+
+Async callback manager for tool run.
+
+
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForToolRun-get_sync">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.CallbackManagerForToolRun":"#langchain_core-callbacks-manager-CallbackManagerForToolRun"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManagerForToolRun.get_sync() -> langchain_core.callbacks.manager.CallbackManagerForToolRun
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the equivalent sync `RunManager`.
+
+**Returns:** `CallbackManagerForToolRun`
+
+The sync `RunManager`.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForToolRun-on_tool_end">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManagerForToolRun.on_tool_end(
+    output: typing.Any,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async run when the tool ends running.
+
+**Parameters:**
+
+<ParamField path="output" type="Any">
+The output of the tool.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncCallbackManagerForToolRun-on_tool_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncCallbackManagerForToolRun.on_tool_error(
+    error: BaseException,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when tool errors.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-AsyncParentRunManager">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.manager.AsyncParentRunManager()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [AsyncRunManager](#langchain_core-callbacks-manager-AsyncRunManager)
+
+Async parent run manager.
+
+
+<Anchor id="langchain_core-callbacks-manager-AsyncParentRunManager-get_child">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.AsyncCallbackManager":"#langchain_core-callbacks-manager-AsyncCallbackManager"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncParentRunManager.get_child(
+    tag: str | None = None
+) -> langchain_core.callbacks.manager.AsyncCallbackManager
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get a child callback manager.
+
+**Parameters:**
+
+<ParamField path="tag" type="str | None" default="None">
+The tag for the child callback manager.
+</ParamField>
+
+**Returns:** `AsyncCallbackManager`
+
+The child callback manager.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-AsyncRunManager">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.manager.AsyncRunManager()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+**Bases:** [BaseRunManager](#langchain_core-callbacks-manager-BaseRunManager)
+
+Async run manager.
+
+
+<Anchor id="langchain_core-callbacks-manager-AsyncRunManager-get_sync">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.RunManager":"#langchain_core-callbacks-manager-RunManager"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncRunManager.get_sync() -> langchain_core.callbacks.manager.RunManager
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Get the equivalent sync `RunManager`.
+
+**Returns:** `RunManager`
+
+The sync `RunManager`.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncRunManager-on_retry">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncRunManager.on_retry(
+    retry_state: tenacity.RetryCallState,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async run when a retry is received.
+
+**Parameters:**
+
+<ParamField path="retry_state" type="RetryCallState">
+The retry state.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-AsyncRunManager-on_text">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.AsyncRunManager.on_text(
+    text: str,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when a text is received.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The received text.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-BaseRunManager">
+
+<CodeBlock links={{"langchain_core.callbacks.base.BaseCallbackHandler":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-BaseCallbackHandler"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.manager.BaseRunManager(
+    run_id: uuid.UUID,
+    handlers: list[langchain_core.callbacks.base.BaseCallbackHandler],
+    inheritable_handlers: list[langchain_core.callbacks.base.BaseCallbackHandler],
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    inheritable_tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    inheritable_metadata: dict[str, typing.Any] | None = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RunManagerMixin](/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-RunManagerMixin)
+
+Base class for run manager (a bound callback manager).
+
+
+<ParamField path="inheritable_metadata" type="= inheritable_metadata or &#123;&#125;">
+</ParamField>
+
+<ParamField path="inheritable_tags" type="= inheritable_tags or []">
+</ParamField>
+
+<ParamField path="metadata" type="= metadata or &#123;&#125;">
+</ParamField>
+
+<ParamField path="tags" type="= tags or []">
+</ParamField>
+<Anchor id="langchain_core-callbacks-manager-BaseRunManager-get_noop_manager">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.BaseRunManager.get_noop_manager() -> typing_extensions.Self
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Return a manager that doesn't perform any operations.
+
+**Returns:** `Self`
+
+The noop manager.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-CallbackManager">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.manager.CallbackManager()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseCallbackManager](/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-BaseCallbackManager)
+
+Callback manager for LangChain.
+
+
+<Anchor id="langchain_core-callbacks-manager-CallbackManager-configure">
+
+<CodeBlock links={{"langchain_core.callbacks.base.Callbacks":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-Callbacks","langchain_core.callbacks.manager.CallbackManager":"#langchain_core-callbacks-manager-CallbackManager"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManager.configure(
+    inheritable_callbacks: langchain_core.callbacks.base.Callbacks = None,
+    local_callbacks: langchain_core.callbacks.base.Callbacks = None,
+    verbose: bool = False,
+    inheritable_tags: list[str] | None = None,
+    local_tags: list[str] | None = None,
+    inheritable_metadata: dict[str, typing.Any] | None = None,
+    local_metadata: dict[str, typing.Any] | None = None
+) -> langchain_core.callbacks.manager.CallbackManager
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Configure the callback manager.
+
+**Parameters:**
+
+<ParamField path="inheritable_callbacks" type="Callbacks" default="None">
+The inheritable callbacks.
+</ParamField>
+
+<ParamField path="local_callbacks" type="Callbacks" default="None">
+The local callbacks.
+</ParamField>
+
+<ParamField path="verbose" type="bool" default="False">
+Whether to enable verbose mode.
+</ParamField>
+
+<ParamField path="inheritable_tags" type="list[str] | None" default="None">
+The inheritable tags.
+</ParamField>
+
+<ParamField path="local_tags" type="list[str] | None" default="None">
+The local tags.
+</ParamField>
+
+<ParamField path="inheritable_metadata" type="dict[str, Any] | None" default="None">
+The inheritable metadata.
+</ParamField>
+
+<ParamField path="local_metadata" type="dict[str, Any] | None" default="None">
+The local metadata.
+</ParamField>
+
+**Returns:** `CallbackManager`
+
+The configured callback manager.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-CallbackManager-on_chain_start">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.CallbackManagerForChainRun":"#langchain_core-callbacks-manager-CallbackManagerForChainRun"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManager.on_chain_start(
+    serialized: dict[str, typing.Any] | None,
+    inputs: dict[str, typing.Any] | typing.Any,
+    run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.callbacks.manager.CallbackManagerForChainRun
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when chain starts running.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any] | None">
+The serialized chain.
+</ParamField>
+
+<ParamField path="inputs" type="dict[str, Any] | Any">
+The inputs to the chain.
+</ParamField>
+
+<ParamField path="run_id" type="UUID | None" default="None">
+The ID of the run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+**Returns:** `CallbackManagerForChainRun`
+
+The callback manager for the chain run.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-CallbackManager-on_chat_model_start">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.callbacks.manager.CallbackManagerForLLMRun":"#langchain_core-callbacks-manager-CallbackManagerForLLMRun"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManager.on_chat_model_start(
+    serialized: dict[str, typing.Any],
+    messages: list[list[langchain_core.messages.BaseMessage]],
+    run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.callbacks.manager.CallbackManagerForLLMRun]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when chat model starts running.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any]">
+The serialized LLM.
+</ParamField>
+
+<ParamField path="messages" type="list[list[BaseMessage]]">
+The list of messages.
+</ParamField>
+
+<ParamField path="run_id" type="UUID | None" default="None">
+The ID of the run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+**Returns:** `list[CallbackManagerForLLMRun]`
+
+A callback manager for each list of messages as an LLM run.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-CallbackManager-on_custom_event">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManager.on_custom_event(
+    name: str,
+    data: typing.Any,
+    run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Dispatch an adhoc event to the handlers (async version).
+
+This event should NOT be used in any internal LangChain code. The event is meant
+specifically for users of the library to dispatch custom events that are
+tailored to their application.
+
+**Parameters:**
+
+<ParamField path="name" type="str">
+The name of the adhoc event.
+</ParamField>
+
+<ParamField path="data" type="Any">
+The data for the adhoc event.
+</ParamField>
+
+<ParamField path="run_id" type="UUID | None" default="None">
+The ID of the run.
+</ParamField>
+
+**Raises:**
+
+- `ValueError`: If additional keyword arguments are passed.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-CallbackManager-on_llm_start">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.CallbackManagerForLLMRun":"#langchain_core-callbacks-manager-CallbackManagerForLLMRun"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManager.on_llm_start(
+    serialized: dict[str, typing.Any],
+    prompts: list[str],
+    run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.callbacks.manager.CallbackManagerForLLMRun]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when LLM starts running.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any]">
+The serialized LLM.
+</ParamField>
+
+<ParamField path="prompts" type="list[str]">
+The list of prompts.
+</ParamField>
+
+<ParamField path="run_id" type="UUID | None" default="None">
+The ID of the run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+**Returns:** `list[CallbackManagerForLLMRun]`
+
+A callback manager for each prompt as an LLM run.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-CallbackManager-on_retriever_start">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.CallbackManagerForRetrieverRun":"#langchain_core-callbacks-manager-CallbackManagerForRetrieverRun"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManager.on_retriever_start(
+    serialized: dict[str, typing.Any] | None,
+    query: str,
+    run_id: uuid.UUID | None = None,
+    parent_run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.callbacks.manager.CallbackManagerForRetrieverRun
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when the retriever starts running.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any] | None">
+The serialized retriever.
+</ParamField>
+
+<ParamField path="query" type="str">
+The query.
+</ParamField>
+
+<ParamField path="run_id" type="UUID | None" default="None">
+The ID of the run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+**Returns:** `CallbackManagerForRetrieverRun`
+
+The callback manager for the retriever run.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-CallbackManager-on_tool_start">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.CallbackManagerForToolRun":"#langchain_core-callbacks-manager-CallbackManagerForToolRun"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManager.on_tool_start(
+    serialized: dict[str, typing.Any] | None,
+    input_str: str,
+    run_id: uuid.UUID | None = None,
+    parent_run_id: uuid.UUID | None = None,
+    inputs: dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.callbacks.manager.CallbackManagerForToolRun
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when tool starts running.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any] | None">
+Serialized representation of the tool.
+</ParamField>
+
+<ParamField path="input_str" type="str">
+The  input to the tool as a string.
+
+Non-string inputs are cast to strings.
+</ParamField>
+
+<ParamField path="run_id" type="UUID | None" default="None">
+ID for the run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="inputs" type="dict[str, Any] | None" default="None">
+The original input to the tool if provided.
+
+Recommended for usage instead of input_str when the original input is
+needed.
+
+If provided, the inputs are expected to be formatted as a dict. The keys
+will correspond to the named-arguments in the tool.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+The keyword arguments to pass to the event handler
+</ParamField>
+
+**Returns:** `CallbackManagerForToolRun`
+
+The callback manager for the tool run.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-CallbackManagerForChainGroup">
+
+<CodeBlock links={{"langchain_core.callbacks.base.BaseCallbackHandler":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-BaseCallbackHandler","langchain_core.callbacks.manager.CallbackManagerForChainRun":"#langchain_core-callbacks-manager-CallbackManagerForChainRun"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.manager.CallbackManagerForChainGroup(
+    handlers: list[langchain_core.callbacks.base.BaseCallbackHandler],
+    inheritable_handlers: list[langchain_core.callbacks.base.BaseCallbackHandler] | None = None,
+    parent_run_id: uuid.UUID | None = None,
+    parent_run_manager: langchain_core.callbacks.manager.CallbackManagerForChainRun,
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [CallbackManager](#langchain_core-callbacks-manager-CallbackManager)
+
+Callback manager for the chain group.
+
+
+<Anchor id="langchain_core-callbacks-manager-CallbackManagerForChainGroup-copy">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.CallbackManagerForChainGroup":"#langchain_core-callbacks-manager-CallbackManagerForChainGroup"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManagerForChainGroup.copy() -> langchain_core.callbacks.manager.CallbackManagerForChainGroup
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-CallbackManagerForChainGroup-merge">
+
+<CodeBlock links={{"langchain_core.callbacks.base.BaseCallbackManager":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-BaseCallbackManager","langchain_core.callbacks.manager.CallbackManagerForChainGroup":"#langchain_core-callbacks-manager-CallbackManagerForChainGroup"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManagerForChainGroup.merge(
+    other: langchain_core.callbacks.base.BaseCallbackManager
+) -> langchain_core.callbacks.manager.CallbackManagerForChainGroup
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Merge the group callback manager with another callback manager.
+
+Overwrites the merge method in the base class to ensure that the parent run
+manager is preserved. Keeps the `parent_run_manager` from the current object.
+
+**Returns:** `CallbackManagerForChainGroup`
+
+A copy of the current object with the handlers, tags, and other attributes
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-CallbackManagerForChainGroup-on_chain_end">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManagerForChainGroup.on_chain_end(
+    outputs: dict[str, typing.Any] | typing.Any,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when traced chain group ends.
+
+**Parameters:**
+
+<ParamField path="outputs" type="dict[str, Any] | Any">
+The outputs of the chain.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-CallbackManagerForChainGroup-on_chain_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManagerForChainGroup.on_chain_error(
+    error: BaseException,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when chain errors.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-CallbackManagerForChainRun">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.manager.CallbackManagerForChainRun()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [ParentRunManager](#langchain_core-callbacks-manager-ParentRunManager), [ChainManagerMixin](/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-ChainManagerMixin)
+
+Callback manager for chain run.
+
+
+<Anchor id="langchain_core-callbacks-manager-CallbackManagerForChainRun-on_agent_action">
+
+<CodeBlock links={{"langchain_core.agents.AgentAction":"/langchain-core/langchain_core/agents#langchain_core-agents-AgentAction"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManagerForChainRun.on_agent_action(
+    action: langchain_core.agents.AgentAction,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when agent action is received.
+
+**Parameters:**
+
+<ParamField path="action" type="AgentAction">
+The agent action.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-CallbackManagerForChainRun-on_agent_finish">
+
+<CodeBlock links={{"langchain_core.agents.AgentFinish":"/langchain-core/langchain_core/agents#langchain_core-agents-AgentFinish"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManagerForChainRun.on_agent_finish(
+    finish: langchain_core.agents.AgentFinish,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when agent finish is received.
+
+**Parameters:**
+
+<ParamField path="finish" type="AgentFinish">
+The agent finish.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-CallbackManagerForChainRun-on_chain_end">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManagerForChainRun.on_chain_end(
+    outputs: dict[str, typing.Any] | typing.Any,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when chain ends running.
+
+**Parameters:**
+
+<ParamField path="outputs" type="dict[str, Any] | Any">
+The outputs of the chain.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-CallbackManagerForChainRun-on_chain_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManagerForChainRun.on_chain_error(
+    error: BaseException,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when chain errors.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-CallbackManagerForLLMRun">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.manager.CallbackManagerForLLMRun()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RunManager](#langchain_core-callbacks-manager-RunManager), [LLMManagerMixin](/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-LLMManagerMixin)
+
+Callback manager for LLM run.
+
+
+<Anchor id="langchain_core-callbacks-manager-CallbackManagerForLLMRun-on_llm_end">
+
+<CodeBlock links={{"langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManagerForLLMRun.on_llm_end(
+    response: langchain_core.outputs.LLMResult,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when LLM ends running.
+
+**Parameters:**
+
+<ParamField path="response" type="LLMResult">
+The LLM result.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-CallbackManagerForLLMRun-on_llm_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManagerForLLMRun.on_llm_error(
+    error: BaseException,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when LLM errors.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+
+- response (LLMResult): The response which was generated before
+    the error occurred.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-CallbackManagerForLLMRun-on_llm_new_token">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManagerForLLMRun.on_llm_new_token(
+    token: str,
+    chunk: langchain_core.outputs.GenerationChunk | langchain_core.outputs.ChatGenerationChunk | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when LLM generates a new token.
+
+**Parameters:**
+
+<ParamField path="token" type="str">
+The new token.
+</ParamField>
+
+<ParamField path="chunk" type="GenerationChunk | ChatGenerationChunk | None" default="None">
+The chunk.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-CallbackManagerForRetrieverRun">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.manager.CallbackManagerForRetrieverRun()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [ParentRunManager](#langchain_core-callbacks-manager-ParentRunManager), [RetrieverManagerMixin](/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-RetrieverManagerMixin)
+
+Callback manager for retriever run.
+
+
+<Anchor id="langchain_core-callbacks-manager-CallbackManagerForRetrieverRun-on_retriever_end">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManagerForRetrieverRun.on_retriever_end(
+    documents: collections.abc.Sequence[langchain_core.documents.Document],
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when retriever ends running.
+
+**Parameters:**
+
+<ParamField path="documents" type="Sequence[Document]">
+The retrieved documents.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-CallbackManagerForRetrieverRun-on_retriever_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManagerForRetrieverRun.on_retriever_error(
+    error: BaseException,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when retriever errors.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-CallbackManagerForToolRun">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.manager.CallbackManagerForToolRun()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [ParentRunManager](#langchain_core-callbacks-manager-ParentRunManager), [ToolManagerMixin](/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-ToolManagerMixin)
+
+Callback manager for tool run.
+
+
+<Anchor id="langchain_core-callbacks-manager-CallbackManagerForToolRun-on_tool_end">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManagerForToolRun.on_tool_end(
+    output: typing.Any,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when the tool ends running.
+
+**Parameters:**
+
+<ParamField path="output" type="Any">
+The output of the tool.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+The keyword arguments to pass to the event handler
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-CallbackManagerForToolRun-on_tool_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.CallbackManagerForToolRun.on_tool_error(
+    error: BaseException,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when tool errors.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-ParentRunManager">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.manager.ParentRunManager()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RunManager](#langchain_core-callbacks-manager-RunManager)
+
+Synchronous parent run manager.
+
+
+<Anchor id="langchain_core-callbacks-manager-ParentRunManager-get_child">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.CallbackManager":"#langchain_core-callbacks-manager-CallbackManager"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.ParentRunManager.get_child(
+    tag: str | None = None
+) -> langchain_core.callbacks.manager.CallbackManager
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get a child callback manager.
+
+**Parameters:**
+
+<ParamField path="tag" type="str | None" default="None">
+The tag for the child callback manager.
+</ParamField>
+
+**Returns:** `CallbackManager`
+
+The child callback manager.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-RunManager">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.manager.RunManager()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseRunManager](#langchain_core-callbacks-manager-BaseRunManager)
+
+Synchronous run manager.
+
+
+<Anchor id="langchain_core-callbacks-manager-RunManager-on_retry">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.RunManager.on_retry(
+    retry_state: tenacity.RetryCallState,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when a retry is received.
+
+**Parameters:**
+
+<ParamField path="retry_state" type="RetryCallState">
+The retry state.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-manager-RunManager-on_text">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.RunManager.on_text(
+    text: str,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when a text is received.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The received text.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-_ahandle_event_for_handler">
+
+<CodeBlock links={{"langchain_core.callbacks.base.BaseCallbackHandler":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-BaseCallbackHandler"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager._ahandle_event_for_handler(
+    handler: langchain_core.callbacks.base.BaseCallbackHandler,
+    event_name: str,
+    ignore_condition_name: str | None,
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-_configure">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.T":"#langchain_core-callbacks-manager-T","langchain_core.callbacks.base.Callbacks":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-Callbacks"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager._configure(
+    callback_manager_cls: type[langchain_core.callbacks.manager.T],
+    inheritable_callbacks: langchain_core.callbacks.base.Callbacks = None,
+    local_callbacks: langchain_core.callbacks.base.Callbacks = None,
+    inheritable_tags: list[str] | None = None,
+    local_tags: list[str] | None = None,
+    inheritable_metadata: dict[str, typing.Any] | None = None,
+    local_metadata: dict[str, typing.Any] | None = None,
+    verbose: bool = False
+) -> langchain_core.callbacks.manager.T
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Configure the callback manager.
+
+**Parameters:**
+
+<ParamField path="callback_manager_cls" type="type[T]">
+The callback manager class.
+</ParamField>
+
+<ParamField path="inheritable_callbacks" type="Callbacks" default="None">
+The inheritable callbacks.
+</ParamField>
+
+<ParamField path="local_callbacks" type="Callbacks" default="None">
+The local callbacks.
+</ParamField>
+
+<ParamField path="inheritable_tags" type="list[str] | None" default="None">
+The inheritable tags.
+</ParamField>
+
+<ParamField path="local_tags" type="list[str] | None" default="None">
+The local tags.
+</ParamField>
+
+<ParamField path="inheritable_metadata" type="dict[str, Any] | None" default="None">
+The inheritable metadata.
+</ParamField>
+
+<ParamField path="local_metadata" type="dict[str, Any] | None" default="None">
+The local metadata.
+</ParamField>
+
+<ParamField path="verbose" type="bool" default="False">
+Whether to enable verbose mode.
+</ParamField>
+
+**Returns:** `T`
+
+The configured callback manager.
+
+**Raises:**
+
+- `RuntimeError`: If `LANGCHAIN_TRACING` is set but `LANGCHAIN_TRACING_V2` is not.
+
+
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-_executor">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager._executor() -> concurrent.futures.ThreadPoolExecutor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-_get_debug">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager._get_debug() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-_run_coros">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager._run_coros(
+    coros: list[collections.abc.Coroutine[typing.Any, typing.Any, typing.Any]]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-adispatch_custom_event">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.adispatch_custom_event(
+    name: str,
+    data: typing.Any,
+    config: langchain_core.runnables.config.RunnableConfig | None = None
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Dispatch an adhoc event to the handlers.
+
+Example: Use with astream events
+
+    ```python
+    from langchain_core.callbacks import (
+        AsyncCallbackHandler,
+        adispatch_custom_event
+    )
+    from langchain_core.runnable import RunnableLambda
+
+    class CustomCallbackManager(AsyncCallbackHandler):
+        async def on_custom_event(
+            self,
+            name: str,
+            data: Any,
+            *,
+            run_id: UUID,
+            tags: list[str] | None = None,
+            metadata: dict[str, Any] | None = None,
+            **kwargs: Any,
+        ) -> None:
+            print(f"Received custom event: {name} with data: {data}")
+
+    callback = CustomCallbackManager()
+
+    async def foo(inputs):
+        await adispatch_custom_event("event_type_1", {"bar": "buzz})
+        await adispatch_custom_event("event_type_2", 5)
+        return inputs
+
+    foo_ = RunnableLambda(foo)
+
+    async for event in foo_.ainvoke_stream(
+        {"a": "1"},
+        version="v2",
+        config={"callbacks": [CustomCallbackManager()]}
+    ):
+        print(event)
+    ```
+
+!!! warning
+
+    If using python 3.10 and async, you MUST specify the `config` parameter or the
+    function will raise an error. This is due to a limitation in asyncio for python
+    3.10 that prevents LangChain from automatically propagating the config object on
+    the user's behalf.
+
+**Parameters:**
+
+<ParamField path="name" type="str">
+The name of the adhoc event.
+</ParamField>
+
+<ParamField path="data" type="Any">
+The data for the adhoc event.
+
+Free form data. Ideally should be JSON serializable to avoid serialization
+issues downstream, but this is not enforced.
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig | None" default="None">
+Optional config object.
+
+Mirrors the async API but not strictly needed.
+</ParamField>
+
+**Raises:**
+
+- `RuntimeError`: If there is no parent run ID available to associate the event
+with.
+
+
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-ahandle_event">
+
+<CodeBlock links={{"langchain_core.callbacks.base.BaseCallbackHandler":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-BaseCallbackHandler"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.ahandle_event(
+    handlers: list[langchain_core.callbacks.base.BaseCallbackHandler],
+    event_name: str,
+    ignore_condition_name: str | None,
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async generic event handler for `AsyncCallbackManager`.
+
+**Parameters:**
+
+<ParamField path="handlers" type="list[BaseCallbackHandler]">
+The list of handlers that will handle the event.
+</ParamField>
+
+<ParamField path="event_name" type="str">
+The name of the event (e.g., `'on_llm_start'`).
+</ParamField>
+
+<ParamField path="ignore_condition_name" type="str | None">
+Name of the attribute defined on handler that if `True`
+will cause the handler to be skipped for the given event.
+</ParamField>
+
+<ParamField path="*args" type="Any" default="()">
+The arguments to pass to the event handler.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+The keyword arguments to pass to the event handler.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-atrace_as_chain_group">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.AsyncCallbackManager":"#langchain_core-callbacks-manager-AsyncCallbackManager","langchain_core.callbacks.manager.AsyncCallbackManagerForChainGroup":"#langchain_core-callbacks-manager-AsyncCallbackManagerForChainGroup"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.atrace_as_chain_group(
+    group_name: str,
+    callback_manager: langchain_core.callbacks.manager.AsyncCallbackManager | None = None,
+    inputs: dict[str, typing.Any] | None = None,
+    project_name: str | None = None,
+    example_id: str | uuid.UUID | None = None,
+    run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None
+) -> collections.abc.AsyncGenerator[langchain_core.callbacks.manager.AsyncCallbackManagerForChainGroup, None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Get an async callback manager for a chain group in a context manager.
+
+Useful for grouping different async calls together as a single run even if they
+aren't composed in a single chain.
+
+!!! note
+
+    Must have `LANGCHAIN_TRACING_V2` env var set to true to see the trace in
+    LangSmith.
+
+**Parameters:**
+
+<ParamField path="group_name" type="str">
+The name of the chain group.
+</ParamField>
+
+<ParamField path="callback_manager" type="AsyncCallbackManager | None" default="None">
+The async callback manager to use, which manages tracing and
+other callback behavior.
+</ParamField>
+
+<ParamField path="inputs" type="dict[str, Any] | None" default="None">
+The inputs to the chain group.
+</ParamField>
+
+<ParamField path="project_name" type="str | None" default="None">
+The name of the project.
+</ParamField>
+
+<ParamField path="example_id" type="str | UUID | None" default="None">
+The ID of the example.
+</ParamField>
+
+<ParamField path="run_id" type="UUID | None" default="None">
+The ID of the run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The inheritable tags to apply to all runs.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+The metadata to apply to all runs.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-dispatch_custom_event">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.dispatch_custom_event(
+    name: str,
+    data: typing.Any,
+    config: langchain_core.runnables.config.RunnableConfig | None = None
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Dispatch an adhoc event.
+
+**Parameters:**
+
+<ParamField path="name" type="str">
+The name of the adhoc event.
+</ParamField>
+
+<ParamField path="data" type="Any">
+The data for the adhoc event.
+
+Free form data. Ideally should be JSON serializable to avoid serialization
+issues downstream, but this is not enforced.
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig | None" default="None">
+Optional config object.
+
+Mirrors the async API but not strictly needed.
+</ParamField>
+
+**Raises:**
+
+- `RuntimeError`: If there is no parent run ID available to associate the event
+with.
+
+
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-handle_event">
+
+<CodeBlock links={{"langchain_core.callbacks.base.BaseCallbackHandler":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-BaseCallbackHandler"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.handle_event(
+    handlers: list[langchain_core.callbacks.base.BaseCallbackHandler],
+    event_name: str,
+    ignore_condition_name: str | None,
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Generic event handler for `CallbackManager`.
+
+**Parameters:**
+
+<ParamField path="handlers" type="list[BaseCallbackHandler]">
+The list of handlers that will handle the event.
+</ParamField>
+
+<ParamField path="event_name" type="str">
+The name of the event (e.g., `'on_llm_start'`).
+</ParamField>
+
+<ParamField path="ignore_condition_name" type="str | None">
+Name of the attribute defined on handler that if `True`
+will cause the handler to be skipped for the given event.
+</ParamField>
+
+<ParamField path="*args" type="Any" default="()">
+The arguments to pass to the event handler.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+The keyword arguments to pass to the event handler
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-shielded">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.Func":"#langchain_core-callbacks-manager-Func"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.shielded(
+    func: langchain_core.callbacks.manager.Func
+) -> langchain_core.callbacks.manager.Func
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Makes so an awaitable method is always shielded from cancellation.
+
+**Parameters:**
+
+<ParamField path="func" type="Func">
+The function to shield.
+</ParamField>
+
+**Returns:** `Func`
+
+The shielded function
+
+
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-trace_as_chain_group">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.CallbackManager":"#langchain_core-callbacks-manager-CallbackManager","langchain_core.callbacks.manager.CallbackManagerForChainGroup":"#langchain_core-callbacks-manager-CallbackManagerForChainGroup"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.trace_as_chain_group(
+    group_name: str,
+    callback_manager: langchain_core.callbacks.manager.CallbackManager | None = None,
+    inputs: dict[str, typing.Any] | None = None,
+    project_name: str | None = None,
+    example_id: str | uuid.UUID | None = None,
+    run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None
+) -> collections.abc.Generator[langchain_core.callbacks.manager.CallbackManagerForChainGroup, None, None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get a callback manager for a chain group in a context manager.
+
+Useful for grouping different calls together as a single run even if they aren't
+composed in a single chain.
+
+!!! note
+
+    Must have `LANGCHAIN_TRACING_V2` env var set to true to see the trace in
+    LangSmith.
+
+**Parameters:**
+
+<ParamField path="group_name" type="str">
+The name of the chain group.
+</ParamField>
+
+<ParamField path="callback_manager" type="CallbackManager | None" default="None">
+The callback manager to use.
+</ParamField>
+
+<ParamField path="inputs" type="dict[str, Any] | None" default="None">
+The inputs to the chain group.
+</ParamField>
+
+<ParamField path="project_name" type="str | None" default="None">
+The name of the project.
+</ParamField>
+
+<ParamField path="example_id" type="str | UUID | None" default="None">
+The ID of the example.
+</ParamField>
+
+<ParamField path="run_id" type="UUID | None" default="None">
+The ID of the run.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The inheritable tags to apply to all runs.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+The metadata to apply to all runs.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="langchain_core-callbacks-manager-Func">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.Func = TypeVar('Func', bound=Callable)
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-callbacks-manager-T">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.T = TypeVar('T', CallbackManager, AsyncCallbackManager)
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-callbacks-manager-logger">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.manager.logger = logging.getLogger(__name__)
+```
+
+</CodeBlock>
+</Anchor>
+

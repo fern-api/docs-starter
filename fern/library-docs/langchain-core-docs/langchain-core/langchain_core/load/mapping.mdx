@@ -1,0 +1,85 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/load/mapping
+title: langchain_core.load.mapping
+---
+
+Serialization mapping.
+
+This file contains a mapping between the `lc_namespace` path for a given
+subclass that implements from `Serializable` to the namespace
+where that class is actually located.
+
+This mapping helps maintain the ability to serialize and deserialize
+well-known LangChain objects even if they are moved around in the codebase
+across different LangChain versions.
+
+For example, the code for the `AIMessage` class is located in
+`langchain_core.messages.ai.AIMessage`. This message is associated with the
+`lc_namespace` of `["langchain", "schema", "messages", "AIMessage"]`,
+because this code was originally in `langchain.schema.messages.AIMessage`.
+
+The mapping allows us to deserialize an `AIMessage` created with an older
+version of LangChain where the code was in a different location.
+
+## Module Contents
+
+### Data
+
+[`OLD_CORE_NAMESPACES_MAPPING`](#langchain_core-load-mapping-OLD_CORE_NAMESPACES_MAPPING)
+
+[`SERIALIZABLE_MAPPING`](#langchain_core-load-mapping-SERIALIZABLE_MAPPING)
+
+[`_JS_SERIALIZABLE_MAPPING`](#langchain_core-load-mapping-_JS_SERIALIZABLE_MAPPING)
+
+[`_OG_SERIALIZABLE_MAPPING`](#langchain_core-load-mapping-_OG_SERIALIZABLE_MAPPING)
+
+### API
+
+<Anchor id="langchain_core-load-mapping-OLD_CORE_NAMESPACES_MAPPING">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load.mapping.OLD_CORE_NAMESPACES_MAPPING: dict[tuple[str, ...], tuple[str, ...]] = {('langchain_core', 'messages', 'ai', 'AIMessage'): ('langchain_core', 'messages...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-load-mapping-SERIALIZABLE_MAPPING">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load.mapping.SERIALIZABLE_MAPPING: dict[tuple[str, ...], tuple[str, ...]] = {('langchain', 'schema', 'messages', 'AIMessage'): ('langchain_core', 'messages'...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-load-mapping-_JS_SERIALIZABLE_MAPPING">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load.mapping._JS_SERIALIZABLE_MAPPING: dict[tuple[str, ...], tuple[str, ...]] = {('langchain_core', 'messages', 'AIMessage'): ('langchain_core', 'messages', 'ai...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-load-mapping-_OG_SERIALIZABLE_MAPPING">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load.mapping._OG_SERIALIZABLE_MAPPING: dict[tuple[str, ...], tuple[str, ...]] = {('langchain', 'schema', 'AIMessage'): ('langchain_core', 'messages', 'ai', 'AIM...
+```
+
+</CodeBlock>
+</Anchor>
+

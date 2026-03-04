@@ -1,0 +1,201 @@
+---
+title: thrust::mr::new_delete_resource_base
+description: ""
+---
+
+```cpp showLineNumbers={false}
+#include <thrust/mr/new.h>
+```
+
+**Inherits from:** `thrust::mr::memory_resource<>` (public)
+
+---
+
+## Methods
+
+### do_allocate <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>virtual</Badge>
+
+Allocates memory of size at least `bytes` and alignment at least `alignment`.
+
+<CodeBlock links={{"new_delete_resource_base": "/library/api/thrust::mr::new_delete_resource_base"}}>
+```cpp showLineNumbers={false}
+void * thrust::mr::new_delete_resource_base::do_allocate(
+    std::size_t bytes,
+    std::size_t alignment = THRUST_MR_DEFAULT_ALIGNMENT
+) override
+```
+</CodeBlock>
+
+**Returns:** A pointer to void to the newly allocated memory.
+
+**Throws:** `thrust::bad_alloc` when no memory with requested size and alignment can be allocated.
+
+**Parameters**
+
+<ParamField path="bytes" type="std::size_t">
+Size, in bytes, that is requested from this allocation
+</ParamField>
+
+<ParamField path="alignment" type="std::size_t" default="THRUST_MR_DEFAULT_ALIGNMENT">
+Alignment that is requested from this allocation
+</ParamField>
+
+### do_deallocate
+
+<Tabs>
+<Tab title="Overload 1">
+
+<Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"new_delete_resource_base": "/library/api/thrust::mr::new_delete_resource_base"}}>
+```cpp showLineNumbers={false}
+void thrust::mr::new_delete_resource_base::do_deallocate(
+    void *p,
+    std::size_t bytes,
+    std::size_t alignment = THRUST_MR_DEFAULT_ALIGNMENT
+) override
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Deallocates memory pointed to by `p`">
+
+<Badge intent="note" minimal>virtual</Badge>
+
+Deallocates memory pointed to by `p`.
+
+<CodeBlock links={{"new_delete_resource_base": "/library/api/thrust::mr::new_delete_resource_base", "memory_resource": "/library/api/thrust::mr::memory_resource"}}>
+```cpp showLineNumbers={false}
+virtual void thrust::mr::memory_resource<Pointer>::do_deallocate(
+    pointer p,
+    std::size_t bytes,
+    std::size_t alignment
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="p" type="pointer">
+Pointer to be deallocated
+</ParamField>
+
+<ParamField path="bytes" type="std::size_t">
+The size of the allocation. This must be equivalent to the value of `bytes` that was passed to the allocation function that returned `p`.
+</ParamField>
+
+<ParamField path="alignment" type="std::size_t">
+The size of the allocation. This must be equivalent to the value of `alignment` that was passed to the allocation function that returned `p`.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### allocate <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Allocates memory of size at least `bytes` and alignment at least `alignment`.
+
+<CodeBlock links={{"new_delete_resource_base": "/library/api/thrust::mr::new_delete_resource_base", "memory_resource": "/library/api/thrust::mr::memory_resource"}}>
+```cpp showLineNumbers={false}
+pointer thrust::mr::memory_resource<Pointer>::allocate(
+    std::size_t bytes,
+    std::size_t alignment = THRUST_MR_DEFAULT_ALIGNMENT
+)
+```
+</CodeBlock>
+
+**Returns:** A pointer to void to the newly allocated memory.
+
+**Throws:** `thrust::bad_alloc` when no memory with requested size and alignment can be allocated.
+
+**Parameters**
+
+<ParamField path="bytes" type="std::size_t">
+Size, in bytes, that is requested from this allocation
+</ParamField>
+
+<ParamField path="alignment" type="std::size_t" default="THRUST_MR_DEFAULT_ALIGNMENT">
+Alignment that is requested from this allocation
+</ParamField>
+
+### deallocate <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Deallocates memory pointed to by `p`.
+
+<CodeBlock links={{"new_delete_resource_base": "/library/api/thrust::mr::new_delete_resource_base", "memory_resource": "/library/api/thrust::mr::memory_resource"}}>
+```cpp showLineNumbers={false}
+void thrust::mr::memory_resource<Pointer>::deallocate(
+    pointer p,
+    std::size_t bytes,
+    std::size_t alignment = THRUST_MR_DEFAULT_ALIGNMENT
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="p" type="pointer">
+Pointer to be deallocated
+</ParamField>
+
+<ParamField path="bytes" type="std::size_t">
+The size of the allocation. This must be equivalent to the value of `bytes` that was passed to the allocation function that returned `p`.
+</ParamField>
+
+<ParamField path="alignment" type="std::size_t" default="THRUST_MR_DEFAULT_ALIGNMENT">
+The alignment of the allocation. This must be equivalent to the value of `alignment` that was passed to the allocation function that returned `p`.
+</ParamField>
+
+### is_equal <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Compares this resource to the other one.
+
+The default implementation uses identity comparison, which is often the right thing to do and doesn't require RTTI involvement.
+
+<CodeBlock links={{"new_delete_resource_base": "/library/api/thrust::mr::new_delete_resource_base", "memory_resource": "/library/api/thrust::mr::memory_resource"}}>
+```cpp showLineNumbers={false}
+bool thrust::mr::memory_resource<Pointer>::is_equal(
+    const memory_resource &other
+) const noexcept
+```
+</CodeBlock>
+
+**Returns:** whether the two resources are equivalent.
+
+**Parameters**
+
+<ParamField path="other" type="const memory_resource &">
+The other resource to compare this resource to
+</ParamField>
+
+### do_is_equal <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>virtual</Badge>
+
+Compares this resource to the other one.
+
+The default implementation uses identity comparison, which is often the right thing to do and doesn't require RTTI involvement.
+
+<CodeBlock links={{"new_delete_resource_base": "/library/api/thrust::mr::new_delete_resource_base", "memory_resource": "/library/api/thrust::mr::memory_resource"}}>
+```cpp showLineNumbers={false}
+virtual bool thrust::mr::memory_resource<Pointer>::do_is_equal(
+    const memory_resource &other
+) const noexcept
+```
+</CodeBlock>
+
+**Returns:** whether the two resources are equivalent.
+
+**Parameters**
+
+<ParamField path="other" type="const memory_resource &">
+The other resource to compare this resource to
+</ParamField>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `pointer` | `Pointer` | Alias for the template parameter. |

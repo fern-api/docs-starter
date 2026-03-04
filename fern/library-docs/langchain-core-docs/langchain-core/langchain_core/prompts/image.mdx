@@ -1,0 +1,230 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/prompts/image
+title: langchain_core.prompts.image
+---
+
+Image prompt template for a multimodal model.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`ImagePromptTemplate`](#langchain_core-prompts-image-ImagePromptTemplate) | Image prompt template for a multimodal model. |
+
+### API
+
+<Anchor id="langchain_core-prompts-image-ImagePromptTemplate">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.prompts.image.ImagePromptTemplate(
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BasePromptTemplate[ImageURL]](/langchain-core/langchain_core/prompts/base#langchain_core-prompts-base-BasePromptTemplate)
+
+Image prompt template for a multimodal model.
+
+
+<ParamField path="_prompt_type" type="str">
+Return the prompt type key.
+</ParamField>
+
+<ParamField path="template" type="dict = Field(default_factory=dict)">
+Template for the prompt.
+</ParamField>
+
+<ParamField path="template_format" type="PromptTemplateFormat = 'f-string'">
+The format of the prompt template.
+
+Options are: `'f-string'`, `'mustache'`, `'jinja2'`.
+</ParamField>
+<Anchor id="langchain_core-prompts-image-ImagePromptTemplate-aformat">
+
+<CodeBlock links={{"langchain_core.prompt_values.ImageURL":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-ImageURL"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.image.ImagePromptTemplate.aformat(
+    kwargs: typing.Any = {}
+) -> langchain_core.prompt_values.ImageURL
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async format the prompt with the inputs.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Any arguments to be passed to the prompt template.
+</ParamField>
+
+**Returns:** `ImageURL`
+
+A formatted string.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-image-ImagePromptTemplate-aformat_prompt">
+
+<CodeBlock links={{"langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.image.ImagePromptTemplate.aformat_prompt(
+    kwargs: typing.Any = {}
+) -> langchain_core.prompt_values.PromptValue
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async format the prompt with the inputs.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Any arguments to be passed to the prompt template.
+</ParamField>
+
+**Returns:** `PromptValue`
+
+A formatted string.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-image-ImagePromptTemplate-format">
+
+<CodeBlock links={{"langchain_core.prompt_values.ImageURL":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-ImageURL"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.image.ImagePromptTemplate.format(
+    kwargs: typing.Any = {}
+) -> langchain_core.prompt_values.ImageURL
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format the prompt with the inputs.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Any arguments to be passed to the prompt template.
+</ParamField>
+
+**Returns:** `ImageURL`
+
+A formatted string.
+
+**Raises:**
+
+- `ValueError`: If the url is not provided.
+- `ValueError`: If the url is not a string.
+- `ValueError`: If `'path'` is provided in the template or kwargs.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-image-ImagePromptTemplate-format_prompt">
+
+<CodeBlock links={{"langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.image.ImagePromptTemplate.format_prompt(
+    kwargs: typing.Any = {}
+) -> langchain_core.prompt_values.PromptValue
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format the prompt with the inputs.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Any arguments to be passed to the prompt template.
+</ParamField>
+
+**Returns:** `PromptValue`
+
+A formatted string.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-image-ImagePromptTemplate-get_lc_namespace">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.image.ImagePromptTemplate.get_lc_namespace() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Get the namespace of the LangChain object.
+
+**Returns:** `list[str]`
+
+`["langchain", "prompts", "image"]`
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-image-ImagePromptTemplate-pretty_repr">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.image.ImagePromptTemplate.pretty_repr(
+    html: bool = False
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return a pretty representation of the prompt.
+
+**Parameters:**
+
+<ParamField path="html" type="bool" default="False">
+Whether to return an html formatted string.
+</ParamField>
+
+**Returns:** `str`
+
+A pretty representation of the prompt.
+
+
+</Indent>
+</Indent>

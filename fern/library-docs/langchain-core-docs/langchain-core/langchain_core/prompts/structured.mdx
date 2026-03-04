@@ -1,0 +1,211 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/prompts/structured
+title: langchain_core.prompts.structured
+---
+
+Structured prompt template for a language model.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`StructuredPrompt`](#langchain_core-prompts-structured-StructuredPrompt) | Structured prompt template for a language model. |
+
+### API
+
+<Anchor id="langchain_core-prompts-structured-StructuredPrompt">
+
+<CodeBlock links={{"langchain_core.prompts.chat.MessageLikeRepresentation":"/langchain-core/langchain_core/prompts/chat#langchain_core-prompts-chat-MessageLikeRepresentation","langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict","langchain_core.prompts.string.PromptTemplateFormat":"/langchain-core/langchain_core/prompts/string#langchain_core-prompts-string-PromptTemplateFormat"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.prompts.structured.StructuredPrompt(
+    messages: collections.abc.Sequence[langchain_core.prompts.chat.MessageLikeRepresentation],
+    schema_: langchain_core.prompts.dict | type[pydantic.BaseModel] | None = None,
+    structured_output_kwargs: langchain_core.prompts.dict[str, typing.Any] | None = None,
+    template_format: langchain_core.prompts.string.PromptTemplateFormat = 'f-string',
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [ChatPromptTemplate](/langchain-core/langchain_core/prompts/chat#langchain_core-prompts-chat-ChatPromptTemplate)
+
+Structured prompt template for a language model.
+
+
+<ParamField path="schema_" type="dict | type">
+Schema for the structured prompt.
+</ParamField>
+
+<ParamField path="structured_output_kwargs" type="dict[str, Any] = Field(default_factory=dict)">
+</ParamField>
+<Anchor id="langchain_core-prompts-structured-StructuredPrompt-__or__">
+
+<CodeBlock links={{"langchain_core.runnables.base.Runnable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-Runnable","langchain_core.runnables.base.Other":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-Other","langchain_core.runnables.base.RunnableSerializable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-RunnableSerializable","langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.structured.StructuredPrompt.__or__(
+    other: langchain_core.runnables.base.Runnable[typing.Any, langchain_core.runnables.base.Other] | collections.abc.Callable[[Iterator[Any]], collections.abc.Iterator[langchain_core.runnables.base.Other]] | collections.abc.Callable[[AsyncIterator[Any]], collections.abc.AsyncIterator[langchain_core.runnables.base.Other]] | collections.abc.Callable[[Any], langchain_core.runnables.base.Other] | collections.abc.Mapping[str, langchain_core.runnables.base.Runnable[typing.Any, langchain_core.runnables.base.Other] | collections.abc.Callable[[Any], langchain_core.runnables.base.Other] | typing.Any]
+) -> langchain_core.runnables.base.RunnableSerializable[langchain_core.prompts.dict, langchain_core.runnables.base.Other]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-structured-StructuredPrompt-from_messages_and_schema">
+
+<CodeBlock links={{"langchain_core.prompts.chat.MessageLikeRepresentation":"/langchain-core/langchain_core/prompts/chat#langchain_core-prompts-chat-MessageLikeRepresentation","langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict","langchain_core.prompts.chat.ChatPromptTemplate":"/langchain-core/langchain_core/prompts/chat#langchain_core-prompts-chat-ChatPromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.structured.StructuredPrompt.from_messages_and_schema(
+    messages: collections.abc.Sequence[langchain_core.prompts.chat.MessageLikeRepresentation],
+    schema: langchain_core.prompts.dict | type,
+    kwargs: typing.Any = {}
+) -> langchain_core.prompts.chat.ChatPromptTemplate
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Create a chat prompt template from a variety of message formats.
+
+**Parameters:**
+
+<ParamField path="messages" type="Sequence[MessageLikeRepresentation]">
+Sequence of message representations.
+
+A message can be represented using the following formats:
+
+1. `BaseMessagePromptTemplate`
+2. `BaseMessage`
+3. 2-tuple of `(message type, template)`; e.g.,
+    `("human", "&#123;user_input&#125;")`
+4. 2-tuple of `(message class, template)`
+5. A string which is shorthand for `("human", template)`; e.g.,
+    `"&#123;user_input&#125;"`
+</ParamField>
+
+<ParamField path="schema" type="dict | type">
+A dictionary representation of function call, or a Pydantic model.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Any additional kwargs to pass through to
+`ChatModel.with_structured_output(schema, **kwargs)`.
+</ParamField>
+
+**Returns:** `ChatPromptTemplate`
+
+A structured prompt template
+
+**Examples:**
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+Instantiation from a list of message templates:
+
+```python
+from langchain_core.prompts import StructuredPrompt
+
+
+class OutputSchema(BaseModel):
+    name: str
+    value: int
+
+
+template = StructuredPrompt(
+    [
+        ("human", "Hello, how are you?"),
+        ("ai", "I'm doing well, thanks!"),
+        ("human", "That's good to hear."),
+    ],
+    OutputSchema,
+)
+```
+
+</CodeBlock>
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-structured-StructuredPrompt-get_lc_namespace">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.structured.StructuredPrompt.get_lc_namespace() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Get the namespace of the LangChain object.
+
+For example, if the class is `langchain.llms.openai.OpenAI`, then the namespace
+is `["langchain", "llms", "openai"]`
+
+**Returns:** `list[str]`
+
+The namespace of the LangChain object.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-structured-StructuredPrompt-pipe">
+
+<CodeBlock links={{"langchain_core.runnables.base.Runnable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-Runnable","langchain_core.runnables.base.Other":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-Other","langchain_core.runnables.base.RunnableSerializable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-RunnableSerializable","langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.structured.StructuredPrompt.pipe(
+    others: langchain_core.runnables.base.Runnable[typing.Any, langchain_core.runnables.base.Other] | collections.abc.Callable[[Iterator[Any]], collections.abc.Iterator[langchain_core.runnables.base.Other]] | collections.abc.Callable[[AsyncIterator[Any]], collections.abc.AsyncIterator[langchain_core.runnables.base.Other]] | collections.abc.Callable[[Any], langchain_core.runnables.base.Other] | collections.abc.Mapping[str, langchain_core.runnables.base.Runnable[typing.Any, langchain_core.runnables.base.Other] | collections.abc.Callable[[Any], langchain_core.runnables.base.Other] | typing.Any] = (),
+    name: str | None = None
+) -> langchain_core.runnables.base.RunnableSerializable[langchain_core.prompts.dict, langchain_core.runnables.base.Other]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Pipe the structured prompt to a language model.
+
+**Parameters:**
+
+<ParamField path="others" type="Runnable[Any, Other] | Callable[[Iterator[Any]], Iterator[Other]] | Callable[[AsyncIterator[Any]], AsyncIterator[Other]] | Callable[[Any], Other] | Mapping[str, Runnable[Any, Other] | Callable[[Any], Other] | Any]" default="()">
+The language model to pipe the structured prompt to.
+</ParamField>
+
+<ParamField path="name" type="str | None" default="None">
+The name of the pipeline.
+</ParamField>
+
+**Returns:** `RunnableSerializable[dict, Other]`
+
+A `RunnableSequence` object.
+
+**Raises:**
+
+- `NotImplementedError`: If the first element of `others` is not a language
+model.
+
+
+</Indent>
+</Indent>

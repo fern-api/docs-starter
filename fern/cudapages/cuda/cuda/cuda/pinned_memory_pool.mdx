@@ -1,0 +1,167 @@
+---
+title: "cuda::pinned_memory_pool"
+description: ""
+---
+
+`pinned_memory_pool` allocates pinned memory using `cudaMallocFromPoolAsync / cudaFreeAsync
+&lt;https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY__POOLS.html&gt;`__
+for allocation/deallocation. When constructed it creates an underlying \c cudaMemPool_t with the location type set to \c cudaMemLocationTypeHost or \c cudaMemLocationTypeHostNuma and owns it.
+
+```cpp showLineNumbers={false}
+#include <cuda/pinned_memory_pool.h>
+```
+
+**Inherits from:** `cuda::pinned_memory_pool_ref` (public)
+
+---
+
+## Constructors
+
+### pinned_memory_pool <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Constructs a `pinned_memory_pool` with optional properties.
+
+Properties include the initial pool size and the release threshold. If the pool size grows beyond the release threshold, unused memory held by the pool will be released at the next synchronization event.
+
+<CodeBlock links={{"pinned_memory_pool": "/libcudacxx/api/cuda::pinned_memory_pool", "memory_pool_properties": "/libcudacxx/api/cuda::memory_pool_properties"}}>
+```cpp showLineNumbers={false}
+cuda::pinned_memory_pool::pinned_memory_pool(
+    memory_pool_properties __properties = {}
+)
+```
+</CodeBlock>
+
+<Note>
+Memory from this pool is accessible from all devices right away, which differs from the default behavior of pinned memory pools where memory is not accessible from devices until `cudaMemPoolSetAccess` is called.
+</Note>
+
+**Parameters**
+
+<ParamField path="__properties" type="memory_pool_properties" default="{}">
+Optional, additional properties of the pool to be created.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Constructs a `pinned_memory_pool` with the specified NUMA node id and optional properties.
+
+Properties include the initial pool size and the release threshold. If the pool size grows beyond the release threshold, unused memory held by the pool will be released at the next synchronization event.
+
+<CodeBlock links={{"pinned_memory_pool": "/libcudacxx/api/cuda::pinned_memory_pool", "memory_pool_properties": "/libcudacxx/api/cuda::memory_pool_properties"}}>
+```cpp showLineNumbers={false}
+cuda::pinned_memory_pool::pinned_memory_pool(
+    int __numa_id,
+    memory_pool_properties __properties = {}
+)
+```
+</CodeBlock>
+
+<Note>
+Memory from this pool is accessible from all devices right away, which differs from the default behavior of pinned memory pools where memory is not accessible from devices until `cudaMemPoolSetAccess` is called.
+</Note>
+
+**Parameters**
+
+<ParamField path="__numa_id" type="int">
+The NUMA node id of the NUMA node the pool is constructed on.
+</ParamField>
+
+<ParamField path="__properties" type="memory_pool_properties" default="{}">
+Optional, additional properties of the pool to be created.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 4">
+
+<Badge intent="note" minimal>noexcept</Badge>
+
+<CodeBlock links={{"pinned_memory_pool": "/libcudacxx/api/cuda::pinned_memory_pool"}}>
+```cpp showLineNumbers={false}
+cuda::pinned_memory_pool::pinned_memory_pool(
+    ::cudaMemPool_t __pool
+) noexcept
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Copy (deleted)">
+
+<CodeBlock links={{"pinned_memory_pool": "/libcudacxx/api/cuda::pinned_memory_pool"}}>
+```cpp showLineNumbers={false}
+cuda::pinned_memory_pool::pinned_memory_pool(
+    const pinned_memory_pool &
+) = delete
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### Destructor
+
+### ~pinned_memory_pool <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<CodeBlock links={{"pinned_memory_pool": "/libcudacxx/api/cuda::pinned_memory_pool"}}>
+```cpp showLineNumbers={false}
+cuda::pinned_memory_pool::~pinned_memory_pool() noexcept
+```
+</CodeBlock>
+
+---
+
+## Assignment operators
+
+### operator=
+
+<CodeBlock links={{"pinned_memory_pool": "/libcudacxx/api/cuda::pinned_memory_pool"}}>
+```cpp showLineNumbers={false}
+pinned_memory_pool & cuda::pinned_memory_pool::operator=(
+    const pinned_memory_pool &
+) = delete
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### as_ref <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Returns a [`pinned_memory_pool_ref`](/libcudacxx/api/cuda::pinned_memory_pool_ref) for this `pinned_memory_pool`.
+
+We return by reference to ensure that we can subsequently convert to a resource_ref
+
+<CodeBlock links={{"pinned_memory_pool": "/libcudacxx/api/cuda::pinned_memory_pool"}}>
+```cpp showLineNumbers={false}
+pinned_memory_pool_ref & cuda::pinned_memory_pool::as_ref() noexcept
+```
+</CodeBlock>
+
+---
+
+## Static methods
+
+### from_native_handle <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<CodeBlock links={{"pinned_memory_pool": "/libcudacxx/api/cuda::pinned_memory_pool"}}>
+```cpp showLineNumbers={false}
+static pinned_memory_pool cuda::pinned_memory_pool::from_native_handle(
+    ::cudaMemPool_t __pool
+) noexcept
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `reference_type` | `pinned_memory_pool_ref` |
+| `default_queries` | `::cuda::mr::properties_list<::cuda::mr::device_accessible, ::cuda::mr::host_accessible >` |

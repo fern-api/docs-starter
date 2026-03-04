@@ -1,0 +1,109 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/outputs
+title: langchain_core.outputs
+---
+
+Output classes.
+
+Used to represent the output of a language model call and the output of a chat.
+
+The top container for information is the `LLMResult` object. `LLMResult` is used by both
+chat models and LLMs. This object contains the output of the language model and any
+additional information that the model provider wants to return.
+
+When invoking models via the standard runnable methods (e.g. invoke, batch, etc.):
+
+- Chat models will return `AIMessage` objects.
+- LLMs will return regular text strings.
+
+In addition, users can access the raw output of either LLMs or chat models via
+callbacks. The `on_chat_model_end` and `on_llm_end` callbacks will return an `LLMResult`
+object containing the generated outputs and any additional information returned by the
+model provider.
+
+In general, if information is already available in the AIMessage object, it is
+recommended to access it from there rather than from the `LLMResult` object.
+
+## Submodules
+
+- **[`langchain_core.outputs.chat_generation`](/langchain-core/langchain_core/outputs/chat_generation)**
+- **[`langchain_core.outputs.chat_result`](/langchain-core/langchain_core/outputs/chat_result)**
+- **[`langchain_core.outputs.generation`](/langchain-core/langchain_core/outputs/generation)**
+- **[`langchain_core.outputs.llm_result`](/langchain-core/langchain_core/outputs/llm_result)**
+- **[`langchain_core.outputs.run_info`](/langchain-core/langchain_core/outputs/run_info)**
+
+## Package Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`__dir__`](#langchain_core-outputs-__dir__) | - |
+| [`__getattr__`](#langchain_core-outputs-__getattr__) | - |
+
+### Data
+
+[`__all__`](#langchain_core-outputs-__all__)
+
+[`_dynamic_imports`](#langchain_core-outputs-_dynamic_imports)
+
+### API
+
+<Anchor id="langchain_core-outputs-__dir__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.outputs.__dir__() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-outputs-__getattr__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.outputs.__getattr__(
+    attr_name: str
+) -> object
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-outputs-__all__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.outputs.__all__ = ('ChatGeneration', 'ChatGenerationChunk', 'ChatResult', 'Generation', 'Generatio...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-outputs-_dynamic_imports">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.outputs._dynamic_imports = {'ChatGeneration': 'chat_generation', 'ChatGenerationChunk': 'chat_generation', ...
+```
+
+</CodeBlock>
+</Anchor>
+

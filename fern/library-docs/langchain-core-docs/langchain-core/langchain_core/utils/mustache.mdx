@@ -1,0 +1,532 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/utils/mustache
+title: langchain_core.utils.mustache
+---
+
+Adapted from https://github.com/noahmorrison/chevron.
+
+MIT License.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`ChevronError`](#langchain_core-utils-mustache-ChevronError) | Custom exception for Chevron errors. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_get_key`](#langchain_core-utils-mustache-_get_key) | Retrieve a value from the current scope using a dot-separated key path. |
+| [`_get_partial`](#langchain_core-utils-mustache-_get_partial) | Load a partial. |
+| [`_html_escape`](#langchain_core-utils-mustache-_html_escape) | Return the HTML-escaped string with these characters escaped: `" & &lt; &gt;`. |
+| [`grab_literal`](#langchain_core-utils-mustache-grab_literal) | Parse a literal from the template. |
+| [`l_sa_check`](#langchain_core-utils-mustache-l_sa_check) | Do a preliminary check to see if a tag could be a standalone. |
+| [`parse_tag`](#langchain_core-utils-mustache-parse_tag) | Parse a tag from a template. |
+| [`r_sa_check`](#langchain_core-utils-mustache-r_sa_check) | Do a final check to see if a tag could be a standalone. |
+| [`render`](#langchain_core-utils-mustache-render) | Render a mustache template. |
+| [`tokenize`](#langchain_core-utils-mustache-tokenize) | Tokenize a mustache template. |
+
+### Data
+
+[`EMPTY_DICT`](#langchain_core-utils-mustache-EMPTY_DICT)
+
+[`Scopes`](#langchain_core-utils-mustache-Scopes)
+
+[`_CURRENT_LINE`](#langchain_core-utils-mustache-_CURRENT_LINE)
+
+[`_LAST_TAG_LINE`](#langchain_core-utils-mustache-_LAST_TAG_LINE)
+
+[`g_token_cache`](#langchain_core-utils-mustache-g_token_cache)
+
+[`logger`](#langchain_core-utils-mustache-logger)
+
+### API
+
+<Anchor id="langchain_core-utils-mustache-ChevronError">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.utils.mustache.ChevronError()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `SyntaxError`
+
+Custom exception for Chevron errors.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-mustache-_get_key">
+
+<CodeBlock links={{"langchain_core.utils.mustache.Scopes":"#langchain_core-utils-mustache-Scopes"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.mustache._get_key(
+    key: str,
+    scopes: langchain_core.utils.mustache.Scopes,
+    warn: bool,
+    keep: bool,
+    def_ldel: str,
+    def_rdel: str
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Retrieve a value from the current scope using a dot-separated key path.
+
+Traverses through nested dictionaries and lists using dot notation.
+
+Supports special key `'.'` to return the current scope.
+
+**Parameters:**
+
+<ParamField path="key" type="str">
+Dot-separated key path (e.g., `'user.name'` or `'.'` for current scope).
+</ParamField>
+
+<ParamField path="scopes" type="Scopes">
+List of scope dictionaries to search through.
+</ParamField>
+
+<ParamField path="warn" type="bool">
+Whether to log a warning when a key is not found.
+</ParamField>
+
+<ParamField path="keep" type="bool">
+Whether to return the original template tag when key is not found.
+</ParamField>
+
+<ParamField path="def_ldel" type="str">
+Left delimiter for template (used when keep is `True`).
+</ParamField>
+
+<ParamField path="def_rdel" type="str">
+Right delimiter for template (used when keep is `True`).
+</ParamField>
+
+**Returns:** `Any`
+
+The value found at the key path.
+
+If not found, returns the original template tag when keep is `True`,
+otherwise returns an empty string.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-mustache-_get_partial">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.mustache._get_partial(
+    name: str,
+    partials_dict: collections.abc.Mapping[str, str]
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Load a partial.
+
+**Returns:** `str`
+
+The partial.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-mustache-_html_escape">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.mustache._html_escape(
+    string: str
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return the HTML-escaped string with these characters escaped: `" & &lt; &gt;`.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-mustache-grab_literal">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.mustache.grab_literal(
+    template: str,
+    l_del: str
+) -> tuple[str, str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse a literal from the template.
+
+**Parameters:**
+
+<ParamField path="template" type="str">
+The template to parse.
+</ParamField>
+
+<ParamField path="l_del" type="str">
+The left delimiter.
+</ParamField>
+
+**Returns:** `tuple[str, str]`
+
+The literal and the template.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-mustache-l_sa_check">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.mustache.l_sa_check(
+    template: str,
+    literal: str,
+    is_standalone: bool
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Do a preliminary check to see if a tag could be a standalone.
+
+**Parameters:**
+
+<ParamField path="template" type="str">
+The template. (Not used.)
+</ParamField>
+
+<ParamField path="literal" type="str">
+The literal.
+</ParamField>
+
+<ParamField path="is_standalone" type="bool">
+Whether the tag is standalone.
+</ParamField>
+
+**Returns:** `bool`
+
+Whether the tag could be a standalone.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-mustache-parse_tag">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.mustache.parse_tag(
+    template: str,
+    l_del: str,
+    r_del: str
+) -> tuple[tuple[str, str], str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse a tag from a template.
+
+**Parameters:**
+
+<ParamField path="template" type="str">
+The template.
+</ParamField>
+
+<ParamField path="l_del" type="str">
+The left delimiter.
+</ParamField>
+
+<ParamField path="r_del" type="str">
+The right delimiter.
+</ParamField>
+
+**Returns:** `tuple[tuple[str, str], str]`
+
+The tag and the template.
+
+**Raises:**
+
+- `ChevronError`: If the tag is unclosed.
+- `ChevronError`: If the set delimiter tag is unclosed.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-mustache-r_sa_check">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.mustache.r_sa_check(
+    template: str,
+    tag_type: str,
+    is_standalone: bool
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Do a final check to see if a tag could be a standalone.
+
+**Parameters:**
+
+<ParamField path="template" type="str">
+The template.
+</ParamField>
+
+<ParamField path="tag_type" type="str">
+The type of the tag.
+</ParamField>
+
+<ParamField path="is_standalone" type="bool">
+Whether the tag is standalone.
+</ParamField>
+
+**Returns:** `bool`
+
+Whether the tag could be a standalone.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-mustache-render">
+
+<CodeBlock links={{"langchain_core.utils.mustache.Scopes":"#langchain_core-utils-mustache-Scopes"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.mustache.render(
+    template: str | list[tuple[str, str]] = '',
+    data: collections.abc.Mapping[str, typing.Any] = EMPTY_DICT,
+    partials_dict: collections.abc.Mapping[str, str] = EMPTY_DICT,
+    padding: str = '',
+    def_ldel: str = '{{',
+    def_rdel: str = '}}',
+    scopes: langchain_core.utils.mustache.Scopes | None = None,
+    warn: bool = False,
+    keep: bool = False
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Render a mustache template.
+
+Renders a mustache template with a data scope and inline partial capability.
+
+**Parameters:**
+
+<ParamField path="template" type="str | list[tuple[str, str]]" default="''">
+A file-like object or a string containing the template.
+</ParamField>
+
+<ParamField path="data" type="Mapping[str, Any]" default="EMPTY_DICT">
+A python dictionary with your data scope.
+</ParamField>
+
+<ParamField path="partials_dict" type="Mapping[str, str]" default="EMPTY_DICT">
+A python dictionary which will be search for partials
+before the filesystem is.
+
+`&#123;'include': 'foo'&#125;` is the same as a file called include.mustache
+(defaults to `&#123;&#125;`).
+</ParamField>
+
+<ParamField path="padding" type="str" default="''">
+This is for padding partials, and shouldn't be used
+(but can be if you really want to).
+</ParamField>
+
+<ParamField path="def_ldel" type="str" default="'&#123;&#123;'">
+The default left delimiter
+
+(`'&#123;&#123;'` by default, as in spec compliant mustache).
+</ParamField>
+
+<ParamField path="def_rdel" type="str" default="'&#125;&#125;'">
+The default right delimiter
+
+(`'&#125;&#125;'` by default, as in spec compliant mustache).
+</ParamField>
+
+<ParamField path="scopes" type="Scopes | None" default="None">
+The list of scopes that `get_key` will look through.
+</ParamField>
+
+<ParamField path="warn" type="bool" default="False">
+Log a warning when a template substitution isn't found in the data
+</ParamField>
+
+<ParamField path="keep" type="bool" default="False">
+Keep unreplaced tags when a substitution isn't found in the data.
+</ParamField>
+
+**Returns:** `str`
+
+A string containing the rendered template.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-mustache-tokenize">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.mustache.tokenize(
+    template: str,
+    def_ldel: str = '{{',
+    def_rdel: str = '}}'
+) -> collections.abc.Iterator[tuple[str, str]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Tokenize a mustache template.
+
+Tokenizes a mustache template in a generator fashion, using file-like objects. It
+also accepts a string containing the template.
+
+**Parameters:**
+
+<ParamField path="template" type="str">
+a file-like object, or a string of a mustache template
+</ParamField>
+
+<ParamField path="def_ldel" type="str" default="'&#123;&#123;'">
+The default left delimiter
+(`'&#123;&#123;'` by default, as in spec compliant mustache)
+</ParamField>
+
+<ParamField path="def_rdel" type="str" default="'&#125;&#125;'">
+The default right delimiter
+(`'&#125;&#125;'` by default, as in spec compliant mustache)
+</ParamField>
+
+**Raises:**
+
+- `ChevronError`: If there is a syntax error in the template.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-mustache-EMPTY_DICT">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.mustache.EMPTY_DICT: MappingProxyType[str, str] = MappingProxyType({})
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-mustache-Scopes">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.mustache.Scopes: TypeAlias = list[Literal[False, 0] | Mapping[str, Any]]
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-mustache-_CURRENT_LINE">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.mustache._CURRENT_LINE = 1
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-mustache-_LAST_TAG_LINE">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.mustache._LAST_TAG_LINE = None
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-mustache-g_token_cache">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.mustache.g_token_cache: dict[str, list[tuple[str, str]]] = {}
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-mustache-logger">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.mustache.logger = logging.getLogger(__name__)
+```
+
+</CodeBlock>
+</Anchor>
+

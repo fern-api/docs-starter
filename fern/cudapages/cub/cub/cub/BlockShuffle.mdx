@@ -1,0 +1,344 @@
+---
+title: cub::BlockShuffle
+description: ""
+---
+
+The BlockShuffle class provides collective methods for shuffling data partitioned across a CUDA thread block.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="T" type="typename">
+The data type to be exchanged.
+</ParamField>
+
+<ParamField path="BlockDimX" type="int">
+The thread block length in threads along the X dimension
+</ParamField>
+
+<ParamField path="BlockDimY" type="int" default="1">
+**[optional]** The thread block length in threads along the Y dimension (default: 1)
+</ParamField>
+
+<ParamField path="BlockDimZ" type="int" default="1">
+**[optional]** The thread block length in threads along the Z dimension (default: 1)
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Collective constructors
+
+### BlockShuffle <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+Collective constructor using a private static allocation of shared memory as temporary storage.
+
+<CodeBlock links={{"BlockShuffle": "/library/api/cub::BlockShuffle"}}>
+```cpp showLineNumbers={false}
+cub::BlockShuffle<T, BlockDimX, BlockDimY, BlockDimZ>::BlockShuffle()
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+</Tab>
+<Tab title="With TempStorage">
+
+Collective constructor using the specified memory allocation as temporary storage.
+
+<CodeBlock links={{"BlockShuffle": "/library/api/cub::BlockShuffle", "TempStorage": "/library/api/cub::BlockShuffle::TempStorage"}}>
+```cpp showLineNumbers={false}
+cub::BlockShuffle<T, BlockDimX, BlockDimY, BlockDimZ>::BlockShuffle(
+    TempStorage &temp_storage
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Parameters**
+
+<ParamField path="temp_storage" type="TempStorage &">
+Reference to memory allocation having layout type [TempStorage](/library/api/cub::BlockShuffle::TempStorage)
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Shuffle movement
+
+### Offset <Badge intent="note" minimal>inline</Badge>
+
+Each *thread*<sub>i</sub> obtains the `input` provided by *thread*<sub>i + distance</sub>. The offset `distance` may be negative.
+
+<CodeBlock links={{"BlockShuffle": "/library/api/cub::BlockShuffle"}}>
+```cpp showLineNumbers={false}
+void cub::BlockShuffle<T, BlockDimX, BlockDimY, BlockDimZ>::Offset(
+    T input,
+    T &output,
+    int distance = 1
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="input" type="T">
+Embed:rst:leading-asterisk 
+//!   The input item from the calling thread (*thread*\ :sub:`i`)
+//!
+</ParamField>
+
+<ParamField path="output" type="T &">
+Embed:rst:leading-asterisk 
+//!   The ``input`` item from the successor (or predecessor) thread
+//!   *thread*\ :sub:`i + distance` (may be aliased to ``input``).
+//!   This value is only updated for for *thread*\ :sub:`i` when
+//!   ``0 <= (i + distance) < BLOCK_THREADS - 1``
+//!
+</ParamField>
+
+<ParamField path="distance" type="int" default="1">
+Offset distance (may be negative)
+</ParamField>
+
+### Up <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Multiple items per thread">
+
+Each *thread*<sub>i</sub> obtains the `input` provided by *thread*<sub>i + distance</sub>.
+
+<CodeBlock links={{"BlockShuffle": "/library/api/cub::BlockShuffle"}}>
+```cpp showLineNumbers={false}
+template <int ITEMS_PER_THREAD>
+void cub::BlockShuffle<T, BlockDimX, BlockDimY, BlockDimZ>::Up(
+    T (&input)[ITEMS_PER_THREAD],
+    T (&prev)[ITEMS_PER_THREAD]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="input" type="T(&)[ITEMS_PER_THREAD]">
+The calling thread's input item
+</ParamField>
+
+<ParamField path="prev" type="T(&)[ITEMS_PER_THREAD]">
+Embed:rst:leading-asterisk 
+//!   The corresponding predecessor items (may be aliased to ``input``).
+//!   The item ``prev[0]`` is not updated for *thread*\ :sub:`0`.
+//!
+</ParamField>
+
+</Tab>
+<Tab title="Multiple items per thread">
+
+The thread block rotates its blocked arrangement of `input` items, shifting it up by one item. All threads receive the `input` provided by *thread*<sub>BLOCK_THREADS - 1</sub>.
+
+<CodeBlock links={{"BlockShuffle": "/library/api/cub::BlockShuffle"}}>
+```cpp showLineNumbers={false}
+template <int ITEMS_PER_THREAD>
+void cub::BlockShuffle<T, BlockDimX, BlockDimY, BlockDimZ>::Up(
+    T (&input)[ITEMS_PER_THREAD],
+    T (&prev)[ITEMS_PER_THREAD],
+    T &block_suffix
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Data is in a blocked arrangement across threads.
+Performance is sensitive to the degree of data movement across the block.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="input" type="T(&)[ITEMS_PER_THREAD]">
+The calling thread's input items
+</ParamField>
+
+<ParamField path="prev" type="T(&)[ITEMS_PER_THREAD]">
+Embed:rst:leading-asterisk 
+//!   The corresponding predecessor items (may be aliased to ``input``).
+//!   The item ``prev[0]`` is not updated for *thread*\ :sub:`0`.
+//!
+</ParamField>
+
+<ParamField path="block_suffix" type="T &">
+Embed:rst:leading-asterisk 
+//!   The item ``input[ITEMS_PER_THREAD - 1]`` from *thread*\ :sub:`BLOCK_THREADS - 1`, provided to all threads
+//!
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### Down <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Multiple items per thread">
+
+The thread block rotates its blocked arrangement of `input` items, shifting it down by one item.
+
+<CodeBlock links={{"BlockShuffle": "/library/api/cub::BlockShuffle"}}>
+```cpp showLineNumbers={false}
+template <int ITEMS_PER_THREAD>
+void cub::BlockShuffle<T, BlockDimX, BlockDimY, BlockDimZ>::Down(
+    T (&input)[ITEMS_PER_THREAD],
+    T (&prev)[ITEMS_PER_THREAD]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Data is in a blocked arrangement across threads.
+Performance is sensitive to the degree of data movement across the block.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="input" type="T(&)[ITEMS_PER_THREAD]">
+The calling thread's input items
+</ParamField>
+
+<ParamField path="prev" type="T(&)[ITEMS_PER_THREAD]">
+Embed:rst:leading-asterisk 
+//!   The corresponding predecessor items (may be aliased to ``input``).
+//!   The value ``prev[0]`` is not updated for *thread*\ :sub:`BLOCK_THREADS - 1`.
+//!
+</ParamField>
+
+</Tab>
+<Tab title="Multiple items per thread">
+
+The thread block rotates its blocked arrangement of input items, shifting it down by one item. All threads receive `input[0]` provided by *thread*<sub>0</sub>.
+
+<CodeBlock links={{"BlockShuffle": "/library/api/cub::BlockShuffle"}}>
+```cpp showLineNumbers={false}
+template <int ITEMS_PER_THREAD>
+void cub::BlockShuffle<T, BlockDimX, BlockDimY, BlockDimZ>::Down(
+    T (&input)[ITEMS_PER_THREAD],
+    T (&prev)[ITEMS_PER_THREAD],
+    T &block_prefix
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Data is in a blocked arrangement across threads.
+Performance is sensitive to the degree of data movement across the block.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="input" type="T(&)[ITEMS_PER_THREAD]">
+The calling thread's input items
+</ParamField>
+
+<ParamField path="prev" type="T(&)[ITEMS_PER_THREAD]">
+Embed:rst:leading-asterisk 
+//!   The corresponding predecessor items (may be aliased to ``input``).
+//!   The value ``prev[0]`` is not updated for *thread*\ :sub:`BLOCK_THREADS - 1`.
+//!
+</ParamField>
+
+<ParamField path="block_prefix" type="T &">
+Embed:rst:leading-asterisk 
+//!   The item ``input[0]`` from *thread*\ :sub:`0`, provided to all threads
+//!
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Utility methods
+
+### PrivateStorage <Badge intent="note" minimal>inline</Badge>
+
+Internal storage allocator.
+
+<CodeBlock links={{"BlockShuffle": "/library/api/cub::BlockShuffle"}}>
+```cpp showLineNumbers={false}
+_TempStorage & cub::BlockShuffle<T, BlockDimX, BlockDimY, BlockDimZ>::PrivateStorage()
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `_TempStorage` | `T[BLOCK_THREADS]` | Shared memory storage layout type (last element from each thread's input). |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `BLOCK_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `LOG_WARP_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `WARP_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `WARPS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `temp_storage` | `_TempStorage &` | Shared storage reference. |
+| `linear_tid` | `unsigned int` | Linear thread-id. |
+
+---
+
+## Inner classes
+
+### TempStorage
+
+<CodeBlock links={{"BlockShuffle": "/library/api/cub::BlockShuffle"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockShuffle::TempStorage
+```
+</CodeBlock>
+
+The operations exposed by `BlockShuffle` require a temporary memory allocation of this nested type for thread communication. This opaque storage can be allocated directly using the `__shared__` keyword. Alternatively, it can be aliased to externally allocated memory (shared or global) or `union`'d with other storage allocation types to facilitate memory reuse.
+
+**Inherits from:** `Uninitialized< _TempStorage >` (public)

@@ -1,0 +1,84 @@
+---
+title: cub::ChainedPolicy
+description: "Helper for dispatching into a policy chain."
+---
+
+Helper for dispatching into a policy chain.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="PolicyPtxVersion" type="int">
+</ParamField>
+
+<ParamField path="PolicyT" type="typename">
+</ParamField>
+
+<ParamField path="PrevPolicyT" type="typename">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Methods
+
+### runtime_arch_to_compiletime <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"ChainedPolicy": "/library/api/cub::ChainedPolicy"}}>
+```cpp showLineNumbers={false}
+template <int ArchMult, int... CudaArches, typename FunctorT>
+static cudaError_t cub::ChainedPolicy<PolicyPtxVersion, PolicyT, PrevPolicyT>::runtime_arch_to_compiletime(
+    int device_ptx_version,
+    FunctorT &op
+)
+```
+</CodeBlock>
+
+### find_and_invoke_policy <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"ChainedPolicy": "/library/api/cub::ChainedPolicy"}}>
+```cpp showLineNumbers={false}
+template <int DevicePtxVersion, typename FunctorT>
+static cudaError_t cub::ChainedPolicy<PolicyPtxVersion, PolicyT, PrevPolicyT>::find_and_invoke_policy(
+    FunctorT &op
+)
+```
+</CodeBlock>
+
+---
+
+## Static methods
+
+### Invoke <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Specializes and dispatches op in accordance to the first policy in the chain of adequate PTX version.
+
+<CodeBlock links={{"ChainedPolicy": "/library/api/cub::ChainedPolicy"}}>
+```cpp showLineNumbers={false}
+template <typename FunctorT>
+static cudaError_t cub::ChainedPolicy<PolicyPtxVersion, PolicyT, PrevPolicyT>::Invoke(
+    int device_ptx_version,
+    FunctorT &op
+)
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `ActivePolicy` | `typename ::cuda::std::_If<(CUB_PTX_ARCH< PolicyPtxVersion &&have_previous_policy), detail::get_active_policy< PrevPolicyT >, ::cuda::std::type_identity< PolicyT > >::type` | The policy for the active compiler pass. |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `have_previous_policy` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `bool` | |

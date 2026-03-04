@@ -1,0 +1,164 @@
+---
+title: cub::GridEvenShare
+description: "[GridEvenShare](/library/api/cub::_grid_even_share) is a descriptor utility for distributing input among CUDA thread blocks in an \"even-share\" fashion."
+---
+
+`GridEvenShare` is a descriptor utility for distributing input among CUDA thread blocks in an "even-share" fashion.
+
+Each thread block gets roughly the same number of input tiles.
+
+**Overview**
+
+Each thread block is assigned a consecutive sequence of input tiles. To help preserve alignment and eliminate the overhead of guarded loads for all but the last thread block, to `GridEvenShare` assigns one of three different amounts of work to a given thread block: "big", "normal", or "last". The "big" workloads are one scheduling grain larger than "normal". The "last" work unit for the last thread block may be partially-full if the input is not an even multiple of the scheduling grain size.
+
+Before invoking a child grid, a parent thread will typically construct an instance of `GridEvenShare`. The instance can be passed to child thread blocks which can initialize their per-thread block offsets using [`BlockInit()`](/library/api/cub::_grid_even_share::BlockInit()).
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="OffsetT" type="typename">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### GridEvenShare <Badge intent="note" minimal>inline</Badge>
+
+Constructor.
+
+<CodeBlock links={{"GridEvenShare": "/library/api/cub::GridEvenShare"}}>
+```cpp showLineNumbers={false}
+cub::GridEvenShare<OffsetT>::GridEvenShare()
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### DispatchInit <Badge intent="note" minimal>inline</Badge>
+
+Dispatch initializer.
+
+To be called prior to kernel launch.
+
+<CodeBlock links={{"GridEvenShare": "/library/api/cub::GridEvenShare"}}>
+```cpp showLineNumbers={false}
+void cub::GridEvenShare<OffsetT>::DispatchInit(
+    OffsetT num_items_,
+    int max_grid_size,
+    int tile_items
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="num_items_" type="OffsetT">
+Total number of input items
+</ParamField>
+
+<ParamField path="max_grid_size" type="int">
+Maximum grid size allowable (actual grid size may be less if not warranted by the the number of input items)
+</ParamField>
+
+<ParamField path="tile_items" type="int">
+Number of data items per input tile
+</ParamField>
+
+### BlockInit <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Initializes ranges for the specified thread block index.
+
+Specialized for a "raking" access pattern in which each thread block is assigned a consecutive sequence of input tiles.
+
+<CodeBlock links={{"GridEvenShare": "/library/api/cub::GridEvenShare"}}>
+```cpp showLineNumbers={false}
+template <int TILE_ITEMS>
+void cub::GridEvenShare<OffsetT>::BlockInit(
+    int block_id,
+    detail::constant_t<GRID_MAPPING_RAKE>
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Block-initialization">
+
+Block-initialization, specialized for a "raking" access pattern in which each thread block is assigned a consecutive sequence of input tiles.
+
+<CodeBlock links={{"GridEvenShare": "/library/api/cub::GridEvenShare"}}>
+```cpp showLineNumbers={false}
+template <int TILE_ITEMS>
+void cub::GridEvenShare<OffsetT>::BlockInit(
+    int block_id,
+    detail::constant_t<GRID_MAPPING_STRIP_MINE>
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Block-initialization">
+
+Block-initialization, specialized for "strip mining" access pattern in which the input tiles assigned to each thread block are separated by a stride equal to the the extent of the grid.
+
+<CodeBlock links={{"GridEvenShare": "/library/api/cub::GridEvenShare"}}>
+```cpp showLineNumbers={false}
+template <int TILE_ITEMS, GridMappingStrategy STRATEGY>
+void cub::GridEvenShare<OffsetT>::BlockInit()
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Block-initialization">
+
+Block-initialization, specialized for a "raking" access pattern in which each thread block is assigned a consecutive sequence of input tiles.
+
+<CodeBlock links={{"GridEvenShare": "/library/api/cub::GridEvenShare"}}>
+```cpp showLineNumbers={false}
+template <int TILE_ITEMS, typename OffsetT1>
+void cub::GridEvenShare<OffsetT>::BlockInit(
+    OffsetT1 block_offset,
+    OffsetT1 block_end
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="block_offset" type="OffsetT1">
+Threadblock begin offset (inclusive)
+</ParamField>
+
+<ParamField path="block_end" type="OffsetT1">
+Threadblock end offset (exclusive)
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `total_tiles` | `int` | |
+| `big_shares` | `int` | |
+| `big_share_items` | `OffsetT` | |
+| `normal_share_items` | `OffsetT` | |
+| `normal_base_offset` | `OffsetT` | |
+| `num_items` | `OffsetT` | Total number of input items. |
+| `grid_size` | `int` | Grid size in thread blocks. |
+| `block_offset` | `OffsetT` | OffsetT into input marking the beginning of the owning thread block's segment of input tiles. |
+| `block_end` | `OffsetT` | OffsetT into input of marking the end (one-past) of the owning thread block's segment of input tiles. |
+| `block_stride` | `OffsetT` | Stride between input tiles. |

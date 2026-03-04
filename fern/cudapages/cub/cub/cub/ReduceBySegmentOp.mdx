@@ -1,0 +1,95 @@
+---
+title: cub::ReduceBySegmentOp
+description: "Reduce-by-segment functor."
+---
+
+Reduce-by-segment functor.
+
+Given two cub::KeyValuePair inputs `a` and `b` and a binary associative combining operator `f(const T &x, const T &y)`, an instance of this functor returns a cub::KeyValuePair whose `key` field is `a.key + b.key`, and whose `value` field is either `b.value` if `b.key` is non-zero, or `f(a.value, b.value)` otherwise.
+
+`ReduceBySegmentOp` is an associative, non-commutative binary combining operator for input sequences of cub::KeyValuePair pairings. Such sequences are typically used to represent a segmented set of values to be reduced and a corresponding set of &#123;0,1&#125;-valued integer "head flags" demarcating the first value of each segment.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="ReductionOpT" type="typename">
+Binary reduction operator to apply to values
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### ReduceBySegmentOp <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+Constructor.
+
+<CodeBlock links={{"ReduceBySegmentOp": "/library/api/cub::ReduceBySegmentOp"}}>
+```cpp showLineNumbers={false}
+cub::ReduceBySegmentOp<ReductionOpT>::ReduceBySegmentOp()
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Constructor">
+
+Constructor.
+
+<CodeBlock links={{"ReduceBySegmentOp": "/library/api/cub::ReduceBySegmentOp"}}>
+```cpp showLineNumbers={false}
+cub::ReduceBySegmentOp<ReductionOpT>::ReduceBySegmentOp(
+    ReductionOpT op
+)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### operator() <Badge intent="note" minimal>inline</Badge>
+
+Scan operator.
+
+<CodeBlock links={{"ReduceBySegmentOp": "/library/api/cub::ReduceBySegmentOp"}}>
+```cpp showLineNumbers={false}
+template <typename KeyValuePairT>
+KeyValuePairT cub::ReduceBySegmentOp<ReductionOpT>::operator()(
+    const KeyValuePairT &first,
+    const KeyValuePairT &second
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="KeyValuePairT" type="typename">
+KeyValuePair pairing of T (value) and OffsetT (head flag)
+</ParamField>
+
+**Parameters**
+
+<ParamField path="first" type="const KeyValuePairT &">
+First partial reduction
+</ParamField>
+
+<ParamField path="second" type="const KeyValuePairT &">
+Second partial reduction
+</ParamField>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `op` | `ReductionOpT` | Wrapped reduction operator. |

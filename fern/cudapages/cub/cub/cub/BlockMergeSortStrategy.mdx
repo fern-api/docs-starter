@@ -1,0 +1,507 @@
+---
+title: cub::BlockMergeSortStrategy
+description: "Generalized merge sort algorithm."
+---
+
+Generalized merge sort algorithm.
+
+This class is used to reduce code duplication. Warp and Block merge sort differ only in how they compute thread index and how they synchronize threads. Since synchronization might require access to custom data (like member mask), CRTP is used.
+
+The code snippet below illustrates the way this class can be used.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh> // or equivalently <cub/block/block_merge_sort.cuh>
+
+constexpr int BLOCK_THREADS = 256;
+constexpr int ItemsPerThread = 9;
+
+class BlockMergeSort : public BlockMergeSortStrategy<int,
+                                                     cub::NullType,
+                                                     BLOCK_THREADS,
+                                                     ItemsPerThread,
+                                                     BlockMergeSort>
+{
+  using BlockMergeSortStrategyT =
+    BlockMergeSortStrategy<int,
+                           cub::NullType,
+                           BLOCK_THREADS,
+                           ItemsPerThread,
+                           BlockMergeSort>;
+public:
+  __device__ __forceinline__ explicit BlockMergeSort(
+    typename BlockMergeSortStrategyT::TempStorage &temp_storage)
+      : BlockMergeSortStrategyT(temp_storage, threadIdx.x)
+  {}
+
+  __device__ __forceinline__ void SyncImplementation() const
+  {
+    __syncthreads();
+  }
+};
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="KeyT" type="typename">
+KeyT type
+</ParamField>
+
+<ParamField path="ValueT" type="typename">
+ValueT type. cub::NullType indicates a keys-only sort
+</ParamField>
+
+<ParamField path="NumThreads" type="int">
+</ParamField>
+
+<ParamField path="ItemsPerThread" type="int">
+</ParamField>
+
+<ParamField path="SynchronizationPolicy" type="typename">
+Provides a way of synchronizing threads. Should be derived from `BlockMergeSortStrategy`.
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### BlockMergeSortStrategy <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 2">
+
+<Badge intent="note" minimal>explicit</Badge>
+
+<CodeBlock links={{"BlockMergeSortStrategy": "/library/api/cub::BlockMergeSortStrategy"}}>
+```cpp showLineNumbers={false}
+cub::BlockMergeSortStrategy<KeyT, ValueT, NumThreads, ItemsPerThread, SynchronizationPolicy>::BlockMergeSortStrategy(
+    unsigned int linear_tid
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="With TempStorage">
+
+<CodeBlock links={{"BlockMergeSortStrategy": "/library/api/cub::BlockMergeSortStrategy", "TempStorage": "/library/api/cub::BlockMergeSortStrategy::TempStorage"}}>
+```cpp showLineNumbers={false}
+cub::BlockMergeSortStrategy<KeyT, ValueT, NumThreads, ItemsPerThread, SynchronizationPolicy>::BlockMergeSortStrategy(
+    TempStorage &temp_storage,
+    unsigned int linear_tid
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Deleted overload 1">
+
+<CodeBlock links={{"BlockMergeSortStrategy": "/library/api/cub::BlockMergeSortStrategy"}}>
+```cpp showLineNumbers={false}
+cub::BlockMergeSortStrategy<KeyT, ValueT, NumThreads, ItemsPerThread, SynchronizationPolicy>::BlockMergeSortStrategy() = delete
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### PrivateStorage <Badge intent="note" minimal>inline</Badge>
+
+Internal storage allocator.
+
+<CodeBlock links={{"BlockMergeSortStrategy": "/library/api/cub::BlockMergeSortStrategy"}}>
+```cpp showLineNumbers={false}
+_TempStorage & cub::BlockMergeSortStrategy<KeyT, ValueT, NumThreads, ItemsPerThread, SynchronizationPolicy>::PrivateStorage()
+```
+</CodeBlock>
+
+### Sync <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"BlockMergeSortStrategy": "/library/api/cub::BlockMergeSortStrategy"}}>
+```cpp showLineNumbers={false}
+void cub::BlockMergeSortStrategy<KeyT, ValueT, NumThreads, ItemsPerThread, SynchronizationPolicy>::Sync() const
+```
+</CodeBlock>
+
+### get_linear_tid <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"BlockMergeSortStrategy": "/library/api/cub::BlockMergeSortStrategy"}}>
+```cpp showLineNumbers={false}
+unsigned int cub::BlockMergeSortStrategy<KeyT, ValueT, NumThreads, ItemsPerThread, SynchronizationPolicy>::get_linear_tid() const
+```
+</CodeBlock>
+
+### Sort <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Sorts items partitioned across a CUDA thread block using a merge sorting method.
+
+<CodeBlock links={{"BlockMergeSortStrategy": "/library/api/cub::BlockMergeSortStrategy"}}>
+```cpp showLineNumbers={false}
+template <typename CompareOp>
+void cub::BlockMergeSortStrategy<KeyT, ValueT, NumThreads, ItemsPerThread, SynchronizationPolicy>::Sort(
+    KeyT (&keys)[ItemsPerThread],
+    CompareOp compare_op
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="CompareOp" type="typename">
+Functor type having member `bool operator()(KeyT lhs, KeyT rhs)`. `CompareOp` is a model of [Strict Weak Ordering](https://en.cppreference.com/w/cpp/concepts/strict_weak_order).
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="compare_op" type="CompareOp">
+Comparison function object which returns true if the first argument is ordered before the second
+</ParamField>
+
+</Tab>
+<Tab title="Partial tile">
+
+Sorts items partitioned across a CUDA thread block using a merge sorting method.
+
+<CodeBlock links={{"BlockMergeSortStrategy": "/library/api/cub::BlockMergeSortStrategy"}}>
+```cpp showLineNumbers={false}
+template <typename CompareOp>
+void cub::BlockMergeSortStrategy<KeyT, ValueT, NumThreads, ItemsPerThread, SynchronizationPolicy>::Sort(
+    KeyT (&keys)[ItemsPerThread],
+    CompareOp compare_op,
+    int valid_items,
+    KeyT oob_default
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="CompareOp" type="typename">
+Functor type having member `bool operator()(KeyT lhs, KeyT rhs)`. `CompareOp` is a model of [Strict Weak Ordering](https://en.cppreference.com/w/cpp/concepts/strict_weak_order).
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="compare_op" type="CompareOp">
+Comparison function object which returns true if the first argument is ordered before the second
+</ParamField>
+
+<ParamField path="valid_items" type="int">
+Number of valid items to sort
+</ParamField>
+
+<ParamField path="oob_default" type="KeyT">
+Default value to assign out-of-bound items
+</ParamField>
+
+</Tab>
+<Tab title="Overload 3">
+
+Sorts items partitioned across a CUDA thread block using a merge sorting method.
+
+<CodeBlock links={{"BlockMergeSortStrategy": "/library/api/cub::BlockMergeSortStrategy"}}>
+```cpp showLineNumbers={false}
+template <typename CompareOp>
+void cub::BlockMergeSortStrategy<KeyT, ValueT, NumThreads, ItemsPerThread, SynchronizationPolicy>::Sort(
+    KeyT (&keys)[ItemsPerThread],
+    ValueT (&items)[ItemsPerThread],
+    CompareOp compare_op
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="CompareOp" type="typename">
+Functor type having member `bool operator()(KeyT lhs, KeyT rhs)`. `CompareOp` is a model of [Strict Weak Ordering](https://en.cppreference.com/w/cpp/concepts/strict_weak_order).
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="items" type="ValueT(&)[ItemsPerThread]">
+Values to sort
+</ParamField>
+
+<ParamField path="compare_op" type="CompareOp">
+Comparison function object which returns true if the first argument is ordered before the second
+</ParamField>
+
+</Tab>
+<Tab title="Partial tile">
+
+Sorts items partitioned across a CUDA thread block using a merge sorting method.
+
+<CodeBlock links={{"BlockMergeSortStrategy": "/library/api/cub::BlockMergeSortStrategy"}}>
+```cpp showLineNumbers={false}
+template <typename CompareOp, bool IS_LAST_TILE>
+void cub::BlockMergeSortStrategy<KeyT, ValueT, NumThreads, ItemsPerThread, SynchronizationPolicy>::Sort(
+    KeyT (&keys)[ItemsPerThread],
+    ValueT (&items)[ItemsPerThread],
+    CompareOp compare_op,
+    int valid_items,
+    KeyT oob_default
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="CompareOp" type="typename">
+Functor type having member `bool operator()(KeyT lhs, KeyT rhs)` `CompareOp` is a model of [Strict Weak Ordering](https://en.cppreference.com/w/cpp/concepts/strict_weak_order).
+</ParamField>
+
+<ParamField path="IS_LAST_TILE" type="bool">
+True if `valid_items` isn't equal to the [`ITEMS_PER_TILE`](/library/api/cub::_block_merge_sort_strategy::ITEMS_PER_TILE)
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="items" type="ValueT(&)[ItemsPerThread]">
+Values to sort
+</ParamField>
+
+<ParamField path="compare_op" type="CompareOp">
+Comparison function object which returns true if the first argument is ordered before the second
+</ParamField>
+
+<ParamField path="valid_items" type="int">
+Number of valid items to sort
+</ParamField>
+
+<ParamField path="oob_default" type="KeyT">
+Default value to assign out-of-bound items
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### StableSort <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Sorts items partitioned across a CUDA thread block using a merge sorting method.
+
+<CodeBlock links={{"BlockMergeSortStrategy": "/library/api/cub::BlockMergeSortStrategy"}}>
+```cpp showLineNumbers={false}
+template <typename CompareOp>
+void cub::BlockMergeSortStrategy<KeyT, ValueT, NumThreads, ItemsPerThread, SynchronizationPolicy>::StableSort(
+    KeyT (&keys)[ItemsPerThread],
+    CompareOp compare_op
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="CompareOp" type="typename">
+Functor type having member `bool operator()(KeyT lhs, KeyT rhs)`. `CompareOp` is a model of [Strict Weak Ordering](https://en.cppreference.com/w/cpp/concepts/strict_weak_order).
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="compare_op" type="CompareOp">
+Comparison function object which returns true if the first argument is ordered before the second
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Sorts items partitioned across a CUDA thread block using a merge sorting method.
+
+<CodeBlock links={{"BlockMergeSortStrategy": "/library/api/cub::BlockMergeSortStrategy"}}>
+```cpp showLineNumbers={false}
+template <typename CompareOp>
+void cub::BlockMergeSortStrategy<KeyT, ValueT, NumThreads, ItemsPerThread, SynchronizationPolicy>::StableSort(
+    KeyT (&keys)[ItemsPerThread],
+    ValueT (&items)[ItemsPerThread],
+    CompareOp compare_op
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="CompareOp" type="typename">
+Functor type having member `bool operator()(KeyT lhs, KeyT rhs)`. `CompareOp` is a model of [Strict Weak Ordering](https://en.cppreference.com/w/cpp/concepts/strict_weak_order).
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="items" type="ValueT(&)[ItemsPerThread]">
+Values to sort
+</ParamField>
+
+<ParamField path="compare_op" type="CompareOp">
+Comparison function object which returns true if the first argument is ordered before the second
+</ParamField>
+
+</Tab>
+<Tab title="Partial tile">
+
+Sorts items partitioned across a CUDA thread block using a merge sorting method.
+
+<CodeBlock links={{"BlockMergeSortStrategy": "/library/api/cub::BlockMergeSortStrategy"}}>
+```cpp showLineNumbers={false}
+template <typename CompareOp>
+void cub::BlockMergeSortStrategy<KeyT, ValueT, NumThreads, ItemsPerThread, SynchronizationPolicy>::StableSort(
+    KeyT (&keys)[ItemsPerThread],
+    CompareOp compare_op,
+    int valid_items,
+    KeyT oob_default
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="CompareOp" type="typename">
+Functor type having member `bool operator()(KeyT lhs, KeyT rhs)`. `CompareOp` is a model of [Strict Weak Ordering](https://en.cppreference.com/w/cpp/concepts/strict_weak_order).
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="compare_op" type="CompareOp">
+Comparison function object which returns true if the first argument is ordered before the second
+</ParamField>
+
+<ParamField path="valid_items" type="int">
+Number of valid items to sort
+</ParamField>
+
+<ParamField path="oob_default" type="KeyT">
+Default value to assign out-of-bound items
+</ParamField>
+
+</Tab>
+<Tab title="Partial tile">
+
+Sorts items partitioned across a CUDA thread block using a merge sorting method.
+
+<CodeBlock links={{"BlockMergeSortStrategy": "/library/api/cub::BlockMergeSortStrategy"}}>
+```cpp showLineNumbers={false}
+template <typename CompareOp, bool IS_LAST_TILE>
+void cub::BlockMergeSortStrategy<KeyT, ValueT, NumThreads, ItemsPerThread, SynchronizationPolicy>::StableSort(
+    KeyT (&keys)[ItemsPerThread],
+    ValueT (&items)[ItemsPerThread],
+    CompareOp compare_op,
+    int valid_items,
+    KeyT oob_default
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="CompareOp" type="typename">
+Functor type having member `bool operator()(KeyT lhs, KeyT rhs)`. `CompareOp` is a model of [Strict Weak Ordering](https://en.cppreference.com/w/cpp/concepts/strict_weak_order).
+</ParamField>
+
+<ParamField path="IS_LAST_TILE" type="bool">
+True if `valid_items` isn't equal to the [`ITEMS_PER_TILE`](/library/api/cub::_block_merge_sort_strategy::ITEMS_PER_TILE)
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="items" type="ValueT(&)[ItemsPerThread]">
+Values to sort
+</ParamField>
+
+<ParamField path="compare_op" type="CompareOp">
+Comparison function object which returns true if the first argument is ordered before the second
+</ParamField>
+
+<ParamField path="valid_items" type="int">
+Number of valid items to sort
+</ParamField>
+
+<ParamField path="oob_default" type="KeyT">
+Default value to assign out-of-bound items
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `ITEMS_PER_TILE` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `KEYS_ONLY` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `bool` | |
+| `temp_storage` | `_TempStorage &` | Shared storage reference. |
+| `linear_tid` | `const unsigned int` | |
+
+---
+
+## Inner classes
+
+### TempStorage
+
+<CodeBlock links={{"BlockMergeSortStrategy": "/library/api/cub::BlockMergeSortStrategy"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockMergeSortStrategy::TempStorage
+```
+</CodeBlock>
+
+The operations exposed by [BlockMergeSort](/library/api/cub::_block_merge_sort) require a temporary memory allocation of this nested type for thread communication. This opaque storage can be allocated directly using the `__shared__` keyword. Alternatively, it can be aliased to externally allocated memory (shared or global) or `union`'d with other storage allocation types to facilitate memory reuse.
+
+**Inherits from:** `Uninitialized< _TempStorage >` (public)

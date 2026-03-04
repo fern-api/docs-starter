@@ -1,0 +1,36 @@
+---
+title: "cuda::mr::synchronous_resource"
+description: "The `synchronous_resource` concept verifies that a type Resource satisfies the basic requirements of a memory resource."
+---
+
+<Badge intent="info">C++20 concept</Badge>
+
+The `synchronous_resource` concept verifies that a type Resource satisfies the basic requirements of a memory resource.
+
+<CodeBlock>
+```cpp showLineNumbers={false}
+template <class _Resource>
+concept synchronous_resource = /* see description */;
+```
+</CodeBlock>
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="_Resource" type="class">
+The type that should implement the synchronous resource concept
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Description
+
+We require that a resource supports the following interface
+
+  - `allocate(size_t bytes, size_t alignment)`
+  - `deallocate(void* ptr, size_t bytes, size_t alignment)`
+  - `T() == T()`
+  - `T() != T()`

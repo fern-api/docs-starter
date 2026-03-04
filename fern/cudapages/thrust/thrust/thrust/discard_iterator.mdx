@@ -1,0 +1,126 @@
+---
+title: thrust::discard_iterator
+description: "[`discard_iterator`](/library/api/thrust::discard_iterator) is an iterator which represents a special kind of pointer that ignores values written to it upon dereference."
+---
+
+`discard_iterator` is an iterator which represents a special kind of pointer that ignores values written to it upon dereference.
+
+This iterator is useful for ignoring the output of certain algorithms without wasting memory capacity or bandwidth. `discard_iterator` may also be used to count the size of an algorithm's output which may not be known a priori.
+
+The following code snippet demonstrates how to use `discard_iterator` to ignore one of the output ranges of reduce_by_key
+
+```cpp showLineNumbers={false}
+#include <thrust/discard_iterator.h>
+```
+
+**See also:**
+make_discard_iterator
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <thrust/iterator/discard_iterator.h>
+#include <thrust/reduce.h>
+#include <thrust/device_vector.h>
+
+int main()
+{
+  thrust::device_vector<int> keys{1, 3, 3, 3, 2, 2, 1};
+  thrust::device_vector<int> values{9, 8, 7, 6, 5, 4, 3};
+
+  thrust::device_vector<int> result(4);
+
+  // we are only interested in the reduced values
+  // use discard_iterator to ignore the output keys
+  thrust::reduce_by_key(keys.begin(), keys.end(),
+                        values.begin(),
+                        thrust::make_discard_iterator(),
+                        result.begin());
+
+  // result is now [9, 21, 9, 3]
+
+  return 0;
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="System" type="typename" default="use_default">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `thrust::iterator_adaptor< discard_iterator< use_default >, base_iterator, value_type, iterator_system_t< base_iterator >, iterator_traversal_t< base_iterator >, reference >` (public)
+
+---
+
+## Constructors
+
+### discard_iterator <Badge intent="note" minimal>inline</Badge>
+
+This constructor receives an optional index specifying the position of this `discard_iterator` in a range.
+
+`i` The index of this `discard_iterator` in a range. Defaults to the value returned by `Incrementable's` null constructor. For example, when `Incrementable == int`, `0`.
+
+<CodeBlock links={{"discard_iterator": "/library/api/thrust::discard_iterator"}}>
+```cpp showLineNumbers={false}
+thrust::discard_iterator<System>::discard_iterator(
+    incrementable const &i = incrementable()
+)
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### base <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"discard_iterator": "/library/api/thrust::discard_iterator", "iterator_adaptor": "/library/api/thrust::iterator_adaptor"}}>
+```cpp showLineNumbers={false}
+Base const  & thrust::iterator_adaptor<Derived, Base, Value, System, Traversal, Reference, Difference>::base() const
+```
+</CodeBlock>
+
+**Returns:** A `const` reference to the `Base` iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) adapts.
+
+### base_reference <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+<CodeBlock links={{"discard_iterator": "/library/api/thrust::discard_iterator", "iterator_adaptor": "/library/api/thrust::iterator_adaptor"}}>
+```cpp showLineNumbers={false}
+Base & thrust::iterator_adaptor<Derived, Base, Value, System, Traversal, Reference, Difference>::base_reference()
+```
+</CodeBlock>
+
+**Returns:** A mutable reference to the `Base` iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) adapts.
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"discard_iterator": "/library/api/thrust::discard_iterator", "iterator_adaptor": "/library/api/thrust::iterator_adaptor"}}>
+```cpp showLineNumbers={false}
+Base const  & thrust::iterator_adaptor<Derived, Base, Value, System, Traversal, Reference, Difference>::base_reference() const
+```
+</CodeBlock>
+
+**Returns:** A `const` reference to the `Base` iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) adapts.
+
+</Tab>
+</Tabs>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `base_type` | `Base` | The type of iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor)`'s` `adapts`. |

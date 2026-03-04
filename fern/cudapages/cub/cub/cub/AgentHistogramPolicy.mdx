@@ -1,0 +1,59 @@
+---
+title: cub::AgentHistogramPolicy
+description: "Parameterizable tuning policy type for AgentHistogram."
+---
+
+Parameterizable tuning policy type for AgentHistogram.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="BlockThreads" type="int">
+Threads per thread block
+</ParamField>
+
+<ParamField path="PixelsPerThread" type="int">
+Pixels per thread (per tile of input)
+</ParamField>
+
+<ParamField path="LoadAlgorithm" type="BlockLoadAlgorithm">
+The [BlockLoad](/library/api/cub::_block_load) algorithm to use
+</ParamField>
+
+<ParamField path="LoadModifier" type="CacheLoadModifier">
+Cache load modifier for reading input elements
+</ParamField>
+
+<ParamField path="RleCompress" type="bool">
+Whether to perform localized RLE to compress samples before histogramming
+</ParamField>
+
+<ParamField path="MemoryPreference" type="BlockHistogramMemoryPreference">
+Whether to prefer privatized shared-memory bins (versus privatized global-memory bins)
+</ParamField>
+
+<ParamField path="WorkStealing" type="bool">
+Whether to dequeue tiles from a global work queue
+</ParamField>
+
+<ParamField path="VecSize" type="int" default="4">
+Vector size for samples loading (1, 2, 4)
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `BLOCK_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | Threads per thread block. |
+| `PIXELS_PER_THREAD` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | Pixels per thread (per tile of input). |
+| `IS_RLE_COMPRESS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `bool` | Whether to perform localized RLE to compress samples before histogramming. |
+| `MEM_PREFERENCE` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `BlockHistogramMemoryPreference` | Whether to prefer privatized shared-memory bins (versus privatized global-memory bins). |
+| `IS_WORK_STEALING` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `bool` | Whether to dequeue tiles from a global work queue. |
+| `VEC_SIZE` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | Vector size for samples loading (1, 2, 4). |
+| `LOAD_ALGORITHM` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `BlockLoadAlgorithm` | Cache load modifier for reading input elements. |
+| `LOAD_MODIFIER` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `CacheLoadModifier` | |

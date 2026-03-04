@@ -1,0 +1,255 @@
+---
+title: "cuda::constant_iterator"
+description: "The [`constant_iterator`](/libcudacxx/api/cuda::constant_iterator) class represents an iterator in an infinite sequence of repeated values."
+---
+
+The `constant_iterator` class represents an iterator in an infinite sequence of repeated values.
+
+This iterator is useful for creating a range filled with the same value without explicitly storing it in memory. Using `constant_iterator` saves both memory capacity and bandwidth.
+
+The following code snippet demonstrates how to create a `constant_iterator` whose [`value_type`](/libcudacxx/api/cuda::constant_iterator::value_type) is `int` and whose value is `10`.
+
+```cpp showLineNumbers={false}
+#include <cuda/constant_iterator.h>
+```
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <cuda/iterator>
+
+cuda::constant_iterator iter(10);
+
+*iter;    // returns 10
+iter[0];  // returns 10
+iter[1];  // returns 10
+iter[13]; // returns 10
+
+// and so on...
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="_Tp" type="class">
+The value type of the `constant_iterator`.
+</ParamField>
+
+<ParamField path="_Index" type="class" default="::cuda::std::ptrdiff_t">
+The index type of the `constant_iterator`. It can optionally be specified, but must satisfy **integer-like**
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### constant_iterator <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+<CodeBlock links={{"constant_iterator": "/libcudacxx/api/cuda::constant_iterator"}}>
+```cpp showLineNumbers={false}
+template <class _Tp2>
+cuda::constant_iterator<_Tp, _Index>::constant_iterator() noexcept(::cuda::std::is_nothrow_default_constructible_v< _Tp2 >)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Creates a `constant_iterator` from a value">
+
+Creates a `constant_iterator` from a value.
+
+The index is set to zero
+
+<CodeBlock links={{"constant_iterator": "/libcudacxx/api/cuda::constant_iterator"}}>
+```cpp showLineNumbers={false}
+cuda::constant_iterator<_Tp, _Index>::constant_iterator(
+    _Tp __value
+) noexcept(::cuda::std::is_nothrow_move_constructible_v< _Tp >)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__value" type="_Tp">
+The value to store in the `constant_iterator`
+</ParamField>
+
+</Tab>
+<Tab title="Overload 3">
+
+<Badge intent="note" minimal>explicit</Badge>
+
+Creates `constant_iterator` from a value and an index.
+
+<CodeBlock links={{"constant_iterator": "/libcudacxx/api/cuda::constant_iterator"}}>
+```cpp showLineNumbers={false}
+template <typename _Index2>
+cuda::constant_iterator<_Tp, _Index>::constant_iterator(
+    _Tp __value,
+    _Index2 __index
+) noexcept(::cuda::std::is_nothrow_move_constructible_v< _Tp >)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__value" type="_Tp">
+The value to store in the `constant_iterator`
+</ParamField>
+
+<ParamField path="__index" type="_Index2">
+The index in the sequence represented by this `constant_iterator`
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### index <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Returns a the current index.
+
+<CodeBlock links={{"constant_iterator": "/libcudacxx/api/cuda::constant_iterator"}}>
+```cpp showLineNumbers={false}
+difference_type cuda::constant_iterator<_Tp, _Index>::index() const noexcept
+```
+</CodeBlock>
+
+### operator* <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Returns a const reference to the stored value.
+
+<CodeBlock links={{"constant_iterator": "/libcudacxx/api/cuda::constant_iterator"}}>
+```cpp showLineNumbers={false}
+const _Tp & cuda::constant_iterator<_Tp, _Index>::operator*() const noexcept
+```
+</CodeBlock>
+
+### operator[] <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Returns a const reference to the stored value.
+
+<CodeBlock links={{"constant_iterator": "/libcudacxx/api/cuda::constant_iterator"}}>
+```cpp showLineNumbers={false}
+const _Tp & cuda::constant_iterator<_Tp, _Index>::operator[](
+    difference_type
+) const noexcept
+```
+</CodeBlock>
+
+### operator++ <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Pre-increment">
+
+Increments the stored index.
+
+<CodeBlock links={{"constant_iterator": "/libcudacxx/api/cuda::constant_iterator"}}>
+```cpp showLineNumbers={false}
+constant_iterator & cuda::constant_iterator<_Tp, _Index>::operator++() noexcept
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Post-increment">
+
+Increments the stored index.
+
+<CodeBlock links={{"constant_iterator": "/libcudacxx/api/cuda::constant_iterator"}}>
+```cpp showLineNumbers={false}
+constant_iterator cuda::constant_iterator<_Tp, _Index>::operator++(
+    int
+) noexcept(::cuda::std::is_nothrow_copy_constructible_v< _Tp >)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### operator-- <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Pre-decrement">
+
+Decrements the stored index.
+
+<CodeBlock links={{"constant_iterator": "/libcudacxx/api/cuda::constant_iterator"}}>
+```cpp showLineNumbers={false}
+constant_iterator & cuda::constant_iterator<_Tp, _Index>::operator--() noexcept
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Post-decrement">
+
+Decrements the stored index.
+
+<CodeBlock links={{"constant_iterator": "/libcudacxx/api/cuda::constant_iterator"}}>
+```cpp showLineNumbers={false}
+constant_iterator cuda::constant_iterator<_Tp, _Index>::operator--(
+    int
+) noexcept(::cuda::std::is_nothrow_copy_constructible_v< _Tp >)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### operator+= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Advances a `constant_iterator` by a given number of elements.
+
+<CodeBlock links={{"constant_iterator": "/libcudacxx/api/cuda::constant_iterator"}}>
+```cpp showLineNumbers={false}
+constant_iterator & cuda::constant_iterator<_Tp, _Index>::operator+=(
+    difference_type __n
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The amount of elements to advance
+</ParamField>
+
+### operator-= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Decrements a `constant_iterator` by a given number of elements.
+
+<CodeBlock links={{"constant_iterator": "/libcudacxx/api/cuda::constant_iterator"}}>
+```cpp showLineNumbers={false}
+constant_iterator & cuda::constant_iterator<_Tp, _Index>::operator-=(
+    difference_type __n
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The amount of elements to decrement
+</ParamField>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `iterator_concept` | `::cuda::std::random_access_iterator_tag` |
+| `iterator_category` | `::cuda::std::random_access_iterator_tag` |
+| `value_type` | `_Tp` |
+| `difference_type` | `::cuda::std::ptrdiff_t` |
+| `reference` | `_Tp` |
+| `pointer` | `void` |

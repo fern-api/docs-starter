@@ -1,0 +1,18 @@
+---
+title: cub::ScanTileState
+description: "Tile status interface."
+---
+
+Tile status interface.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="T" type="typename">
+</ParamField>
+
+<ParamField path="SingleWord" type="bool" default="detail::is_primitive<T>::value || (::cuda::std::is_trivially_copyable_v<T>                             && sizeof(T) < detail::largest_atomic_message_size                                                                                       && ::cuda::is_power_of_two(sizeof(T)))">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>

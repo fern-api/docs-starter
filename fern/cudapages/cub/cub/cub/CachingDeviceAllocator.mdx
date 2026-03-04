@@ -1,0 +1,253 @@
+---
+title: cub::CachingDeviceAllocator
+description: "A simple caching allocator for device memory allocations."
+---
+
+A simple caching allocator for device memory allocations.
+
+**Overview**
+
+The allocator is thread-safe and stream-safe and is capable of managing cached device allocations on multiple devices. It behaves as follows:
+
+- Allocations from the allocator are associated with an `active_stream`. Once freed, the allocation becomes available immediately for reuse within the `active_stream` with which it was associated with during allocation, and it becomes available for reuse within other streams when all prior work submitted to `active_stream` has completed.
+- Allocations are categorized and cached by bin size. A new allocation request of a given size will only consider cached allocations within the corresponding bin.
+- Bin limits progress geometrically in accordance with the growth factor `bin_growth` provided during construction. Unused device allocations within a larger bin cache are not reused for allocation requests that categorize to smaller bin sizes.
+- Allocation requests below ( `bin_growth` ^ `min_bin` ) are rounded up to ( `bin_growth` ^ `min_bin` ).
+- Allocations above ( `bin_growth` ^ `max_bin` ) are not rounded up to the nearest bin and are simply freed when they are deallocated instead of being returned to a bin-cache.
+- If the total storage of cached allocations on a given device will exceed `max_cached_bytes`, allocations for that device are simply freed when they are deallocated instead of being returned to their bin-cache.
+
+For example, the default-constructed `CachingDeviceAllocator` is configured with:
+- `bin_growth` = 8
+- `min_bin` = 3
+- `max_bin` = 7
+- `max_cached_bytes` = 6MB - 1B
+
+which delineates five bin-sizes: 512B, 4KB, 32KB, 256KB, and 2MB and sets a maximum of 6,291,455 cached bytes per device
+
+---
+
+## Constructors
+
+### CachingDeviceAllocator <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Constructor">
+
+Constructor.
+
+<CodeBlock links={{"CachingDeviceAllocator": "/library/api/cub::CachingDeviceAllocator"}}>
+```cpp showLineNumbers={false}
+cub::CachingDeviceAllocator::CachingDeviceAllocator(
+    unsigned int bin_growth,
+    unsigned int min_bin = 1,
+    unsigned int max_bin = INVALID_BIN,
+    size_t max_cached_bytes = INVALID_SIZE,
+    bool skip_cleanup = false
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="bin_growth" type="unsigned int">
+Geometric growth factor for bin-sizes
+</ParamField>
+
+<ParamField path="min_bin" type="unsigned int" default="1">
+Minimum bin (default is bin_growth ^ 1)
+</ParamField>
+
+<ParamField path="max_bin" type="unsigned int" default="INVALID_BIN">
+Maximum bin (default is no max bin)
+</ParamField>
+
+<ParamField path="max_cached_bytes" type="size_t" default="INVALID_SIZE">
+Maximum aggregate cached bytes per device (default is no limit)
+</ParamField>
+
+<ParamField path="skip_cleanup" type="bool" default="false">
+Whether or not to skip a call to [`FreeAllCached()`](/library/api/cub::_caching_device_allocator::FreeAllCached()) when the destructor is called (default is to deallocate)
+</ParamField>
+
+</Tab>
+<Tab title="Default constructor">
+
+Default constructor.
+
+Configured with:
+
+- `bin_growth` = 8
+- `min_bin` = 3
+- `max_bin` = 7
+- `max_cached_bytes` = ( `bin_growth` ^ `max_bin`) * 3 ) - 1 = 6,291,455 bytes
+
+which delineates five bin-sizes: 512B, 4KB, 32KB, 256KB, and 2MB and sets a maximum of 6,291,455 cached bytes per device
+
+<CodeBlock links={{"CachingDeviceAllocator": "/library/api/cub::CachingDeviceAllocator"}}>
+```cpp showLineNumbers={false}
+cub::CachingDeviceAllocator::CachingDeviceAllocator(
+    bool skip_cleanup = false,
+    bool debug = false
+)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### Destructor
+
+### ~CachingDeviceAllocator <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>virtual</Badge>
+
+Destructor.
+
+<CodeBlock links={{"CachingDeviceAllocator": "/library/api/cub::CachingDeviceAllocator"}}>
+```cpp showLineNumbers={false}
+virtual cub::CachingDeviceAllocator::~CachingDeviceAllocator()
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### SetMaxCachedBytes <Badge intent="note" minimal>inline</Badge>
+
+Sets the limit on the number bytes this allocator is allowed to cache per device.
+
+Changing the ceiling of cached bytes does not cause any allocations (in-use or cached-in-reserve) to be freed. See [`FreeAllCached()`](/library/api/cub::_caching_device_allocator::FreeAllCached()).
+
+<CodeBlock links={{"CachingDeviceAllocator": "/library/api/cub::CachingDeviceAllocator"}}>
+```cpp showLineNumbers={false}
+cudaError_t cub::CachingDeviceAllocator::SetMaxCachedBytes(
+    size_t max_cached_bytes_
+)
+```
+</CodeBlock>
+
+### DeviceAllocate <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Provides a suitable allocation of device memory for the given size on the specified device.
+
+Once freed, the allocation becomes available immediately for reuse within the `active_stream` with which it was associated with during allocation, and it becomes available for reuse within other streams when all prior work submitted to `active_stream` has completed.
+
+<CodeBlock links={{"CachingDeviceAllocator": "/library/api/cub::CachingDeviceAllocator"}}>
+```cpp showLineNumbers={false}
+cudaError_t cub::CachingDeviceAllocator::DeviceAllocate(
+    int device,
+    void **d_ptr,
+    size_t bytes,
+    cudaStream_t active_stream = 0
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="device" type="int">
+Device on which to place the allocation
+</ParamField>
+
+<ParamField path="d_ptr" type="void **">
+Reference to pointer to the allocation
+</ParamField>
+
+<ParamField path="bytes" type="size_t">
+Minimum number of bytes for the allocation
+</ParamField>
+
+<ParamField path="active_stream" type="cudaStream_t" default="0">
+The stream to be associated with this allocation
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Provides a suitable allocation of device memory for the given size on the current device.
+
+Once freed, the allocation becomes available immediately for reuse within the `active_stream` with which it was associated with during allocation, and it becomes available for reuse within other streams when all prior work submitted to `active_stream` has completed.
+
+<CodeBlock links={{"CachingDeviceAllocator": "/library/api/cub::CachingDeviceAllocator"}}>
+```cpp showLineNumbers={false}
+cudaError_t cub::CachingDeviceAllocator::DeviceAllocate(
+    void **d_ptr,
+    size_t bytes,
+    cudaStream_t active_stream = 0
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="d_ptr" type="void **">
+Reference to pointer to the allocation
+</ParamField>
+
+<ParamField path="bytes" type="size_t">
+Minimum number of bytes for the allocation
+</ParamField>
+
+<ParamField path="active_stream" type="cudaStream_t" default="0">
+The stream to be associated with this allocation
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### DeviceFree <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Frees a live allocation of device memory on the specified device, returning it to the allocator.
+
+Once freed, the allocation becomes available immediately for reuse within the `active_stream` with which it was associated with during allocation, and it becomes available for reuse within other streams when all prior work submitted to `active_stream` has completed.
+
+<CodeBlock links={{"CachingDeviceAllocator": "/library/api/cub::CachingDeviceAllocator"}}>
+```cpp showLineNumbers={false}
+cudaError_t cub::CachingDeviceAllocator::DeviceFree(
+    int device,
+    void *d_ptr
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Overload 2">
+
+Frees a live allocation of device memory on the current device, returning it to the allocator.
+
+Once freed, the allocation becomes available immediately for reuse within the `active_stream` with which it was associated with during allocation, and it becomes available for reuse within other streams when all prior work submitted to `active_stream` has completed.
+
+<CodeBlock links={{"CachingDeviceAllocator": "/library/api/cub::CachingDeviceAllocator"}}>
+```cpp showLineNumbers={false}
+cudaError_t cub::CachingDeviceAllocator::DeviceFree(
+    void *d_ptr
+)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### FreeAllCached <Badge intent="note" minimal>inline</Badge>
+
+Frees all cached device allocations on all devices.
+
+<CodeBlock links={{"CachingDeviceAllocator": "/library/api/cub::CachingDeviceAllocator"}}>
+```cpp showLineNumbers={false}
+cudaError_t cub::CachingDeviceAllocator::FreeAllCached()
+```
+</CodeBlock>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `INVALID_BIN` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `unsigned int` | Out-of-bounds bin. |
+| `INVALID_SIZE` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `size_t` | Invalid size. |

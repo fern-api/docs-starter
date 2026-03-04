@@ -1,0 +1,1335 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/language_models/llms
+title: langchain_core.language_models.llms
+---
+
+Base interface for traditional large language models (LLMs) to expose.
+
+These are traditionally older models (newer models generally are chat models).
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`BaseLLM`](#langchain_core-language_models-llms-BaseLLM) | Base LLM abstract interface. |
+| [`LLM`](#langchain_core-language_models-llms-LLM) | Simple interface for implementing a custom LLM. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_log_error_once`](#langchain_core-language_models-llms-_log_error_once) | Log an error once. |
+| [`_resolve_cache`](#langchain_core-language_models-llms-_resolve_cache) | Resolve the cache. |
+| [`aget_prompts`](#langchain_core-language_models-llms-aget_prompts) | Get prompts that are already cached. Async version. |
+| [`aupdate_cache`](#langchain_core-language_models-llms-aupdate_cache) | Update the cache and get the LLM output. Async version. |
+| [`create_base_retry_decorator`](#langchain_core-language_models-llms-create_base_retry_decorator) | Create a retry decorator for a given LLM and provided a list of error types. |
+| [`get_prompts`](#langchain_core-language_models-llms-get_prompts) | Get prompts that are already cached. |
+| [`update_cache`](#langchain_core-language_models-llms-update_cache) | Update the cache and get the LLM output. |
+
+### Data
+
+[`_background_tasks`](#langchain_core-language_models-llms-_background_tasks)
+
+[`logger`](#langchain_core-language_models-llms-logger)
+
+### API
+
+<Anchor id="langchain_core-language_models-llms-BaseLLM">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.language_models.llms.BaseLLM()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+**Bases:** [BaseLanguageModel[str]](/langchain-core/langchain_core/language_models/base#langchain_core-language_models-base-BaseLanguageModel)
+
+Base LLM abstract interface.
+
+It should take in a prompt and return a string.
+
+
+<ParamField path="OutputType" type="type[str]">
+Get the output type for this `Runnable`.
+</ParamField>
+
+<ParamField path="_llm_type" type="str">
+Return type of llm.
+</ParamField>
+
+<ParamField path="_serialized" type="dict[str, Any]">
+</ParamField>
+
+<ParamField path="model_config" type="= ConfigDict(arbitrary_types_allowed=True)">
+</ParamField>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-__str__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM.__str__() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return a string representation of the object for printing.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-_agenerate">
+
+<CodeBlock links={{"langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM._agenerate(
+    prompts: list[str],
+    stop: list[str] | None = None,
+    run_manager: langchain_core.callbacks.AsyncCallbackManagerForLLMRun | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.LLMResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run the LLM on the given prompts.
+
+**Parameters:**
+
+<ParamField path="prompts" type="list[str]">
+The prompts to generate from.
+</ParamField>
+
+<ParamField path="stop" type="list[str] | None" default="None">
+Stop words to use when generating.
+
+Model output is cut off at the first occurrence of any of these
+substrings.
+
+If stop tokens are not supported consider raising `NotImplementedError`.
+</ParamField>
+
+<ParamField path="run_manager" type="AsyncCallbackManagerForLLMRun | None" default="None">
+Callback manager for the run.
+</ParamField>
+
+**Returns:** `LLMResult`
+
+The LLM result.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-_agenerate_helper">
+
+<CodeBlock links={{"langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM._agenerate_helper(
+    prompts: list[str],
+    stop: list[str] | None,
+    run_managers: list[langchain_core.callbacks.AsyncCallbackManagerForLLMRun],
+    new_arg_supported: bool,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.LLMResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-_astream">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM._astream(
+    prompt: str,
+    stop: list[str] | None = None,
+    run_manager: langchain_core.callbacks.AsyncCallbackManagerForLLMRun | None = None,
+    kwargs: typing.Any = {}
+) -> collections.abc.AsyncIterator[langchain_core.outputs.GenerationChunk]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+An async version of the _stream method.
+
+The default implementation uses the synchronous _stream method and wraps it in
+an async iterator. Subclasses that need to provide a true async implementation
+should override this method.
+
+**Parameters:**
+
+<ParamField path="prompt" type="str">
+The prompt to generate from.
+</ParamField>
+
+<ParamField path="stop" type="list[str] | None" default="None">
+Stop words to use when generating.
+
+Model output is cut off at the first occurrence of any of these
+substrings.
+</ParamField>
+
+<ParamField path="run_manager" type="AsyncCallbackManagerForLLMRun | None" default="None">
+Callback manager for the run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arbitrary additional keyword arguments.
+
+These are usually passed to the model provider API call.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-_call_async">
+
+<CodeBlock links={{"langchain_core.callbacks.Callbacks":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-Callbacks","langchain_core.language_models.llms.BaseLLM.dict":"/langchain-core/langchain_core/language_models/llms/BaseLLM#langchain_core-language_models-llms-BaseLLM-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM._call_async(
+    prompt: str,
+    stop: list[str] | None = None,
+    callbacks: langchain_core.callbacks.Callbacks = None,
+    tags: list[str] | None = None,
+    metadata: langchain_core.language_models.llms.BaseLLM.dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Check Cache and run the LLM on the given prompt and input.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-_convert_input">
+
+<CodeBlock links={{"langchain_core.language_models.base.LanguageModelInput":"/langchain-core/langchain_core/language_models/base#langchain_core-language_models-base-LanguageModelInput","langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM._convert_input(
+    model_input: langchain_core.language_models.base.LanguageModelInput
+) -> langchain_core.prompt_values.PromptValue
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-_generate">
+
+<CodeBlock links={{"langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM._generate(
+    prompts: list[str],
+    stop: list[str] | None = None,
+    run_manager: langchain_core.callbacks.CallbackManagerForLLMRun | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.LLMResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Run the LLM on the given prompts.
+
+**Parameters:**
+
+<ParamField path="prompts" type="list[str]">
+The prompts to generate from.
+</ParamField>
+
+<ParamField path="stop" type="list[str] | None" default="None">
+Stop words to use when generating.
+
+Model output is cut off at the first occurrence of any of these
+substrings.
+
+If stop tokens are not supported consider raising `NotImplementedError`.
+</ParamField>
+
+<ParamField path="run_manager" type="CallbackManagerForLLMRun | None" default="None">
+Callback manager for the run.
+</ParamField>
+
+**Returns:** `LLMResult`
+
+The LLM result.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-_generate_helper">
+
+<CodeBlock links={{"langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM._generate_helper(
+    prompts: list[str],
+    stop: list[str] | None,
+    run_managers: list[langchain_core.callbacks.CallbackManagerForLLMRun],
+    new_arg_supported: bool,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.LLMResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-_get_ls_params">
+
+<CodeBlock links={{"langchain_core.language_models.base.LangSmithParams":"/langchain-core/langchain_core/language_models/base#langchain_core-language_models-base-LangSmithParams"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM._get_ls_params(
+    stop: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.language_models.base.LangSmithParams
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get standard params for tracing.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-_get_run_ids_list">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM._get_run_ids_list(
+    run_id: uuid.UUID | list[uuid.UUID | None] | None,
+    prompts: list
+) -> list
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-_stream">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM._stream(
+    prompt: str,
+    stop: list[str] | None = None,
+    run_manager: langchain_core.callbacks.CallbackManagerForLLMRun | None = None,
+    kwargs: typing.Any = {}
+) -> collections.abc.Iterator[langchain_core.outputs.GenerationChunk]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Stream the LLM on the given prompt.
+
+This method should be overridden by subclasses that support streaming.
+
+If not implemented, the default behavior of calls to stream will be to
+fallback to the non-streaming version of the model and return
+the output as a single chunk.
+
+**Parameters:**
+
+<ParamField path="prompt" type="str">
+The prompt to generate from.
+</ParamField>
+
+<ParamField path="stop" type="list[str] | None" default="None">
+Stop words to use when generating.
+
+Model output is cut off at the first occurrence of any of these
+substrings.
+</ParamField>
+
+<ParamField path="run_manager" type="CallbackManagerForLLMRun | None" default="None">
+Callback manager for the run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arbitrary additional keyword arguments.
+
+These are usually passed to the model provider API call.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-abatch">
+
+<CodeBlock links={{"langchain_core.language_models.base.LanguageModelInput":"/langchain-core/langchain_core/language_models/base#langchain_core-language_models-base-LanguageModelInput","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM.abatch(
+    inputs: list[langchain_core.language_models.base.LanguageModelInput],
+    config: langchain_core.runnables.RunnableConfig | list[langchain_core.runnables.RunnableConfig] | None = None,
+    return_exceptions: bool = False,
+    kwargs: typing.Any = {}
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-agenerate">
+
+<CodeBlock links={{"langchain_core.callbacks.Callbacks":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-Callbacks","langchain_core.language_models.llms.BaseLLM.dict":"/langchain-core/langchain_core/language_models/llms/BaseLLM#langchain_core-language_models-llms-BaseLLM-dict","langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM.agenerate(
+    prompts: list[str],
+    stop: list[str] | None = None,
+    callbacks: langchain_core.callbacks.Callbacks | list[langchain_core.callbacks.Callbacks] | None = None,
+    tags: list[str] | list[list[str]] | None = None,
+    metadata: langchain_core.language_models.llms.BaseLLM.dict[str, typing.Any] | list[langchain_core.language_models.llms.BaseLLM.dict[str, typing.Any]] | None = None,
+    run_name: str | list[str] | None = None,
+    run_id: uuid.UUID | list[uuid.UUID | None] | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.LLMResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Asynchronously pass a sequence of prompts to a model and return generations.
+
+This method should make use of batched calls for models that expose a batched
+API.
+
+Use this method when you want to:
+
+1. Take advantage of batched calls,
+2. Need more output from the model than just the top generated value,
+3. Are building chains that are agnostic to the underlying language model
+    type (e.g., pure text completion models vs chat models).
+
+**Parameters:**
+
+<ParamField path="prompts" type="list[str]">
+List of string prompts.
+</ParamField>
+
+<ParamField path="stop" type="list[str] | None" default="None">
+Stop words to use when generating.
+
+Model output is cut off at the first occurrence of any of these
+substrings.
+</ParamField>
+
+<ParamField path="callbacks" type="Callbacks | list[Callbacks] | None" default="None">
+`Callbacks` to pass through.
+
+Used for executing additional functionality, such as logging or
+streaming, throughout generation.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | list[list[str]] | None" default="None">
+List of tags to associate with each prompt. If provided, the length
+of the list must match the length of the prompts list.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | list[dict[str, Any]] | None" default="None">
+List of metadata dictionaries to associate with each prompt. If
+provided, the length of the list must match the length of the prompts
+list.
+</ParamField>
+
+<ParamField path="run_name" type="str | list[str] | None" default="None">
+List of run names to associate with each prompt. If provided, the
+length of the list must match the length of the prompts list.
+</ParamField>
+
+<ParamField path="run_id" type="uuid.UUID | list[uuid.UUID | None] | None" default="None">
+List of run IDs to associate with each prompt. If provided, the
+length of the list must match the length of the prompts list.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arbitrary additional keyword arguments.
+
+These are usually passed to the model provider API call.
+</ParamField>
+
+**Returns:** `LLMResult`
+
+An `LLMResult`, which contains a list of candidate `Generations` for each
+input prompt and additional model provider-specific output.
+
+**Raises:**
+
+- `ValueError`: If the length of `callbacks`, `tags`, `metadata`, or
+`run_name` (if provided) does not match the length of prompts.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-agenerate_prompt">
+
+<CodeBlock links={{"langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue","langchain_core.callbacks.Callbacks":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-Callbacks","langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM.agenerate_prompt(
+    prompts: list[langchain_core.prompt_values.PromptValue],
+    stop: list[str] | None = None,
+    callbacks: langchain_core.callbacks.Callbacks | list[langchain_core.callbacks.Callbacks] | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.LLMResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-ainvoke">
+
+<CodeBlock links={{"langchain_core.language_models.base.LanguageModelInput":"/langchain-core/langchain_core/language_models/base#langchain_core-language_models-base-LanguageModelInput","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM.ainvoke(
+    input: langchain_core.language_models.base.LanguageModelInput,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    stop: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-astream">
+
+<CodeBlock links={{"langchain_core.language_models.base.LanguageModelInput":"/langchain-core/langchain_core/language_models/base#langchain_core-language_models-base-LanguageModelInput","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM.astream(
+    input: langchain_core.language_models.base.LanguageModelInput,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    stop: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> collections.abc.AsyncIterator[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-batch">
+
+<CodeBlock links={{"langchain_core.language_models.base.LanguageModelInput":"/langchain-core/langchain_core/language_models/base#langchain_core-language_models-base-LanguageModelInput","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM.batch(
+    inputs: list[langchain_core.language_models.base.LanguageModelInput],
+    config: langchain_core.runnables.RunnableConfig | list[langchain_core.runnables.RunnableConfig] | None = None,
+    return_exceptions: bool = False,
+    kwargs: typing.Any = {}
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-dict">
+
+<CodeBlock links={{"langchain_core.language_models.llms.BaseLLM.dict":"/langchain-core/langchain_core/language_models/llms/BaseLLM#langchain_core-language_models-llms-BaseLLM-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM.dict(
+    kwargs: typing.Any = {}
+) -> langchain_core.language_models.llms.BaseLLM.dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return a dictionary of the LLM.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-generate">
+
+<CodeBlock links={{"langchain_core.callbacks.Callbacks":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-Callbacks","langchain_core.language_models.llms.BaseLLM.dict":"/langchain-core/langchain_core/language_models/llms/BaseLLM#langchain_core-language_models-llms-BaseLLM-dict","langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM.generate(
+    prompts: list[str],
+    stop: list[str] | None = None,
+    callbacks: langchain_core.callbacks.Callbacks | list[langchain_core.callbacks.Callbacks] | None = None,
+    tags: list[str] | list[list[str]] | None = None,
+    metadata: langchain_core.language_models.llms.BaseLLM.dict[str, typing.Any] | list[langchain_core.language_models.llms.BaseLLM.dict[str, typing.Any]] | None = None,
+    run_name: str | list[str] | None = None,
+    run_id: uuid.UUID | list[uuid.UUID | None] | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.LLMResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Pass a sequence of prompts to a model and return generations.
+
+This method should make use of batched calls for models that expose a batched
+API.
+
+Use this method when you want to:
+
+1. Take advantage of batched calls,
+2. Need more output from the model than just the top generated value,
+3. Are building chains that are agnostic to the underlying language model
+    type (e.g., pure text completion models vs chat models).
+
+**Parameters:**
+
+<ParamField path="prompts" type="list[str]">
+List of string prompts.
+</ParamField>
+
+<ParamField path="stop" type="list[str] | None" default="None">
+Stop words to use when generating.
+
+Model output is cut off at the first occurrence of any of these
+substrings.
+</ParamField>
+
+<ParamField path="callbacks" type="Callbacks | list[Callbacks] | None" default="None">
+`Callbacks` to pass through.
+
+Used for executing additional functionality, such as logging or
+streaming, throughout generation.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | list[list[str]] | None" default="None">
+List of tags to associate with each prompt. If provided, the length
+of the list must match the length of the prompts list.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | list[dict[str, Any]] | None" default="None">
+List of metadata dictionaries to associate with each prompt. If
+provided, the length of the list must match the length of the prompts
+list.
+</ParamField>
+
+<ParamField path="run_name" type="str | list[str] | None" default="None">
+List of run names to associate with each prompt. If provided, the
+length of the list must match the length of the prompts list.
+</ParamField>
+
+<ParamField path="run_id" type="uuid.UUID | list[uuid.UUID | None] | None" default="None">
+List of run IDs to associate with each prompt. If provided, the
+length of the list must match the length of the prompts list.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arbitrary additional keyword arguments.
+
+These are usually passed to the model provider API call.
+</ParamField>
+
+**Returns:** `LLMResult`
+
+An `LLMResult`, which contains a list of candidate `Generations` for each
+input prompt and additional model provider-specific output.
+
+**Raises:**
+
+- `ValueError`: If prompts is not a list.
+- `ValueError`: If the length of `callbacks`, `tags`, `metadata`, or
+`run_name` (if provided) does not match the length of prompts.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-generate_prompt">
+
+<CodeBlock links={{"langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue","langchain_core.callbacks.Callbacks":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-Callbacks","langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM.generate_prompt(
+    prompts: list[langchain_core.prompt_values.PromptValue],
+    stop: list[str] | None = None,
+    callbacks: langchain_core.callbacks.Callbacks | list[langchain_core.callbacks.Callbacks] | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.LLMResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-invoke">
+
+<CodeBlock links={{"langchain_core.language_models.base.LanguageModelInput":"/langchain-core/langchain_core/language_models/base#langchain_core-language_models-base-LanguageModelInput","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM.invoke(
+    input: langchain_core.language_models.base.LanguageModelInput,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    stop: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-save">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM.save(
+    file_path: pathlib.Path | str
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Save the LLM.
+
+**Parameters:**
+
+<ParamField path="file_path" type="Path | str">
+Path to file to save the LLM to.
+</ParamField>
+
+**Raises:**
+
+- `ValueError`: If the file path is not a string or Path object.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-BaseLLM-stream">
+
+<CodeBlock links={{"langchain_core.language_models.base.LanguageModelInput":"/langchain-core/langchain_core/language_models/base#langchain_core-language_models-base-LanguageModelInput","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.BaseLLM.stream(
+    input: langchain_core.language_models.base.LanguageModelInput,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    stop: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> collections.abc.Iterator[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-language_models-llms-LLM">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.language_models.llms.LLM()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseLLM](#langchain_core-language_models-llms-BaseLLM)
+
+Simple interface for implementing a custom LLM.
+
+You should subclass this class and implement the following:
+
+- `_call` method: Run the LLM on the given prompt and input (used by `invoke`).
+- `_identifying_params` property: Return a dictionary of the identifying parameters
+    This is critical for caching and tracing purposes. Identifying parameters
+    is a dict that identifies the LLM.
+    It should mostly include a `model_name`.
+
+Optional: Override the following methods to provide more optimizations:
+
+- `_acall`: Provide a native async version of the `_call` method.
+    If not provided, will delegate to the synchronous version using
+    `run_in_executor`. (Used by `ainvoke`).
+- `_stream`: Stream the LLM on the given prompt and input.
+    `stream` will use `_stream` if provided, otherwise it
+    use `_call` and output will arrive in one chunk.
+- `_astream`: Override to provide a native async version of the `_stream` method.
+    `astream` will use `_astream` if provided, otherwise it will implement
+    a fallback behavior that will use `_stream` if `_stream` is implemented,
+    and use `_acall` if `_stream` is not implemented.
+
+
+<Anchor id="langchain_core-language_models-llms-LLM-_acall">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.LLM._acall(
+    prompt: str,
+    stop: list[str] | None = None,
+    run_manager: langchain_core.callbacks.AsyncCallbackManagerForLLMRun | None = None,
+    kwargs: typing.Any = {}
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async version of the _call method.
+
+The default implementation delegates to the synchronous _call method using
+`run_in_executor`. Subclasses that need to provide a true async implementation
+should override this method to reduce the overhead of using `run_in_executor`.
+
+**Parameters:**
+
+<ParamField path="prompt" type="str">
+The prompt to generate from.
+</ParamField>
+
+<ParamField path="stop" type="list[str] | None" default="None">
+Stop words to use when generating.
+
+Model output is cut off at the first occurrence of any of these
+substrings.
+
+If stop tokens are not supported consider raising `NotImplementedError`.
+</ParamField>
+
+<ParamField path="run_manager" type="AsyncCallbackManagerForLLMRun | None" default="None">
+Callback manager for the run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arbitrary additional keyword arguments.
+
+These are usually passed to the model provider API call.
+</ParamField>
+
+**Returns:** `str`
+
+The model output as a string. SHOULD NOT include the prompt.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-LLM-_agenerate">
+
+<CodeBlock links={{"langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.LLM._agenerate(
+    prompts: list[str],
+    stop: list[str] | None = None,
+    run_manager: langchain_core.callbacks.AsyncCallbackManagerForLLMRun | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.LLMResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-LLM-_call">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.LLM._call(
+    prompt: str,
+    stop: list[str] | None = None,
+    run_manager: langchain_core.callbacks.CallbackManagerForLLMRun | None = None,
+    kwargs: typing.Any = {}
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Run the LLM on the given input.
+
+Override this method to implement the LLM logic.
+
+**Parameters:**
+
+<ParamField path="prompt" type="str">
+The prompt to generate from.
+</ParamField>
+
+<ParamField path="stop" type="list[str] | None" default="None">
+Stop words to use when generating.
+
+Model output is cut off at the first occurrence of any of these
+substrings.
+
+If stop tokens are not supported consider raising `NotImplementedError`.
+</ParamField>
+
+<ParamField path="run_manager" type="CallbackManagerForLLMRun | None" default="None">
+Callback manager for the run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arbitrary additional keyword arguments.
+
+These are usually passed to the model provider API call.
+</ParamField>
+
+**Returns:** `str`
+
+The model output as a string. SHOULD NOT include the prompt.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-llms-LLM-_generate">
+
+<CodeBlock links={{"langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.LLM._generate(
+    prompts: list[str],
+    stop: list[str] | None = None,
+    run_manager: langchain_core.callbacks.CallbackManagerForLLMRun | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.LLMResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-language_models-llms-_log_error_once">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms._log_error_once(
+    msg: str
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Log an error once.
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-llms-_resolve_cache">
+
+<CodeBlock links={{"langchain_core.caches.BaseCache":"/langchain-core/langchain_core/caches#langchain_core-caches-BaseCache"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms._resolve_cache(
+    cache: langchain_core.caches.BaseCache | bool | None
+) -> langchain_core.caches.BaseCache | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Resolve the cache.
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-llms-aget_prompts">
+
+<CodeBlock links={{"langchain_core.caches.BaseCache":"/langchain-core/langchain_core/caches#langchain_core-caches-BaseCache"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.aget_prompts(
+    params: dict[str, typing.Any],
+    prompts: list[str],
+    cache: langchain_core.caches.BaseCache | bool | None = None
+) -> tuple[dict[int, list], str, list[int], list[str]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Get prompts that are already cached. Async version.
+
+**Parameters:**
+
+<ParamField path="params" type="dict[str, Any]">
+Dictionary of parameters.
+</ParamField>
+
+<ParamField path="prompts" type="list[str]">
+List of prompts.
+</ParamField>
+
+<ParamField path="cache" type="BaseCache | bool | None" default="None">
+Cache object.
+</ParamField>
+
+**Returns:** `tuple[dict[int, list], str, list[int], list[str]]`
+
+A tuple of existing prompts, llm_string, missing prompt indexes,
+and missing prompts.
+
+**Raises:**
+
+- `ValueError`: If the cache is not set and cache is True.
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-llms-aupdate_cache">
+
+<CodeBlock links={{"langchain_core.caches.BaseCache":"/langchain-core/langchain_core/caches#langchain_core-caches-BaseCache","langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.aupdate_cache(
+    cache: langchain_core.caches.BaseCache | bool | None,
+    existing_prompts: dict[int, list],
+    llm_string: str,
+    missing_prompt_idxs: list[int],
+    new_results: langchain_core.outputs.LLMResult,
+    prompts: list[str]
+) -> dict | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Update the cache and get the LLM output. Async version.
+
+**Parameters:**
+
+<ParamField path="cache" type="BaseCache | bool | None">
+Cache object.
+</ParamField>
+
+<ParamField path="existing_prompts" type="dict[int, list]">
+Dictionary of existing prompts.
+</ParamField>
+
+<ParamField path="llm_string" type="str">
+LLM string.
+</ParamField>
+
+<ParamField path="missing_prompt_idxs" type="list[int]">
+List of missing prompt indexes.
+</ParamField>
+
+<ParamField path="new_results" type="LLMResult">
+LLMResult object.
+</ParamField>
+
+<ParamField path="prompts" type="list[str]">
+List of prompts.
+</ParamField>
+
+**Returns:** `dict | None`
+
+LLM output.
+
+**Raises:**
+
+- `ValueError`: If the cache is not set and cache is True.
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-llms-create_base_retry_decorator">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.create_base_retry_decorator(
+    error_types: list[type[BaseException]],
+    max_retries: int = 1,
+    run_manager: langchain_core.callbacks.AsyncCallbackManagerForLLMRun | langchain_core.callbacks.CallbackManagerForLLMRun | None = None
+) -> collections.abc.Callable[[Any], typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a retry decorator for a given LLM and provided a list of error types.
+
+**Parameters:**
+
+<ParamField path="error_types" type="list[type[BaseException]]">
+List of error types to retry on.
+</ParamField>
+
+<ParamField path="max_retries" type="int" default="1">
+Number of retries.
+</ParamField>
+
+<ParamField path="run_manager" type="AsyncCallbackManagerForLLMRun | CallbackManagerForLLMRun | None" default="None">
+Callback manager for the run.
+</ParamField>
+
+**Returns:** `Callable[[Any], Any]`
+
+A retry decorator.
+
+**Raises:**
+
+- `ValueError`: If the cache is not set and cache is True.
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-llms-get_prompts">
+
+<CodeBlock links={{"langchain_core.caches.BaseCache":"/langchain-core/langchain_core/caches#langchain_core-caches-BaseCache"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.get_prompts(
+    params: dict[str, typing.Any],
+    prompts: list[str],
+    cache: langchain_core.caches.BaseCache | bool | None = None
+) -> tuple[dict[int, list], str, list[int], list[str]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get prompts that are already cached.
+
+**Parameters:**
+
+<ParamField path="params" type="dict[str, Any]">
+Dictionary of parameters.
+</ParamField>
+
+<ParamField path="prompts" type="list[str]">
+List of prompts.
+</ParamField>
+
+<ParamField path="cache" type="BaseCache | bool | None" default="None">
+Cache object.
+</ParamField>
+
+**Returns:** `tuple[dict[int, list], str, list[int], list[str]]`
+
+A tuple of existing prompts, llm_string, missing prompt indexes,
+and missing prompts.
+
+**Raises:**
+
+- `ValueError`: If the cache is not set and cache is True.
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-llms-update_cache">
+
+<CodeBlock links={{"langchain_core.caches.BaseCache":"/langchain-core/langchain_core/caches#langchain_core-caches-BaseCache","langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.update_cache(
+    cache: langchain_core.caches.BaseCache | bool | None,
+    existing_prompts: dict[int, list],
+    llm_string: str,
+    missing_prompt_idxs: list[int],
+    new_results: langchain_core.outputs.LLMResult,
+    prompts: list[str]
+) -> dict | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Update the cache and get the LLM output.
+
+**Parameters:**
+
+<ParamField path="cache" type="BaseCache | bool | None">
+Cache object.
+</ParamField>
+
+<ParamField path="existing_prompts" type="dict[int, list]">
+Dictionary of existing prompts.
+</ParamField>
+
+<ParamField path="llm_string" type="str">
+LLM string.
+</ParamField>
+
+<ParamField path="missing_prompt_idxs" type="list[int]">
+List of missing prompt indexes.
+</ParamField>
+
+<ParamField path="new_results" type="LLMResult">
+LLMResult object.
+</ParamField>
+
+<ParamField path="prompts" type="list[str]">
+List of prompts.
+</ParamField>
+
+**Returns:** `dict | None`
+
+LLM output.
+
+**Raises:**
+
+- `ValueError`: If the cache is not set and cache is True.
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-llms-_background_tasks">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms._background_tasks: set[Task] = set()
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-language_models-llms-logger">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.llms.logger = logging.getLogger(__name__)
+```
+
+</CodeBlock>
+</Anchor>
+

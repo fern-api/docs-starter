@@ -1,0 +1,214 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/data/datasets/response_datasets/oai_format_dataset
+title: nemo_rl.data.datasets.response_datasets.oai_format_dataset
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`OpenAIFormatDataset`](#nemo_rl-data-datasets-response_datasets-oai_format_dataset-OpenAIFormatDataset) | This class is used to load an SFT dataset in the OpenAI format. |
+| [`PreservingDataset`](#nemo_rl-data-datasets-response_datasets-oai_format_dataset-PreservingDataset) | A dataset wrapper that preserves original dict structure without None-filling. |
+
+### API
+
+<Anchor id="nemo_rl-data-datasets-response_datasets-oai_format_dataset-OpenAIFormatDataset">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.datasets.response_datasets.oai_format_dataset.OpenAIFormatDataset(
+    data_path: str,
+    chat_key: str = 'messages',
+    system_key: str | None = None,
+    system_prompt: str | None = None,
+    tool_key: str | None = 'tools',
+    use_preserving_dataset: bool = False,
+    kwargs = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RawDataset](/nemo-rl/nemo_rl/data/datasets/raw_dataset#nemo_rl-data-datasets-raw_dataset-RawDataset)
+
+This class is used to load an SFT dataset in the OpenAI format.
+
+The dataset should be in the following format:
+&#123;
+    "messages": [
+        &#123;"role": "system", "content": "You are a helpful assistant."&#125;,
+        &#123;"role": "user", "content": "What is the capital of France?"&#125;,
+        &#123;"role": "assistant", "content": "The capital of France is Paris."&#125;
+    ]
+&#125;
+Please refer to https://github.com/NVIDIA-NeMo/RL/blob/main/docs/guides/sft.md#openai-format-datasets-with-tool-calling-support for more details.
+
+**Parameters:**
+
+<ParamField path="data_path" type="str">
+Path to the dataset JSON file
+</ParamField>
+
+<ParamField path="chat_key" type="str" default="'messages'">
+Key for the messages list in the dataset (default: "messages")
+</ParamField>
+
+<ParamField path="system_key" type="str | None" default="None">
+Optional key for system prompt in the dataset
+</ParamField>
+
+<ParamField path="system_prompt" type="str | None" default="None">
+Optional system prompt to add if not in the dataset
+</ParamField>
+
+<ParamField path="tool_key" type="str | None" default="'tools'">
+Key for tools in the dataset (default: "tools")
+</ParamField>
+
+<ParamField path="use_preserving_dataset" type="bool" default="False">
+If True, uses PreservingDataset to maintain
+heterogeneous schemas (e.g., for tool calls with varying argument
+structures). If False, uses standard HuggingFace dataset loading.
+Default is False for backward compatibility.
+</ParamField>
+
+
+<ParamField path="dataset" type="= original_dataset.map(self.format_data)">
+</ParamField>
+
+<ParamField path="task_name">
+</ParamField>
+<Anchor id="nemo_rl-data-datasets-response_datasets-oai_format_dataset-OpenAIFormatDataset-format_data">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.response_datasets.oai_format_dataset.OpenAIFormatDataset.format_data(
+    data: dict[str, typing.Any]
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-data-datasets-response_datasets-oai_format_dataset-PreservingDataset">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.datasets.response_datasets.oai_format_dataset.PreservingDataset(
+    data: list[dict[str, typing.Any]]
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+A dataset wrapper that preserves original dict structure without None-filling.
+
+Unlike HuggingFace's Dataset class which enforces schema uniformity across all samples
+(filling missing keys with None), this class maintains the exact structure of each sample.
+This is critical for heterogeneous data like tool calls where different samples may have
+different argument structures.
+
+
+<Anchor id="nemo_rl-data-datasets-response_datasets-oai_format_dataset-PreservingDataset-__getitem__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.response_datasets.oai_format_dataset.PreservingDataset.__getitem__(
+    idx: typing.Union[int, slice, list]
+) -> typing.Union[dict[str, typing.Any], list[dict[str, typing.Any]]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Support integer indexing, slicing, and list indexing.
+
+
+</Indent>
+<Anchor id="nemo_rl-data-datasets-response_datasets-oai_format_dataset-PreservingDataset-__iter__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.response_datasets.oai_format_dataset.PreservingDataset.__iter__()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-data-datasets-response_datasets-oai_format_dataset-PreservingDataset-__len__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.response_datasets.oai_format_dataset.PreservingDataset.__len__() -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-data-datasets-response_datasets-oai_format_dataset-PreservingDataset-map">
+
+<CodeBlock links={{"nemo_rl.data.datasets.response_datasets.oai_format_dataset.PreservingDataset":"#nemo_rl-data-datasets-response_datasets-oai_format_dataset-PreservingDataset"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.response_datasets.oai_format_dataset.PreservingDataset.map(
+    function: typing.Callable,
+    args = (),
+    kwargs = {}
+) -> nemo_rl.data.datasets.response_datasets.oai_format_dataset.PreservingDataset
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Apply a function to each sample in the dataset.
+
+**Parameters:**
+
+<ParamField path="function" type="Callable">
+Function to apply to each sample
+</ParamField>
+
+<ParamField path="with_indices">
+If True, pass index as second argument to function
+</ParamField>
+
+**Returns:** `PreservingDataset`
+
+New PreservingDataset with transformed samples
+
+
+</Indent>
+</Indent>

@@ -1,0 +1,68 @@
+---
+title: "cuda::device_memory_pool_ref"
+description: ""
+---
+
+`device_memory_pool_ref` allocates device memory using `cudaMallocFromPoolAsync / cudaFreeAsync
+&lt;https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY__POOLS.html&gt;`__
+for allocation/deallocation. A `device_memory_pool_ref` is a thin wrapper around a \c cudaMemPool_t with the location type set to \c cudaMemLocationTypeDevice.
+
+.. warning::
+
+   `device_memory_pool_ref` does not own the pool and it is the responsibility of the user to ensure that the lifetime of the pool exceeds the lifetime of the `device_memory_pool_ref`.
+
+```cpp showLineNumbers={false}
+#include <cuda/device_memory_pool.h>
+```
+
+**Inherits from:** `cuda::__memory_pool_base` (public)
+
+---
+
+## Constructors
+
+### device_memory_pool_ref <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>explicit</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Constructs the `device_memory_pool_ref` from a `cudaMemPool_t`.
+
+<CodeBlock links={{"device_memory_pool_ref": "/libcudacxx/api/cuda::device_memory_pool_ref"}}>
+```cpp showLineNumbers={false}
+cuda::device_memory_pool_ref::device_memory_pool_ref(
+    ::cudaMemPool_t __pool
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__pool" type="::cudaMemPool_t">
+The `cudaMemPool_t` used to allocate memory.
+</ParamField>
+
+</Tab>
+<Tab title="Deleted overloads">
+
+The following overloads are deleted to prevent misuse:
+
+<CodeBlock links={{"device_memory_pool_ref": "/libcudacxx/api/cuda::device_memory_pool_ref"}}>
+```cpp showLineNumbers={false}
+cuda::device_memory_pool_ref::device_memory_pool_ref(int) = delete;
+cuda::device_memory_pool_ref::device_memory_pool_ref(::cuda::std::nullptr_t) = delete;
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `default_queries` | `::cuda::mr::properties_list<::cuda::mr::device_accessible >` |

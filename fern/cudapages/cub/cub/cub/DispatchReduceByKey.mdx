@@ -1,0 +1,210 @@
+---
+title: cub::DispatchReduceByKey
+description: "Utility class for dispatching the appropriately-tuned kernels for DeviceReduceByKey."
+---
+
+Utility class for dispatching the appropriately-tuned kernels for DeviceReduceByKey.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="KeysInputIteratorT" type="typename">
+Random-access input iterator type for keys
+</ParamField>
+
+<ParamField path="UniqueOutputIteratorT" type="typename">
+Random-access output iterator type for keys
+</ParamField>
+
+<ParamField path="ValuesInputIteratorT" type="typename">
+Random-access input iterator type for values
+</ParamField>
+
+<ParamField path="AggregatesOutputIteratorT" type="typename">
+Random-access output iterator type for values
+</ParamField>
+
+<ParamField path="NumRunsOutputIteratorT" type="typename">
+Output iterator type for recording number of segments encountered
+</ParamField>
+
+<ParamField path="EqualityOpT" type="typename">
+KeyT equality operator type
+</ParamField>
+
+<ParamField path="ReductionOpT" type="typename">
+ValueT reduction operator type
+</ParamField>
+
+<ParamField path="OffsetT" type="typename">
+Signed integer type for global offsets
+</ParamField>
+
+<ParamField path="AccumT" type="typename" default="::cuda::std::__accumulator_t<ReductionOpT,                                                            cub::detail::it_value_t<ValuesInputIteratorT>,                                                            cub::detail::it_value_t<ValuesInputIteratorT>>">
+</ParamField>
+
+<ParamField path="PolicyHub" type="typename" default="detail::reduce_by_key::policy_hub<            ReductionOpT,            AccumT,            cub::detail::non_void_value_t<UniqueOutputIteratorT, cub::detail::it_value_t<KeysInputIteratorT>>>">
+Implementation detail, do not specify directly, requirements on the content of this type are subject to breaking change.
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### DispatchReduceByKey <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"DispatchReduceByKey": "/library/api/cub::DispatchReduceByKey"}}>
+```cpp showLineNumbers={false}
+cub::DispatchReduceByKey<KeysInputIteratorT, UniqueOutputIteratorT, ValuesInputIteratorT, AggregatesOutputIteratorT, NumRunsOutputIteratorT, EqualityOpT, ReductionOpT, OffsetT, AccumT, PolicyHub>::DispatchReduceByKey(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeysInputIteratorT d_keys_in,
+    UniqueOutputIteratorT d_unique_out,
+    ValuesInputIteratorT d_values_in,
+    AggregatesOutputIteratorT d_aggregates_out,
+    NumRunsOutputIteratorT d_num_runs_out,
+    EqualityOpT equality_op,
+    ReductionOpT reduction_op,
+    OffsetT num_items,
+    cudaStream_t stream
+)
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### Invoke <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+<CodeBlock links={{"DispatchReduceByKey": "/library/api/cub::DispatchReduceByKey"}}>
+```cpp showLineNumbers={false}
+template <typename ActivePolicyT, typename ScanInitKernelT, typename ReduceByKeyKernelT>
+cudaError_t cub::DispatchReduceByKey<KeysInputIteratorT, UniqueOutputIteratorT, ValuesInputIteratorT, AggregatesOutputIteratorT, NumRunsOutputIteratorT, EqualityOpT, ReductionOpT, OffsetT, AccumT, PolicyHub>::Invoke(
+    ScanInitKernelT init_kernel,
+    ReduceByKeyKernelT reduce_by_key_kernel
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Overload 2">
+
+<CodeBlock links={{"DispatchReduceByKey": "/library/api/cub::DispatchReduceByKey"}}>
+```cpp showLineNumbers={false}
+template <typename ActivePolicyT>
+cudaError_t cub::DispatchReduceByKey<KeysInputIteratorT, UniqueOutputIteratorT, ValuesInputIteratorT, AggregatesOutputIteratorT, NumRunsOutputIteratorT, EqualityOpT, ReductionOpT, OffsetT, AccumT, PolicyHub>::Invoke()
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Static methods
+
+### Dispatch <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Internal dispatch routine.
+
+<CodeBlock links={{"DispatchReduceByKey": "/library/api/cub::DispatchReduceByKey"}}>
+```cpp showLineNumbers={false}
+static cudaError_t cub::DispatchReduceByKey<KeysInputIteratorT, UniqueOutputIteratorT, ValuesInputIteratorT, AggregatesOutputIteratorT, NumRunsOutputIteratorT, EqualityOpT, ReductionOpT, OffsetT, AccumT, PolicyHub>::Dispatch(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeysInputIteratorT d_keys_in,
+    UniqueOutputIteratorT d_unique_out,
+    ValuesInputIteratorT d_values_in,
+    AggregatesOutputIteratorT d_aggregates_out,
+    NumRunsOutputIteratorT d_num_runs_out,
+    EqualityOpT equality_op,
+    ReductionOpT reduction_op,
+    OffsetT num_items,
+    cudaStream_t stream
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to [`temp_storage_bytes`](/library/api/cub::_dispatch_reduce_by_key::temp_storage_bytes) and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of [`d_temp_storage`](/library/api/cub::_dispatch_reduce_by_key::d_temp_storage) allocation
+</ParamField>
+
+<ParamField path="d_keys_in" type="KeysInputIteratorT">
+Pointer to the input sequence of keys
+</ParamField>
+
+<ParamField path="d_unique_out" type="UniqueOutputIteratorT">
+Pointer to the output sequence of unique keys (one key per run)
+</ParamField>
+
+<ParamField path="d_values_in" type="ValuesInputIteratorT">
+Pointer to the input sequence of corresponding values
+</ParamField>
+
+<ParamField path="d_aggregates_out" type="AggregatesOutputIteratorT">
+Pointer to the output sequence of value aggregates (one aggregate per run)
+</ParamField>
+
+<ParamField path="d_num_runs_out" type="NumRunsOutputIteratorT">
+Pointer to total number of runs encountered (i.e., the length of d_unique_out)
+</ParamField>
+
+<ParamField path="equality_op" type="EqualityOpT">
+KeyT equality operator
+</ParamField>
+
+<ParamField path="reduction_op" type="ReductionOpT">
+ValueT reduction operator
+</ParamField>
+
+<ParamField path="num_items" type="OffsetT">
+Total number of items to select from
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t">
+CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `ValueInputT` | `cub::detail::it_value_t< ValuesInputIteratorT >` |
+| `streaming_context_t` | `NullType` |
+| `ScanTileStateT` | `ReduceByKeyScanTileState< AccumT, OffsetT >` |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `INIT_KERNEL_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `d_temp_storage` | `void *` | |
+| `temp_storage_bytes` | `size_t &` | |
+| `d_keys_in` | `KeysInputIteratorT` | |
+| `d_unique_out` | `UniqueOutputIteratorT` | |
+| `d_values_in` | `ValuesInputIteratorT` | |
+| `d_aggregates_out` | `AggregatesOutputIteratorT` | |
+| `d_num_runs_out` | `NumRunsOutputIteratorT` | |
+| `equality_op` | `EqualityOpT` | |
+| `reduction_op` | `ReductionOpT` | |
+| `num_items` | `OffsetT` | |
+| `stream` | `cudaStream_t` | |

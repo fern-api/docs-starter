@@ -1,0 +1,377 @@
+---
+title: cub::DispatchRadixSort
+description: "Utility class for dispatching the appropriately-tuned kernels for device-wide radix sort."
+---
+
+Utility class for dispatching the appropriately-tuned kernels for device-wide radix sort.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="Order" type="SortOrder">
+</ParamField>
+
+<ParamField path="KeyT" type="typename">
+Key type
+</ParamField>
+
+<ParamField path="ValueT" type="typename">
+Value type
+</ParamField>
+
+<ParamField path="OffsetT" type="typename">
+Signed integer type for global offsets
+</ParamField>
+
+<ParamField path="DecomposerT" type="typename" default="detail::identity_decomposer_t">
+Implementation detail, do not specify directly, requirements on the content of this type are subject to breaking change.
+</ParamField>
+
+<ParamField path="PolicyHub" type="typename" default="detail::radix_sort::policy_hub<KeyT, ValueT, OffsetT>">
+</ParamField>
+
+<ParamField path="KernelSource" type="typename" default="detail::radix_sort::DeviceRadixSortKernelSource<            detail::radix_sort::policy_selector_from_hub<PolicyHub>,            Order,            KeyT,            ValueT,            OffsetT,            DecomposerT>">
+</ParamField>
+
+<ParamField path="KernelLauncherFactory" type="typename" default="CUB_DETAIL_DEFAULT_KERNEL_LAUNCHER_FACTORY">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### DispatchRadixSort <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"DispatchRadixSort": "/library/api/cub::DispatchRadixSort"}}>
+```cpp showLineNumbers={false}
+cub::DispatchRadixSort<Order, KeyT, ValueT, OffsetT, DecomposerT, PolicyHub, KernelSource, KernelLauncherFactory>::DispatchRadixSort(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    DoubleBuffer<KeyT> &d_keys,
+    DoubleBuffer<ValueT> &d_values,
+    OffsetT num_items,
+    int begin_bit,
+    int end_bit,
+    bool is_overwrite_okay,
+    cudaStream_t stream,
+    int ptx_version,
+    DecomposerT decomposer = {},
+    KernelSource kernel_source = {},
+    KernelLauncherFactory launcher_factory = {}
+)
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### InvokeSingleTile <Badge intent="note" minimal>inline</Badge>
+
+Invoke a single block to sort in-core.
+
+<CodeBlock links={{"DispatchRadixSort": "/library/api/cub::DispatchRadixSort"}}>
+```cpp showLineNumbers={false}
+template <typename ActivePolicyT, typename SingleTileKernelT>
+cudaError_t cub::DispatchRadixSort<Order, KeyT, ValueT, OffsetT, DecomposerT, PolicyHub, KernelSource, KernelLauncherFactory>::InvokeSingleTile(
+    SingleTileKernelT single_tile_kernel,
+    ActivePolicyT policy = {}
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="ActivePolicyT" type="typename">
+Umbrella policy active for the target device
+</ParamField>
+
+<ParamField path="SingleTileKernelT" type="typename">
+Function type of cub::DeviceRadixSortSingleTileKernel
+</ParamField>
+
+**Parameters**
+
+<ParamField path="single_tile_kernel" type="SingleTileKernelT">
+Kernel function pointer to parameterization of cub::DeviceRadixSortSingleTileKernel
+</ParamField>
+
+### InvokePass <Badge intent="note" minimal>inline</Badge>
+
+Invoke a three-kernel sorting pass at the current bit.
+
+<CodeBlock links={{"DispatchRadixSort": "/library/api/cub::DispatchRadixSort"}}>
+```cpp showLineNumbers={false}
+template <typename PassConfigT>
+cudaError_t cub::DispatchRadixSort<Order, KeyT, ValueT, OffsetT, DecomposerT, PolicyHub, KernelSource, KernelLauncherFactory>::InvokePass(
+    const KeyT *d_keys_in,
+    KeyT *d_keys_out,
+    const ValueT *d_values_in,
+    ValueT *d_values_out,
+    OffsetT *d_spine,
+    int,
+    int &current_bit,
+    PassConfigT &pass_config
+)
+```
+</CodeBlock>
+
+### InvokeOnesweep <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"DispatchRadixSort": "/library/api/cub::DispatchRadixSort"}}>
+```cpp showLineNumbers={false}
+template <typename ActivePolicyT>
+cudaError_t cub::DispatchRadixSort<Order, KeyT, ValueT, OffsetT, DecomposerT, PolicyHub, KernelSource, KernelLauncherFactory>::InvokeOnesweep(
+    ActivePolicyT policy = {}
+)
+```
+</CodeBlock>
+
+### InvokePasses <Badge intent="note" minimal>inline</Badge>
+
+Invocation (run multiple digit passes).
+
+<CodeBlock links={{"DispatchRadixSort": "/library/api/cub::DispatchRadixSort"}}>
+```cpp showLineNumbers={false}
+template <typename ActivePolicyT,
+          typename UpsweepKernelT,
+          typename ScanKernelT,
+          typename DownsweepKernelT>
+cudaError_t cub::DispatchRadixSort<Order, KeyT, ValueT, OffsetT, DecomposerT, PolicyHub, KernelSource, KernelLauncherFactory>::InvokePasses(
+    UpsweepKernelT upsweep_kernel,
+    UpsweepKernelT alt_upsweep_kernel,
+    ScanKernelT scan_kernel,
+    DownsweepKernelT downsweep_kernel,
+    DownsweepKernelT alt_downsweep_kernel,
+    ActivePolicyT policy = {}
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="ActivePolicyT" type="typename">
+Umbrella policy active for the target device
+</ParamField>
+
+<ParamField path="UpsweepKernelT" type="typename">
+Function type of cub::DeviceRadixSortUpsweepKernel
+</ParamField>
+
+<ParamField path="ScanKernelT" type="typename">
+Function type of cub::SpineScanKernel
+</ParamField>
+
+<ParamField path="DownsweepKernelT" type="typename">
+Function type of cub::DeviceRadixSortDownsweepKernel
+</ParamField>
+
+**Parameters**
+
+<ParamField path="upsweep_kernel" type="UpsweepKernelT">
+Kernel function pointer to parameterization of cub::DeviceRadixSortUpsweepKernel
+</ParamField>
+
+<ParamField path="alt_upsweep_kernel" type="UpsweepKernelT">
+Alternate kernel function pointer to parameterization of cub::DeviceRadixSortUpsweepKernel
+</ParamField>
+
+<ParamField path="scan_kernel" type="ScanKernelT">
+Kernel function pointer to parameterization of cub::SpineScanKernel
+</ParamField>
+
+<ParamField path="downsweep_kernel" type="DownsweepKernelT">
+Kernel function pointer to parameterization of cub::DeviceRadixSortDownsweepKernel
+</ParamField>
+
+<ParamField path="alt_downsweep_kernel" type="DownsweepKernelT">
+Alternate kernel function pointer to parameterization of cub::DeviceRadixSortDownsweepKernel
+</ParamField>
+
+### InvokeCopy <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"DispatchRadixSort": "/library/api/cub::DispatchRadixSort"}}>
+```cpp showLineNumbers={false}
+cudaError_t cub::DispatchRadixSort<Order, KeyT, ValueT, OffsetT, DecomposerT, PolicyHub, KernelSource, KernelLauncherFactory>::InvokeCopy()
+```
+</CodeBlock>
+
+### Invoke <Badge intent="note" minimal>inline</Badge>
+
+Invocation.
+
+<CodeBlock links={{"DispatchRadixSort": "/library/api/cub::DispatchRadixSort"}}>
+```cpp showLineNumbers={false}
+template <typename ActivePolicyT>
+cudaError_t cub::DispatchRadixSort<Order, KeyT, ValueT, OffsetT, DecomposerT, PolicyHub, KernelSource, KernelLauncherFactory>::Invoke(
+    ActivePolicyT = {}
+)
+```
+</CodeBlock>
+
+### __invoke <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"DispatchRadixSort": "/library/api/cub::DispatchRadixSort"}}>
+```cpp showLineNumbers={false}
+template <typename PolicyGetter>
+cudaError_t cub::DispatchRadixSort<Order, KeyT, ValueT, OffsetT, DecomposerT, PolicyHub, KernelSource, KernelLauncherFactory>::__invoke(
+    PolicyGetter policy_getter
+)
+```
+</CodeBlock>
+
+### __invoke_single_tile <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"DispatchRadixSort": "/library/api/cub::DispatchRadixSort"}}>
+```cpp showLineNumbers={false}
+template <typename SingleTileKernelT>
+cudaError_t cub::DispatchRadixSort<Order, KeyT, ValueT, OffsetT, DecomposerT, PolicyHub, KernelSource, KernelLauncherFactory>::__invoke_single_tile(
+    SingleTileKernelT single_tile_kernel,
+    detail::radix_sort::radix_sort_downsweep_policy policy
+)
+```
+</CodeBlock>
+
+### __invoke_onesweep <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"DispatchRadixSort": "/library/api/cub::DispatchRadixSort"}}>
+```cpp showLineNumbers={false}
+cudaError_t cub::DispatchRadixSort<Order, KeyT, ValueT, OffsetT, DecomposerT, PolicyHub, KernelSource, KernelLauncherFactory>::__invoke_onesweep(
+    detail::radix_sort::radix_sort_policy policy
+)
+```
+</CodeBlock>
+
+### __invoke_passes <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"DispatchRadixSort": "/library/api/cub::DispatchRadixSort"}}>
+```cpp showLineNumbers={false}
+template <typename UpsweepKernelT, typename ScanKernelT, typename DownsweepKernelT>
+cudaError_t cub::DispatchRadixSort<Order, KeyT, ValueT, OffsetT, DecomposerT, PolicyHub, KernelSource, KernelLauncherFactory>::__invoke_passes(
+    UpsweepKernelT upsweep_kernel,
+    UpsweepKernelT alt_upsweep_kernel,
+    ScanKernelT scan_kernel,
+    DownsweepKernelT downsweep_kernel,
+    DownsweepKernelT alt_downsweep_kernel,
+    const detail::radix_sort::radix_sort_policy &policy
+)
+```
+</CodeBlock>
+
+---
+
+## Static methods
+
+### Dispatch <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Internal dispatch routine.
+
+<CodeBlock links={{"DispatchRadixSort": "/library/api/cub::DispatchRadixSort"}}>
+```cpp showLineNumbers={false}
+template <typename MaxPolicyT>
+static cudaError_t cub::DispatchRadixSort<Order, KeyT, ValueT, OffsetT, DecomposerT, PolicyHub, KernelSource, KernelLauncherFactory>::Dispatch(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    DoubleBuffer<KeyT> &d_keys,
+    DoubleBuffer<ValueT> &d_values,
+    OffsetT num_items,
+    int begin_bit,
+    int end_bit,
+    bool is_overwrite_okay,
+    cudaStream_t stream,
+    DecomposerT decomposer = {},
+    KernelSource kernel_source = {},
+    KernelLauncherFactory launcher_factory = {},
+    MaxPolicyT max_policy = {}
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When nullptr, the required allocation size is written to [`temp_storage_bytes`](/library/api/cub::_dispatch_radix_sort::temp_storage_bytes) and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of [`d_temp_storage`](/library/api/cub::_dispatch_radix_sort::d_temp_storage) allocation
+</ParamField>
+
+<ParamField path="d_keys" type="DoubleBuffer<KeyT> &">
+Double-buffer whose current buffer contains the unsorted input keys and, upon return, is updated to point to the sorted output keys
+</ParamField>
+
+<ParamField path="d_values" type="DoubleBuffer<ValueT> &">
+Double-buffer whose current buffer contains the unsorted input values and, upon return, is updated to point to the sorted output values
+</ParamField>
+
+<ParamField path="num_items" type="OffsetT">
+Number of items to sort
+</ParamField>
+
+<ParamField path="begin_bit" type="int">
+The beginning (least-significant) bit index needed for key comparison
+</ParamField>
+
+<ParamField path="end_bit" type="int">
+The past-the-end (most-significant) bit index needed for key comparison
+</ParamField>
+
+<ParamField path="is_overwrite_okay" type="bool">
+Whether is okay to overwrite source buffers
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t">
+CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `KEYS_ONLY` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `bool` | |
+| `d_temp_storage` | `void *` | Device-accessible allocation of temporary storage. |
+| `temp_storage_bytes` | `size_t &` | Reference to size in bytes of [`d_temp_storage`](/library/api/cub::_dispatch_radix_sort::d_temp_storage) allocation. |
+| `d_keys` | `DoubleBuffer< KeyT > &` | Double-buffer whose current buffer contains the unsorted input keys and, upon return, is updated to point to the sorted output keys. |
+| `d_values` | `DoubleBuffer< ValueT > &` | Double-buffer whose current buffer contains the unsorted input values and, upon return, is updated to point to the sorted output values. |
+| `num_items` | `OffsetT` | Number of items to sort. |
+| `begin_bit` | `int` | The beginning (least-significant) bit index needed for key comparison. |
+| `end_bit` | `int` | The past-the-end (most-significant) bit index needed for key comparison. |
+| `stream` | `cudaStream_t` | CUDA stream to launch kernels within. Default is stream<sub>0</sub>. |
+| `ptx_version` | `int` | PTX version. |
+| `is_overwrite_okay` | `bool` | Whether is okay to overwrite source buffers. |
+| `decomposer` | `DecomposerT` | |
+| `kernel_source` | `KernelSource` | |
+| `launcher_factory` | `KernelLauncherFactory` | |
+
+---
+
+## Inner classes
+
+### PassConfig
+
+<CodeBlock links={{"DispatchRadixSort": "/library/api/cub::DispatchRadixSort"}}>
+```cpp showLineNumbers={false}
+struct cub::DispatchRadixSort::PassConfig
+```
+</CodeBlock>
+
+Pass configuration structure.
+
+| Name | Type | Description |
+|---|---|---|
+| `upsweep_kernel` | `UpsweepKernelT` | |
+| `upsweep_config` | `detail::KernelConfig` | |
+| `scan_kernel` | `ScanKernelT` | |
+| `scan_config` | `detail::KernelConfig` | |
+| `downsweep_kernel` | `DownsweepKernelT` | |
+| `downsweep_config` | `detail::KernelConfig` | |
+| `radix_bits` | `int` | |
+| `radix_digits` | `int` | |
+| `max_downsweep_grid_size` | `int` | |
+| `even_share` | `GridEvenShare< OffsetT >` | |

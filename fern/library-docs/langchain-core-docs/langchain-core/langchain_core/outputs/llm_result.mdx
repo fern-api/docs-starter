@@ -1,0 +1,131 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/outputs/llm_result
+title: langchain_core.outputs.llm_result
+---
+
+`LLMResult` class.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`LLMResult`](#langchain_core-outputs-llm_result-LLMResult) | A container for results of an LLM call. |
+
+### API
+
+<Anchor id="langchain_core-outputs-llm_result-LLMResult">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.outputs.llm_result.LLMResult()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `BaseModel`
+
+A container for results of an LLM call.
+
+Both chat models and LLMs generate an `LLMResult` object. This object contains the
+generated outputs and any additional information that the model provider wants to
+return.
+
+
+<ParamField path="generations" type="list[list[Generation | ChatGeneration | GenerationChunk | ChatGenerationChunk]]">
+Generated outputs.
+
+The first dimension of the list represents completions for different input prompts.
+
+The second dimension of the list represents different candidate generations for a
+given prompt.
+
+- When returned from **an LLM**, the type is `list[list[Generation]]`.
+- When returned from a **chat model**, the type is `list[list[ChatGeneration]]`.
+
+`ChatGeneration` is a subclass of `Generation` that has a field for a structured
+chat message.
+</ParamField>
+
+<ParamField path="llm_output" type="dict | None = None">
+For arbitrary LLM provider specific output.
+
+This dictionary is a free-form dictionary that can contain any information that the
+provider wants to return. It is not standardized and is provider-specific.
+
+Users should generally avoid relying on this field and instead rely on accessing
+relevant information from standardized fields present in AIMessage.
+</ParamField>
+
+<ParamField path="run" type="list[RunInfo] | None = None">
+List of metadata info for model call for each input.
+
+See `langchain_core.outputs.run_info.RunInfo` for details.
+</ParamField>
+
+<ParamField path="type" type="Literal['LLMResult'] = 'LLMResult'">
+Type is used exclusively for serialization purposes.
+</ParamField>
+<Anchor id="langchain_core-outputs-llm_result-LLMResult-__eq__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.outputs.llm_result.LLMResult.__eq__(
+    other: object
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check for `LLMResult` equality by ignoring any metadata related to runs.
+
+**Parameters:**
+
+<ParamField path="other" type="object">
+Another `LLMResult` object to compare against.
+</ParamField>
+
+**Returns:** `bool`
+
+`True` if the generations and `llm_output` are equal, `False` otherwise.
+
+
+</Indent>
+<Anchor id="langchain_core-outputs-llm_result-LLMResult-flatten">
+
+<CodeBlock links={{"langchain_core.outputs.llm_result.LLMResult":"#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.outputs.llm_result.LLMResult.flatten() -> list[langchain_core.outputs.llm_result.LLMResult]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Flatten generations into a single list.
+
+Unpack `list[list[Generation]] -&gt; list[LLMResult]` where each returned
+`LLMResult` contains only a single `Generation`. If token usage information is
+available, it is kept only for the `LLMResult` corresponding to the top-choice
+`Generation`, to avoid over-counting of token usage downstream.
+
+**Returns:** `list[LLMResult]`
+
+List of `LLMResult` objects where each returned `LLMResult` contains a
+single `Generation`.
+
+
+</Indent>
+</Indent>

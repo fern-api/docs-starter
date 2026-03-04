@@ -1,0 +1,567 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/utils/utils
+title: langchain_core.utils.utils
+---
+
+Generic utility functions.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`_NoDefaultType`](#langchain_core-utils-utils-_NoDefaultType) | Type to indicate no default value is provided. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_build_model_kwargs`](#langchain_core-utils-utils-_build_model_kwargs) | Build `model_kwargs` param from Pydantic constructor values. |
+| [`build_extra_kwargs`](#langchain_core-utils-utils-build_extra_kwargs) | Build extra kwargs from values and extra_kwargs. |
+| [`check_package_version`](#langchain_core-utils-utils-check_package_version) | Check the version of a package. |
+| [`convert_to_secret_str`](#langchain_core-utils-utils-convert_to_secret_str) | Convert a string to a `SecretStr` if needed. |
+| [`ensure_id`](#langchain_core-utils-utils-ensure_id) | Ensure the ID is a valid string, generating a new UUID if not provided. |
+| [`from_env`](#langchain_core-utils-utils-from_env) | Create a factory method that gets a value from an environment variable. |
+| [`get_pydantic_field_names`](#langchain_core-utils-utils-get_pydantic_field_names) | Get field names, including aliases, for a pydantic class. |
+| [`guard_import`](#langchain_core-utils-utils-guard_import) | Dynamically import a module. |
+| [`mock_now`](#langchain_core-utils-utils-mock_now) | Context manager for mocking out datetime.now() in unit tests. |
+| [`raise_for_status_with_text`](#langchain_core-utils-utils-raise_for_status_with_text) | Raise an error with the response text. |
+| [`secret_from_env`](#langchain_core-utils-utils-secret_from_env) | Secret from env. |
+| [`xor_args`](#langchain_core-utils-utils-xor_args) | Validate specified keyword args are mutually exclusive. |
+
+### Data
+
+[`LC_AUTO_PREFIX`](#langchain_core-utils-utils-LC_AUTO_PREFIX)
+
+[`LC_ID_PREFIX`](#langchain_core-utils-utils-LC_ID_PREFIX)
+
+[`_NoDefault`](#langchain_core-utils-utils-_NoDefault)
+
+### API
+
+<Anchor id="langchain_core-utils-utils-_NoDefaultType">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.utils.utils._NoDefaultType()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Type to indicate no default value is provided.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-utils-_build_model_kwargs">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.utils._build_model_kwargs(
+    values: dict[str, typing.Any],
+    all_required_field_names: set[str]
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Build `model_kwargs` param from Pydantic constructor values.
+
+**Parameters:**
+
+<ParamField path="values" type="dict[str, Any]">
+All init args passed in by user.
+</ParamField>
+
+<ParamField path="all_required_field_names" type="set[str]">
+All required field names for the pydantic class.
+</ParamField>
+
+**Returns:** `dict[str, Any]`
+
+Extra kwargs.
+
+**Raises:**
+
+- `ValueError`: If a field is specified in both `values` and `extra_kwargs`.
+- `ValueError`: If a field is specified in `model_kwargs`.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-utils-build_extra_kwargs">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.utils.build_extra_kwargs(
+    extra_kwargs: dict[str, typing.Any],
+    values: dict[str, typing.Any],
+    all_required_field_names: set[str]
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Build extra kwargs from values and extra_kwargs.
+
+!!! danger "DON'T USE"
+
+    Kept for backwards-compatibility but should never have been public. Use the
+    internal `_build_model_kwargs` function instead.
+
+**Parameters:**
+
+<ParamField path="extra_kwargs" type="dict[str, Any]">
+Extra kwargs passed in by user.
+</ParamField>
+
+<ParamField path="values" type="dict[str, Any]">
+Values passed in by user.
+</ParamField>
+
+<ParamField path="all_required_field_names" type="set[str]">
+All required field names for the pydantic class.
+</ParamField>
+
+**Returns:** `dict[str, Any]`
+
+Extra kwargs.
+
+**Raises:**
+
+- `ValueError`: If a field is specified in both `values` and `extra_kwargs`.
+- `ValueError`: If a field is specified in `model_kwargs`.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-utils-check_package_version">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.utils.check_package_version(
+    package: str,
+    lt_version: str | None = None,
+    lte_version: str | None = None,
+    gt_version: str | None = None,
+    gte_version: str | None = None
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check the version of a package.
+
+**Parameters:**
+
+<ParamField path="package" type="str">
+The name of the package.
+</ParamField>
+
+<ParamField path="lt_version" type="str | None" default="None">
+The version must be less than this.
+</ParamField>
+
+<ParamField path="lte_version" type="str | None" default="None">
+The version must be less than or equal to this.
+</ParamField>
+
+<ParamField path="gt_version" type="str | None" default="None">
+The version must be greater than this.
+</ParamField>
+
+<ParamField path="gte_version" type="str | None" default="None">
+The version must be greater than or equal to this.
+</ParamField>
+
+**Raises:**
+
+- `ValueError`: If the package version does not meet the requirements.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-utils-convert_to_secret_str">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.utils.convert_to_secret_str(
+    value: pydantic.SecretStr | str
+) -> pydantic.SecretStr
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert a string to a `SecretStr` if needed.
+
+**Parameters:**
+
+<ParamField path="value" type="SecretStr | str">
+The value to convert.
+</ParamField>
+
+**Returns:** `SecretStr`
+
+The `SecretStr` value.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-utils-ensure_id">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.utils.ensure_id(
+    id_val: str | None
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Ensure the ID is a valid string, generating a new UUID if not provided.
+
+Auto-generated UUIDs are prefixed by `'lc_'` to indicate they are
+LangChain-generated IDs.
+
+**Parameters:**
+
+<ParamField path="id_val" type="str | None">
+Optional string ID value to validate.
+</ParamField>
+
+**Returns:** `str`
+
+A string ID, either the validated provided value or a newly generated UUID4.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-utils-from_env">
+
+<CodeBlock links={{"langchain_core.utils.utils._NoDefaultType":"#langchain_core-utils-utils-_NoDefaultType"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.utils.from_env(
+    key: str | collections.abc.Sequence[str],
+    default: str | langchain_core.utils.utils._NoDefaultType | None = _NoDefault,
+    error_message: str | None = None
+) -> collections.abc.Callable[[], str] | collections.abc.Callable[[], str | None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a factory method that gets a value from an environment variable.
+
+**Parameters:**
+
+<ParamField path="key" type="str | Sequence[str]">
+The environment variable to look up.
+
+If a list of keys is provided, the first key found in the environment will
+be used. If no key is found, the default value will be used if set,
+otherwise an error will be raised.
+</ParamField>
+
+<ParamField path="default" type="str | _NoDefaultType | None" default="_NoDefault">
+The default value to return if the environment variable is not set.
+</ParamField>
+
+<ParamField path="error_message" type="str | None" default="None">
+The error message which will be raised if the key is not found
+and no default value is provided.
+
+This will be raised as a ValueError.
+</ParamField>
+
+**Returns:** `Callable[[], str] | Callable[[], str | None]`
+
+Factory method that will look up the value from the environment.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-utils-get_pydantic_field_names">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.utils.get_pydantic_field_names(
+    pydantic_cls: typing.Any
+) -> set[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get field names, including aliases, for a pydantic class.
+
+**Parameters:**
+
+<ParamField path="pydantic_cls" type="Any">
+Pydantic class.
+</ParamField>
+
+**Returns:** `set[str]`
+
+Field names.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-utils-guard_import">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.utils.guard_import(
+    module_name: str,
+    pip_name: str | None = None,
+    package: str | None = None
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Dynamically import a module.
+
+Raise an exception if the module is not installed.
+
+**Parameters:**
+
+<ParamField path="module_name" type="str">
+The name of the module to import.
+</ParamField>
+
+<ParamField path="pip_name" type="str | None" default="None">
+The name of the module to install with pip.
+</ParamField>
+
+<ParamField path="package" type="str | None" default="None">
+The package to import the module from.
+</ParamField>
+
+**Returns:** `Any`
+
+The imported module.
+
+**Raises:**
+
+- `ImportError`: If the module is not installed.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-utils-mock_now">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.utils.mock_now(
+    dt_value: datetime.datetime
+) -> collections.abc.Iterator[type]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Context manager for mocking out datetime.now() in unit tests.
+
+**Parameters:**
+
+<ParamField path="dt_value" type="datetime.datetime">
+The datetime value to use for datetime.now().
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-utils-raise_for_status_with_text">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.utils.raise_for_status_with_text(
+    response: requests.Response
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Raise an error with the response text.
+
+**Parameters:**
+
+<ParamField path="response" type="Response">
+The response to check for errors.
+</ParamField>
+
+**Raises:**
+
+- `ValueError`: If the response has an error status code.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-utils-secret_from_env">
+
+<CodeBlock links={{"langchain_core.utils.utils._NoDefaultType":"#langchain_core-utils-utils-_NoDefaultType"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.utils.secret_from_env(
+    key: str | collections.abc.Sequence[str],
+    default: str | langchain_core.utils.utils._NoDefaultType | None = _NoDefault,
+    error_message: str | None = None
+) -> collections.abc.Callable[[], pydantic.SecretStr | None] | collections.abc.Callable[[], pydantic.SecretStr]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Secret from env.
+
+**Parameters:**
+
+<ParamField path="key" type="str | Sequence[str]">
+The environment variable to look up.
+</ParamField>
+
+<ParamField path="default" type="str | _NoDefaultType | None" default="_NoDefault">
+The default value to return if the environment variable is not set.
+</ParamField>
+
+<ParamField path="error_message" type="str | None" default="None">
+The error message which will be raised if the key is not found
+and no default value is provided.
+
+This will be raised as a `ValueError`.
+</ParamField>
+
+**Returns:** `Callable[[], SecretStr | None] | Callable[[], SecretStr]`
+
+Factory method that will look up the secret from the environment.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-utils-xor_args">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.utils.xor_args(
+    arg_groups: tuple[str, ...] = ()
+) -> collections.abc.Callable
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Validate specified keyword args are mutually exclusive.
+
+**Parameters:**
+
+<ParamField path="*arg_groups" type="tuple[str, ...]" default="()">
+Groups of mutually exclusive keyword args.
+</ParamField>
+
+**Returns:** `Callable`
+
+Decorator that validates the specified keyword args are mutually exclusive.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-utils-LC_AUTO_PREFIX">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.utils.LC_AUTO_PREFIX = 'lc_'
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+LangChain auto-generated ID prefix for messages and content blocks.
+
+</Indent>
+
+<Anchor id="langchain_core-utils-utils-LC_ID_PREFIX">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.utils.LC_ID_PREFIX = 'lc_run-'
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Internal tracing/callback system identifier.
+
+Used for:
+
+- Tracing. Every LangChain operation (LLM call, chain execution, tool use, etc.)
+    gets a unique run_id (UUID)
+- Enables tracking parent-child relationships between operations
+
+</Indent>
+
+<Anchor id="langchain_core-utils-utils-_NoDefault">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.utils._NoDefault = _NoDefaultType()
+```
+
+</CodeBlock>
+</Anchor>
+

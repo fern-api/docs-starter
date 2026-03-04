@@ -1,0 +1,204 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/output_parsers/pydantic
+title: langchain_core.output_parsers.pydantic
+---
+
+Output parsers using Pydantic.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`PydanticOutputParser`](#langchain_core-output_parsers-pydantic-PydanticOutputParser) | Parse an output using a Pydantic model. |
+
+### Data
+
+[`_PYDANTIC_FORMAT_INSTRUCTIONS`](#langchain_core-output_parsers-pydantic-_PYDANTIC_FORMAT_INSTRUCTIONS)
+
+[`__all__`](#langchain_core-output_parsers-pydantic-__all__)
+
+### API
+
+<Anchor id="langchain_core-output_parsers-pydantic-PydanticOutputParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.output_parsers.pydantic.PydanticOutputParser()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [JsonOutputParser](/langchain-core/langchain_core/output_parsers/json#langchain_core-output_parsers-json-JsonOutputParser), `Generic[TBaseModel]`
+
+Parse an output using a Pydantic model.
+
+
+<ParamField path="OutputType" type="type[TBaseModel]">
+Return the Pydantic model.
+</ParamField>
+
+<ParamField path="_type" type="str">
+</ParamField>
+
+<ParamField path="pydantic_object" type="Annotated[type[TBaseModel], SkipValidation()]">
+The Pydantic model to parse.
+</ParamField>
+<Anchor id="langchain_core-output_parsers-pydantic-PydanticOutputParser-_parse_obj">
+
+<CodeBlock links={{"langchain_core.utils.pydantic.TBaseModel":"/langchain-core/langchain_core/utils/pydantic#langchain_core-utils-pydantic-TBaseModel"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.pydantic.PydanticOutputParser._parse_obj(
+    obj: dict
+) -> langchain_core.utils.pydantic.TBaseModel
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-pydantic-PydanticOutputParser-_parser_exception">
+
+<CodeBlock links={{"langchain_core.exceptions.OutputParserException":"/langchain-core/langchain_core/exceptions#langchain_core-exceptions-OutputParserException"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.pydantic.PydanticOutputParser._parser_exception(
+    e: Exception,
+    json_object: dict
+) -> langchain_core.exceptions.OutputParserException
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-pydantic-PydanticOutputParser-get_format_instructions">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.pydantic.PydanticOutputParser.get_format_instructions() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return the format instructions for the JSON output.
+
+**Returns:** `str`
+
+The format instructions for the JSON output.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-pydantic-PydanticOutputParser-parse">
+
+<CodeBlock links={{"langchain_core.utils.pydantic.TBaseModel":"/langchain-core/langchain_core/utils/pydantic#langchain_core-utils-pydantic-TBaseModel"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.pydantic.PydanticOutputParser.parse(
+    text: str
+) -> langchain_core.utils.pydantic.TBaseModel
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse the output of an LLM call to a Pydantic object.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The output of the LLM call.
+</ParamField>
+
+**Returns:** `TBaseModel`
+
+The parsed Pydantic object.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-pydantic-PydanticOutputParser-parse_result">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list","langchain_core.utils.pydantic.TBaseModel":"/langchain-core/langchain_core/utils/pydantic#langchain_core-utils-pydantic-TBaseModel"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.pydantic.PydanticOutputParser.parse_result(
+    result: langchain_core.output_parsers.list[langchain_core.outputs.Generation],
+    partial: bool = False
+) -> langchain_core.utils.pydantic.TBaseModel | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse the result of an LLM call to a Pydantic object.
+
+**Parameters:**
+
+<ParamField path="result" type="list[Generation]">
+The result of the LLM call.
+</ParamField>
+
+<ParamField path="partial" type="bool" default="False">
+Whether to parse partial JSON objects.
+
+If `True`, the output will be a JSON object containing all the keys that
+have been returned so far.
+</ParamField>
+
+**Returns:** `TBaseModel | None`
+
+The parsed Pydantic object.
+
+**Raises:**
+
+- `OutputParserException`: If the result is not valid JSON or does not conform
+to the Pydantic model.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-pydantic-_PYDANTIC_FORMAT_INSTRUCTIONS">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.pydantic._PYDANTIC_FORMAT_INSTRUCTIONS = 'The output should be formatted as a JSON instance that conforms to the JSON sch...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-output_parsers-pydantic-__all__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.pydantic.__all__ = ['PydanticBaseModel', 'PydanticOutputParser', 'TBaseModel']
+```
+
+</CodeBlock>
+</Anchor>
+

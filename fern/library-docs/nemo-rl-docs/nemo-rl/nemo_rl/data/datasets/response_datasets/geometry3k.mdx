@@ -1,0 +1,76 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/data/datasets/response_datasets/geometry3k
+title: nemo_rl.data.datasets.response_datasets.geometry3k
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`Geometry3KDataset`](#nemo_rl-data-datasets-response_datasets-geometry3k-Geometry3KDataset) | Simple wrapper around the Geometry3K dataset. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`format_geometry3k_dataset`](#nemo_rl-data-datasets-response_datasets-geometry3k-format_geometry3k_dataset) | Format the Geometry3K dataset into an OpenAI-API-like message log. |
+
+### API
+
+<Anchor id="nemo_rl-data-datasets-response_datasets-geometry3k-Geometry3KDataset">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.datasets.response_datasets.geometry3k.Geometry3KDataset(
+    split: str = 'train',
+    kwargs = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RawDataset](/nemo-rl/nemo_rl/data/datasets/raw_dataset#nemo_rl-data-datasets-raw_dataset-RawDataset)
+
+Simple wrapper around the Geometry3K dataset.
+
+**Parameters:**
+
+<ParamField path="split" type="str" default="'train'">
+Split name for the dataset, default is "train"
+</ParamField>
+
+
+<ParamField path="dataset">
+</ParamField>
+
+<ParamField path="task_name" type="= 'geometry3k'">
+</ParamField>
+</Indent>
+
+<Anchor id="nemo_rl-data-datasets-response_datasets-geometry3k-format_geometry3k_dataset">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.datasets.response_datasets.geometry3k.format_geometry3k_dataset(
+    example: dict[str, typing.Any],
+    return_pil: bool = False
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format the Geometry3K dataset into an OpenAI-API-like message log.
+
+
+</Indent>

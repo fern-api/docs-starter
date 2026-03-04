@@ -1,0 +1,624 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/policy/utils
+title: nemo_rl.models.policy.utils
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`IPCProtocol`](#nemo_rl-models-policy-utils-IPCProtocol) | IPC protocol constants for ZMQ weight streaming. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_gather_ipc_handlers`](#nemo_rl-models-policy-utils-_gather_ipc_handlers) | Gather IPC handlers from all ranks in the default FSDP group, then filter by server. |
+| [`_send_tensor_to_sglang`](#nemo_rl-models-policy-utils-_send_tensor_to_sglang) | Send gathered IPC handlers to SGLang server via HTTP. |
+| [`_setup_ipc_gather_group`](#nemo_rl-models-policy-utils-_setup_ipc_gather_group) | Setup gather configuration for IPC handlers. |
+| [`apply_top_k_only`](#nemo_rl-models-policy-utils-apply_top_k_only) | Apply top-k mask to the logits. |
+| [`apply_top_k_top_p`](#nemo_rl-models-policy-utils-apply_top_k_top_p) | Apply top-k and top-p masks to the logits. |
+| [`calculate_aligned_size`](#nemo_rl-models-policy-utils-calculate_aligned_size) | Calculate aligned size for memory alignment. |
+| [`configure_dynamo_cache`](#nemo_rl-models-policy-utils-configure_dynamo_cache) | Disable dynamo autotune_local_cache. |
+| [`get_gpu_info`](#nemo_rl-models-policy-utils-get_gpu_info) | Return information about the GPU being used by this worker. |
+| [`get_handle_from_tensor`](#nemo_rl-models-policy-utils-get_handle_from_tensor) | Get IPC handle from a tensor. |
+| [`get_megatron_checkpoint_dir`](#nemo_rl-models-policy-utils-get_megatron_checkpoint_dir) | Gets the default megatron checkpoint directory for initial HF -&gt; Mcore conversion. |
+| [`get_runtime_env_for_policy_worker`](#nemo_rl-models-policy-utils-get_runtime_env_for_policy_worker) | Get runtime environment configuration for policy workers. |
+| [`is_vllm_v1_engine_enabled`](#nemo_rl-models-policy-utils-is_vllm_v1_engine_enabled) | Check if vLLM V1 engine is enabled. |
+| [`rebuild_cuda_tensor_from_ipc`](#nemo_rl-models-policy-utils-rebuild_cuda_tensor_from_ipc) | Rebuild a CUDA tensor from an IPC handle. |
+| [`resolve_model_class`](#nemo_rl-models-policy-utils-resolve_model_class) | Resolve the appropriate model class for a given model name. |
+| [`stream_weights_via_http_impl`](#nemo_rl-models-policy-utils-stream_weights_via_http_impl) | Stream weights to SGLang servers via HTTP API (update_weights_from_tensor). |
+| [`stream_weights_via_ipc_zmq_impl`](#nemo_rl-models-policy-utils-stream_weights_via_ipc_zmq_impl) | Shared implementation for streaming weights via IPC ZMQ with improved memory management. |
+
+### Data
+
+[`AUTOMODEL_FACTORY`](#nemo_rl-models-policy-utils-AUTOMODEL_FACTORY)
+
+[`NEMO_AUTOMODEL_AVAILABLE`](#nemo_rl-models-policy-utils-NEMO_AUTOMODEL_AVAILABLE)
+
+### API
+
+<Anchor id="nemo_rl-models-policy-utils-IPCProtocol">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.utils.IPCProtocol
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `enum.Enum`
+
+IPC protocol constants for ZMQ weight streaming.
+
+<ParamField path="ACK" type="= 'ack'">
+</ParamField>
+
+<ParamField path="COMPLETE" type="= 'complete'">
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-utils-_gather_ipc_handlers">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.utils._gather_ipc_handlers(
+    serialized_handler: str,
+    gather_group: typing.Optional[torch.distributed.ProcessGroup],
+    gather_src: typing.Optional[int],
+    rank: int,
+    matching_ranks: typing.Optional[list[int]] = None
+) -> typing.Optional[list[str]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Gather IPC handlers from all ranks in the default FSDP group, then filter by server.
+
+**Parameters:**
+
+<ParamField path="serialized_handler" type="str">
+Serialized IPC handler from this rank
+</ParamField>
+
+<ParamField path="gather_group" type="Optional[dist.ProcessGroup]">
+Process group (None means use default FSDP group)
+</ParamField>
+
+<ParamField path="gather_src" type="Optional[int]">
+Rank that will collect and filter handlers
+</ParamField>
+
+<ParamField path="rank" type="int">
+Current rank
+</ParamField>
+
+<ParamField path="matching_ranks" type="Optional[list[int]]" default="None">
+List of ranks that belong to the same SGLang server
+</ParamField>
+
+**Returns:** `Optional[list[str]]`
+
+List of serialized handlers in rank order (only on gather_src rank), None otherwise
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-utils-_send_tensor_to_sglang">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.utils._send_tensor_to_sglang(
+    url: str,
+    tensor_name: str,
+    gathered_handlers: list[str],
+    shape: torch.Size,
+    dtype: str,
+    flush_cache: bool = False
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Send gathered IPC handlers to SGLang server via HTTP.
+
+Key: gathered_handlers are in rank order [rank0, rank1, ...]
+SGLang will automatically match: handler = serialized_handlers[tp_rank]
+
+**Parameters:**
+
+<ParamField path="url" type="str">
+SGLang server URL
+</ParamField>
+
+<ParamField path="tensor_name" type="str">
+Name of the tensor
+</ParamField>
+
+<ParamField path="gathered_handlers" type="list[str]">
+List of serialized IPC handlers in rank order
+</ParamField>
+
+<ParamField path="shape" type="torch.Size">
+Tensor shape
+</ParamField>
+
+<ParamField path="dtype" type="str">
+Tensor dtype
+</ParamField>
+
+<ParamField path="flush_cache" type="bool" default="False">
+Whether to flush cache after this tensor (for last tensor)
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-utils-_setup_ipc_gather_group">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.utils._setup_ipc_gather_group(
+    rank: int,
+    current_device_uuid: str,
+    sglang_gpu_uuids: list[str],
+    sglang_url_to_gpu_uuids: dict[str, list[str]]
+) -> tuple[typing.Optional[torch.distributed.ProcessGroup], typing.Optional[int], typing.Optional[list[int]]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Setup gather configuration for IPC handlers.
+
+**Returns:** `Optional[dist.ProcessGroup]`
+
+Tuple of (gather_group, gather_src_rank, matching_ranks)
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-utils-apply_top_k_only">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.utils.apply_top_k_only(
+    logits: torch.Tensor,
+    top_k: int
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Apply top-k mask to the logits.
+
+Simplified version of VLLM's implementation for scalar parameters.
+This implementation doesn't involve sorting the entire vocab.
+
+Based on VLLM's implementation:
+https://github.com/vllm-project/vllm/blob/34a20c49b3f81f64133428b3a0d62309db1256f9/vllm/v1/sample/ops/topk_topp_sampler.py
+SPDX-License-Identifier: Apache-2.0
+Copyright contributors to the vLLM project
+
+**Parameters:**
+
+<ParamField path="logits" type="torch.Tensor">
+Input logits tensor of shape [batch_size, seq_len, vocab_size]
+</ParamField>
+
+<ParamField path="top_k" type="int">
+Top-k sampling parameter.
+</ParamField>
+
+**Returns:** `torch.Tensor`
+
+Filtered logits with top-k applied
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-utils-apply_top_k_top_p">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.utils.apply_top_k_top_p(
+    logits: torch.Tensor,
+    top_k: typing.Optional[int] = None,
+    top_p: typing.Optional[float] = None
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Apply top-k and top-p masks to the logits.
+
+Simplified version of VLLM's implementation for scalar parameters.
+
+Based on VLLM's implementation:
+https://github.com/vllm-project/vllm/blob/34a20c49b3f81f64133428b3a0d62309db1256f9/vllm/v1/sample/ops/topk_topp_sampler.py
+SPDX-License-Identifier: Apache-2.0
+Copyright contributors to the vLLM project
+
+**Parameters:**
+
+<ParamField path="logits" type="torch.Tensor">
+Input logits tensor of shape [batch_size, seq_len, vocab_size]
+</ParamField>
+
+<ParamField path="top_k" type="Optional[int]" default="None">
+Top-k sampling parameter. Set to -1 to consider all tokens.
+</ParamField>
+
+<ParamField path="top_p" type="Optional[float]" default="None">
+Top-p (nucleus) sampling parameter. Must be in (0, 1]. Set to 1 to consider all tokens.
+</ParamField>
+
+**Returns:** `torch.Tensor`
+
+Filtered logits with sampling parameters applied
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-utils-calculate_aligned_size">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.utils.calculate_aligned_size(
+    size_bytes: int,
+    alignment: int = 512
+) -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Calculate aligned size for memory alignment.
+
+**Parameters:**
+
+<ParamField path="size_bytes" type="int">
+Size in bytes to align
+</ParamField>
+
+<ParamField path="alignment" type="int" default="512">
+Alignment boundary in bytes (default 512)
+</ParamField>
+
+**Returns:** `int`
+
+Aligned size in bytes(int).
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-utils-configure_dynamo_cache">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.utils.configure_dynamo_cache() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Disable dynamo autotune_local_cache.
+
+Dynamo may fail at cached_autotune when there's already a cache with different order of node_bundles.
+Disable autotune_local_cache as a workaround.
+See https://github.com/pytorch/pytorch/issues/153791 for more details.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-utils-get_gpu_info">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.utils.get_gpu_info(
+    model: torch.nn.Module
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return information about the GPU being used by this worker.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-utils-get_handle_from_tensor">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.utils.get_handle_from_tensor(
+    tensor: torch.Tensor
+) -> tuple[typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get IPC handle from a tensor.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-utils-get_megatron_checkpoint_dir">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.utils.get_megatron_checkpoint_dir() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Gets the default megatron checkpoint directory for initial HF -&gt; Mcore conversion.
+
+Megatron initial checkpoint should be saved to a path available on all nodes. The directory used will take this order of precendence:
+1. $NRL_MEGATRON_CHECKPOINT_DIR (if set)
+2. $HF_HOME/nemo_rl (if HF_HOME is set)
+3. ~/.cache/huggingface/nemo_rl
+
+HF_HOME is preferred since many users will also have that path mounted and it means one less directory
+to mount into your runtime environment.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-utils-get_runtime_env_for_policy_worker">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.utils.get_runtime_env_for_policy_worker(
+    policy_worker_name: str
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get runtime environment configuration for policy workers.
+
+Note: expandable_segments configuration is handled directly in the worker init methods
+to ensure proper GPU detection after CUDA initialization.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-utils-is_vllm_v1_engine_enabled">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.utils.is_vllm_v1_engine_enabled() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if vLLM V1 engine is enabled.
+
+**Returns:** `bool`
+
+True if V1 engine is enabled, False otherwise (defaults to True if not set)
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-utils-rebuild_cuda_tensor_from_ipc">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.utils.rebuild_cuda_tensor_from_ipc(
+    cuda_ipc_handle: tuple,
+    device_id: int
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Rebuild a CUDA tensor from an IPC handle.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-utils-resolve_model_class">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.utils.resolve_model_class(
+    model_name: str
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Resolve the appropriate model class for a given model name.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-utils-stream_weights_via_http_impl">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.utils.stream_weights_via_http_impl(
+    params_generator,
+    sglang_url_to_gpu_uuids: dict[str, list[str]],
+    rank: int,
+    worker_name: str,
+    current_device_uuid: str
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Stream weights to SGLang servers via HTTP API (update_weights_from_tensor).
+
+Flow: Each rank creates IPC handler → gather handlers in rank order → send list → SGLang matches by tp_rank index
+
+Key points:
+- Each rank creates handler on its own GPU
+- Handlers are gathered in rank order: [rank0_handler, rank1_handler, ...]
+- List index = rank = GPU ID
+- SGLang automatically matches: handler = serialized_handlers[tp_rank]
+
+**Parameters:**
+
+<ParamField path="params_generator">
+Generator yielding (name, tensor) pairs
+</ParamField>
+
+<ParamField path="sglang_url_to_gpu_uuids" type="dict[str, list[str]]">
+Dict mapping SGLang server URL to list of GPU UUIDs it uses
+</ParamField>
+
+<ParamField path="rank" type="int">
+Worker rank for logging
+</ParamField>
+
+<ParamField path="worker_name" type="str">
+Name of the worker for logging
+</ParamField>
+
+<ParamField path="current_device_uuid" type="str">
+UUID of the current training worker's GPU
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-utils-stream_weights_via_ipc_zmq_impl">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.utils.stream_weights_via_ipc_zmq_impl(
+    params_generator,
+    buffer_size_bytes: int,
+    zmq_socket,
+    rank: int,
+    worker_name: str
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Shared implementation for streaming weights via IPC ZMQ with improved memory management.
+
+Uses ping-pong double buffering to enable overlapping communication while reusing buffers
+to reduce memory allocation overhead and improve stability.
+
+**Parameters:**
+
+<ParamField path="params_generator">
+Generator yielding (name, tensor) pairs
+</ParamField>
+
+<ParamField path="buffer_size_bytes" type="int">
+total size of buffer in bytes for batching parameters
+</ParamField>
+
+<ParamField path="zmq_socket">
+ZMQ socket for communication
+</ParamField>
+
+<ParamField path="rank" type="int">
+Worker rank for logging
+</ParamField>
+
+<ParamField path="worker_name" type="str">
+Name of the worker for logging
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-utils-AUTOMODEL_FACTORY">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.utils.AUTOMODEL_FACTORY: Dict[str, Any] = {'qwen2_5_vl': AutoModelForImageTextToText, 'qwen2_vl': AutoModelForImageTextToT...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="nemo_rl-models-policy-utils-NEMO_AUTOMODEL_AVAILABLE">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.utils.NEMO_AUTOMODEL_AVAILABLE = True
+```
+
+</CodeBlock>
+</Anchor>
+

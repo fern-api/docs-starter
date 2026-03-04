@@ -1,0 +1,158 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/outputs/generation
+title: langchain_core.outputs.generation
+---
+
+Generation output schema.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`Generation`](#langchain_core-outputs-generation-Generation) | A single text generation output. |
+| [`GenerationChunk`](#langchain_core-outputs-generation-GenerationChunk) | `GenerationChunk`, which can be concatenated with other `Generation` chunks. |
+
+### API
+
+<Anchor id="langchain_core-outputs-generation-Generation">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.outputs.generation.Generation()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [Serializable](/langchain-core/langchain_core/load/serializable#langchain_core-load-serializable-Serializable)
+
+A single text generation output.
+
+Generation represents the response from an "old-fashioned" LLM (string-in,
+string-out) that generates regular text (not chat messages).
+
+This model is used internally by chat model and will eventually be mapped to a more
+general `LLMResult` object, and then projected into an `AIMessage` object.
+
+LangChain users working with chat models will usually access information via
+`AIMessage` (returned from runnable interfaces) or `LLMResult` (available via
+callbacks). Please refer to `AIMessage` and `LLMResult` for more information.
+
+
+<ParamField path="generation_info" type="dict[str, Any] | None = None">
+Raw response from the provider.
+
+May include things like the reason for finishing or token log probabilities.
+</ParamField>
+
+<ParamField path="text" type="str">
+Generated text output.
+</ParamField>
+
+<ParamField path="type" type="Literal['Generation'] = 'Generation'">
+Type is used exclusively for serialization purposes.
+
+Set to `'Generation'` for this class.
+</ParamField>
+<Anchor id="langchain_core-outputs-generation-Generation-get_lc_namespace">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.outputs.generation.Generation.get_lc_namespace() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Get the namespace of the LangChain object.
+
+**Returns:** `list[str]`
+
+`["langchain", "schema", "output"]`
+
+
+</Indent>
+<Anchor id="langchain_core-outputs-generation-Generation-is_lc_serializable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.outputs.generation.Generation.is_lc_serializable() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Return `True` as this class is serializable.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-outputs-generation-GenerationChunk">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.outputs.generation.GenerationChunk()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [Generation](#langchain_core-outputs-generation-Generation)
+
+`GenerationChunk`, which can be concatenated with other `Generation` chunks.
+
+
+<Anchor id="langchain_core-outputs-generation-GenerationChunk-__add__">
+
+<CodeBlock links={{"langchain_core.outputs.generation.GenerationChunk":"#langchain_core-outputs-generation-GenerationChunk"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.outputs.generation.GenerationChunk.__add__(
+    other: langchain_core.outputs.generation.GenerationChunk
+) -> langchain_core.outputs.generation.GenerationChunk
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Concatenate two `GenerationChunk` objects.
+
+**Parameters:**
+
+<ParamField path="other" type="GenerationChunk">
+Another `GenerationChunk` to concatenate with.
+</ParamField>
+
+**Returns:** `GenerationChunk`
+
+A new `GenerationChunk` concatenated from self and other.
+
+**Raises:**
+
+- `TypeError`: If other is not a `GenerationChunk`.
+
+
+</Indent>
+</Indent>

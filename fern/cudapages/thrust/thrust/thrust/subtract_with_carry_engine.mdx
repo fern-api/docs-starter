@@ -1,0 +1,152 @@
+---
+title: thrust::subtract_with_carry_engine
+description: "A [`subtract_with_carry_engine`](/library/api/thrust::subtract_with_carry_engine) random number engine produces unsigned integer random numbers using the subtract with carry algorithm of Marsaglia & Zaman."
+---
+
+A `subtract_with_carry_engine` random number engine produces unsigned integer random numbers using the subtract with carry algorithm of Marsaglia & Zaman.
+
+The generation algorithm is performed as follows:
+
+1. Let `Y = X_{i-s}- X_{i-r} - c`.
+2. Set `X_i` to `y = T mod m`. Set `c` to `1` if `Y < 0`, otherwise set `c` to `0`.
+
+This algorithm corresponds to a modular linear function of the form
+
+`TA(x_i) = (a * x_i) mod b`, where `b` is of the form `m^r - m^s + 1` and `a = b - (b-1)/m`.
+
+```cpp showLineNumbers={false}
+#include <thrust/subtract_with_carry_engine.h>
+```
+
+<Note>
+Inexperienced users should not use this class template directly. Instead, use `ranlux24_base` or `ranlux48_base`, which are instances of `subtract_with_carry_engine`.
+</Note>
+
+**See also:**
+thrust::random::ranlux24_base,
+thrust::random::ranlux48_base
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="UIntType" type="typename">
+The type of unsigned integer to produce.
+</ParamField>
+
+<ParamField path="w" type="size_t">
+The word size of the produced values (` w <= sizeof(UIntType)`).
+</ParamField>
+
+<ParamField path="s" type="size_t">
+The short lag of the generation algorithm.
+</ParamField>
+
+<ParamField path="r" type="size_t">
+The long lag of the generation algorithm.
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### subtract_with_carry_engine <Badge intent="note" minimal>explicit</Badge>
+
+This constructor, which optionally accepts a seed, initializes a new `subtract_with_carry_engine`.
+
+<CodeBlock links={{"subtract_with_carry_engine": "/library/api/thrust::subtract_with_carry_engine"}}>
+```cpp showLineNumbers={false}
+thrust::random::subtract_with_carry_engine<UIntType, w, s, r>::subtract_with_carry_engine(
+    result_type value = default_seed
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="value" type="result_type" default="default_seed">
+The seed used to initialize this `subtract_with_carry_engine``'s` state.
+</ParamField>
+
+---
+
+## Methods
+
+### seed
+
+This method initializes this `subtract_with_carry_engine``'s` state, and optionally accepts a seed value.
+
+<CodeBlock links={{"subtract_with_carry_engine": "/library/api/thrust::subtract_with_carry_engine"}}>
+```cpp showLineNumbers={false}
+void thrust::random::subtract_with_carry_engine<UIntType, w, s, r>::seed(
+    result_type value = default_seed
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="value" type="result_type" default="default_seed">
+The seed used to initializes this `subtract_with_carry_engine``'s` state.
+</ParamField>
+
+### operator()
+
+This member function produces a new random value and updates this `subtract_with_carry_engine``'s` state.
+
+<CodeBlock links={{"subtract_with_carry_engine": "/library/api/thrust::subtract_with_carry_engine"}}>
+```cpp showLineNumbers={false}
+result_type thrust::random::subtract_with_carry_engine<UIntType, w, s, r>::operator()(
+    void
+)
+```
+</CodeBlock>
+
+**Returns:** A new random number.
+
+### discard
+
+This member function advances this `subtract_with_carry_engine``'s` state a given number of times and discards the results.
+
+<CodeBlock links={{"subtract_with_carry_engine": "/library/api/thrust::subtract_with_carry_engine"}}>
+```cpp showLineNumbers={false}
+void thrust::random::subtract_with_carry_engine<UIntType, w, s, r>::discard(
+    unsigned long long z
+)
+```
+</CodeBlock>
+
+<Note>
+This function is provided because an implementation may be able to accelerate it.
+</Note>
+
+**Parameters**
+
+<ParamField path="z" type="unsigned long long">
+The number of random values to discard.
+</ParamField>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `result_type` | `UIntType` | The type of the unsigned integer produced by this `subtract_with_carry_engine`. |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `word_size` <Badge intent="note" minimal>static</Badge> | `const size_t` | The word size of the produced values. |
+| `short_lag` <Badge intent="note" minimal>static</Badge> | `const size_t` | The size of the short lag used in the generation algorithm. |
+| `long_lag` <Badge intent="note" minimal>static</Badge> | `const size_t` | The size of the long lag used in the generation algorithm. |
+| `min` <Badge intent="note" minimal>static</Badge> | `const result_type` | The smallest value this `subtract_with_carry_engine` may potentially produce. |
+| `max` <Badge intent="note" minimal>static</Badge> | `const result_type` | The largest value this `subtract_with_carry_engine` may potentially produce. |
+| `default_seed` <Badge intent="note" minimal>static</Badge> | `const result_type` | The default seed of this `subtract_with_carry_engine`. |

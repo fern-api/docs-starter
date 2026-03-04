@@ -1,0 +1,273 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/document_loaders/base
+title: langchain_core.document_loaders.base
+---
+
+Abstract interface for document loader implementations.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`BaseBlobParser`](#langchain_core-document_loaders-base-BaseBlobParser) | Abstract interface for blob parsers. |
+| [`BaseLoader`](#langchain_core-document_loaders-base-BaseLoader) | Interface for document loader. |
+
+### Data
+
+[`_HAS_TEXT_SPLITTERS`](#langchain_core-document_loaders-base-_HAS_TEXT_SPLITTERS)
+
+### API
+
+<Anchor id="langchain_core-document_loaders-base-BaseBlobParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.document_loaders.base.BaseBlobParser()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+Abstract interface for blob parsers.
+
+A blob parser provides a way to parse raw data stored in a blob into one or more
+`Document` objects.
+
+The parser can be composed with blob loaders, making it easy to reuse a parser
+independent of how the blob was originally loaded.
+
+
+<Anchor id="langchain_core-document_loaders-base-BaseBlobParser-lazy_parse">
+
+<CodeBlock links={{"langchain_core.documents.base.Blob":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Blob","langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.document_loaders.base.BaseBlobParser.lazy_parse(
+    blob: langchain_core.documents.base.Blob
+) -> collections.abc.Iterator[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Lazy parsing interface.
+
+Subclasses are required to implement this method.
+
+**Parameters:**
+
+<ParamField path="blob" type="Blob">
+`Blob` instance
+</ParamField>
+
+**Returns:** `Iterator[Document]`
+
+Generator of `Document` objects
+
+
+</Indent>
+<Anchor id="langchain_core-document_loaders-base-BaseBlobParser-parse">
+
+<CodeBlock links={{"langchain_core.documents.base.Blob":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Blob","langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.document_loaders.base.BaseBlobParser.parse(
+    blob: langchain_core.documents.base.Blob
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Eagerly parse the blob into a `Document` or list of `Document` objects.
+
+This is a convenience method for interactive development environment.
+
+Production applications should favor the `lazy_parse` method instead.
+
+Subclasses should generally not over-ride this parse method.
+
+**Parameters:**
+
+<ParamField path="blob" type="Blob">
+`Blob` instance
+</ParamField>
+
+**Returns:** `list[Document]`
+
+List of `Document` objects
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-document_loaders-base-BaseLoader">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.document_loaders.base.BaseLoader()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+Interface for document loader.
+
+Implementations should implement the lazy-loading method using generators to avoid
+loading all documents into memory at once.
+
+`load` is provided just for user convenience and should not be overridden.
+
+
+<Anchor id="langchain_core-document_loaders-base-BaseLoader-alazy_load">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.document_loaders.base.BaseLoader.alazy_load() -> collections.abc.AsyncIterator[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+A lazy loader for `Document`.
+
+
+</Indent>
+<Anchor id="langchain_core-document_loaders-base-BaseLoader-aload">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.document_loaders.base.BaseLoader.aload() -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Load data into `Document` objects.
+
+**Returns:** `list[Document]`
+
+The documents.
+
+
+</Indent>
+<Anchor id="langchain_core-document_loaders-base-BaseLoader-lazy_load">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.document_loaders.base.BaseLoader.lazy_load() -> collections.abc.Iterator[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+A lazy loader for `Document`.
+
+
+</Indent>
+<Anchor id="langchain_core-document_loaders-base-BaseLoader-load">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.document_loaders.base.BaseLoader.load() -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Load data into `Document` objects.
+
+**Returns:** `list[Document]`
+
+The documents.
+
+
+</Indent>
+<Anchor id="langchain_core-document_loaders-base-BaseLoader-load_and_split">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.document_loaders.base.BaseLoader.load_and_split(
+    text_splitter: langchain_text_splitters.TextSplitter | None = None
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Load `Document` and split into chunks. Chunks are returned as `Document`.
+
+!!! danger
+
+    Do not override this method. It should be considered to be deprecated!
+
+**Parameters:**
+
+<ParamField path="text_splitter" type="TextSplitter | None" default="None">
+`TextSplitter` instance to use for splitting documents.
+
+Defaults to `RecursiveCharacterTextSplitter`.
+</ParamField>
+
+**Returns:** `list[Document]`
+
+List of `Document` objects.
+
+**Raises:**
+
+- `ImportError`: If `langchain-text-splitters` is not installed and no
+`text_splitter` is provided.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-document_loaders-base-_HAS_TEXT_SPLITTERS">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.document_loaders.base._HAS_TEXT_SPLITTERS = True
+```
+
+</CodeBlock>
+</Anchor>
+

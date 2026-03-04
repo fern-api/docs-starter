@@ -1,0 +1,454 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/dtensor/parallelize
+title: nemo_rl.models.dtensor.parallelize
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`RotaryEmbedParallel`](#nemo_rl-models-dtensor-parallelize-RotaryEmbedParallel) | Custom SequenceParallel class for Qwen2 / Gemma3 rotary embeddings because the input is a tuple. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_parallelize_gemma3`](#nemo_rl-models-dtensor-parallelize-_parallelize_gemma3) | Parallelizes a Gemma3ForCausalLM model across data and tensor parallel dimensions. |
+| [`_parallelize_llama`](#nemo_rl-models-dtensor-parallelize-_parallelize_llama) | Parallelizes a LlamaForCausalLM model across data and tensor parallel dimensions. |
+| [`_parallelize_model`](#nemo_rl-models-dtensor-parallelize-_parallelize_model) | Parallelize a model using DTensor. |
+| [`_parallelize_nm5_h`](#nemo_rl-models-dtensor-parallelize-_parallelize_nm5_h) | Parallelize a NemotronHForCausalLM model across data and tensor parallel dimensions. |
+| [`_parallelize_qwen`](#nemo_rl-models-dtensor-parallelize-_parallelize_qwen) | Parallelizes a Qwen2ForCausalLM model across data and tensor parallel dimensions. |
+| [`clip_grad_by_total_norm_`](#nemo_rl-models-dtensor-parallelize-clip_grad_by_total_norm_) | Clips gradient of an iterable of parameters by total norm. |
+| [`get_grad_norm`](#nemo_rl-models-dtensor-parallelize-get_grad_norm) | Calculate the norm of gradients. |
+| [`get_hf_tp_plan`](#nemo_rl-models-dtensor-parallelize-get_hf_tp_plan) | Get the Hugging Face tensor parallel plan from the model. |
+| [`to_local_if_dtensor`](#nemo_rl-models-dtensor-parallelize-to_local_if_dtensor) | Returns the local shard of the given tensor if it is a DTensor. |
+| [`translate_parallel_style`](#nemo_rl-models-dtensor-parallelize-translate_parallel_style) | Translate parallel style str to parallel type. |
+
+### Data
+
+[`PARALLIZE_FUNCTIONS`](#nemo_rl-models-dtensor-parallelize-PARALLIZE_FUNCTIONS)
+
+### API
+
+<Anchor id="nemo_rl-models-dtensor-parallelize-RotaryEmbedParallel">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.dtensor.parallelize.RotaryEmbedParallel()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `SequenceParallel`
+
+Custom SequenceParallel class for Qwen2 / Gemma3 rotary embeddings because the input is a tuple.
+
+
+<Anchor id="nemo_rl-models-dtensor-parallelize-RotaryEmbedParallel-_prepare_input_fn">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.dtensor.parallelize.RotaryEmbedParallel._prepare_input_fn(
+    sequence_sharding,
+    mod,
+    inputs,
+    device_mesh
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-dtensor-parallelize-RotaryEmbedParallel-_prepare_output_fn">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.dtensor.parallelize.RotaryEmbedParallel._prepare_output_fn(
+    use_local_output,
+    mod,
+    outputs,
+    device_mesh
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-models-dtensor-parallelize-_parallelize_gemma3">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.dtensor.parallelize._parallelize_gemma3(
+    model: typing.Union[transformers.models.gemma3.modeling_gemma3.Gemma3ForCausalLM, transformers.models.gemma3.modeling_gemma3.Gemma3ForConditionalGeneration],
+    sequence_parallel: bool = False
+) -> dict[str, torch.distributed.tensor.parallel.ParallelStyle]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parallelizes a Gemma3ForCausalLM model across data and tensor parallel dimensions.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-dtensor-parallelize-_parallelize_llama">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.dtensor.parallelize._parallelize_llama(
+    model: transformers.models.llama.modeling_llama.LlamaForCausalLM,
+    sequence_parallel: bool = False
+) -> dict[str, torch.distributed.tensor.parallel.ParallelStyle]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parallelizes a LlamaForCausalLM model across data and tensor parallel dimensions.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-dtensor-parallelize-_parallelize_model">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.dtensor.parallelize._parallelize_model(
+    model: typing.Union[transformers.models.qwen2.modeling_qwen2.Qwen2ForCausalLM, transformers.models.qwen3.modeling_qwen3.Qwen3ForCausalLM, transformers.models.llama.modeling_llama.LlamaForCausalLM, transformers.models.gemma3.modeling_gemma3.Gemma3ForCausalLM, transformers.models.gemma3.modeling_gemma3.Gemma3ForConditionalGeneration],
+    dp_mesh: torch.distributed.device_mesh.DeviceMesh,
+    tp_mesh: torch.distributed.device_mesh.DeviceMesh,
+    param_dtype: torch.dtype,
+    sequence_parallel: bool = False,
+    activation_checkpointing: bool = False,
+    cpu_offload: bool = False,
+    custom_parallel_plan: typing.Optional[typing.Union[dict, str]] = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parallelize a model using DTensor.
+
+**Parameters:**
+
+<ParamField path="model" type="Union[Qwen2ForCausalLM, Qwen3ForCausalLM, LlamaForCausalLM, Gemma3ForCausalLM, Gemma3ForConditionalGeneration]">
+The model to parallelize.
+</ParamField>
+
+<ParamField path="dp_mesh" type="DeviceMesh">
+Device mesh for data parallelism.
+</ParamField>
+
+<ParamField path="tp_mesh" type="DeviceMesh">
+Device mesh for tensor parallelism.
+</ParamField>
+
+<ParamField path="param_dtype" type="torch.dtype">
+Data type for model parameters.
+</ParamField>
+
+<ParamField path="sequence_parallel" type="bool" default="False">
+Whether to use sequence parallelism. Defaults to False.
+</ParamField>
+
+<ParamField path="activation_checkpointing" type="bool" default="False">
+Whether to use activation checkpointing. Defaults to False.
+</ParamField>
+
+<ParamField path="cpu_offload" type="bool" default="False">
+Whether to enable cpu offloading for FSDP. Defaults to False.
+</ParamField>
+
+<ParamField path="custom_parallel_plan" type="Optional[Union[dict, str]]" default="None">
+Custom parallel plan for the model. Defaults to None.
+If it's a dict, it will be used as the parallel plan directly.
+If it's a string, it must be a path that points to a dict or a function that returns a dict.
+The usage example can refer to `docs/design-docs/fsdp2-parallel-plan.md`.
+</ParamField>
+
+**Returns:**
+
+The parallelized model.
+
+**Raises:**
+
+- `ValueError`: If the model type is not supported for parallelization.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-dtensor-parallelize-_parallelize_nm5_h">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.dtensor.parallelize._parallelize_nm5_h(
+    model,
+    dp_mesh: torch.distributed.device_mesh.DeviceMesh,
+    tp_mesh: torch.distributed.device_mesh.DeviceMesh,
+    param_dtype: torch.dtype,
+    sequence_parallel: bool = False,
+    activation_checkpointing: bool = False,
+    cpu_offload: bool = False,
+    custom_parallel_plan: typing.Optional[typing.Union[dict, str]] = None
+) -> torch.distributed.fsdp.FSDPModule
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parallelize a NemotronHForCausalLM model across data and tensor parallel dimensions.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-dtensor-parallelize-_parallelize_qwen">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.dtensor.parallelize._parallelize_qwen(
+    model: typing.Union[transformers.models.qwen2.modeling_qwen2.Qwen2ForCausalLM, transformers.models.qwen3.modeling_qwen3.Qwen3ForCausalLM],
+    sequence_parallel: bool = False
+) -> dict[str, torch.distributed.tensor.parallel.ParallelStyle]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parallelizes a Qwen2ForCausalLM model across data and tensor parallel dimensions.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-dtensor-parallelize-clip_grad_by_total_norm_">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.dtensor.parallelize.clip_grad_by_total_norm_(
+    parameters: typing.Union[list[typing.Union[torch.Tensor, torch.distributed.tensor.DTensor]], typing.Union[torch.Tensor, torch.distributed.tensor.DTensor]],
+    max_grad_norm: typing.Union[int, float],
+    total_norm: float
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Clips gradient of an iterable of parameters by total norm.
+
+Taken and modified from: https://github.com/NVIDIA/Megatron-LM/blob/a695b2bd2a0ca9ca63385a48c41a1c5a033cdd1e/megatron/core/optimizer/clip_grads.py#L138
+
+Note that the gradients are modified in place.
+
+**Parameters:**
+
+<ParamField path="parameters" type="Union[list[Union[torch.Tensor, DTensor]], Union[torch.Tensor, DTensor]]">
+
+An iterable of Tensors or DTensors, or a single Tensor or DTensor
+that will have gradients normalized.
+</ParamField>
+
+<ParamField path="max_grad_norm" type="Union[float, int]">
+Maximum norm of the gradients.
+</ParamField>
+
+<ParamField path="total_norm" type="float">
+The pre-computed total norm of the gradients to use for scaling.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-dtensor-parallelize-get_grad_norm">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.dtensor.parallelize.get_grad_norm(
+    parameters: typing.Union[list[typing.Union[torch.Tensor, torch.distributed.tensor.DTensor]], typing.Union[torch.Tensor, torch.distributed.tensor.DTensor]],
+    dp_cp_group: torch.distributed.ProcessGroup,
+    tp_group: torch.distributed.ProcessGroup,
+    norm_type: typing.Union[int, float] = 2,
+    dtype: torch.dtype = torch.float32
+) -> float
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Calculate the norm of gradients.
+
+Taken and modified from: https://github.com/NVIDIA/Megatron-LM/blob/a695b2bd2a0ca9ca63385a48c41a1c5a033cdd1e/megatron/core/optimizer/clip_grads.py#L51
+
+**Parameters:**
+
+<ParamField path="parameters" type="Union[list[Union[torch.Tensor, DTensor]], Union[torch.Tensor, DTensor]]">
+
+An iterable of Tensors or DTensors, or a single Tensor or DTensor
+that will have gradient norm calculated.
+</ParamField>
+
+<ParamField path="dp_group" type="torch.distributed.ProcessGroup">
+Process group for data parallel communication.
+</ParamField>
+
+<ParamField path="cp_group" type="torch.distributed.ProcessGroup">
+Process group for context parallel communication.
+</ParamField>
+
+<ParamField path="tp_group" type="torch.distributed.ProcessGroup">
+Process group for tensor parallel communication.
+</ParamField>
+
+<ParamField path="norm_type" type="Union[int, float]" default="2">
+Type of the used p-norm. Can be ``'inf'`` for
+infinity norm.
+</ParamField>
+
+**Returns:** `float`
+
+Total norm of the gradients (viewed as a single vector)
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-dtensor-parallelize-get_hf_tp_plan">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.dtensor.parallelize.get_hf_tp_plan(
+    model: transformers.modeling_utils.PreTrainedModel
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the Hugging Face tensor parallel plan from the model.
+
+This function:
+- Retrieves TP strategies from model class, instance, and inner model levels.
+- Handles special cases for `embed_tokens` and `lm_head` for speed up.
+- Converts string-based parallel styles to DTensor parallelization strategies.
+
+Taken and modified from: https://github.com/NVIDIA/NeMo/blob/6c6169db01bcca73ae8ad3ac35242fadbb9a78ba/nemo/lightning/pytorch/strategies/utils.py#L532
+
+**Parameters:**
+
+<ParamField path="model" type="PreTrainedModel">
+A Hugging Face model instance
+</ParamField>
+
+**Returns:**
+
+A dictionary mapping model component paths to their parallelization strategies
+
+**Raises:**
+
+- `AssertionError`: If no TP plan is found
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-dtensor-parallelize-to_local_if_dtensor">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.dtensor.parallelize.to_local_if_dtensor(
+    tensor: typing.Union[torch.Tensor, torch.distributed.tensor.DTensor]
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Returns the local shard of the given tensor if it is a DTensor.
+
+Taken and modified from: https://github.com/NVIDIA/Megatron-LM/blob/605f618f237cda8fa80132bc2ccff933512d5a0d/megatron/core/utils.py#L746
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-dtensor-parallelize-translate_parallel_style">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.dtensor.parallelize.translate_parallel_style(
+    style: str
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Translate parallel style str to parallel type.
+
+Taken and modified from: https://github.com/NVIDIA/NeMo/blob/6c6169db01bcca73ae8ad3ac35242fadbb9a78ba/nemo/lightning/pytorch/strategies/utils.py#L547
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-dtensor-parallelize-PARALLIZE_FUNCTIONS">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.dtensor.parallelize.PARALLIZE_FUNCTIONS: dict[type[Module], Callable[..., dict[str, ParallelStyle]]] = {Qwen2ForCausalLM: _parallelize_qwen, Qwen3ForCausalLM: _parallelize_qwen, Llama...
+```
+
+</CodeBlock>
+</Anchor>
+

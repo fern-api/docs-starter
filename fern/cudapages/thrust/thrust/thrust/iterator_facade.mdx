@@ -1,0 +1,216 @@
+---
+title: thrust::iterator_facade
+description: "[`iterator_facade`](/library/api/thrust::iterator_facade) is a template which allows the programmer to define a novel iterator with a standards-conforming interface which Thrust can use to reason about algorithm acceleration opportunities."
+---
+
+`iterator_facade` is a template which allows the programmer to define a novel iterator with a standards-conforming interface which Thrust can use to reason about algorithm acceleration opportunities.
+
+Because most of a standard iterator's interface is defined in terms of a small set of core primitives, `iterator_facade` defines the non-primitive portion mechanically. In principle a novel iterator could explicitly provide the entire interface in an ad hoc fashion but doing so might be tedious and prone to subtle errors.
+
+Often `iterator_facade` is too primitive a tool to use for defining novel iterators. In these cases, [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) or a specific fancy iterator should be used instead.
+
+`iterator_facade``'s` functionality is derived from and generally equivalent to `boost::iterator_facade`. The exception is Thrust's addition of the template parameter `System`, which is necessary to allow Thrust to dispatch an algorithm to one of several parallel backend systems. An additional exception is Thrust's omission of the `operator->` member function.
+
+Interested users may refer to `boost::iterator_facade`'s documentation for usage examples.
+
+```cpp showLineNumbers={false}
+#include <thrust/iterator_facade.h>
+```
+
+<Note>
+`iterator_facade``'s` arithmetic operator free functions exist with the usual meanings but are omitted here for brevity.
+</Note>
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="Derived" type="typename">
+</ParamField>
+
+<ParamField path="Value" type="typename">
+</ParamField>
+
+<ParamField path="System" type="typename">
+</ParamField>
+
+<ParamField path="Traversal" type="typename">
+</ParamField>
+
+<ParamField path="Reference" type="typename">
+</ParamField>
+
+<ParamField path="Difference" type="typename" default="::cuda::std::ptrdiff_t">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Methods
+
+### operator* <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+[`operator*()`](/library/api/thrust::iterator_facade::operator*()) dereferences this `iterator_facade`.
+
+<CodeBlock links={{"iterator_facade": "/library/api/thrust::iterator_facade"}}>
+```cpp showLineNumbers={false}
+reference thrust::iterator_facade<Derived, Value, System, Traversal, Reference, Difference>::operator*() const
+```
+</CodeBlock>
+
+**Returns:** A reference to the element pointed to by this `iterator_facade`.
+
+### operator[] <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+`operator`[] performs indexed dereference.
+
+<CodeBlock links={{"iterator_facade": "/library/api/thrust::iterator_facade"}}>
+```cpp showLineNumbers={false}
+reference thrust::iterator_facade<Derived, Value, System, Traversal, Reference, Difference>::operator[](
+    difference_type n
+) const
+```
+</CodeBlock>
+
+**Returns:** A reference to the element `n` distance away from this `iterator_facade`.
+
+### operator++ <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Pre-increment">
+
+`operator++` pre-increments this `iterator_facade` to refer to the element in the next position.
+
+<CodeBlock links={{"iterator_facade": "/library/api/thrust::iterator_facade"}}>
+```cpp showLineNumbers={false}
+Derived & thrust::iterator_facade<Derived, Value, System, Traversal, Reference, Difference>::operator++()
+```
+</CodeBlock>
+
+**Returns:** `*this`
+
+</Tab>
+<Tab title="Post-increment">
+
+`operator++` post-increments this `iterator_facade` and returns a new `iterator_facade` referring to the element in the next position.
+
+<CodeBlock links={{"iterator_facade": "/library/api/thrust::iterator_facade"}}>
+```cpp showLineNumbers={false}
+Derived thrust::iterator_facade<Derived, Value, System, Traversal, Reference, Difference>::operator++(
+    int
+)
+```
+</CodeBlock>
+
+**Returns:** A copy of `*this` before increment.
+
+</Tab>
+</Tabs>
+
+### operator-- <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Pre-decrement">
+
+`operator--` pre-decrements this `iterator_facade` to refer to the element in the previous position.
+
+<CodeBlock links={{"iterator_facade": "/library/api/thrust::iterator_facade"}}>
+```cpp showLineNumbers={false}
+Derived & thrust::iterator_facade<Derived, Value, System, Traversal, Reference, Difference>::operator--()
+```
+</CodeBlock>
+
+**Returns:** `*this`
+
+</Tab>
+<Tab title="Post-decrement">
+
+`operator--` post-decrements this `iterator_facade` and returns a new `iterator_facade` referring to the element in the previous position.
+
+<CodeBlock links={{"iterator_facade": "/library/api/thrust::iterator_facade"}}>
+```cpp showLineNumbers={false}
+Derived thrust::iterator_facade<Derived, Value, System, Traversal, Reference, Difference>::operator--(
+    int
+)
+```
+</CodeBlock>
+
+**Returns:** A copy of `*this` before decrement.
+
+</Tab>
+</Tabs>
+
+### operator+= <Badge intent="note" minimal>inline</Badge>
+
+`operator+=` increments this `iterator_facade` to refer to an element a given distance after its current position.
+
+<CodeBlock links={{"iterator_facade": "/library/api/thrust::iterator_facade"}}>
+```cpp showLineNumbers={false}
+Derived & thrust::iterator_facade<Derived, Value, System, Traversal, Reference, Difference>::operator+=(
+    difference_type n
+)
+```
+</CodeBlock>
+
+**Returns:** `*this`
+
+**Parameters**
+
+<ParamField path="n" type="difference_type">
+The quantity to increment.
+</ParamField>
+
+### operator-= <Badge intent="note" minimal>inline</Badge>
+
+`operator-=` decrements this `iterator_facade` to refer to an element a given distance before its current position.
+
+<CodeBlock links={{"iterator_facade": "/library/api/thrust::iterator_facade"}}>
+```cpp showLineNumbers={false}
+Derived & thrust::iterator_facade<Derived, Value, System, Traversal, Reference, Difference>::operator-=(
+    difference_type n
+)
+```
+</CodeBlock>
+
+**Returns:** `*this`
+
+**Parameters**
+
+<ParamField path="n" type="difference_type">
+The quantity to decrement.
+</ParamField>
+
+### operator- <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+`operator-` subtracts a given quantity from this `iterator_facade` and returns a new `iterator_facade` referring to the element at the given position before this `iterator_facade`.
+
+<CodeBlock links={{"iterator_facade": "/library/api/thrust::iterator_facade"}}>
+```cpp showLineNumbers={false}
+Derived thrust::iterator_facade<Derived, Value, System, Traversal, Reference, Difference>::operator-(
+    difference_type n
+) const
+```
+</CodeBlock>
+
+**Returns:** An `iterator_facade` pointing `n` elements before this `iterator_facade`.
+
+**Parameters**
+
+<ParamField path="n" type="difference_type">
+The quantity to decrement
+</ParamField>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `value_type` | `::cuda::std::remove_const_t< Value >` | The type of element pointed to by `iterator_facade`. |
+| `reference` | `Reference` | The return type of [`iterator_facade::operator*()`](/library/api/thrust::iterator_facade::operator*()). |
+| `pointer` | `void` | The return type of `iterator_facade``'s` non-existent `operator->()` member function. |
+| `difference_type` | `Difference` | The type of expressions of the form `x - y` where `x` and `y` are of type `iterator_facade`. |
+| `iterator_category` | `detail::iterator_facade_category_t< System, Traversal >` | The type of iterator category of `iterator_facade`. |

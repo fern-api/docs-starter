@@ -1,0 +1,175 @@
+---
+title: thrust::system::error_code
+description: "The class [`error_code`](/library/api/thrust::system::error_code) describes an object used to hold error code values, such as those originating from the operating system or other low-level application program interfaces."
+---
+
+The class `error_code` describes an object used to hold error code values, such as those originating from the operating system or other low-level application program interfaces.
+
+```cpp showLineNumbers={false}
+#include <thrust/system/error_code.h>
+```
+
+---
+
+## Constructors
+
+### error_code
+
+<Tabs>
+<Tab title="Default">
+
+<Badge intent="note" minimal>inline</Badge>
+
+Effects: Constructs an object of type `error_code`.
+
+<CodeBlock links={{"error_code": "/library/api/thrust::system::error_code"}}>
+```cpp showLineNumbers={false}
+thrust::system::error_code::error_code()
+```
+</CodeBlock>
+
+<Info title="Postconditions">
+[`value()`](/library/api/thrust::system::error_code::value())` == 0` and [`category()`](/library/api/thrust::system::error_code::category())` == &``system_category()`.
+</Info>
+
+</Tab>
+<Tab title="Effects: Constructs an object of type `error_code`">
+
+<Badge intent="note" minimal>inline</Badge>
+
+Effects: Constructs an object of type `error_code`.
+
+<CodeBlock links={{"error_code": "/library/api/thrust::system::error_code", "error_category": "/library/api/thrust::system::error_category"}}>
+```cpp showLineNumbers={false}
+thrust::system::error_code::error_code(
+    int val,
+    const error_category &cat
+)
+```
+</CodeBlock>
+
+<Info title="Postconditions">
+[`value()`](/library/api/thrust::system::error_code::value())` == val` and [`category()`](/library/api/thrust::system::error_code::category())` == &cat`.
+</Info>
+
+</Tab>
+<Tab title="Effects: Constructs an object of type `error_code`">
+
+Effects: Constructs an object of type `error_code`.
+
+<CodeBlock links={{"error_code": "/library/api/thrust::system::error_code", "is_error_code_enum": "/library/api/thrust::system::is_error_code_enum"}}>
+```cpp showLineNumbers={false}
+template <typename ErrorCodeEnum>
+thrust::system::error_code::error_code(
+    ErrorCodeEnum e,
+    ::cuda::std::enable_if_t<is_error_code_enum<ErrorCodeEnum>::value> * = 0
+)
+```
+</CodeBlock>
+
+<Info title="Postconditions">
+`*this == make_error_code(e)`.
+</Info>
+
+</Tab>
+</Tabs>
+
+---
+
+## Assignment operators
+
+### operator=
+
+<CodeBlock links={{"error_code": "/library/api/thrust::system::error_code", "is_error_code_enum": "/library/api/thrust::system::is_error_code_enum"}}>
+```cpp showLineNumbers={false}
+template <typename ErrorCodeEnum>
+::cuda::std::enable_if_t<is_error_code_enum<ErrorCodeEnum>::value, error_code> & thrust::system::error_code::operator=(
+    ErrorCodeEnum e
+)
+```
+</CodeBlock>
+
+<Info title="Postconditions">
+`*this == make_error_code(e)`.
+</Info>
+
+---
+
+## Methods
+
+### assign <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"error_code": "/library/api/thrust::system::error_code", "error_category": "/library/api/thrust::system::error_category"}}>
+```cpp showLineNumbers={false}
+void thrust::system::error_code::assign(
+    int val,
+    const error_category &cat
+)
+```
+</CodeBlock>
+
+<Info title="Postconditions">
+[`value()`](/library/api/thrust::system::error_code::value())` == val` and [`category()`](/library/api/thrust::system::error_code::category())` == &cat`.
+</Info>
+
+### clear <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"error_code": "/library/api/thrust::system::error_code"}}>
+```cpp showLineNumbers={false}
+void thrust::system::error_code::clear()
+```
+</CodeBlock>
+
+<Info title="Postconditions">
+[`value()`](/library/api/thrust::system::error_code::value())` == 0` and [`category()`](/library/api/thrust::system::error_code::category())` == ``system_category()`.
+</Info>
+
+### value <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"error_code": "/library/api/thrust::system::error_code"}}>
+```cpp showLineNumbers={false}
+int thrust::system::error_code::value() const
+```
+</CodeBlock>
+
+**Returns:** An integral value of this `error_code` object.
+
+### category <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"error_code": "/library/api/thrust::system::error_code", "error_category": "/library/api/thrust::system::error_category"}}>
+```cpp showLineNumbers={false}
+const error_category & thrust::system::error_code::category() const
+```
+</CodeBlock>
+
+**Returns:** An [`error_category`](/library/api/thrust::system::error_category) describing the category of this `error_code` object.
+
+### default_error_condition <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"error_code": "/library/api/thrust::system::error_code", "error_condition": "/library/api/thrust::system::error_condition"}}>
+```cpp showLineNumbers={false}
+error_condition thrust::system::error_code::default_error_condition() const
+```
+</CodeBlock>
+
+**Returns:** [`category()`](/library/api/thrust::system::error_code::category())`.`[`default_error_condition()`](/library/api/thrust::system::error_code::default_error_condition()).
+
+### message <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"error_code": "/library/api/thrust::system::error_code"}}>
+```cpp showLineNumbers={false}
+std::string thrust::system::error_code::message() const
+```
+</CodeBlock>
+
+**Returns:** [`category()`](/library/api/thrust::system::error_code::category())`.message(value())`.
+
+### operator bool <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"error_code": "/library/api/thrust::system::error_code"}}>
+```cpp showLineNumbers={false}
+thrust::system::error_code::operator bool() const
+```
+</CodeBlock>
+
+**Returns:** [`value()`](/library/api/thrust::system::error_code::value())` != 0`.

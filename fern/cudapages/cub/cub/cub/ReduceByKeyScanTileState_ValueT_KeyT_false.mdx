@@ -1,0 +1,44 @@
+---
+title: "cub::ReduceByKeyScanTileState< ValueT, KeyT, false >"
+description: "Tile status interface for reduction by key, specialized for scan status and value types that cannot be combined into one machine word."
+---
+
+Tile status interface for reduction by key, specialized for scan status and value types that cannot be combined into one machine word.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="ValueT" type="typename">
+</ParamField>
+
+<ParamField path="KeyT" type="typename">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `cub::ScanTileState< KeyValuePair< KeyT, ValueT > >` (public)
+
+---
+
+## Methods
+
+### ReduceByKeyScanTileState <Badge intent="note" minimal>inline</Badge>
+
+Constructor.
+
+<CodeBlock links={{"ReduceByKeyScanTileState< ValueT, KeyT, false >": "/library/api/cub::ReduceByKeyScanTileState%3C ValueT, KeyT, false %3E"}}>
+```cpp showLineNumbers={false}
+cub::ReduceByKeyScanTileState<ValueT, KeyT, false>::ReduceByKeyScanTileState()
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `SuperClass` | `ScanTileState< KeyValuePair< KeyT, ValueT > >` |

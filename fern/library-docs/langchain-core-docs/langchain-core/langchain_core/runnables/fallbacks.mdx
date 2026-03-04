@@ -1,0 +1,352 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/runnables/fallbacks
+title: langchain_core.runnables.fallbacks
+---
+
+`Runnable` that can fallback to other `Runnable` objects if it fails.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`RunnableWithFallbacks`](#langchain_core-runnables-fallbacks-RunnableWithFallbacks) | `Runnable` that can fallback to other `Runnable` objects if it fails. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_is_runnable_type`](#langchain_core-runnables-fallbacks-_is_runnable_type) | - |
+| [`_returns_runnable`](#langchain_core-runnables-fallbacks-_returns_runnable) | - |
+
+### API
+
+<Anchor id="langchain_core-runnables-fallbacks-RunnableWithFallbacks">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.fallbacks.RunnableWithFallbacks()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RunnableSerializable[Input, Output]](/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-RunnableSerializable)
+
+`Runnable` that can fallback to other `Runnable` objects if it fails.
+
+External APIs (e.g., APIs for a language model) may at times experience
+degraded performance or even downtime.
+
+In these cases, it can be useful to have a fallback `Runnable` that can be
+used in place of the original `Runnable` (e.g., fallback to another LLM provider).
+
+Fallbacks can be defined at the level of a single `Runnable`, or at the level
+of a chain of `Runnable`s. Fallbacks are tried in order until one succeeds or
+all fail.
+
+While you can instantiate a `RunnableWithFallbacks` directly, it is usually
+more convenient to use the `with_fallbacks` method on a `Runnable`.
+
+
+<ParamField path="InputType" type="type[Input]">
+</ParamField>
+
+<ParamField path="OutputType" type="type[Output]">
+</ParamField>
+
+<ParamField path="config_specs" type="list[ConfigurableFieldSpec]">
+</ParamField>
+
+<ParamField path="exception_key" type="str | None = None">
+If `string` is specified then handled exceptions will be passed to fallbacks as
+part of the input under the specified key.
+
+If `None`, exceptions will not be passed to fallbacks.
+
+If used, the base `Runnable` and its fallbacks must accept a dictionary as input.
+</ParamField>
+
+<ParamField path="exceptions_to_handle" type="tuple[type[BaseException], ...] = (Exception,)">
+The exceptions on which fallbacks should be tried.
+
+Any exception that is not a subclass of these exceptions will be raised immediately.
+</ParamField>
+
+<ParamField path="fallbacks" type="Sequence[Runnable[Input, Output]]">
+A sequence of fallbacks to try.
+</ParamField>
+
+<ParamField path="model_config" type="= ConfigDict(arbitrary_types_allowed=True)">
+</ParamField>
+
+<ParamField path="runnable" type="Runnable[Input, Output]">
+The `Runnable` to run first.
+</ParamField>
+
+<ParamField path="runnables" type="Iterator[Runnable[Input, Output]]">
+Iterator over the `Runnable` and its fallbacks.
+</ParamField>
+<Anchor id="langchain_core-runnables-fallbacks-RunnableWithFallbacks-__getattr__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.fallbacks.RunnableWithFallbacks.__getattr__(
+    name: str
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get an attribute from the wrapped `Runnable` and its fallbacks.
+
+**Returns:** `Any`
+
+If the attribute is anything other than a method that outputs a `Runnable`,
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-fallbacks-RunnableWithFallbacks-abatch">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.fallbacks.RunnableWithFallbacks.abatch(
+    inputs: list[langchain_core.runnables.utils.Input],
+    config: langchain_core.runnables.config.RunnableConfig | list[langchain_core.runnables.config.RunnableConfig] | None = None,
+    return_exceptions: bool = False,
+    kwargs: typing.Any | None = {}
+) -> list[langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-fallbacks-RunnableWithFallbacks-ainvoke">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.fallbacks.RunnableWithFallbacks.ainvoke(
+    input: langchain_core.runnables.utils.Input,
+    config: langchain_core.runnables.config.RunnableConfig | None = None,
+    kwargs: typing.Any | None = {}
+) -> langchain_core.runnables.utils.Output
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-fallbacks-RunnableWithFallbacks-astream">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.fallbacks.RunnableWithFallbacks.astream(
+    input: langchain_core.runnables.utils.Input,
+    config: langchain_core.runnables.config.RunnableConfig | None = None,
+    kwargs: typing.Any | None = {}
+) -> collections.abc.AsyncIterator[langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-fallbacks-RunnableWithFallbacks-batch">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.fallbacks.RunnableWithFallbacks.batch(
+    inputs: list[langchain_core.runnables.utils.Input],
+    config: langchain_core.runnables.config.RunnableConfig | list[langchain_core.runnables.config.RunnableConfig] | None = None,
+    return_exceptions: bool = False,
+    kwargs: typing.Any | None = {}
+) -> list[langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-fallbacks-RunnableWithFallbacks-get_input_schema">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.fallbacks.RunnableWithFallbacks.get_input_schema(
+    config: langchain_core.runnables.config.RunnableConfig | None = None
+) -> type[pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-fallbacks-RunnableWithFallbacks-get_lc_namespace">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.fallbacks.RunnableWithFallbacks.get_lc_namespace() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Get the namespace of the LangChain object.
+
+**Returns:** `list[str]`
+
+`["langchain", "schema", "runnable"]`
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-fallbacks-RunnableWithFallbacks-get_output_schema">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.fallbacks.RunnableWithFallbacks.get_output_schema(
+    config: langchain_core.runnables.config.RunnableConfig | None = None
+) -> type[pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-fallbacks-RunnableWithFallbacks-invoke">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.fallbacks.RunnableWithFallbacks.invoke(
+    input: langchain_core.runnables.utils.Input,
+    config: langchain_core.runnables.config.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.runnables.utils.Output
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-fallbacks-RunnableWithFallbacks-is_lc_serializable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.fallbacks.RunnableWithFallbacks.is_lc_serializable() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Return `True` as this class is serializable.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-fallbacks-RunnableWithFallbacks-stream">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.fallbacks.RunnableWithFallbacks.stream(
+    input: langchain_core.runnables.utils.Input,
+    config: langchain_core.runnables.config.RunnableConfig | None = None,
+    kwargs: typing.Any | None = {}
+) -> collections.abc.Iterator[langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-fallbacks-_is_runnable_type">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.fallbacks._is_runnable_type(
+    type_: typing.Any
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-fallbacks-_returns_runnable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.fallbacks._returns_runnable(
+    attr: typing.Any
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>

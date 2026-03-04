@@ -1,0 +1,972 @@
+---
+title: cub::BlockExchange
+description: ""
+---
+
+The BlockExchange class provides collective methods for rearranging data partitioned across a CUDA thread block.
+
+## Performance considerations
+
+- Proper device-specific padding ensures zero bank conflicts for most types.
+
+## Example
+
+The code snippet below illustrates the conversion from a "blocked" to a "striped" arrangement of 512 integer items partitioned across 128 threads where each thread owns 4 items.
+
+[1,129,257,385], ..., [127,255,383,511] &#125;`. The corresponding output `thread_data`` in those threads will be `{ [0,1,2,3], [4,5,6,7], [8,9,10,11], ..., [508,509,510,511] }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_exchange.cuh>
+
+__global__ void ExampleKernel(int *d_data, ...)
+{
+    // Specialize BlockExchange for a 1D block of 128 threads owning 4 integer items each
+    using BlockExchange = cub::BlockExchange<int, 128, 4>;
+
+    // Allocate shared memory for BlockExchange
+    __shared__ typename BlockExchange::TempStorage temp_storage;
+
+    // Load a tile of data striped across threads
+    int thread_data[4];
+    cub::LoadDirectStriped<128>(threadIdx.x, d_data, thread_data);
+
+    // Collectively exchange data into a blocked arrangement across threads
+    BlockExchange(temp_storage).StripedToBlocked(thread_data);
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="T" type="typename">
+The data type to be exchanged
+</ParamField>
+
+<ParamField path="BlockDimX" type="int">
+The thread block length in threads along the X dimension
+</ParamField>
+
+<ParamField path="ItemsPerThread" type="int">
+The number of items partitioned onto each thread.
+</ParamField>
+
+<ParamField path="WarpTimeSlicing" type="bool" default="false">
+**[optional]** When `true`, only use enough shared memory for a single warp's worth of tile data, time-slicing the block-wide exchange over multiple synchronized rounds. Yields a smaller memory footprint at the expense of decreased parallelism. (Default: false)
+</ParamField>
+
+<ParamField path="BlockDimY" type="int" default="1">
+**[optional]** The thread block length in threads along the Y dimension (default: 1)
+</ParamField>
+
+<ParamField path="BlockDimZ" type="int" default="1">
+**[optional]** The thread block length in threads along the Z dimension (default: 1)
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Collective constructors
+
+### BlockExchange <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+Collective constructor using a private static allocation of shared memory as temporary storage.
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::BlockExchange()
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+</Tab>
+<Tab title="With TempStorage">
+
+Collective constructor using the specified memory allocation as temporary storage.
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::BlockExchange(
+    TempStorage &temp_storage
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Parameters**
+
+<ParamField path="temp_storage" type="TempStorage &">
+Reference to memory allocation having layout type [TempStorage](/library/api/cub::_block_exchange::TempStorage)
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Structured exchanges
+
+### StripedToBlocked <Badge intent="note" minimal>inline</Badge>
+
+Transposes data items from **striped** arrangement to **blocked** arrangement.
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT>
+void cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::StripedToBlocked(
+    const T (&input_items)[ItemsPerThread],
+    OutputT (&output_items)[ItemsPerThread]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="input_items" type="const T(&)[ItemsPerThread]">
+Items to exchange, converting between **striped** and **blocked** arrangements.
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ItemsPerThread]">
+Items from exchange, converting between **striped** and **blocked** arrangements.
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the conversion from a "striped" to a "blocked" arrangement of 512 integer items partitioned across 128 threads where each thread owns 4 items.
+
+[1,129,257,385], ..., [127,255,383,511] &#125;`` after loading from device-accessible memory. The corresponding output `thread_data` in those threads will be `{ [0,1,2,3], [4,5,6,7], [8,9,10,11], ..., [508,509,510,511] }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_exchange.cuh>
+
+__global__ void ExampleKernel(int *d_data, ...)
+{
+    // Specialize BlockExchange for a 1D block of 128 threads owning 4 integer items each
+    using BlockExchange = cub::BlockExchange<int, 128, 4>;
+
+    // Allocate shared memory for BlockExchange
+    __shared__ typename BlockExchange::TempStorage temp_storage;
+
+    // Load a tile of ordered data into a striped arrangement across block threads
+    int thread_data[4];
+    cub::LoadDirectStriped<128>(threadIdx.x, d_data, thread_data);
+
+    // Collectively exchange data into a blocked arrangement across threads
+    BlockExchange(temp_storage).StripedToBlocked(thread_data, thread_data);
+}
+```
+
+### BlockedToStriped <Badge intent="note" minimal>inline</Badge>
+
+Transposes data items from **blocked** arrangement to **striped** arrangement.
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT>
+void cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::BlockedToStriped(
+    const T (&input_items)[ItemsPerThread],
+    OutputT (&output_items)[ItemsPerThread]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="input_items" type="const T(&)[ItemsPerThread]">
+Items to exchange, converting between **striped** and **blocked** arrangements.
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ItemsPerThread]">
+Items from exchange, converting between **striped** and **blocked** arrangements.
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the conversion from a "blocked" to a "striped" arrangement of 512 integer items partitioned across 128 threads where each thread owns 4 items.
+
+[8,9,10,11], ..., [508,509,510,511] &#125;`. The corresponding output `thread_data`` in those threads will be `{ [0,128,256,384], [1,129,257,385], ..., [127,255,383,511] }` in preparation for storing to device-accessible memory.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_exchange.cuh>
+
+__global__ void ExampleKernel(int *d_data, ...)
+{
+    // Specialize BlockExchange for a 1D block of 128 threads owning 4 integer items each
+    using BlockExchange = cub::BlockExchange<int, 128, 4>;
+
+    // Allocate shared memory for BlockExchange
+    __shared__ typename BlockExchange::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_data[4];
+    ...
+
+    // Collectively exchange data into a striped arrangement across threads
+    BlockExchange(temp_storage).BlockedToStriped(thread_data, thread_data);
+
+    // Store data striped across block threads into an ordered tile
+    cub::StoreDirectStriped<STORE_DEFAULT, 128>(threadIdx.x, d_data, thread_data);
+}
+```
+
+### WarpStripedToBlocked <Badge intent="note" minimal>inline</Badge>
+
+Transposes data items from **warp-striped** arrangement to **blocked** arrangement.
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT>
+void cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::WarpStripedToBlocked(
+    const T (&input_items)[ItemsPerThread],
+    OutputT (&output_items)[ItemsPerThread]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="input_items" type="const T(&)[ItemsPerThread]">
+Items to exchange, converting between **striped** and **blocked** arrangements.
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ItemsPerThread]">
+Items from exchange, converting between **striped** and **blocked** arrangements.
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the conversion from a "warp-striped" to a "blocked" arrangement of 512 integer items partitioned across 128 threads where each thread owns 4 items.
+
+[1,33,65,97], [2,34,66,98], ..., [415,447,479,511] &#125;`` after loading from device-accessible memory. (The first 128 items are striped across the first warp of 32 threads, the second 128 items are striped across the second warp, etc.) The corresponding output `thread_data` in those threads will be `{ [0,1,2,3], [4,5,6,7], [8,9,10,11], ..., [508,509,510,511] }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_exchange.cuh>
+
+__global__ void ExampleKernel(int *d_data, ...)
+{
+    // Specialize BlockExchange for a 1D block of 128 threads owning 4 integer items each
+    using BlockExchange = cub::BlockExchange<int, 128, 4>;
+
+    // Allocate shared memory for BlockExchange
+    __shared__ typename BlockExchange::TempStorage temp_storage;
+
+    // Load a tile of ordered data into a warp-striped arrangement across warp threads
+    int thread_data[4];
+    cub::LoadSWarptriped<LOAD_DEFAULT>(threadIdx.x, d_data, thread_data);
+
+    // Collectively exchange data into a blocked arrangement across threads
+    BlockExchange(temp_storage).WarpStripedToBlocked(thread_data);
+}
+```
+
+### BlockedToWarpStriped <Badge intent="note" minimal>inline</Badge>
+
+Transposes data items from **blocked** arrangement to **warp-striped** arrangement.
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT>
+void cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::BlockedToWarpStriped(
+    const T (&input_items)[ItemsPerThread],
+    OutputT (&output_items)[ItemsPerThread]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="input_items" type="const T(&)[ItemsPerThread]">
+Items to exchange, converting between **striped** and **blocked** arrangements.
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ItemsPerThread]">
+Items from exchange, converting between **striped** and **blocked** arrangements.
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the conversion from a "blocked" to a "warp-striped" arrangement of 512 integer items partitioned across 128 threads where each thread owns 4 items.
+
+[8,9,10,11], ..., [508,509,510,511] &#125;`. The corresponding output `thread_data`` in those threads will be `{ [0,32,64,96], [1,33,65,97], [2,34,66,98], ..., [415,447,479,511] }` in preparation for storing to device-accessible memory. (The first 128 items are striped across the first warp of 32 threads, the second 128 items are striped across the second warp, etc.)
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_exchange.cuh>
+
+__global__ void ExampleKernel(int *d_data, ...)
+{
+    // Specialize BlockExchange for a 1D block of 128 threads owning 4 integer items each
+    using BlockExchange = cub::BlockExchange<int, 128, 4>;
+
+    // Allocate shared memory for BlockExchange
+    __shared__ typename BlockExchange::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_data[4];
+    ...
+
+    // Collectively exchange data into a warp-striped arrangement across threads
+    BlockExchange(temp_storage).BlockedToWarpStriped(thread_data, thread_data);
+
+    // Store data striped across warp threads into an ordered tile
+    cub::StoreDirectStriped<STORE_DEFAULT, 128>(threadIdx.x, d_data, thread_data);
+}
+```
+
+---
+
+## Scatter exchanges
+
+### ScatterToBlocked <Badge intent="note" minimal>inline</Badge>
+
+Exchanges data items annotated by rank into **blocked** arrangement.
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT, typename OffsetT>
+void cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::ScatterToBlocked(
+    const T (&input_items)[ItemsPerThread],
+    OutputT (&output_items)[ItemsPerThread],
+    OffsetT (&ranks)[ItemsPerThread]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="OffsetT" type="typename">
+**[inferred]** Signed integer type for local offsets
+</ParamField>
+
+**Parameters**
+
+<ParamField path="input_items" type="const T(&)[ItemsPerThread]">
+Items to exchange, converting between **striped** and **blocked** arrangements.
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ItemsPerThread]">
+Items from exchange, converting between **striped** and **blocked** arrangements.
+</ParamField>
+
+<ParamField path="ranks" type="OffsetT(&)[ItemsPerThread]">
+Corresponding scatter ranks
+</ParamField>
+
+### ScatterToStriped <Badge intent="note" minimal>inline</Badge>
+
+Exchanges data items annotated by rank into **striped** arrangement.
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT, typename OffsetT>
+void cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::ScatterToStriped(
+    const T (&input_items)[ItemsPerThread],
+    OutputT (&output_items)[ItemsPerThread],
+    OffsetT (&ranks)[ItemsPerThread]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="OffsetT" type="typename">
+**[inferred]** Signed integer type for local offsets
+</ParamField>
+
+**Parameters**
+
+<ParamField path="input_items" type="const T(&)[ItemsPerThread]">
+Items to exchange, converting between **striped** and **blocked** arrangements.
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ItemsPerThread]">
+Items from exchange, converting between **striped** and **blocked** arrangements.
+</ParamField>
+
+<ParamField path="ranks" type="OffsetT(&)[ItemsPerThread]">
+Corresponding scatter ranks
+</ParamField>
+
+### ScatterToStripedGuarded <Badge intent="note" minimal>inline</Badge>
+
+Exchanges data items annotated by rank into **striped** arrangement. Items with rank -1 are not exchanged.
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT, typename OffsetT>
+void cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::ScatterToStripedGuarded(
+    const T (&input_items)[ItemsPerThread],
+    OutputT (&output_items)[ItemsPerThread],
+    OffsetT (&ranks)[ItemsPerThread]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="OffsetT" type="typename">
+**[inferred]** Signed integer type for local offsets
+</ParamField>
+
+**Parameters**
+
+<ParamField path="input_items" type="const T(&)[ItemsPerThread]">
+Items to exchange, converting between **striped** and **blocked** arrangements.
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ItemsPerThread]">
+Items from exchange, converting between **striped** and **blocked** arrangements.
+</ParamField>
+
+<ParamField path="ranks" type="OffsetT(&)[ItemsPerThread]">
+Corresponding scatter ranks
+</ParamField>
+
+### ScatterToStripedFlagged <Badge intent="note" minimal>inline</Badge>
+
+Exchanges valid data items annotated by rank into **striped** arrangement.
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT, typename OffsetT, typename ValidFlag>
+void cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::ScatterToStripedFlagged(
+    const T (&input_items)[ItemsPerThread],
+    OutputT (&output_items)[ItemsPerThread],
+    OffsetT (&ranks)[ItemsPerThread],
+    ValidFlag (&is_valid)[ItemsPerThread]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="OffsetT" type="typename">
+**[inferred]** Signed integer type for local offsets
+</ParamField>
+
+<ParamField path="ValidFlag" type="typename">
+**[inferred]** FlagT type denoting which items are valid
+</ParamField>
+
+**Parameters**
+
+<ParamField path="input_items" type="const T(&)[ItemsPerThread]">
+Items to exchange, converting between **striped** and **blocked** arrangements.
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ItemsPerThread]">
+Items from exchange, converting between **striped** and **blocked** arrangements.
+</ParamField>
+
+<ParamField path="ranks" type="OffsetT(&)[ItemsPerThread]">
+Corresponding scatter ranks
+</ParamField>
+
+<ParamField path="is_valid" type="ValidFlag(&)[ItemsPerThread]">
+Corresponding flag denoting item validity
+</ParamField>
+
+---
+
+## Utility methods
+
+### PrivateStorage <Badge intent="note" minimal>inline</Badge>
+
+Internal storage allocator.
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange", "_TempStorage": "/library/api/cub::BlockExchange::_TempStorage"}}>
+```cpp showLineNumbers={false}
+_TempStorage & cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::PrivateStorage()
+```
+</CodeBlock>
+
+### BlockedToStriped <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Transposes data items from **blocked** arrangement to **striped** arrangement.
+
+Specialized for no timeslicing.
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT>
+void cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::BlockedToStriped(
+    const T (&input_items)[ItemsPerThread],
+    OutputT (&output_items)[ItemsPerThread],
+    ::cuda::std::false_type
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="input_items" type="const T(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Transposes data items from **blocked** arrangement to **striped** arrangement.
+
+Specialized for warp-timeslicing.
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT>
+void cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::BlockedToStriped(
+    const T (&input_items)[ItemsPerThread],
+    OutputT (&output_items)[ItemsPerThread],
+    ::cuda::std::true_type
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="input_items" type="const T(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### BlockedToWarpStriped <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Transposes data items from **blocked** arrangement to **warp-striped** arrangement.
+
+Specialized for no timeslicing
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT>
+void cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::BlockedToWarpStriped(
+    const T (&input_items)[ItemsPerThread],
+    OutputT (&output_items)[ItemsPerThread],
+    ::cuda::std::false_type
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="input_items" type="const T(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Transposes data items from **blocked** arrangement to **warp-striped** arrangement.
+
+Specialized for warp-timeslicing
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT>
+void cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::BlockedToWarpStriped(
+    const T (&input_items)[ItemsPerThread],
+    OutputT (&output_items)[ItemsPerThread],
+    ::cuda::std::true_type
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="input_items" type="const T(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### StripedToBlocked <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Transposes data items from **striped** arrangement to **blocked** arrangement.
+
+Specialized for no timeslicing.
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT>
+void cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::StripedToBlocked(
+    const T (&input_items)[ItemsPerThread],
+    OutputT (&output_items)[ItemsPerThread],
+    ::cuda::std::false_type
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="input_items" type="const T(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Transposes data items from **striped** arrangement to **blocked** arrangement.
+
+Specialized for warp-timeslicing.
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT>
+void cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::StripedToBlocked(
+    const T (&input_items)[ItemsPerThread],
+    OutputT (&output_items)[ItemsPerThread],
+    ::cuda::std::true_type
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="input_items" type="const T(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### WarpStripedToBlocked <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Transposes data items from **warp-striped** arrangement to **blocked** arrangement.
+
+Specialized for no timeslicing
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT>
+void cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::WarpStripedToBlocked(
+    const T (&input_items)[ItemsPerThread],
+    OutputT (&output_items)[ItemsPerThread],
+    ::cuda::std::false_type
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="input_items" type="const T(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Transposes data items from **warp-striped** arrangement to **blocked** arrangement.
+
+Specialized for warp-timeslicing
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT>
+void cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::WarpStripedToBlocked(
+    const T (&input_items)[ItemsPerThread],
+    OutputT (&output_items)[ItemsPerThread],
+    ::cuda::std::true_type
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="input_items" type="const T(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### ScatterToBlocked <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Exchanges data items annotated by rank into **blocked** arrangement.
+
+Specialized for no timeslicing.
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT, typename OffsetT>
+void cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::ScatterToBlocked(
+    const T (&input_items)[ItemsPerThread],
+    OutputT (&output_items)[ItemsPerThread],
+    OffsetT (&ranks)[ItemsPerThread],
+    ::cuda::std::false_type
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="input_items" type="const T(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+<ParamField path="ranks" type="OffsetT(&)[ItemsPerThread]">
+Corresponding scatter ranks
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Exchanges data items annotated by rank into **blocked** arrangement.
+
+Specialized for warp-timeslicing.
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT, typename OffsetT>
+void cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::ScatterToBlocked(
+    const T (&input_items)[ItemsPerThread],
+    OutputT (&output_items)[ItemsPerThread],
+    OffsetT ranks[ItemsPerThread],
+    ::cuda::std::true_type
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="input_items" type="const T(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+<ParamField path="ranks" type="OffsetT[ItemsPerThread]">
+Corresponding scatter ranks
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### ScatterToStriped <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Exchanges data items annotated by rank into **striped** arrangement.
+
+Specialized for no timeslicing.
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT, typename OffsetT>
+void cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::ScatterToStriped(
+    const T (&input_items)[ItemsPerThread],
+    OutputT (&output_items)[ItemsPerThread],
+    OffsetT (&ranks)[ItemsPerThread],
+    ::cuda::std::false_type
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="input_items" type="const T(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+<ParamField path="ranks" type="OffsetT(&)[ItemsPerThread]">
+Corresponding scatter ranks
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Exchanges data items annotated by rank into **striped** arrangement.
+
+Specialized for warp-timeslicing.
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+template <typename OutputT, typename OffsetT>
+void cub::BlockExchange<T, BlockDimX, ItemsPerThread, WarpTimeSlicing, BlockDimY, BlockDimZ>::ScatterToStriped(
+    const T (&input_items)[ItemsPerThread],
+    OutputT (&output_items)[ItemsPerThread],
+    OffsetT (&ranks)[ItemsPerThread],
+    ::cuda::std::true_type
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="input_items" type="const T(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+<ParamField path="output_items" type="OutputT(&)[ItemsPerThread]">
+Items to exchange, converting between **blocked** and **striped** arrangements.
+</ParamField>
+
+<ParamField path="ranks" type="OffsetT(&)[ItemsPerThread]">
+Corresponding scatter ranks
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `TempStorage` | `Uninitialized< _TempStorage >` | The operations exposed by `BlockExchange` require a temporary memory allocation of this nested type for thread communication. This opaque storage can be allocated directly using the `__shared__` keyword. Alternatively, it can be aliased to externally allocated memory (shared or global) or `union`'d with other storage allocation types to facilitate memory reuse. |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `BLOCK_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | The thread block size in threads. |
+| `WARP_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `WARPS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `LOG_SMEM_BANKS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `TILE_ITEMS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `TIME_SLICES` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `TIME_SLICED_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `TIME_SLICED_ITEMS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `WARP_TIME_SLICED_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `WARP_TIME_SLICED_ITEMS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `INSERT_PADDING` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `bool` | |
+| `PADDING_ITEMS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `temp_storage` | `_TempStorage &` | |
+| `linear_tid` | `unsigned int` | |
+| `lane_id` | `unsigned int` | |
+| `warp_id` | `unsigned int` | |
+| `warp_offset` | `unsigned int` | |
+
+---
+
+## Inner classes
+
+### _TempStorage
+
+<CodeBlock links={{"BlockExchange": "/library/api/cub::BlockExchange"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockExchange::_TempStorage
+```
+</CodeBlock>
+
+Shared memory storage layout type.
+
+| Name | Type | Description |
+|---|---|---|
+| `buff` | `T` | |

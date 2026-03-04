@@ -1,0 +1,358 @@
+---
+title: "cuda::transform_iterator"
+description: "[`transform_iterator`](/libcudacxx/api/cuda::transform_iterator) is an iterator which represents a pointer into a range of values after transformation by a functor."
+---
+
+`transform_iterator` is an iterator which represents a pointer into a range of values after transformation by a functor.
+
+This iterator is useful for creating a range filled with the result of applying an operation to another range without either explicitly storing it in memory, or explicitly executing the transformation. Using `transform_iterator` facilitates kernel fusion by deferring the execution of a transformation until the value is needed while saving both memory capacity and bandwidth.
+
+The following code snippet demonstrates how to create a `transform_iterator` which represents the result of `sqrtf` applied to the contents of a `thrust::device_vector`.
+
+This next example demonstrates how to use a `transform_iterator` with the `thrust::reduce` functor to compute the sum of squares of a sequence. We will create temporary `transform_iterators` utilising class template argument deduction avoid explicitly specifying their type:
+
+```cpp showLineNumbers={false}
+#include <cuda/transform_iterator.h>
+```
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <cuda/iterator>
+#include <thrust/device_vector.h>
+
+struct square_root
+{
+  __host__ __device__
+  float operator()(float x) const
+  {
+    return sqrtf(x);
+  }
+};
+
+int main()
+{
+  thrust::device_vector<float> v{1.0f, 4.0f, 9.0f, 16.0f};
+
+  using FloatIterator = thrust::device_vector<float>::iterator;
+
+  cuda::transform_iterator iter(v.begin(), square_root{});
+
+  *iter;   // returns 1.0f
+  iter[0]; // returns 1.0f;
+  iter[1]; // returns 2.0f;
+  iter[2]; // returns 3.0f;
+  iter[3]; // returns 4.0f;
+
+  // iter[4] is an out-of-bounds error
+}
+```
+
+```cpp showLineNumbers={false}
+#include <cuda/iterator>
+#include <thrust/device_vector.h>
+#include <thrust/reduce.h>
+#include <iostream>
+
+struct square
+{
+  __host__ __device__
+  float operator()(float x) const
+  {
+    return x * x;
+  }
+};
+
+int main()
+{
+  // initialize a device array
+  thrust::device_vector<float> v(4);
+  v[0] = 1.0f;
+  v[1] = 2.0f;
+  v[2] = 3.0f;
+  thrust::device_vector<float> v{1.0f, 2.0f, 3.0f, 4.0f};
+  thrust::reduce(cuda::transform_iterator{v.begin(), square{}},
+                 cuda::transform_iterator{v.end(),   square{}});
+
+  std::cout << "sum of squares: " << sum_of_squares << std::endl;
+  return 0;
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="_Fn" type="class">
+</ParamField>
+
+<ParamField path="_Iter" type="class">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `cuda::__transform_iterator_category_base< _Fn, _Iter >` (public)
+
+---
+
+## Constructors
+
+### transform_iterator <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+Default constructs a `transform_iterator` with a value initialized iterator and functor.
+
+<CodeBlock links={{"transform_iterator": "/libcudacxx/api/cuda::transform_iterator"}}>
+```cpp showLineNumbers={false}
+template <class _Iter2, class _Fn2>
+cuda::transform_iterator<_Fn, _Iter>::transform_iterator() noexcept(::cuda::std::is_nothrow_default_constructible_v< _Iter2 > &&::cuda::std::is_nothrow_default_constructible_v< _Fn2 >)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="From iterator range">
+
+Constructs a `transform_iterator` with a given iterator and functor.
+
+<CodeBlock links={{"transform_iterator": "/libcudacxx/api/cuda::transform_iterator"}}>
+```cpp showLineNumbers={false}
+cuda::transform_iterator<_Fn, _Iter>::transform_iterator(
+    _Iter __iter,
+    _Fn __func
+) noexcept(::cuda::std::is_nothrow_move_constructible_v< _Iter > &&::cuda::std::is_nothrow_move_constructible_v< _Fn >)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__iter" type="_Iter">
+The iterator to transform
+</ParamField>
+
+<ParamField path="__func" type="_Fn">
+The functor to apply to the iterator
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### base <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+Extracts the stored iterator.
+
+<CodeBlock links={{"transform_iterator": "/libcudacxx/api/cuda::transform_iterator"}}>
+```cpp showLineNumbers={false}
+_Iter cuda::transform_iterator<_Fn, _Iter>::base() && noexcept(::cuda::std::is_nothrow_move_constructible_v< _Iter >)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+Returns a const reference to the stored iterator.
+
+<CodeBlock links={{"transform_iterator": "/libcudacxx/api/cuda::transform_iterator"}}>
+```cpp showLineNumbers={false}
+const _Iter & cuda::transform_iterator<_Fn, _Iter>::base() const & noexcept
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### operator* <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+Dereferences the stored iterator and applies the stored functor to the result.
+
+<CodeBlock links={{"transform_iterator": "/libcudacxx/api/cuda::transform_iterator"}}>
+```cpp showLineNumbers={false}
+reference cuda::transform_iterator<_Fn, _Iter>::operator*() noexcept(::cuda::std::invoke(::cuda::std::declval< _Fn & >(), *::cuda::std::declval< _Iter & >()))
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+Dereferences the stored iterator and applies the stored functor to the result.
+
+<CodeBlock links={{"transform_iterator": "/libcudacxx/api/cuda::transform_iterator"}}>
+```cpp showLineNumbers={false}
+reference cuda::transform_iterator<_Fn, _Iter>::operator*() const noexcept(::cuda::std::invoke(::cuda::std::declval< const _Fn & >(), *::cuda::std::declval< const _Iter2 & >()))
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### operator[] <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+Subscripts the stored iterator by a number of elements and applies the stored functor to the result.
+
+<CodeBlock links={{"transform_iterator": "/libcudacxx/api/cuda::transform_iterator"}}>
+```cpp showLineNumbers={false}
+reference cuda::transform_iterator<_Fn, _Iter>::operator[](
+    difference_type __n
+) noexcept(__transform_iterator_nothrow_subscript< _Fn, _Iter2 >)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The number of elements to advance by
+</ParamField>
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+Subscripts the stored iterator by a number of elements and applies the stored functor to the result.
+
+<CodeBlock links={{"transform_iterator": "/libcudacxx/api/cuda::transform_iterator"}}>
+```cpp showLineNumbers={false}
+reference cuda::transform_iterator<_Fn, _Iter>::operator[](
+    difference_type __n
+) const noexcept(__transform_iterator_nothrow_subscript< const _Fn, _Iter2 >)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The number of elements to advance by
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### operator++ <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Pre-increment">
+
+Increments the stored iterator.
+
+<CodeBlock links={{"transform_iterator": "/libcudacxx/api/cuda::transform_iterator"}}>
+```cpp showLineNumbers={false}
+transform_iterator & cuda::transform_iterator<_Fn, _Iter>::operator++() noexcept(++::cuda::std::declval< _Iter & >())
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Post-increment">
+
+Increments the stored iterator.
+
+<CodeBlock links={{"transform_iterator": "/libcudacxx/api/cuda::transform_iterator"}}>
+```cpp showLineNumbers={false}
+auto cuda::transform_iterator<_Fn, _Iter>::operator++(
+    int
+) noexcept(++::cuda::std::declval< _Iter & >())
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### operator-- <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Pre-decrement">
+
+Decrements the stored iterator.
+
+<CodeBlock links={{"transform_iterator": "/libcudacxx/api/cuda::transform_iterator"}}>
+```cpp showLineNumbers={false}
+template <class _Iter2>
+transform_iterator & cuda::transform_iterator<_Fn, _Iter>::operator--() noexcept(--::cuda::std::declval< _Iter2 & >())
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Post-decrement">
+
+Decrements the stored iterator.
+
+<CodeBlock links={{"transform_iterator": "/libcudacxx/api/cuda::transform_iterator"}}>
+```cpp showLineNumbers={false}
+template <class _Iter2>
+transform_iterator cuda::transform_iterator<_Fn, _Iter>::operator--(
+    int
+) noexcept(::cuda::std::is_nothrow_copy_constructible_v< _Iter > &&noexcept(--::cuda::std::declval< _Iter2 & >()))
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### operator+= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Increments the `transform_iterator` by a given number of elements.
+
+<CodeBlock links={{"transform_iterator": "/libcudacxx/api/cuda::transform_iterator"}}>
+```cpp showLineNumbers={false}
+template <class _Iter2>
+transform_iterator & cuda::transform_iterator<_Fn, _Iter>::operator+=(
+    difference_type __n
+) noexcept(::cuda::std::declval< _Iter2 & >()+=__n)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The number of elements to increment
+</ParamField>
+
+### operator-= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Decrements the `transform_iterator` by a given number of elements.
+
+<CodeBlock links={{"transform_iterator": "/libcudacxx/api/cuda::transform_iterator"}}>
+```cpp showLineNumbers={false}
+template <class _Iter2>
+transform_iterator & cuda::transform_iterator<_Fn, _Iter>::operator-=(
+    difference_type __n
+) noexcept(::cuda::std::declval< _Iter2 & >() -=__n)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The number of elements to decrement
+</ParamField>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `iterator_concept` | `::cuda::std::conditional_t< ::cuda::std::__has_random_access_traversal< _Iter >, ::cuda::std::random_access_iterator_tag, ::cuda::std::conditional_t<::cuda::std::__has_bidirectional_traversal< _Iter >, ::cuda::std::bidirectional_iterator_tag, ::cuda::std::conditional_t<::cuda::std::__has_forward_traversal< _Iter >, ::cuda::std::forward_iterator_tag, ::cuda::std::input_iterator_tag > > >` |
+| `value_type` | `::cuda::std::remove_cvref_t<::cuda::std::invoke_result_t< _Fn &, ::cuda::std::iter_reference_t< _Iter > > >` |
+| `difference_type` | `::cuda::std::iter_difference_t< _Iter >` |
+| `reference` | `::cuda::std::invoke_result_t< _Fn &, ::cuda::std::iter_reference_t< _Iter > >` |
+| `pointer` | `void` |

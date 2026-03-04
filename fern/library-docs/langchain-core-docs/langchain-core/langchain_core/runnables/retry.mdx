@@ -1,0 +1,414 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/runnables/retry
+title: langchain_core.runnables.retry
+---
+
+`Runnable` that retries a `Runnable` if it fails.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`ExponentialJitterParams`](#langchain_core-runnables-retry-ExponentialJitterParams) | Parameters for `tenacity.wait_exponential_jitter`. |
+| [`RunnableRetry`](#langchain_core-runnables-retry-RunnableRetry) | Retry a Runnable if it fails. |
+
+### Data
+
+[`T`](#langchain_core-runnables-retry-T)
+
+[`U`](#langchain_core-runnables-retry-U)
+
+### API
+
+<Anchor id="langchain_core-runnables-retry-ExponentialJitterParams">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.retry.ExponentialJitterParams
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Parameters for `tenacity.wait_exponential_jitter`.
+
+<ParamField path="exp_base" type="float">
+Base for exponential backoff.
+</ParamField>
+
+<ParamField path="initial" type="float">
+Initial wait.
+</ParamField>
+
+<ParamField path="jitter" type="float">
+Random additional wait sampled from random.uniform(0, jitter).
+</ParamField>
+
+<ParamField path="max" type="float">
+Maximum wait.
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-retry-RunnableRetry">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.retry.RunnableRetry()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RunnableBindingBase[Input, Output]](/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-RunnableBindingBase)
+
+Retry a Runnable if it fails.
+
+RunnableRetry can be used to add retry logic to any object
+that subclasses the base Runnable.
+
+Such retries are especially useful for network calls that may fail
+due to transient errors.
+
+The RunnableRetry is implemented as a RunnableBinding. The easiest
+way to use it is through the `.with_retry()` method on all Runnables.
+
+Example:
+Here's an example that uses a RunnableLambda to raise an exception
+
+    ```python
+    import time
+
+
+    def foo(input) -> None:
+        '''Fake function that raises an exception.'''
+        raise ValueError(f"Invoking foo failed. At time {time.time()}")
+
+
+    runnable = RunnableLambda(foo)
+
+    runnable_with_retries = runnable.with_retry(
+        retry_if_exception_type=(ValueError,),  # Retry only on ValueError
+        wait_exponential_jitter=True,  # Add jitter to the exponential backoff
+        stop_after_attempt=2,  # Try twice
+        exponential_jitter_params={"initial": 2},  # if desired, customize backoff
+    )
+
+    # The method invocation above is equivalent to the longer form below:
+
+    runnable_with_retries = RunnableRetry(
+        bound=runnable,
+        retry_exception_types=(ValueError,),
+        max_attempt_number=2,
+        wait_exponential_jitter=True,
+        exponential_jitter_params={"initial": 2},
+    )
+    ```
+
+This logic can be used to retry any Runnable, including a chain of Runnables,
+but in general it's best practice to keep the scope of the retry as small as
+possible. For example, if you have a chain of Runnables, you should only retry
+the Runnable that is likely to fail, not the entire chain.
+
+
+<ParamField path="_kwargs_retrying" type="dict[str, Any]">
+</ParamField>
+
+<ParamField path="exponential_jitter_params" type="ExponentialJitterParams | None = None">
+Parameters for `tenacity.wait_exponential_jitter`. Namely: `initial`,
+`max`, `exp_base`, and `jitter` (all `float` values).
+</ParamField>
+
+<ParamField path="max_attempt_number" type="int = 3">
+The maximum number of attempts to retry the Runnable.
+</ParamField>
+
+<ParamField path="retry_exception_types" type="tuple[type[BaseException], ...] = (Exception,)">
+The exception types to retry on. By default all exceptions are retried.
+
+In general you should only retry on exceptions that are likely to be
+transient, such as network errors.
+
+Good exceptions to retry are all server errors (5xx) and selected client
+errors (4xx) such as 429 Too Many Requests.
+</ParamField>
+
+<ParamField path="wait_exponential_jitter" type="bool = True">
+Whether to add jitter to the exponential backoff.
+</ParamField>
+<Anchor id="langchain_core-runnables-retry-RunnableRetry-_abatch">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.callbacks.manager.AsyncCallbackManagerForChainRun":"/langchain-core/langchain_core/callbacks/manager#langchain_core-callbacks-manager-AsyncCallbackManagerForChainRun","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.retry.RunnableRetry._abatch(
+    inputs: list[langchain_core.runnables.utils.Input],
+    run_manager: list[langchain_core.callbacks.manager.AsyncCallbackManagerForChainRun],
+    config: list[langchain_core.runnables.config.RunnableConfig],
+    kwargs: typing.Any = {}
+) -> list[langchain_core.runnables.utils.Output | Exception]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-retry-RunnableRetry-_ainvoke">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.callbacks.manager.AsyncCallbackManagerForChainRun":"/langchain-core/langchain_core/callbacks/manager#langchain_core-callbacks-manager-AsyncCallbackManagerForChainRun","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.retry.RunnableRetry._ainvoke(
+    input_: langchain_core.runnables.utils.Input,
+    run_manager: langchain_core.callbacks.manager.AsyncCallbackManagerForChainRun,
+    config: langchain_core.runnables.config.RunnableConfig,
+    kwargs: typing.Any = {}
+) -> langchain_core.runnables.utils.Output
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-retry-RunnableRetry-_async_retrying">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.retry.RunnableRetry._async_retrying(
+    kwargs: typing.Any = {}
+) -> tenacity.AsyncRetrying
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-retry-RunnableRetry-_batch">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.callbacks.manager.CallbackManagerForChainRun":"/langchain-core/langchain_core/callbacks/manager#langchain_core-callbacks-manager-CallbackManagerForChainRun","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.retry.RunnableRetry._batch(
+    inputs: list[langchain_core.runnables.utils.Input],
+    run_manager: list[langchain_core.callbacks.manager.CallbackManagerForChainRun],
+    config: list[langchain_core.runnables.config.RunnableConfig],
+    kwargs: typing.Any = {}
+) -> list[langchain_core.runnables.utils.Output | Exception]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-retry-RunnableRetry-_invoke">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.callbacks.manager.CallbackManagerForChainRun":"/langchain-core/langchain_core/callbacks/manager#langchain_core-callbacks-manager-CallbackManagerForChainRun","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.retry.RunnableRetry._invoke(
+    input_: langchain_core.runnables.utils.Input,
+    run_manager: langchain_core.callbacks.manager.CallbackManagerForChainRun,
+    config: langchain_core.runnables.config.RunnableConfig,
+    kwargs: typing.Any = {}
+) -> langchain_core.runnables.utils.Output
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-retry-RunnableRetry-_patch_config">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.retry.T":"#langchain_core-runnables-retry-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.retry.RunnableRetry._patch_config(
+    config: langchain_core.runnables.config.RunnableConfig,
+    run_manager: langchain_core.runnables.retry.T,
+    retry_state: tenacity.RetryCallState
+) -> langchain_core.runnables.config.RunnableConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-retry-RunnableRetry-_patch_config_list">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.retry.T":"#langchain_core-runnables-retry-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.retry.RunnableRetry._patch_config_list(
+    config: list[langchain_core.runnables.config.RunnableConfig],
+    run_manager: list[langchain_core.runnables.retry.T],
+    retry_state: tenacity.RetryCallState
+) -> list[langchain_core.runnables.config.RunnableConfig]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-retry-RunnableRetry-_sync_retrying">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.retry.RunnableRetry._sync_retrying(
+    kwargs: typing.Any = {}
+) -> tenacity.Retrying
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-retry-RunnableRetry-abatch">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.retry.RunnableRetry.abatch(
+    inputs: list[langchain_core.runnables.utils.Input],
+    config: langchain_core.runnables.config.RunnableConfig | list[langchain_core.runnables.config.RunnableConfig] | None = None,
+    return_exceptions: bool = False,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-retry-RunnableRetry-ainvoke">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.retry.RunnableRetry.ainvoke(
+    input: langchain_core.runnables.utils.Input,
+    config: langchain_core.runnables.config.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.runnables.utils.Output
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-retry-RunnableRetry-batch">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.retry.RunnableRetry.batch(
+    inputs: list[langchain_core.runnables.utils.Input],
+    config: langchain_core.runnables.config.RunnableConfig | list[langchain_core.runnables.config.RunnableConfig] | None = None,
+    return_exceptions: bool = False,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-retry-RunnableRetry-invoke">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.retry.RunnableRetry.invoke(
+    input: langchain_core.runnables.utils.Input,
+    config: langchain_core.runnables.config.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.runnables.utils.Output
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-retry-T">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.retry.T = TypeVar('T', CallbackManagerForChainRun, AsyncCallbackManagerForChainRun)
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-runnables-retry-U">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.retry.U = TypeVar('U')
+```
+
+</CodeBlock>
+</Anchor>
+

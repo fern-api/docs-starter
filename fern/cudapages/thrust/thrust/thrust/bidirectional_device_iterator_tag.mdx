@@ -1,0 +1,17 @@
+---
+title: thrust::bidirectional_device_iterator_tag
+description: "[`bidirectional_device_iterator_tag`](/library/api/thrust::bidirectional_device_iterator_tag) is an empty class: it has no member functions, member variables, or nested types."
+---
+
+`bidirectional_device_iterator_tag` is an empty class: it has no member functions, member variables, or nested types.
+
+It is used solely as a "tag": a representation of the Bidirectional Device Iterator concept within the C++ type system.
+
+```cpp showLineNumbers={false}
+#include <thrust/iterator_categories.h>
+```
+
+**See also:**
+[https://en.cppreference.com/w/cpp/iterator/iterator_tags](https://en.cppreference.com/w/cpp/iterator/iterator_tags) iterator_traits, [input_device_iterator_tag](/library/api/thrust::input_device_iterator_tag), [output_device_iterator_tag](/library/api/thrust::output_device_iterator_tag), [forward_device_iterator_tag](/library/api/thrust::forward_device_iterator_tag), [random_access_device_iterator_tag](/library/api/thrust::random_access_device_iterator_tag), input_host_iterator_tag, output_host_iterator_tag, forward_host_iterator_tag, bidirectional_host_iterator_tag, random_access_host_iterator_tag
+
+**Inherits from:** `detail::iterator_category_with_system_and_traversal<::cuda::std::bidirectional_iterator_tag, device_system_tag, bidirectional_traversal_tag >` (public)

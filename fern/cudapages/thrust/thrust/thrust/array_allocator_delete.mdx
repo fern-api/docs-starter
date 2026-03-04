@@ -1,0 +1,173 @@
+---
+title: thrust::array_allocator_delete
+description: ""
+---
+
+```cpp showLineNumbers={false}
+#include <thrust/allocate_unique.h>
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="T" type="typename">
+</ParamField>
+
+<ParamField path="Allocator" type="typename">
+</ParamField>
+
+<ParamField path="Uninitialized" type="bool" default="false">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+This class is marked <Badge intent="note" minimal>final</Badge>.
+
+---
+
+## Constructors
+
+### array_allocator_delete <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Move">
+
+<CodeBlock links={{"array_allocator_delete": "/library/api/thrust::array_allocator_delete"}}>
+```cpp showLineNumbers={false}
+template <typename UAllocator>
+thrust::array_allocator_delete<T, Allocator, Uninitialized>::array_allocator_delete(
+    UAllocator &&other,
+    std::size_t n
+) noexcept
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Copy">
+
+<CodeBlock links={{"array_allocator_delete": "/library/api/thrust::array_allocator_delete"}}>
+```cpp showLineNumbers={false}
+template <typename U, typename UAllocator>
+thrust::array_allocator_delete<T, Allocator, Uninitialized>::array_allocator_delete(
+    array_allocator_delete<U, UAllocator> const &other
+) noexcept
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Move">
+
+<CodeBlock links={{"array_allocator_delete": "/library/api/thrust::array_allocator_delete"}}>
+```cpp showLineNumbers={false}
+template <typename U, typename UAllocator>
+thrust::array_allocator_delete<T, Allocator, Uninitialized>::array_allocator_delete(
+    array_allocator_delete<U, UAllocator> &&other
+) noexcept
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Assignment operators
+
+### operator= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Copy assign">
+
+<CodeBlock links={{"array_allocator_delete": "/library/api/thrust::array_allocator_delete"}}>
+```cpp showLineNumbers={false}
+template <typename U, typename UAllocator>
+array_allocator_delete & thrust::array_allocator_delete<T, Allocator, Uninitialized>::operator=(
+    array_allocator_delete<U, UAllocator> const &other
+) noexcept
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Move assign">
+
+<CodeBlock links={{"array_allocator_delete": "/library/api/thrust::array_allocator_delete"}}>
+```cpp showLineNumbers={false}
+template <typename U, typename UAllocator>
+array_allocator_delete & thrust::array_allocator_delete<T, Allocator, Uninitialized>::operator=(
+    array_allocator_delete<U, UAllocator> &&other
+) noexcept
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### operator() <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"array_allocator_delete": "/library/api/thrust::array_allocator_delete"}}>
+```cpp showLineNumbers={false}
+void thrust::array_allocator_delete<T, Allocator, Uninitialized>::operator()(
+    pointer p
+)
+```
+</CodeBlock>
+
+### get_allocator <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+<CodeBlock links={{"array_allocator_delete": "/library/api/thrust::array_allocator_delete"}}>
+```cpp showLineNumbers={false}
+allocator_type & thrust::array_allocator_delete<T, Allocator, Uninitialized>::get_allocator() noexcept
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"array_allocator_delete": "/library/api/thrust::array_allocator_delete"}}>
+```cpp showLineNumbers={false}
+allocator_type const  & thrust::array_allocator_delete<T, Allocator, Uninitialized>::get_allocator() const noexcept
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### swap <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<CodeBlock links={{"array_allocator_delete": "/library/api/thrust::array_allocator_delete"}}>
+```cpp showLineNumbers={false}
+void thrust::array_allocator_delete<T, Allocator, Uninitialized>::swap(
+    array_allocator_delete &other
+) noexcept
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `allocator_type` | `typename std::remove_cv< typename std::remove_reference< Allocator >::type >::type::template rebind< T >::other` |
+| `pointer` | `typename ::cuda::std::allocator_traits< allocator_type >::pointer` |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `alloc_` | `allocator_type` | |
+| `count_` | `std::size_t` | |

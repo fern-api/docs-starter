@@ -1,0 +1,117 @@
+---
+title: "cuda::mr::legacy_pinned_memory_resource"
+description: "[legacy_pinned_memory_resource](/library/api/cuda::mr::legacy_pinned_memory_resource) uses `cudaMallocHost` / `cudaFreeAsync` for allocation / deallocation."
+---
+
+`legacy_pinned_memory_resource` uses `cudaMallocHost` / `cudaFreeAsync` for allocation / deallocation.
+
+```cpp showLineNumbers={false}
+#include <cuda/mr/legacy_pinned_memory_resource.h>
+```
+
+<Note>
+This memory resource will be deprecated in the future. For CUDA 12.6 and above, use `cuda::pinned_memory_resource` instead, which is the long-term replacement.
+</Note>
+
+---
+
+## Constructors
+
+### legacy_pinned_memory_resource <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Construct a new `legacy_pinned_memory_resource`.
+
+<CodeBlock links={{"legacy_pinned_memory_resource": "/library/api/cuda::mr::legacy_pinned_memory_resource", "device_ref": "/libcudacxx/api/cuda::device_ref"}}>
+```cpp showLineNumbers={false}
+cuda::mr::legacy_pinned_memory_resource::legacy_pinned_memory_resource(
+    ::cuda::device_ref __device = {0}
+) noexcept
+```
+</CodeBlock>
+
+<Note>
+Synchronous allocations in CUDA are tied to a device, even if not located in device memory. This constructor takes an optional device argument to specify the device that should be tied to allocations for the resource. This association has the effect of initializing that device and the memory being implicitly freed if the device is reset.
+</Note>
+
+---
+
+## Methods
+
+### allocate_sync <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Allocate host memory of size at least `__bytes`.
+
+<CodeBlock links={{"legacy_pinned_memory_resource": "/library/api/cuda::mr::legacy_pinned_memory_resource"}}>
+```cpp showLineNumbers={false}
+void * cuda::mr::legacy_pinned_memory_resource::allocate_sync(
+    const size_t __bytes,
+    const size_t __alignment = ::cuda::mr::default_cuda_malloc_alignment
+)
+```
+</CodeBlock>
+
+**Returns:** Pointer to the newly allocated memory
+
+**Throws:** `std::invalid_argument` in case of invalid alignment or `cuda::cuda_error` of the returned error code.
+
+**Parameters**
+
+<ParamField path="__bytes" type="const size_t">
+The size in bytes of the allocation.
+</ParamField>
+
+<ParamField path="__alignment" type="const size_t" default="::cuda::mr::default_cuda_malloc_alignment">
+The requested alignment of the allocation.
+</ParamField>
+
+### deallocate_sync <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Deallocate memory pointed to by `__ptr`.
+
+<CodeBlock links={{"legacy_pinned_memory_resource": "/library/api/cuda::mr::legacy_pinned_memory_resource"}}>
+```cpp showLineNumbers={false}
+void cuda::mr::legacy_pinned_memory_resource::deallocate_sync(
+    void *__ptr,
+    const size_t __bytes,
+    const size_t __alignment = ::cuda::mr::default_cuda_malloc_alignment
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__ptr" type="void *">
+Pointer to be deallocated. Must have been allocated through a call to [`allocate_sync`](/library/api/cuda::mr::legacy_pinned_memory_resource::allocate_sync).
+</ParamField>
+
+<ParamField path="__bytes" type="const size_t">
+The number of bytes that was passed to the allocation call that returned `__ptr`.
+</ParamField>
+
+<ParamField path="__alignment" type="const size_t" default="::cuda::mr::default_cuda_malloc_alignment">
+The alignment that was passed to the allocation call that returned `__ptr`.
+</ParamField>
+
+### operator== <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Equality comparison with another `legacy_pinned_memory_resource`.
+
+<CodeBlock links={{"legacy_pinned_memory_resource": "/library/api/cuda::mr::legacy_pinned_memory_resource"}}>
+```cpp showLineNumbers={false}
+bool cuda::mr::legacy_pinned_memory_resource::operator==(
+    legacy_pinned_memory_resource const &
+) const noexcept
+```
+</CodeBlock>
+
+**Returns:** Whether both `legacy_pinned_memory_resource` were constructed with the same flags.
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `default_queries` | `::cuda::mr::properties_list<::cuda::mr::device_accessible, ::cuda::mr::host_accessible >` |

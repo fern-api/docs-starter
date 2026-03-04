@@ -1,0 +1,116 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/tools/render
+title: langchain_core.tools.render
+---
+
+Utilities to render tools.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`render_text_description`](#langchain_core-tools-render-render_text_description) | Render the tool name and description in plain text. |
+| [`render_text_description_and_args`](#langchain_core-tools-render-render_text_description_and_args) | Render the tool name, description, and args in plain text. |
+
+### Data
+
+[`ToolsRenderer`](#langchain_core-tools-render-ToolsRenderer)
+
+### API
+
+<Anchor id="langchain_core-tools-render-render_text_description">
+
+<CodeBlock links={{"langchain_core.tools.base.BaseTool":"/langchain-core/langchain_core/tools/base#langchain_core-tools-base-BaseTool"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.render.render_text_description(
+    tools: list[langchain_core.tools.base.BaseTool]
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Render the tool name and description in plain text.
+
+Output will be in the format of:
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+search: This tool is used for search
+calculator: This tool is used for math
+```
+
+</CodeBlock>
+
+**Parameters:**
+
+<ParamField path="tools" type="list[BaseTool]">
+The tools to render.
+</ParamField>
+
+**Returns:** `str`
+
+The rendered text.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-render-render_text_description_and_args">
+
+<CodeBlock links={{"langchain_core.tools.base.BaseTool":"/langchain-core/langchain_core/tools/base#langchain_core-tools-base-BaseTool"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.render.render_text_description_and_args(
+    tools: list[langchain_core.tools.base.BaseTool]
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Render the tool name, description, and args in plain text.
+
+Output will be in the format of:
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+search: This tool is used for search, args: {"query": {"type": "string"}}
+calculator: This tool is used for math,     args: {"expression": {"type": "string"}}
+```
+
+</CodeBlock>
+
+**Parameters:**
+
+<ParamField path="tools" type="list[BaseTool]">
+The tools to render.
+</ParamField>
+
+**Returns:** `str`
+
+The rendered text.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-render-ToolsRenderer">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.render.ToolsRenderer = Callable[[list[BaseTool]], str]
+```
+
+</CodeBlock>
+</Anchor>
+

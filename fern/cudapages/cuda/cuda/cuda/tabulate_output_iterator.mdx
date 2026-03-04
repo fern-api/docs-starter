@@ -1,0 +1,295 @@
+---
+title: "cuda::tabulate_output_iterator"
+description: "[`tabulate_output_iterator`](/libcudacxx/api/cuda::tabulate_output_iterator) is a special kind of output iterator which, whenever a value is assigned to a dereferenced iterator, calls the given callable with the index that corresponds to the offset of the dereferenced iterator and the assigned value."
+---
+
+`tabulate_output_iterator` is a special kind of output iterator which, whenever a value is assigned to a dereferenced iterator, calls the given callable with the index that corresponds to the offset of the dereferenced iterator and the assigned value.
+
+The following code snippet demonstrates how to create a `tabulate_output_iterator` which prints the index and the assigned value.
+
+```cpp showLineNumbers={false}
+#include <cuda/tabulate_output_iterator.h>
+```
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <cuda/iterator>
+
+struct print_op
+{
+  __host__ __device__ void operator()(int index, float value) const
+  {
+    printf("%d: %f\n", index, value);
+  }
+};
+
+int main()
+{
+  auto tabulate_it = cuda::make_tabulate_output_iterator(print_op{});
+
+  tabulate_it[0] =  1.0f;    // prints: 0: 1.0
+  tabulate_it[1] =  3.0f;    // prints: 1: 3.0
+  tabulate_it[9] =  5.0f;    // prints: 9: 5.0
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="_Fn" type="class">
+</ParamField>
+
+<ParamField path="_Index" type="class">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### tabulate_output_iterator <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+<CodeBlock links={{"tabulate_output_iterator": "/libcudacxx/api/cuda::tabulate_output_iterator"}}>
+```cpp showLineNumbers={false}
+template <class _Fn2>
+cuda::tabulate_output_iterator<_Fn, _Index>::tabulate_output_iterator() noexcept(::cuda::std::is_nothrow_default_constructible_v< _Fn2 >)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Overload 2">
+
+Constructs a `tabulate_output_iterator` with a given functor and an optional index.
+
+<CodeBlock links={{"tabulate_output_iterator": "/libcudacxx/api/cuda::tabulate_output_iterator"}}>
+```cpp showLineNumbers={false}
+cuda::tabulate_output_iterator<_Fn, _Index>::tabulate_output_iterator(
+    _Fn __func,
+    _Index __index = 0
+) noexcept(::cuda::std::is_nothrow_move_constructible_v< _Fn >)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__func" type="_Fn">
+The output function
+</ParamField>
+
+<ParamField path="__index" type="_Index" default="0">
+The position in the output sequence
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### index <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Returns the stored index.
+
+<CodeBlock links={{"tabulate_output_iterator": "/libcudacxx/api/cuda::tabulate_output_iterator"}}>
+```cpp showLineNumbers={false}
+difference_type cuda::tabulate_output_iterator<_Fn, _Index>::index() const noexcept
+```
+</CodeBlock>
+
+### operator* <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+Dereferences the `tabulate_output_iterator`.
+
+<CodeBlock links={{"tabulate_output_iterator": "/libcudacxx/api/cuda::tabulate_output_iterator"}}>
+```cpp showLineNumbers={false}
+auto cuda::tabulate_output_iterator<_Fn, _Index>::operator*() noexcept
+```
+</CodeBlock>
+
+**Returns:** A proxy that applies the stored function and index on assignment
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+Dereferences the `tabulate_output_iterator`.
+
+<CodeBlock links={{"tabulate_output_iterator": "/libcudacxx/api/cuda::tabulate_output_iterator"}}>
+```cpp showLineNumbers={false}
+auto cuda::tabulate_output_iterator<_Fn, _Index>::operator*() const noexcept
+```
+</CodeBlock>
+
+**Returns:** A proxy that applies the stored function and index on assignment
+
+</Tab>
+</Tabs>
+
+### operator[] <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+Subscripts the `tabulate_output_iterator` with a given offset.
+
+<CodeBlock links={{"tabulate_output_iterator": "/libcudacxx/api/cuda::tabulate_output_iterator"}}>
+```cpp showLineNumbers={false}
+auto cuda::tabulate_output_iterator<_Fn, _Index>::operator[](
+    difference_type __n
+) noexcept
+```
+</CodeBlock>
+
+**Returns:** A proxy that applies the stored function and index on assignment
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The additional offset to advance the stored index
+</ParamField>
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+Subscripts the `tabulate_output_iterator` with a given offset.
+
+<CodeBlock links={{"tabulate_output_iterator": "/libcudacxx/api/cuda::tabulate_output_iterator"}}>
+```cpp showLineNumbers={false}
+auto cuda::tabulate_output_iterator<_Fn, _Index>::operator[](
+    difference_type __n
+) const noexcept
+```
+</CodeBlock>
+
+**Returns:** A proxy that applies the stored function and index on assignment
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The additional offset to advance the stored index
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### operator++ <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Pre-increment">
+
+Increments the `tabulate_output_iterator` by incrementing the stored index.
+
+<CodeBlock links={{"tabulate_output_iterator": "/libcudacxx/api/cuda::tabulate_output_iterator"}}>
+```cpp showLineNumbers={false}
+tabulate_output_iterator & cuda::tabulate_output_iterator<_Fn, _Index>::operator++() noexcept
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Post-increment">
+
+Increments the `tabulate_output_iterator` by incrementing the stored index.
+
+<CodeBlock links={{"tabulate_output_iterator": "/libcudacxx/api/cuda::tabulate_output_iterator"}}>
+```cpp showLineNumbers={false}
+tabulate_output_iterator cuda::tabulate_output_iterator<_Fn, _Index>::operator++(
+    int
+) noexcept(::cuda::std::is_nothrow_copy_constructible_v< _Fn >)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### operator-- <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Pre-decrement">
+
+Decrements the `tabulate_output_iterator` by decrementing the stored index.
+
+<CodeBlock links={{"tabulate_output_iterator": "/libcudacxx/api/cuda::tabulate_output_iterator"}}>
+```cpp showLineNumbers={false}
+tabulate_output_iterator & cuda::tabulate_output_iterator<_Fn, _Index>::operator--() noexcept
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Post-decrement">
+
+Decrements the `tabulate_output_iterator` by decrementing the stored index.
+
+<CodeBlock links={{"tabulate_output_iterator": "/libcudacxx/api/cuda::tabulate_output_iterator"}}>
+```cpp showLineNumbers={false}
+tabulate_output_iterator cuda::tabulate_output_iterator<_Fn, _Index>::operator--(
+    int
+) noexcept(::cuda::std::is_nothrow_copy_constructible_v< _Fn >)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### operator+= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Advances the `tabulate_output_iterator` by a given number of elements.
+
+<CodeBlock links={{"tabulate_output_iterator": "/libcudacxx/api/cuda::tabulate_output_iterator"}}>
+```cpp showLineNumbers={false}
+tabulate_output_iterator & cuda::tabulate_output_iterator<_Fn, _Index>::operator+=(
+    difference_type __n
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The number of elements to advance
+</ParamField>
+
+### operator-= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Decrements the `tabulate_output_iterator` by a given number of elements.
+
+<CodeBlock links={{"tabulate_output_iterator": "/libcudacxx/api/cuda::tabulate_output_iterator"}}>
+```cpp showLineNumbers={false}
+tabulate_output_iterator & cuda::tabulate_output_iterator<_Fn, _Index>::operator-=(
+    difference_type __n
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The number of elements to decrement
+</ParamField>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `iterator_concept` | `::cuda::std::random_access_iterator_tag` |
+| `iterator_category` | `::cuda::std::random_access_iterator_tag` |
+| `difference_type` | `_Index` |
+| `value_type` | `void` |
+| `pointer` | `void` |
+| `reference` | `void` |

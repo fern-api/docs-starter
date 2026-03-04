@@ -1,0 +1,246 @@
+---
+title: cub::BlockRadixRankMatch
+description: "Radix-rank using match.any."
+---
+
+Radix-rank using match.any.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="BlockDimX" type="int">
+</ParamField>
+
+<ParamField path="RadixBits" type="int">
+</ParamField>
+
+<ParamField path="IsDescending" type="bool">
+</ParamField>
+
+<ParamField path="InnerScanAlgorithm" type="BlockScanAlgorithm" default="BLOCK_SCAN_WARP_SCANS">
+</ParamField>
+
+<ParamField path="BlockDimY" type="int" default="1">
+</ParamField>
+
+<ParamField path="BlockDimZ" type="int" default="1">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Collective constructors
+
+### BlockRadixRankMatch <Badge intent="note" minimal>inline</Badge>
+
+Collective constructor using the specified memory allocation as temporary storage.
+
+<CodeBlock links={{"BlockRadixRankMatch": "/library/api/cub::BlockRadixRankMatch", "TempStorage": "/library/api/cub::BlockRadixRankMatch::TempStorage"}}>
+```cpp showLineNumbers={false}
+cub::BlockRadixRankMatch<BlockDimX, RadixBits, IsDescending, InnerScanAlgorithm, BlockDimY, BlockDimZ>::BlockRadixRankMatch(
+    TempStorage &temp_storage
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="temp_storage" type="TempStorage &">
+Reference to memory allocation having layout type [TempStorage](/library/api/cub::BlockRadixRankMatch::TempStorage)
+</ParamField>
+
+---
+
+## Raking
+
+### CallBack <Badge intent="note" minimal>inline</Badge>
+
+Computes the count of keys for each digit value, and calls the callback with the array of key counts.
+
+<CodeBlock links={{"BlockRadixRankMatch": "/library/api/cub::BlockRadixRankMatch"}}>
+```cpp showLineNumbers={false}
+template <int KEYS_PER_THREAD, typename CountsCallback>
+void cub::BlockRadixRankMatch<BlockDimX, RadixBits, IsDescending, InnerScanAlgorithm, BlockDimY, BlockDimZ>::CallBack(
+    CountsCallback callback
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="CountsCallback" type="typename">
+The callback type. It should implement an instance overload of operator()(int (&bins)[BINS_TRACKED_PER_THREAD]), where bins is an array of key counts for each digit value distributed in block distribution among the threads of the thread block. Key counts can be used, to update other data structures in global or shared memory. Depending on the implementation of the ranking algoirhtm (see [BlockRadixRankMatchEarlyCounts](/library/api/cub::_block_radix_rank_match_early_counts)), key counts may become available early, therefore, they are returned through a callback rather than a separate output parameter of [RankKeys()](/library/api/cub::_block_radix_rank_match::RankKeys()).
+</ParamField>
+
+### RankKeys <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Rank keys">
+
+Rank keys.
+
+<CodeBlock links={{"BlockRadixRankMatch": "/library/api/cub::BlockRadixRankMatch"}}>
+```cpp showLineNumbers={false}
+template <typename UnsignedBits,
+          int KEYS_PER_THREAD,
+          typename DigitExtractorT,
+          typename CountsCallback>
+void cub::BlockRadixRankMatch<BlockDimX, RadixBits, IsDescending, InnerScanAlgorithm, BlockDimY, BlockDimZ>::RankKeys(
+    UnsignedBits (&keys)[KEYS_PER_THREAD],
+    int (&ranks)[KEYS_PER_THREAD],
+    DigitExtractorT digit_extractor,
+    CountsCallback callback
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="keys" type="UnsignedBits(&)[KEYS_PER_THREAD]">
+Keys for this tile
+</ParamField>
+
+<ParamField path="ranks" type="int(&)[KEYS_PER_THREAD]">
+For each key, the local rank within the tile
+</ParamField>
+
+<ParamField path="digit_extractor" type="DigitExtractorT">
+The digit extractor
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+<CodeBlock links={{"BlockRadixRankMatch": "/library/api/cub::BlockRadixRankMatch"}}>
+```cpp showLineNumbers={false}
+template <typename UnsignedBits, int KEYS_PER_THREAD, typename DigitExtractorT>
+void cub::BlockRadixRankMatch<BlockDimX, RadixBits, IsDescending, InnerScanAlgorithm, BlockDimY, BlockDimZ>::RankKeys(
+    UnsignedBits (&keys)[KEYS_PER_THREAD],
+    int (&ranks)[KEYS_PER_THREAD],
+    DigitExtractorT digit_extractor
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Rank keys">
+
+Rank keys.
+
+For the lower `RADIX_DIGITS` threads, digit counts for each digit are provided for the corresponding thread.
+
+<CodeBlock links={{"BlockRadixRankMatch": "/library/api/cub::BlockRadixRankMatch"}}>
+```cpp showLineNumbers={false}
+template <typename UnsignedBits,
+          int KEYS_PER_THREAD,
+          typename DigitExtractorT,
+          typename CountsCallback>
+void cub::BlockRadixRankMatch<BlockDimX, RadixBits, IsDescending, InnerScanAlgorithm, BlockDimY, BlockDimZ>::RankKeys(
+    UnsignedBits (&keys)[KEYS_PER_THREAD],
+    int (&ranks)[KEYS_PER_THREAD],
+    DigitExtractorT digit_extractor,
+    int (&exclusive_digit_prefix)[BINS_TRACKED_PER_THREAD],
+    CountsCallback callback
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="keys" type="UnsignedBits(&)[KEYS_PER_THREAD]">
+Keys for this tile
+</ParamField>
+
+<ParamField path="ranks" type="int(&)[KEYS_PER_THREAD]">
+For each key, the local rank within the tile (out parameter)
+</ParamField>
+
+<ParamField path="digit_extractor" type="DigitExtractorT">
+The digit extractor
+</ParamField>
+
+<ParamField path="exclusive_digit_prefix" type="int(&)[BINS_TRACKED_PER_THREAD]">
+The exclusive prefix sum for the digits [(threadIdx.x * BINS_TRACKED_PER_THREAD) ... (threadIdx.x * BINS_TRACKED_PER_THREAD) + BINS_TRACKED_PER_THREAD - 1]
+</ParamField>
+
+</Tab>
+<Tab title="Overload 4">
+
+<CodeBlock links={{"BlockRadixRankMatch": "/library/api/cub::BlockRadixRankMatch"}}>
+```cpp showLineNumbers={false}
+template <typename UnsignedBits, int KEYS_PER_THREAD, typename DigitExtractorT>
+void cub::BlockRadixRankMatch<BlockDimX, RadixBits, IsDescending, InnerScanAlgorithm, BlockDimY, BlockDimZ>::RankKeys(
+    UnsignedBits (&keys)[KEYS_PER_THREAD],
+    int (&ranks)[KEYS_PER_THREAD],
+    DigitExtractorT digit_extractor,
+    int (&exclusive_digit_prefix)[BINS_TRACKED_PER_THREAD]
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="keys" type="UnsignedBits(&)[KEYS_PER_THREAD]">
+Keys for this tile
+</ParamField>
+
+<ParamField path="ranks" type="int(&)[KEYS_PER_THREAD]">
+For each key, the local rank within the tile (out parameter)
+</ParamField>
+
+<ParamField path="exclusive_digit_prefix" type="int(&)[BINS_TRACKED_PER_THREAD]">
+The exclusive prefix sum for the digits [(threadIdx.x * BINS_TRACKED_PER_THREAD) ... (threadIdx.x * BINS_TRACKED_PER_THREAD) + BINS_TRACKED_PER_THREAD - 1]
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `RankT` | `int32_t` | |
+| `DigitCounterT` | `int32_t` | |
+| `BlockScanT` | `BlockScan< DigitCounterT, BLOCK_THREADS, InnerScanAlgorithm, BlockDimY, BlockDimZ >` | [BlockScan](/library/api/cub::_block_scan) type. |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `BLOCK_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `RADIX_DIGITS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `LOG_WARP_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `WARP_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `PARTIAL_WARP_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `WARPS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `PADDED_WARPS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `COUNTERS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `RAKING_SEGMENT` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `PADDED_RAKING_SEGMENT` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `BINS_TRACKED_PER_THREAD` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | Number of bin-starting offsets tracked per thread. |
+| `temp_storage` | `_TempStorage &` | Shared storage reference. |
+| `linear_tid` | `unsigned int` | Linear thread-id. |
+
+---
+
+## Inner classes
+
+### TempStorage
+
+<CodeBlock links={{"BlockRadixRankMatch": "/library/api/cub::BlockRadixRankMatch"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockRadixRankMatch::TempStorage
+```
+</CodeBlock>
+
+The operations exposed by `BlockRadixRankMatch` require a temporary memory allocation of this nested type for thread communication. This opaque storage can be allocated directly using the `__shared__` keyword. Alternatively, it can be aliased to externally allocated memory (shared or global) or `union`'d with other storage allocation types to facilitate memory reuse.
+
+**Inherits from:** `Uninitialized< _TempStorage >` (public)

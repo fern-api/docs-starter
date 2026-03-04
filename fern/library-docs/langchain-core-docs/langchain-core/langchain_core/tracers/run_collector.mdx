@@ -1,0 +1,75 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/tracers/run_collector
+title: langchain_core.tracers.run_collector
+---
+
+A tracer that collects all nested runs in a list.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`RunCollectorCallbackHandler`](#langchain_core-tracers-run_collector-RunCollectorCallbackHandler) | Tracer that collects all nested runs in a list. |
+
+### API
+
+<Anchor id="langchain_core-tracers-run_collector-RunCollectorCallbackHandler">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tracers.run_collector.RunCollectorCallbackHandler(
+    example_id: uuid.UUID | str | None = None,
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseTracer](/langchain-core/langchain_core/tracers/base#langchain_core-tracers-base-BaseTracer)
+
+Tracer that collects all nested runs in a list.
+
+This tracer is useful for inspection and evaluation purposes.
+
+
+<ParamField path="example_id">
+</ParamField>
+
+<ParamField path="name" type="str = 'run-collector_callback_handler'">
+</ParamField>
+
+<ParamField path="traced_runs" type="list[Run] = []">
+</ParamField>
+<Anchor id="langchain_core-tracers-run_collector-RunCollectorCallbackHandler-_persist_run">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.run_collector.RunCollectorCallbackHandler._persist_run(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Persist a run by adding it to the `traced_runs` list.
+
+**Parameters:**
+
+<ParamField path="run" type="Run">
+The run to be persisted.
+</ParamField>
+
+
+</Indent>
+</Indent>

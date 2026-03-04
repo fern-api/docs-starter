@@ -1,0 +1,777 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/tracers/event_stream
+title: langchain_core.tracers.event_stream
+---
+
+Internal tracer to power the event stream API.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`RunInfo`](#langchain_core-tracers-event_stream-RunInfo) | Information about a run. |
+| [`_AstreamEventsCallbackHandler`](#langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler) | An implementation of an async callback handler for astream events. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_assign_name`](#langchain_core-tracers-event_stream-_assign_name) | Assign a name to a run. |
+| [`_astream_events_implementation_v1`](#langchain_core-tracers-event_stream-_astream_events_implementation_v1) | - |
+| [`_astream_events_implementation_v2`](#langchain_core-tracers-event_stream-_astream_events_implementation_v2) | Implementation of the astream events API for v2 runnables. |
+
+### Data
+
+[`T`](#langchain_core-tracers-event_stream-T)
+
+[`logger`](#langchain_core-tracers-event_stream-logger)
+
+### API
+
+<Anchor id="langchain_core-tracers-event_stream-RunInfo">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tracers.event_stream.RunInfo
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Information about a run.
+
+This is used to keep track of the metadata associated with a run.
+
+<ParamField path="inputs" type="NotRequired[Any]">
+The inputs to the run.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any]">
+The metadata associated with the run.
+</ParamField>
+
+<ParamField path="name" type="str">
+The name of the run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None">
+The ID of the parent run.
+</ParamField>
+
+<ParamField path="run_type" type="str">
+The type of the run.
+</ParamField>
+
+<ParamField path="tags" type="list[str]">
+The tags associated with the run.
+</ParamField>
+
+<ParamField path="tool_call_id" type="NotRequired[str | None]">
+The tool call ID associated with the run.
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tracers.event_stream._AstreamEventsCallbackHandler(
+    args: typing.Any = (),
+    include_names: collections.abc.Sequence[str] | None = None,
+    include_types: collections.abc.Sequence[str] | None = None,
+    include_tags: collections.abc.Sequence[str] | None = None,
+    exclude_names: collections.abc.Sequence[str] | None = None,
+    exclude_types: collections.abc.Sequence[str] | None = None,
+    exclude_tags: collections.abc.Sequence[str] | None = None,
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [AsyncCallbackHandler](/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-AsyncCallbackHandler), [_StreamingCallbackHandler](/langchain-core/langchain_core/tracers/_streaming#langchain_core-tracers-_streaming-_StreamingCallbackHandler)
+
+An implementation of an async callback handler for astream events.
+
+
+<ParamField path="is_tapped" type="dict[UUID, Any] = &#123;&#125;">
+</ParamField>
+
+<ParamField path="parent_map" type="dict[UUID, UUID | None] = &#123;&#125;">
+</ParamField>
+
+<ParamField path="receive_stream" type="= memory_stream.get_receive_stream()">
+</ParamField>
+
+<ParamField path="root_event_filter">
+</ParamField>
+
+<ParamField path="run_map" type="dict[UUID, RunInfo] = &#123;&#125;">
+</ParamField>
+
+<ParamField path="send_stream" type="= memory_stream.get_send_stream()">
+</ParamField>
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler-__aiter__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._AstreamEventsCallbackHandler.__aiter__() -> collections.abc.AsyncIterator[typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Iterate over the receive stream.
+
+**Returns:** `AsyncIterator[Any]`
+
+An async iterator over the receive stream.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler-__copy__">
+
+<CodeBlock links={{"langchain_core.tracers.event_stream._AstreamEventsCallbackHandler":"#langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._AstreamEventsCallbackHandler.__copy__() -> langchain_core.tracers.event_stream._AstreamEventsCallbackHandler
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return self.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler-__deepcopy__">
+
+<CodeBlock links={{"langchain_core.tracers.event_stream._AstreamEventsCallbackHandler":"#langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._AstreamEventsCallbackHandler.__deepcopy__(
+    memo: dict
+) -> langchain_core.tracers.event_stream._AstreamEventsCallbackHandler
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return self.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler-_get_parent_ids">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._AstreamEventsCallbackHandler._get_parent_ids(
+    run_id: uuid.UUID
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the parent IDs of a run (non-recursively) cast to strings.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler-_get_tool_run_info_with_inputs">
+
+<CodeBlock links={{"langchain_core.tracers.event_stream.RunInfo":"#langchain_core-tracers-event_stream-RunInfo"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._AstreamEventsCallbackHandler._get_tool_run_info_with_inputs(
+    run_id: uuid.UUID
+) -> tuple[langchain_core.tracers.event_stream.RunInfo, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get run info for a tool and extract inputs, with validation.
+
+**Parameters:**
+
+<ParamField path="run_id" type="UUID">
+The run ID of the tool.
+</ParamField>
+
+**Returns:** `tuple[RunInfo, Any]`
+
+A tuple of `(run_info, inputs)`.
+
+**Raises:**
+
+- `AssertionError`: If the run ID is a tool call and does not have inputs.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler-_send">
+
+<CodeBlock links={{"langchain_core.runnables.schema.StreamEvent":"/langchain-core/langchain_core/runnables/schema#langchain_core-runnables-schema-StreamEvent"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._AstreamEventsCallbackHandler._send(
+    event: langchain_core.runnables.schema.StreamEvent,
+    event_type: str
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Send an event to the stream.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler-_write_run_start_info">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._AstreamEventsCallbackHandler._write_run_start_info(
+    run_id: uuid.UUID,
+    tags: list[str] | None,
+    metadata: dict[str, typing.Any] | None,
+    parent_run_id: uuid.UUID | None,
+    name_: str,
+    run_type: str,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Update the run info.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler-on_chain_end">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._AstreamEventsCallbackHandler.on_chain_end(
+    outputs: dict[str, typing.Any],
+    run_id: uuid.UUID,
+    inputs: dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+End a trace for a chain run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler-on_chain_start">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._AstreamEventsCallbackHandler.on_chain_start(
+    serialized: dict[str, typing.Any],
+    inputs: dict[str, typing.Any],
+    run_id: uuid.UUID,
+    tags: list[str] | None = None,
+    parent_run_id: uuid.UUID | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    run_type: str | None = None,
+    name: str | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Start a trace for a chain run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler-on_chat_model_start">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._AstreamEventsCallbackHandler.on_chat_model_start(
+    serialized: dict[str, typing.Any],
+    messages: list[list[langchain_core.messages.BaseMessage]],
+    run_id: uuid.UUID,
+    tags: list[str] | None = None,
+    parent_run_id: uuid.UUID | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    name: str | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Start a trace for a chat model run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler-on_custom_event">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._AstreamEventsCallbackHandler.on_custom_event(
+    name: str,
+    data: typing.Any,
+    run_id: uuid.UUID,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Generate a custom astream event.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler-on_llm_end">
+
+<CodeBlock links={{"langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._AstreamEventsCallbackHandler.on_llm_end(
+    response: langchain_core.outputs.LLMResult,
+    run_id: uuid.UUID,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+End a trace for a model run.
+
+For both chat models and non-chat models (legacy text-completion LLMs).
+
+**Raises:**
+
+- `ValueError`: If the run type is not `'llm'` or `'chat_model'`.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler-on_llm_new_token">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._AstreamEventsCallbackHandler.on_llm_new_token(
+    token: str,
+    chunk: langchain_core.outputs.GenerationChunk | langchain_core.outputs.ChatGenerationChunk | None = None,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run on new output token.
+
+Only available when streaming is enabled.
+
+For both chat models and non-chat models (legacy text-completion LLMs).
+
+**Raises:**
+
+- `ValueError`: If the run type is not `llm` or `chat_model`.
+- `AssertionError`: If the run ID is not found in the run map.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler-on_llm_start">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._AstreamEventsCallbackHandler.on_llm_start(
+    serialized: dict[str, typing.Any],
+    prompts: list[str],
+    run_id: uuid.UUID,
+    tags: list[str] | None = None,
+    parent_run_id: uuid.UUID | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    name: str | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Start a trace for a (non-chat model) LLM run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler-on_retriever_end">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._AstreamEventsCallbackHandler.on_retriever_end(
+    documents: collections.abc.Sequence[langchain_core.documents.Document],
+    run_id: uuid.UUID,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when `Retriever` ends running.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler-on_retriever_start">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._AstreamEventsCallbackHandler.on_retriever_start(
+    serialized: dict[str, typing.Any],
+    query: str,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    name: str | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when `Retriever` starts running.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler-on_tool_end">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._AstreamEventsCallbackHandler.on_tool_end(
+    output: typing.Any,
+    run_id: uuid.UUID,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+End a trace for a tool run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler-on_tool_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._AstreamEventsCallbackHandler.on_tool_error(
+    error: BaseException,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run when tool errors.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler-on_tool_start">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._AstreamEventsCallbackHandler.on_tool_start(
+    serialized: dict[str, typing.Any],
+    input_str: str,
+    run_id: uuid.UUID,
+    tags: list[str] | None = None,
+    parent_run_id: uuid.UUID | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    name: str | None = None,
+    inputs: dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Start a trace for a tool run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler-tap_output_aiter">
+
+<CodeBlock links={{"langchain_core.tracers.event_stream.T":"#langchain_core-tracers-event_stream-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._AstreamEventsCallbackHandler.tap_output_aiter(
+    run_id: uuid.UUID,
+    output: collections.abc.AsyncIterator[langchain_core.tracers.event_stream.T]
+) -> collections.abc.AsyncIterator[langchain_core.tracers.event_stream.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Tap the output aiter.
+
+This method is used to tap the output of a `Runnable` that produces an async
+iterator. It is used to generate stream events for the output of the `Runnable`.
+
+**Parameters:**
+
+<ParamField path="run_id" type="UUID">
+The ID of the run.
+</ParamField>
+
+<ParamField path="output" type="AsyncIterator[T]">
+The output of the `Runnable`.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-event_stream-_AstreamEventsCallbackHandler-tap_output_iter">
+
+<CodeBlock links={{"langchain_core.tracers.event_stream.T":"#langchain_core-tracers-event_stream-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._AstreamEventsCallbackHandler.tap_output_iter(
+    run_id: uuid.UUID,
+    output: collections.abc.Iterator[langchain_core.tracers.event_stream.T]
+) -> collections.abc.Iterator[langchain_core.tracers.event_stream.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Tap the output iter.
+
+**Parameters:**
+
+<ParamField path="run_id" type="UUID">
+The ID of the run.
+</ParamField>
+
+<ParamField path="output" type="Iterator[T]">
+The output of the `Runnable`.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-tracers-event_stream-_assign_name">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._assign_name(
+    name: str | None,
+    serialized: dict[str, typing.Any] | None
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Assign a name to a run.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-event_stream-_astream_events_implementation_v1">
+
+<CodeBlock links={{"langchain_core.runnables.Runnable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-Runnable","langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.schema.StandardStreamEvent":"/langchain-core/langchain_core/runnables/schema#langchain_core-runnables-schema-StandardStreamEvent"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._astream_events_implementation_v1(
+    runnable: langchain_core.runnables.Runnable[langchain_core.runnables.utils.Input, langchain_core.runnables.utils.Output],
+    value: typing.Any,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    include_names: collections.abc.Sequence[str] | None = None,
+    include_types: collections.abc.Sequence[str] | None = None,
+    include_tags: collections.abc.Sequence[str] | None = None,
+    exclude_names: collections.abc.Sequence[str] | None = None,
+    exclude_types: collections.abc.Sequence[str] | None = None,
+    exclude_tags: collections.abc.Sequence[str] | None = None,
+    kwargs: typing.Any = {}
+) -> collections.abc.AsyncIterator[langchain_core.runnables.schema.StandardStreamEvent]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-event_stream-_astream_events_implementation_v2">
+
+<CodeBlock links={{"langchain_core.runnables.Runnable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-Runnable","langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.schema.StandardStreamEvent":"/langchain-core/langchain_core/runnables/schema#langchain_core-runnables-schema-StandardStreamEvent"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream._astream_events_implementation_v2(
+    runnable: langchain_core.runnables.Runnable[langchain_core.runnables.utils.Input, langchain_core.runnables.utils.Output],
+    value: typing.Any,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    include_names: collections.abc.Sequence[str] | None = None,
+    include_types: collections.abc.Sequence[str] | None = None,
+    include_tags: collections.abc.Sequence[str] | None = None,
+    exclude_names: collections.abc.Sequence[str] | None = None,
+    exclude_types: collections.abc.Sequence[str] | None = None,
+    exclude_tags: collections.abc.Sequence[str] | None = None,
+    kwargs: typing.Any = {}
+) -> collections.abc.AsyncIterator[langchain_core.runnables.schema.StandardStreamEvent]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Implementation of the astream events API for v2 runnables.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-event_stream-T">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream.T = TypeVar('T')
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-tracers-event_stream-logger">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.event_stream.logger = logging.getLogger(__name__)
+```
+
+</CodeBlock>
+</Anchor>
+

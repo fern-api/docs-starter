@@ -1,0 +1,284 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/prompts/loading
+title: langchain_core.prompts.loading
+---
+
+Load prompts.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_load_chat_prompt`](#langchain_core-prompts-loading-_load_chat_prompt) | Load chat prompt from config. |
+| [`_load_examples`](#langchain_core-prompts-loading-_load_examples) | Load examples if necessary. |
+| [`_load_few_shot_prompt`](#langchain_core-prompts-loading-_load_few_shot_prompt) | Load the "few shot" prompt from the config. |
+| [`_load_output_parser`](#langchain_core-prompts-loading-_load_output_parser) | Load output parser. |
+| [`_load_prompt`](#langchain_core-prompts-loading-_load_prompt) | Load the prompt template from config. |
+| [`_load_prompt_from_file`](#langchain_core-prompts-loading-_load_prompt_from_file) | Load prompt from file. |
+| [`_load_template`](#langchain_core-prompts-loading-_load_template) | Load template from the path if applicable. |
+| [`load_prompt`](#langchain_core-prompts-loading-load_prompt) | Unified method for loading a prompt from LangChainHub or local filesystem. |
+| [`load_prompt_from_config`](#langchain_core-prompts-loading-load_prompt_from_config) | Load prompt from config dict. |
+
+### Data
+
+[`URL_BASE`](#langchain_core-prompts-loading-URL_BASE)
+
+[`logger`](#langchain_core-prompts-loading-logger)
+
+[`type_to_loader_dict`](#langchain_core-prompts-loading-type_to_loader_dict)
+
+### API
+
+<Anchor id="langchain_core-prompts-loading-_load_chat_prompt">
+
+<CodeBlock links={{"langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict","langchain_core.prompts.chat.ChatPromptTemplate":"/langchain-core/langchain_core/prompts/chat#langchain_core-prompts-chat-ChatPromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.loading._load_chat_prompt(
+    config: langchain_core.prompts.dict
+) -> langchain_core.prompts.chat.ChatPromptTemplate
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Load chat prompt from config.
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-loading-_load_examples">
+
+<CodeBlock links={{"langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.loading._load_examples(
+    config: langchain_core.prompts.dict
+) -> langchain_core.prompts.dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Load examples if necessary.
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-loading-_load_few_shot_prompt">
+
+<CodeBlock links={{"langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict","langchain_core.prompts.few_shot.FewShotPromptTemplate":"/langchain-core/langchain_core/prompts/few_shot#langchain_core-prompts-few_shot-FewShotPromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.loading._load_few_shot_prompt(
+    config: langchain_core.prompts.dict
+) -> langchain_core.prompts.few_shot.FewShotPromptTemplate
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Load the "few shot" prompt from the config.
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-loading-_load_output_parser">
+
+<CodeBlock links={{"langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.loading._load_output_parser(
+    config: langchain_core.prompts.dict
+) -> langchain_core.prompts.dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Load output parser.
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-loading-_load_prompt">
+
+<CodeBlock links={{"langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict","langchain_core.prompts.prompt.PromptTemplate":"/langchain-core/langchain_core/prompts/prompt#langchain_core-prompts-prompt-PromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.loading._load_prompt(
+    config: langchain_core.prompts.dict
+) -> langchain_core.prompts.prompt.PromptTemplate
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Load the prompt template from config.
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-loading-_load_prompt_from_file">
+
+<CodeBlock links={{"langchain_core.prompts.base.BasePromptTemplate":"/langchain-core/langchain_core/prompts/base#langchain_core-prompts-base-BasePromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.loading._load_prompt_from_file(
+    file: str | pathlib.Path,
+    encoding: str | None = None
+) -> langchain_core.prompts.base.BasePromptTemplate
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Load prompt from file.
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-loading-_load_template">
+
+<CodeBlock links={{"langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.loading._load_template(
+    var_name: str,
+    config: langchain_core.prompts.dict
+) -> langchain_core.prompts.dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Load template from the path if applicable.
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-loading-load_prompt">
+
+<CodeBlock links={{"langchain_core.prompts.base.BasePromptTemplate":"/langchain-core/langchain_core/prompts/base#langchain_core-prompts-base-BasePromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.loading.load_prompt(
+    path: str | pathlib.Path,
+    encoding: str | None = None
+) -> langchain_core.prompts.base.BasePromptTemplate
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Unified method for loading a prompt from LangChainHub or local filesystem.
+
+**Parameters:**
+
+<ParamField path="path" type="str | Path">
+Path to the prompt file.
+</ParamField>
+
+<ParamField path="encoding" type="str | None" default="None">
+Encoding of the file.
+</ParamField>
+
+**Returns:** `BasePromptTemplate`
+
+A `PromptTemplate` object.
+
+**Raises:**
+
+- `RuntimeError`: If the path is a LangChainHub path.
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-loading-load_prompt_from_config">
+
+<CodeBlock links={{"langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict","langchain_core.prompts.base.BasePromptTemplate":"/langchain-core/langchain_core/prompts/base#langchain_core-prompts-base-BasePromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.loading.load_prompt_from_config(
+    config: langchain_core.prompts.dict
+) -> langchain_core.prompts.base.BasePromptTemplate
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Load prompt from config dict.
+
+**Parameters:**
+
+<ParamField path="config" type="dict">
+Dict containing the prompt configuration.
+</ParamField>
+
+**Returns:** `BasePromptTemplate`
+
+A `PromptTemplate` object.
+
+**Raises:**
+
+- `ValueError`: If the prompt type is not supported.
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-loading-URL_BASE">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.loading.URL_BASE = 'https://raw.githubusercontent.com/hwchase17/langchain-hub/master/prompts/'
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-prompts-loading-logger">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.loading.logger = logging.getLogger(__name__)
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-prompts-loading-type_to_loader_dict">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.loading.type_to_loader_dict: dict[str, Callable[[dict], BasePromptTemplate]] = {'prompt': _load_prompt, 'few_shot': _load_few_shot_prompt, 'chat': _load_chat_p...
+```
+
+</CodeBlock>
+</Anchor>
+

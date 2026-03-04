@@ -1,0 +1,110 @@
+---
+title: cub::DispatchAdjacentDifference
+description: ""
+---
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="InputIteratorT" type="typename">
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+</ParamField>
+
+<ParamField path="DifferenceOpT" type="typename">
+</ParamField>
+
+<ParamField path="OffsetT" type="typename">
+</ParamField>
+
+<ParamField path="AliasOpt" type="MayAlias">
+</ParamField>
+
+<ParamField path="ReadOpt" type="ReadOption">
+</ParamField>
+
+<ParamField path="PolicyHub" type="typename" default="detail::adjacent_difference::policy_hub<InputIteratorT, AliasOpt == MayAlias::Yes>">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### DispatchAdjacentDifference <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"DispatchAdjacentDifference": "/library/api/cub::DispatchAdjacentDifference"}}>
+```cpp showLineNumbers={false}
+cub::DispatchAdjacentDifference<InputIteratorT, OutputIteratorT, DifferenceOpT, OffsetT, AliasOpt, ReadOpt, PolicyHub>::DispatchAdjacentDifference(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_input,
+    OutputIteratorT d_output,
+    OffsetT num_items,
+    DifferenceOpT difference_op,
+    cudaStream_t stream
+)
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### Invoke <Badge intent="note" minimal>inline</Badge>
+
+Invocation.
+
+<CodeBlock links={{"DispatchAdjacentDifference": "/library/api/cub::DispatchAdjacentDifference"}}>
+```cpp showLineNumbers={false}
+template <typename ActivePolicyT>
+cudaError_t cub::DispatchAdjacentDifference<InputIteratorT, OutputIteratorT, DifferenceOpT, OffsetT, AliasOpt, ReadOpt, PolicyHub>::Invoke()
+```
+</CodeBlock>
+
+---
+
+## Static methods
+
+### Dispatch <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"DispatchAdjacentDifference": "/library/api/cub::DispatchAdjacentDifference"}}>
+```cpp showLineNumbers={false}
+static cudaError_t cub::DispatchAdjacentDifference<InputIteratorT, OutputIteratorT, DifferenceOpT, OffsetT, AliasOpt, ReadOpt, PolicyHub>::Dispatch(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_input,
+    OutputIteratorT d_output,
+    OffsetT num_items,
+    DifferenceOpT difference_op,
+    cudaStream_t stream
+)
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `InputT` | `detail::it_value_t< InputIteratorT >` |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `d_temp_storage` | `void *` | |
+| `temp_storage_bytes` | `size_t &` | |
+| `d_input` | `InputIteratorT` | |
+| `d_output` | `OutputIteratorT` | |
+| `num_items` | `OffsetT` | |
+| `difference_op` | `DifferenceOpT` | |
+| `stream` | `cudaStream_t` | |

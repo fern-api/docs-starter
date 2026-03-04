@@ -1,0 +1,710 @@
+---
+title: thrust::complex
+description: "`complex` is the Thrust equivalent to `std::complex`."
+---
+
+`complex` is the Thrust equivalent to `std::complex`.
+
+It is functionally identical to it, but can also be used in device code which `std::complex` currently cannot.
+
+```cpp showLineNumbers={false}
+#include <thrust/complex.h>
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="T" type="typename">
+The type used to hold the real and imaginary parts. Should be `float` or `double`. Others types are not supported. embed:rst:leading-asterisk
+*     .. versionadded:: 2.2.0
+*
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### complex
+
+<Tabs>
+<Tab title="Copy">
+
+Construct a complex number with an imaginary part of 0.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+thrust::complex<T>::complex(
+    const T &re
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="re" type="const T &">
+The real part of the number.
+</ParamField>
+
+</Tab>
+<Tab title="Copy">
+
+Construct a complex number from its real and imaginary parts.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+thrust::complex<T>::complex(
+    const T &re,
+    const T &im
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="re" type="const T &">
+The real part of the number.
+</ParamField>
+
+<ParamField path="im" type="const T &">
+The imaginary part of the number.
+</ParamField>
+
+</Tab>
+<Tab title="Default">
+
+Default construct a complex number.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+thrust::complex<T>::complex() = default
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Copy">
+
+This copy constructor copies from a `complex` with a type that is convertible to this `complex's` [`value_type`](/library/api/thrust::complex::value_type).
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+thrust::complex<T>::complex(
+    const complex<T> &z
+) = default
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="z" type="const complex<T> &">
+The `complex` to copy from.
+</ParamField>
+
+</Tab>
+<Tab title="Copy">
+
+This converting copy constructor copies from a `complex` with a type that is convertible to this `complex's` [`value_type`](/library/api/thrust::complex::value_type).
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+template <typename U>
+thrust::complex<T>::complex(
+    const complex<U> &z
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="U" type="typename">
+Is convertible to [`value_type`](/library/api/thrust::complex::value_type).
+</ParamField>
+
+**Parameters**
+
+<ParamField path="z" type="const complex<U> &">
+The `complex` to copy from.
+</ParamField>
+
+</Tab>
+<Tab title="Copy">
+
+This converting copy constructor copies from a `std::complex` with a type that is convertible to this `complex's` [`value_type`](/library/api/thrust::complex::value_type).
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+thrust::complex<T>::complex(
+    const ::std::complex<T> &z
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="z" type="const ::std::complex<T> &">
+The `complex` to copy from.
+</ParamField>
+
+</Tab>
+<Tab title="Copy">
+
+This converting copy constructor copies from a `std::complex` with a type that is convertible to this `complex's` [`value_type`](/library/api/thrust::complex::value_type).
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+template <typename U>
+thrust::complex<T>::complex(
+    const ::std::complex<U> &z
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="U" type="typename">
+Is convertible to [`value_type`](/library/api/thrust::complex::value_type).
+</ParamField>
+
+**Parameters**
+
+<ParamField path="z" type="const ::std::complex<U> &">
+The `complex` to copy from.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### operator::std::complex <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Casts this `complex` to a `std::complex` of the same type.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+thrust::complex<T>::operator::std::complex() const
+```
+</CodeBlock>
+
+---
+
+## Assignment operators
+
+### operator=
+
+<Tabs>
+<Tab title="Copy assign">
+
+Assign `re` to the real part of this `complex` and set the imaginary part to 0.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+complex & thrust::complex<T>::operator=(
+    const T &re
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="re" type="const T &">
+The real part of the number.
+</ParamField>
+
+</Tab>
+<Tab title="Copy assign">
+
+Assign `z.real()` and `z.imag()` to the real and imaginary parts of this `complex` respectively.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+complex & thrust::complex<T>::operator=(
+    const complex<T> &z
+) = default
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="z" type="const complex<T> &">
+The `complex` to copy from.
+</ParamField>
+
+</Tab>
+<Tab title="Copy assign">
+
+Assign `z.real()` and `z.imag()` to the real and imaginary parts of this `complex` respectively.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+template <typename U>
+complex & thrust::complex<T>::operator=(
+    const complex<U> &z
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="U" type="typename">
+Is convertible to [`value_type`](/library/api/thrust::complex::value_type).
+</ParamField>
+
+**Parameters**
+
+<ParamField path="z" type="const complex<U> &">
+The `complex` to copy from.
+</ParamField>
+
+</Tab>
+<Tab title="Copy assign">
+
+Assign `z.real()` and `z.imag()` to the real and imaginary parts of this `complex` respectively.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+complex & thrust::complex<T>::operator=(
+    const ::std::complex<T> &z
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="z" type="const ::std::complex<T> &">
+The `complex` to copy from.
+</ParamField>
+
+</Tab>
+<Tab title="Copy assign">
+
+Assign `z.real()` and `z.imag()` to the real and imaginary parts of this `complex` respectively.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+template <typename U>
+complex & thrust::complex<T>::operator=(
+    const ::std::complex<U> &z
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="U" type="typename">
+Is convertible to [`value_type`](/library/api/thrust::complex::value_type).
+</ParamField>
+
+**Parameters**
+
+<ParamField path="z" type="const ::std::complex<U> &">
+The `complex` to copy from.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### operator+=
+
+<Tabs>
+<Tab title="Overload 1">
+
+Adds a `complex` to this `complex` and assigns the result to this `complex`.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+template <typename U>
+complex<T> & thrust::complex<T>::operator+=(
+    const complex<U> &z
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="U" type="typename">
+Is convertible to [`value_type`](/library/api/thrust::complex::value_type).
+</ParamField>
+
+**Parameters**
+
+<ParamField path="z" type="const complex<U> &">
+The `complex` to be added.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Adds a scalar to this `complex` and assigns the result to this `complex`.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+template <typename U>
+complex<T> & thrust::complex<T>::operator+=(
+    const U &z
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="U" type="typename">
+Is convertible to [`value_type`](/library/api/thrust::complex::value_type).
+</ParamField>
+
+**Parameters**
+
+<ParamField path="z" type="const U &">
+The `complex` to be added.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### operator-=
+
+<Tabs>
+<Tab title="Overload 1">
+
+Subtracts a `complex` from this `complex` and assigns the result to this `complex`.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+template <typename U>
+complex<T> & thrust::complex<T>::operator-=(
+    const complex<U> &z
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="U" type="typename">
+Is convertible to [`value_type`](/library/api/thrust::complex::value_type).
+</ParamField>
+
+**Parameters**
+
+<ParamField path="z" type="const complex<U> &">
+The `complex` to be subtracted.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Subtracts a scalar from this `complex` and assigns the result to this `complex`.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+template <typename U>
+complex<T> & thrust::complex<T>::operator-=(
+    const U &z
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="U" type="typename">
+Is convertible to [`value_type`](/library/api/thrust::complex::value_type).
+</ParamField>
+
+**Parameters**
+
+<ParamField path="z" type="const U &">
+The scalar to be subtracted.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### operator*=
+
+<Tabs>
+<Tab title="Overload 1">
+
+Multiplies this `complex` by another `complex` and assigns the result to this `complex`.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+template <typename U>
+complex<T> & thrust::complex<T>::operator*=(
+    const complex<U> &z
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="U" type="typename">
+Is convertible to [`value_type`](/library/api/thrust::complex::value_type).
+</ParamField>
+
+**Parameters**
+
+<ParamField path="z" type="const complex<U> &">
+The `complex` to be multiplied.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Multiplies this `complex` by a scalar and assigns the result to this `complex`.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+template <typename U>
+complex<T> & thrust::complex<T>::operator*=(
+    const U &z
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="U" type="typename">
+Is convertible to [`value_type`](/library/api/thrust::complex::value_type).
+</ParamField>
+
+**Parameters**
+
+<ParamField path="z" type="const U &">
+The scalar to be multiplied.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### operator/=
+
+<Tabs>
+<Tab title="Overload 1">
+
+Divides this `complex` by another `complex` and assigns the result to this `complex`.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+template <typename U>
+complex<T> & thrust::complex<T>::operator/=(
+    const complex<U> &z
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="U" type="typename">
+Is convertible to [`value_type`](/library/api/thrust::complex::value_type).
+</ParamField>
+
+**Parameters**
+
+<ParamField path="z" type="const complex<U> &">
+The `complex` to be divided.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Divides this `complex` by a scalar and assigns the result to this `complex`.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+template <typename U>
+complex<T> & thrust::complex<T>::operator/=(
+    const U &z
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="U" type="typename">
+Is convertible to [`value_type`](/library/api/thrust::complex::value_type).
+</ParamField>
+
+**Parameters**
+
+<ParamField path="z" type="const U &">
+The scalar to be divided.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### real <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+Returns the real part of this `complex`.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+T thrust::complex<T>::real() const volatile
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+Returns the real part of this `complex`.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+T thrust::complex<T>::real() const
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Sets the real part of this `complex`">
+
+Sets the real part of this `complex`.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+void thrust::complex<T>::real(
+    T re
+) volatile
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="re" type="T">
+The new real part of this `complex`.
+</ParamField>
+
+</Tab>
+<Tab title="Sets the real part of this `complex`">
+
+Sets the real part of this `complex`.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+void thrust::complex<T>::real(
+    T re
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="re" type="T">
+The new real part of this `complex`.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### imag <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+Returns the imaginary part of this `complex`.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+T thrust::complex<T>::imag() const volatile
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+Returns the imaginary part of this `complex`.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+T thrust::complex<T>::imag() const
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Sets the imaginary part of this `complex`">
+
+Sets the imaginary part of this `complex`.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+void thrust::complex<T>::imag(
+    T im
+) volatile
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="im" type="T">
+The new imaginary part of this `complex.e`
+</ParamField>
+
+</Tab>
+<Tab title="Sets the imaginary part of this `complex`">
+
+Sets the imaginary part of this `complex`.
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+void thrust::complex<T>::imag(
+    T im
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="im" type="T">
+The new imaginary part of this `complex`.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `value_type` | `T` | [`value_type`](/library/api/thrust::complex::value_type) is the type of `complex's` real and imaginary parts. |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `data` | `storage` | |
+
+---
+
+## Inner classes
+
+### storage
+
+<CodeBlock links={{"complex": "/library/api/thrust::complex"}}>
+```cpp showLineNumbers={false}
+struct thrust::complex::storage
+```
+</CodeBlock>
+
+| Name | Type | Description |
+|---|---|---|
+| `x` | `T` | |
+| `y` | `T` | |

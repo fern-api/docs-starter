@@ -1,0 +1,524 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/load/serializable
+title: langchain_core.load.serializable
+---
+
+Serializable base class.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`BaseSerialized`](#langchain_core-load-serializable-BaseSerialized) | Base class for serialized objects. |
+| [`Serializable`](#langchain_core-load-serializable-Serializable) | Serializable base class. |
+| [`SerializedConstructor`](#langchain_core-load-serializable-SerializedConstructor) | Serialized constructor. |
+| [`SerializedNotImplemented`](#langchain_core-load-serializable-SerializedNotImplemented) | Serialized not implemented. |
+| [`SerializedSecret`](#langchain_core-load-serializable-SerializedSecret) | Serialized secret. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_is_field_useful`](#langchain_core-load-serializable-_is_field_useful) | Check if a field is useful as a constructor argument. |
+| [`_replace_secrets`](#langchain_core-load-serializable-_replace_secrets) | - |
+| [`_try_neq_default`](#langchain_core-load-serializable-_try_neq_default) | - |
+| [`to_json_not_implemented`](#langchain_core-load-serializable-to_json_not_implemented) | Serialize a "not implemented" object. |
+| [`try_neq_default`](#langchain_core-load-serializable-try_neq_default) | Try to determine if a value is different from the default. |
+
+### Data
+
+[`logger`](#langchain_core-load-serializable-logger)
+
+### API
+
+<Anchor id="langchain_core-load-serializable-BaseSerialized">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.load.serializable.BaseSerialized
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Base class for serialized objects.
+
+<ParamField path="graph" type="NotRequired[dict[str, Any]]">
+The graph of the object.
+</ParamField>
+
+<ParamField path="id" type="list[str]">
+The unique identifier of the object.
+</ParamField>
+
+<ParamField path="lc" type="int">
+The version of the serialization format.
+</ParamField>
+
+<ParamField path="name" type="NotRequired[str]">
+The name of the object.
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-load-serializable-Serializable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.load.serializable.Serializable(
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+**Bases:** `BaseModel`
+
+Serializable base class.
+
+This class is used to serialize objects to JSON.
+
+It relies on the following methods and properties:
+
+- [`is_lc_serializable`][langchain_core.load.serializable.Serializable.is_lc_serializable]: Is this class serializable?
+
+    By design, even if a class inherits from `Serializable`, it is not serializable
+    by default. This is to prevent accidental serialization of objects that should
+    not be serialized.
+- [`get_lc_namespace`][langchain_core.load.serializable.Serializable.get_lc_namespace]: Get the namespace of the LangChain object.
+
+    During deserialization, this namespace is used to identify
+    the correct class to instantiate.
+
+    Please see the `Reviver` class in `langchain_core.load.load` for more details.
+
+    During deserialization an additional mapping is handle classes that have moved
+    or been renamed across package versions.
+
+- [`lc_secrets`][langchain_core.load.serializable.Serializable.lc_secrets]: A map of constructor argument names to secret ids.
+- [`lc_attributes`][langchain_core.load.serializable.Serializable.lc_attributes]: List of additional attribute names that should be included
+    as part of the serialized representation.
+
+
+<ParamField path="lc_attributes" type="dict">
+List of attribute names that should be included in the serialized kwargs.
+
+These attributes must be accepted by the constructor.
+
+Default is an empty dictionary.
+</ParamField>
+
+<ParamField path="lc_secrets" type="dict[str, str]">
+A map of constructor argument names to secret ids.
+
+For example, `&#123;"openai_api_key": "OPENAI_API_KEY"&#125;`
+</ParamField>
+
+<ParamField path="model_config" type="= ConfigDict(extra='ignore')">
+</ParamField>
+<Anchor id="langchain_core-load-serializable-Serializable-__repr_args__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load.serializable.Serializable.__repr_args__() -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-load-serializable-Serializable-get_lc_namespace">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load.serializable.Serializable.get_lc_namespace() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Get the namespace of the LangChain object.
+
+The default implementation splits `cls.__module__` on `'.'`, e.g.
+`langchain_openai.chat_models` becomes
+`["langchain_openai", "chat_models"]`. This value is used by `lc_id` to
+build the serialization identifier.
+
+New partner packages should **not** override this method. The default
+behavior is correct for any class whose module path already reflects
+its package name. Some older packages (e.g. `langchain-openai`,
+`langchain-anthropic`) override it to return a legacy-style namespace
+like `["langchain", "chat_models", "openai"]`, matching the module
+paths that existed before those integrations were split out of the
+main `langchain` package. Those overrides are kept for
+backwards-compatible deserialization; new packages should not copy them.
+
+Deserialization mapping is handled separately by
+`SERIALIZABLE_MAPPING` in `langchain_core.load.mapping`.
+
+**Returns:** `list[str]`
+
+The namespace.
+
+
+</Indent>
+<Anchor id="langchain_core-load-serializable-Serializable-is_lc_serializable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load.serializable.Serializable.is_lc_serializable() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Is this class serializable?
+
+By design, even if a class inherits from `Serializable`, it is not serializable
+by default. This is to prevent accidental serialization of objects that should
+not be serialized.
+
+**Returns:** `bool`
+
+Whether the class is serializable. Default is `False`.
+
+
+</Indent>
+<Anchor id="langchain_core-load-serializable-Serializable-lc_id">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load.serializable.Serializable.lc_id() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Return a unique identifier for this class for serialization purposes.
+
+The unique identifier is a list of strings that describes the path
+to the object.
+
+For example, for the class `langchain.llms.openai.OpenAI`, the id is
+`["langchain", "llms", "openai", "OpenAI"]`.
+
+
+</Indent>
+<Anchor id="langchain_core-load-serializable-Serializable-to_json">
+
+<CodeBlock links={{"langchain_core.load.serializable.SerializedConstructor":"#langchain_core-load-serializable-SerializedConstructor","langchain_core.load.serializable.SerializedNotImplemented":"#langchain_core-load-serializable-SerializedNotImplemented"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load.serializable.Serializable.to_json() -> langchain_core.load.serializable.SerializedConstructor | langchain_core.load.serializable.SerializedNotImplemented
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Serialize the object to JSON.
+
+**Returns:** `SerializedConstructor | SerializedNotImplemented`
+
+A JSON serializable object or a `SerializedNotImplemented` object.
+
+**Raises:**
+
+- `ValueError`: If the class has deprecated attributes.
+
+
+</Indent>
+<Anchor id="langchain_core-load-serializable-Serializable-to_json_not_implemented">
+
+<CodeBlock links={{"langchain_core.load.serializable.SerializedNotImplemented":"#langchain_core-load-serializable-SerializedNotImplemented"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load.serializable.Serializable.to_json_not_implemented() -> langchain_core.load.serializable.SerializedNotImplemented
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Serialize a "not implemented" object.
+
+**Returns:** `SerializedNotImplemented`
+
+`SerializedNotImplemented`.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-load-serializable-SerializedConstructor">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.load.serializable.SerializedConstructor()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseSerialized](#langchain_core-load-serializable-BaseSerialized)
+
+Serialized constructor.
+
+
+<ParamField path="kwargs" type="dict[str, Any]">
+The constructor arguments.
+</ParamField>
+
+<ParamField path="type" type="Literal['constructor']">
+The type of the object. Must be `'constructor'`.
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-load-serializable-SerializedNotImplemented">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.load.serializable.SerializedNotImplemented()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseSerialized](#langchain_core-load-serializable-BaseSerialized)
+
+Serialized not implemented.
+
+
+<ParamField path="repr" type="str | None">
+The representation of the object.
+</ParamField>
+
+<ParamField path="type" type="Literal['not_implemented']">
+The type of the object. Must be `'not_implemented'`.
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-load-serializable-SerializedSecret">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.load.serializable.SerializedSecret()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseSerialized](#langchain_core-load-serializable-BaseSerialized)
+
+Serialized secret.
+
+
+<ParamField path="type" type="Literal['secret']">
+The type of the object. Must be `'secret'`.
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-load-serializable-_is_field_useful">
+
+<CodeBlock links={{"langchain_core.load.serializable.Serializable":"#langchain_core-load-serializable-Serializable"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load.serializable._is_field_useful(
+    inst: langchain_core.load.serializable.Serializable,
+    key: str,
+    value: typing.Any
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if a field is useful as a constructor argument.
+
+**Parameters:**
+
+<ParamField path="inst" type="Serializable">
+The instance.
+</ParamField>
+
+<ParamField path="key" type="str">
+The key.
+</ParamField>
+
+<ParamField path="value" type="Any">
+The value.
+</ParamField>
+
+**Returns:** `bool`
+
+Whether the field is useful. If the field is required, it is useful.
+
+
+</Indent>
+
+<Anchor id="langchain_core-load-serializable-_replace_secrets">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load.serializable._replace_secrets(
+    root: dict[typing.Any, typing.Any],
+    secrets_map: dict[str, str]
+) -> dict[typing.Any, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-load-serializable-_try_neq_default">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load.serializable._try_neq_default(
+    value: typing.Any,
+    field: pydantic.fields.FieldInfo
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-load-serializable-to_json_not_implemented">
+
+<CodeBlock links={{"langchain_core.load.serializable.SerializedNotImplemented":"#langchain_core-load-serializable-SerializedNotImplemented"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load.serializable.to_json_not_implemented(
+    obj: object
+) -> langchain_core.load.serializable.SerializedNotImplemented
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Serialize a "not implemented" object.
+
+**Parameters:**
+
+<ParamField path="obj" type="object">
+Object to serialize.
+</ParamField>
+
+**Returns:** `SerializedNotImplemented`
+
+`SerializedNotImplemented`
+
+
+</Indent>
+
+<Anchor id="langchain_core-load-serializable-try_neq_default">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load.serializable.try_neq_default(
+    value: typing.Any,
+    key: str,
+    model: pydantic.BaseModel
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Try to determine if a value is different from the default.
+
+**Parameters:**
+
+<ParamField path="value" type="Any">
+The value.
+</ParamField>
+
+<ParamField path="key" type="str">
+The key.
+</ParamField>
+
+<ParamField path="model" type="BaseModel">
+The Pydantic model.
+</ParamField>
+
+**Returns:** `bool`
+
+Whether the value is different from the default.
+
+
+</Indent>
+
+<Anchor id="langchain_core-load-serializable-logger">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load.serializable.logger = logging.getLogger(__name__)
+```
+
+</CodeBlock>
+</Anchor>
+

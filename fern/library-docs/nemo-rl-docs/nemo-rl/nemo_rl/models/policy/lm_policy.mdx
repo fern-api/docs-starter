@@ -1,0 +1,609 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/policy/lm_policy
+title: nemo_rl.models.policy.lm_policy
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`Policy`](#nemo_rl-models-policy-lm_policy-Policy) | - |
+
+### Data
+
+[`PathLike`](#nemo_rl-models-policy-lm_policy-PathLike)
+
+### API
+
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy">
+
+<CodeBlock links={{"nemo_rl.distributed.virtual_cluster.RayVirtualCluster":"/nemo-rl/nemo_rl/distributed/virtual_cluster#nemo_rl-distributed-virtual_cluster-RayVirtualCluster","nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig","nemo_rl.models.policy.lm_policy.PathLike":"#nemo_rl-models-policy-lm_policy-PathLike"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.policy.lm_policy.Policy(
+    cluster: nemo_rl.distributed.virtual_cluster.RayVirtualCluster,
+    config: nemo_rl.models.policy.PolicyConfig,
+    tokenizer: transformers.PreTrainedTokenizerBase,
+    name_prefix: str = 'lm_policy',
+    workers_per_node: typing.Optional[typing.Union[int, list[int]]] = None,
+    init_optimizer: bool = True,
+    weights_path: typing.Optional[nemo_rl.models.policy.lm_policy.PathLike] = None,
+    optimizer_path: typing.Optional[nemo_rl.models.policy.lm_policy.PathLike] = None,
+    init_reference_model: bool = True,
+    processor: typing.Optional[transformers.AutoProcessor] = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [ColocatablePolicyInterface](/nemo-rl/nemo_rl/models/policy/interfaces#nemo_rl-models-policy-interfaces-ColocatablePolicyInterface), [GenerationInterface](/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationInterface)
+
+<ParamField path="dynamic_batching_args" type="DynamicBatchingArgs">
+</ParamField>
+
+<ParamField path="flops_tracker">
+</ParamField>
+
+<ParamField path="sequence_packing_args" type="SequencePackingArgs">
+</ParamField>
+
+<ParamField path="sharding_annotations">
+</ParamField>
+
+<ParamField path="worker_group">
+</ParamField>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-__del__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.__del__() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Shuts down the worker groups when the object is deleted or is garbage collected.
+
+This is an extra safety net in case the user forgets to call worker_group.shutdown() and the pointer to
+the object is lost due to leaving a function scope. It's always recommended that the
+user calls worker_group.shutdown().
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-broadcast_weights_for_collective">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.broadcast_weights_for_collective(
+    kv_scales: typing.Optional[dict[str, float]] = None
+) -> list[ray.ObjectRef]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Broadcast the weights for collective communication.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-calibrate_qkv_fp8_scales">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.models.generation.interfaces.GenerationDatumSpec":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationDatumSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.calibrate_qkv_fp8_scales(
+    data: nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.generation.interfaces.GenerationDatumSpec],
+    micro_batch_size: typing.Optional[int] = None,
+    percentile: float = 99.9,
+    margin: float = 1.05,
+    include_q: bool = False
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Trigger KV-cache FP8 scale calibration across Megatron workers and return results.
+
+Note: The backend `MegatronPolicyWorker.calibrate_qkv_fp8_scales` already implements
+distributed reduction, returning results merged across ranks. Therefore, we shard the
+input by DP and call in parallel, then take the result from the first worker.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-finish_generation">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.finish_generation(
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-finish_training">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.finish_training(
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-generate">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.models.generation.interfaces.GenerationDatumSpec":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationDatumSpec","nemo_rl.models.generation.interfaces.GenerationOutputSpec":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationOutputSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.generate(
+    data: nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.generation.interfaces.GenerationDatumSpec],
+    greedy: bool = False
+) -> nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.generation.interfaces.GenerationOutputSpec]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Generate a batch of data using the policy.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-get_free_memory_bytes">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.get_free_memory_bytes() -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the available free memory.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-get_logprobs">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.models.generation.interfaces.GenerationDatumSpec":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationDatumSpec","nemo_rl.utils.timer.Timer":"/nemo-rl/nemo_rl/utils/timer#nemo_rl-utils-timer-Timer","nemo_rl.models.policy.interfaces.LogprobOutputSpec":"/nemo-rl/nemo_rl/models/policy/interfaces#nemo_rl-models-policy-interfaces-LogprobOutputSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.get_logprobs(
+    data: nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.generation.interfaces.GenerationDatumSpec],
+    timer: typing.Optional[nemo_rl.utils.timer.Timer] = None
+) -> nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.policy.interfaces.LogprobOutputSpec]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the logprobs of the model for a data dict.
+
+**Returns:** `BatchedDataDict[LogprobOutputSpec]`
+
+a BatchedDataDict with key "logprobs" and shape [batch_size, sequence_length].
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-get_reference_policy_logprobs">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.models.generation.interfaces.GenerationDatumSpec":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationDatumSpec","nemo_rl.utils.timer.Timer":"/nemo-rl/nemo_rl/utils/timer#nemo_rl-utils-timer-Timer","nemo_rl.models.policy.interfaces.ReferenceLogprobOutputSpec":"/nemo-rl/nemo_rl/models/policy/interfaces#nemo_rl-models-policy-interfaces-ReferenceLogprobOutputSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.get_reference_policy_logprobs(
+    data: nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.generation.interfaces.GenerationDatumSpec],
+    micro_batch_size: typing.Optional[int] = None,
+    timer: typing.Optional[nemo_rl.utils.timer.Timer] = None
+) -> nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.policy.interfaces.ReferenceLogprobOutputSpec]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the logprobs of the reference policy for a data dict.
+
+Returns: Identical to get_logprobs.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-get_topk_logits">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.models.generation.interfaces.GenerationDatumSpec":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationDatumSpec","nemo_rl.utils.timer.Timer":"/nemo-rl/nemo_rl/utils/timer#nemo_rl-utils-timer-Timer","nemo_rl.models.policy.interfaces.TopkLogitsOutputSpec":"/nemo-rl/nemo_rl/models/policy/interfaces#nemo_rl-models-policy-interfaces-TopkLogitsOutputSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.get_topk_logits(
+    data: nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.generation.interfaces.GenerationDatumSpec],
+    k: int,
+    micro_batch_size: typing.Optional[int] = None,
+    timer: typing.Optional[nemo_rl.utils.timer.Timer] = None
+) -> nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.policy.interfaces.TopkLogitsOutputSpec]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Dispatch get_topk_logits to workers (no CP/packed support initially).
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-init_collective">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.init_collective(
+    ip: str,
+    port: int,
+    world_size: int,
+    train_world_size: int
+) -> list[ray.ObjectRef]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Initialize the collective communication.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-invalidate_kv_cache">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.invalidate_kv_cache(
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-offload_after_refit">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.offload_after_refit() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Offload the optimizer and buffers to the CPU.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-offload_before_refit">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.offload_before_refit() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Offload the optimizer and buffers to the CPU.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-prepare_for_generation">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.prepare_for_generation(
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-prepare_for_lp_inference">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.prepare_for_lp_inference(
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-prepare_for_training">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.prepare_for_training(
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-prepare_refit_info">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.prepare_refit_info() -> typing.Optional[dict[str, typing.Any]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Prepare the info for refit.
+
+**Returns:** `Optional[dict[str, Any]]`
+
+A dictionary containing the info for refit.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-print_node_ip_and_gpu_id">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.print_node_ip_and_gpu_id() -> list[tuple[str, int]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Print the node IP and GPU ID of the current worker.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-save_checkpoint">
+
+<CodeBlock links={{"nemo_rl.utils.checkpoint.CheckpointingConfig":"/nemo-rl/nemo_rl/utils/checkpoint#nemo_rl-utils-checkpoint-CheckpointingConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.save_checkpoint(
+    weights_path: str,
+    optimizer_path: typing.Optional[str] = None,
+    tokenizer_path: typing.Optional[str] = None,
+    checkpointing_cfg: typing.Optional[nemo_rl.utils.checkpoint.CheckpointingConfig] = None
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Save a checkpoint of the model.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-score">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.models.generation.interfaces.GenerationDatumSpec":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationDatumSpec","nemo_rl.models.policy.interfaces.ScoreOutputSpec":"/nemo-rl/nemo_rl/models/policy/interfaces#nemo_rl-models-policy-interfaces-ScoreOutputSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.score(
+    data: nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.generation.interfaces.GenerationDatumSpec]
+) -> nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.policy.interfaces.ScoreOutputSpec]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Score a batch of data using the policy.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-shutdown">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.shutdown() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Shut down all HF workers and clean up resources.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-start_gpu_profiling">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.start_gpu_profiling() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Start GPU profiling.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-stop_gpu_profiling">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.stop_gpu_profiling() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Stop GPU profiling.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-stream_weights_via_http">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.stream_weights_via_http(
+    sglang_url_to_gpu_uuids: dict[str, list[str]]
+) -> list[ray.ObjectRef]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Send the weights to SGLang servers via HTTP API.
+
+**Parameters:**
+
+<ParamField path="sglang_url_to_gpu_uuids" type="dict[str, list[str]]">
+Dict mapping SGLang server URL to list of GPU UUIDs it uses
+</ParamField>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-stream_weights_via_ipc_zmq">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.stream_weights_via_ipc_zmq(
+    buffer_size_bytes: int,
+    kv_scales: typing.Optional[dict[str, float]] = None
+) -> list[ray.ObjectRef]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Send the weights for IPC handles via ZMQ socket.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-policy-lm_policy-Policy-train">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.algorithms.interfaces.LossFunction":"/nemo-rl/nemo_rl/algorithms/interfaces#nemo_rl-algorithms-interfaces-LossFunction","nemo_rl.utils.timer.Timer":"/nemo-rl/nemo_rl/utils/timer#nemo_rl-utils-timer-Timer"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.Policy.train(
+    data: nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any],
+    loss_fn: nemo_rl.algorithms.interfaces.LossFunction,
+    eval_mode: bool = False,
+    gbs: typing.Optional[int] = None,
+    mbs: typing.Optional[int] = None,
+    timer: typing.Optional[nemo_rl.utils.timer.Timer] = None
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Train the policy on a batch of data with a given loss function.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-models-policy-lm_policy-PathLike">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.policy.lm_policy.PathLike = Union[str, 'os.PathLike[Any]']
+```
+
+</CodeBlock>
+</Anchor>
+

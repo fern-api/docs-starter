@@ -37,6 +37,9 @@ tabs:
   Django Core Reference:
     display-name: Django Core Reference
     icon: book
+  C++ Full Reference:
+    display-name: C++ Full Reference
+    icon: book
 
 libraries:
   nemo-rl:
@@ -112,36 +115,66 @@ navigation:
             contents: []
   - tab: C++ Golden Pages
     layout:
-      - section: CUB
+      - section: CUB (v5 - Hand Curated)
         contents:
           - page: BlockReduce
-            path: pages/cub/block_reduce_v3.mdx
+            path: pages/cub/block_reduce_v5.mdx
           - page: BlockScan
-            path: pages/cub/block_scan_v4.mdx
+            path: pages/cub/block_scan_v5.mdx
           - page: WarpReduce
-            path: pages/cub/warp_reduce_v4.mdx
+            path: pages/cub/warp_reduce_v5.mdx
           - page: ArgMax
-            path: pages/cub/simple_struct_v4.mdx
-      - section: Thrust
+            path: pages/cub/simple_struct_v5.mdx
+      - section: CUB (v6 - Renderer Output)
+        contents:
+          - page: BlockReduce
+            path: pages/cub/block_reduce_v6.mdx
+          - page: BlockScan
+            path: pages/cub/block_scan_v6.mdx
+          - page: WarpReduce
+            path: pages/cub/warp_reduce_v6.mdx
+          - page: ArgMax
+            path: pages/cub/simple_struct_v6.mdx
+      - section: Thrust (v5 - Hand Curated)
         contents:
           - page: device_vector
-            path: pages/thrust/device_vector_v3.mdx
+            path: pages/thrust/device_vector_v5.mdx
           - page: pointer
-            path: pages/thrust/pointer_v4.mdx
+            path: pages/thrust/pointer_v5.mdx
           - page: strided_iterator
-            path: pages/thrust/deprecated_example_v4.mdx
+            path: pages/thrust/deprecated_example_v5.mdx
           - page: disjoint_unsynchronized_pool_resource
-            path: pages/thrust/group_member_example_v4.mdx
-      - section: libcudacxx
+            path: pages/thrust/group_member_example_v5.mdx
+      - section: Thrust (v6 - Renderer Output)
+        contents:
+          - page: device_vector
+            path: pages/thrust/device_vector_v6.mdx
+          - page: pointer
+            path: pages/thrust/pointer_v6.mdx
+          - page: strided_iterator
+            path: pages/thrust/deprecated_example_v6.mdx
+          - page: disjoint_unsynchronized_pool_resource
+            path: pages/thrust/group_member_example_v6.mdx
+      - section: libcudacxx (v5 - Hand Curated)
         contents:
           - page: resource_with
-            path: pages/libcudacxx/concept_example_v3.mdx
+            path: pages/libcudacxx/concept_example_v5.mdx
           - page: counting_iterator
-            path: pages/libcudacxx/deep_template_class_v4.mdx
+            path: pages/libcudacxx/deep_template_class_v5.mdx
           - page: buffer
-            path: pages/libcudacxx/empty_docstring_class_v4.mdx
+            path: pages/libcudacxx/empty_docstring_class_v5.mdx
           - page: stream
-            path: pages/libcudacxx/raises_example_v4.mdx
+            path: pages/libcudacxx/raises_example_v5.mdx
+      - section: libcudacxx (v6 - Renderer Output)
+        contents:
+          - page: resource_with
+            path: pages/libcudacxx/concept_example_v6.mdx
+          - page: counting_iterator
+            path: pages/libcudacxx/deep_template_class_v6.mdx
+          - page: buffer
+            path: pages/libcudacxx/empty_docstring_class_v6.mdx
+          - page: stream
+            path: pages/libcudacxx/raises_example_v6.mdx
   - tab: Library Reference
     layout:
       - library: nemo-rl
@@ -151,7 +184,600 @@ navigation:
   - tab: LangChain Core Reference
     layout:
       - library: langchain-core
-  
+  - tab: C++ Full Reference
+    layout:
+      - section: CUB
+        contents:
+          - page: AgentAdjacentDifferencePolicy
+            path: cudapages/cub/cub/cub/AgentAdjacentDifferencePolicy.mdx
+          - page: AgentHistogramPolicy
+            path: cudapages/cub/cub/cub/AgentHistogramPolicy.mdx
+          - page: AgentMergeSortPolicy
+            path: cudapages/cub/cub/cub/AgentMergeSortPolicy.mdx
+          - page: AgentRadixSortDownsweepPolicy
+            path: cudapages/cub/cub/cub/AgentRadixSortDownsweepPolicy.mdx
+          - page: AgentRadixSortExclusiveSumPolicy
+            path: cudapages/cub/cub/cub/AgentRadixSortExclusiveSumPolicy.mdx
+          - page: AgentRadixSortHistogramPolicy
+            path: cudapages/cub/cub/cub/AgentRadixSortHistogramPolicy.mdx
+          - page: AgentRadixSortOnesweepPolicy
+            path: cudapages/cub/cub/cub/AgentRadixSortOnesweepPolicy.mdx
+          - page: AgentRadixSortUpsweepPolicy
+            path: cudapages/cub/cub/cub/AgentRadixSortUpsweepPolicy.mdx
+          - page: AgentReduceByKeyPolicy
+            path: cudapages/cub/cub/cub/AgentReduceByKeyPolicy.mdx
+          - page: AgentReducePolicy
+            path: cudapages/cub/cub/cub/AgentReducePolicy.mdx
+          - page: AgentRlePolicy
+            path: cudapages/cub/cub/cub/AgentRlePolicy.mdx
+          - page: AgentScanByKeyPolicy
+            path: cudapages/cub/cub/cub/AgentScanByKeyPolicy.mdx
+          - page: AgentScanPolicy
+            path: cudapages/cub/cub/cub/AgentScanPolicy.mdx
+          - page: AgentSelectIfPolicy
+            path: cudapages/cub/cub/cub/AgentSelectIfPolicy.mdx
+          - page: AgentSubWarpMergeSortPolicy
+            path: cudapages/cub/cub/cub/AgentSubWarpMergeSortPolicy.mdx
+          - page: AgentThreeWayPartitionPolicy
+            path: cudapages/cub/cub/cub/AgentThreeWayPartitionPolicy.mdx
+          - page: AgentUniqueByKeyPolicy
+            path: cudapages/cub/cub/cub/AgentUniqueByKeyPolicy.mdx
+          - page: AgentWarpReducePolicy
+            path: cudapages/cub/cub/cub/AgentWarpReducePolicy.mdx
+          - page: ArgIndexInputIterator
+            path: cudapages/cub/cub/cub/ArgIndexInputIterator.mdx
+          - page: ArgMax
+            path: cudapages/cub/cub/cub/ArgMax.mdx
+          - page: ArgMin
+            path: cudapages/cub/cub/cub/ArgMin.mdx
+          - page: BFEDigitExtractor
+            path: cudapages/cub/cub/cub/BFEDigitExtractor.mdx
+          - page: BaseDigitExtractor
+            path: cudapages/cub/cub/cub/BaseDigitExtractor.mdx
+          - page: BaseDigitExtractor_KeyT_true
+            path: cudapages/cub/cub/cub/BaseDigitExtractor_KeyT_true.mdx
+          - page: BlockAdjacentDifference
+            path: cudapages/cub/cub/cub/BlockAdjacentDifference.mdx
+          - page: BlockDiscontinuity
+            path: cudapages/cub/cub/cub/BlockDiscontinuity.mdx
+          - page: BlockExchange
+            path: cudapages/cub/cub/cub/BlockExchange.mdx
+          - page: BlockHistogram
+            path: cudapages/cub/cub/cub/BlockHistogram.mdx
+          - page: BlockLoad
+            path: cudapages/cub/cub/cub/BlockLoad.mdx
+          - page: BlockLoadType
+            path: cudapages/cub/cub/cub/BlockLoadType.mdx
+          - page: BlockMergeSort
+            path: cudapages/cub/cub/cub/BlockMergeSort.mdx
+          - page: BlockMergeSortStrategy
+            path: cudapages/cub/cub/cub/BlockMergeSortStrategy.mdx
+          - page: BlockRadixRank
+            path: cudapages/cub/cub/cub/BlockRadixRank.mdx
+          - page: BlockRadixRankEmptyCallback
+            path: cudapages/cub/cub/cub/BlockRadixRankEmptyCallback.mdx
+          - page: BlockRadixRankMatch
+            path: cudapages/cub/cub/cub/BlockRadixRankMatch.mdx
+          - page: BlockRadixRankMatchEarlyCounts
+            path: cudapages/cub/cub/cub/BlockRadixRankMatchEarlyCounts.mdx
+          - page: BlockRadixSort
+            path: cudapages/cub/cub/cub/BlockRadixSort.mdx
+          - page: BlockRakingLayout
+            path: cudapages/cub/cub/cub/BlockRakingLayout.mdx
+          - page: BlockReduce
+            path: cudapages/cub/cub/cub/BlockReduce.mdx
+          - page: BlockRunLengthDecode
+            path: cudapages/cub/cub/cub/BlockRunLengthDecode.mdx
+          - page: BlockScan
+            path: cudapages/cub/cub/cub/BlockScan.mdx
+          - page: BlockScanRunningPrefixOp
+            path: cudapages/cub/cub/cub/BlockScanRunningPrefixOp.mdx
+          - page: BlockShuffle
+            path: cudapages/cub/cub/cub/BlockShuffle.mdx
+          - page: BlockStore
+            path: cudapages/cub/cub/cub/BlockStore.mdx
+          - page: CacheModifiedInputIterator
+            path: cudapages/cub/cub/cub/CacheModifiedInputIterator.mdx
+          - page: CacheModifiedOutputIterator
+            path: cudapages/cub/cub/cub/CacheModifiedOutputIterator.mdx
+          - page: CachingDeviceAllocator
+            path: cudapages/cub/cub/cub/CachingDeviceAllocator.mdx
+          - page: CastOp
+            path: cudapages/cub/cub/cub/CastOp.mdx
+          - page: ChainedPolicy
+            path: cudapages/cub/cub/cub/ChainedPolicy.mdx
+          - page: DeviceAdjacentDifference
+            path: cudapages/cub/cub/cub/DeviceAdjacentDifference.mdx
+          - page: DeviceCopy
+            path: cudapages/cub/cub/cub/DeviceCopy.mdx
+          - page: DeviceFind
+            path: cudapages/cub/cub/cub/DeviceFind.mdx
+          - page: DeviceFor
+            path: cudapages/cub/cub/cub/DeviceFor.mdx
+          - page: DeviceHistogram
+            path: cudapages/cub/cub/cub/DeviceHistogram.mdx
+          - page: DeviceMemcpy
+            path: cudapages/cub/cub/cub/DeviceMemcpy.mdx
+          - page: DeviceMerge
+            path: cudapages/cub/cub/cub/DeviceMerge.mdx
+          - page: DeviceMergeSort
+            path: cudapages/cub/cub/cub/DeviceMergeSort.mdx
+          - page: DevicePartition
+            path: cudapages/cub/cub/cub/DevicePartition.mdx
+          - page: DeviceRadixSort
+            path: cudapages/cub/cub/cub/DeviceRadixSort.mdx
+          - page: DeviceReduce
+            path: cudapages/cub/cub/cub/DeviceReduce.mdx
+          - page: DeviceRleDispatch
+            path: cudapages/cub/cub/cub/DeviceRleDispatch.mdx
+          - page: DeviceRunLengthEncode
+            path: cudapages/cub/cub/cub/DeviceRunLengthEncode.mdx
+          - page: DeviceScan
+            path: cudapages/cub/cub/cub/DeviceScan.mdx
+          - page: DeviceSegmentedRadixSort
+            path: cudapages/cub/cub/cub/DeviceSegmentedRadixSort.mdx
+          - page: DeviceSegmentedReduce
+            path: cudapages/cub/cub/cub/DeviceSegmentedReduce.mdx
+          - page: DeviceSegmentedScan
+            path: cudapages/cub/cub/cub/DeviceSegmentedScan.mdx
+          - page: DeviceSegmentedSort
+            path: cudapages/cub/cub/cub/DeviceSegmentedSort.mdx
+          - page: DeviceSelect
+            path: cudapages/cub/cub/cub/DeviceSelect.mdx
+          - page: DeviceTopK
+            path: cudapages/cub/cub/cub/DeviceTopK.mdx
+          - page: DeviceTransform
+            path: cudapages/cub/cub/cub/DeviceTransform.mdx
+          - page: DispatchAdjacentDifference
+            path: cudapages/cub/cub/cub/DispatchAdjacentDifference.mdx
+          - page: DispatchHistogram
+            path: cudapages/cub/cub/cub/DispatchHistogram.mdx
+          - page: DispatchMergeSort
+            path: cudapages/cub/cub/cub/DispatchMergeSort.mdx
+          - page: DispatchRadixSort
+            path: cudapages/cub/cub/cub/DispatchRadixSort.mdx
+          - page: DispatchReduce
+            path: cudapages/cub/cub/cub/DispatchReduce.mdx
+          - page: DispatchReduceByKey
+            path: cudapages/cub/cub/cub/DispatchReduceByKey.mdx
+          - page: DispatchScan
+            path: cudapages/cub/cub/cub/DispatchScan.mdx
+          - page: DispatchScanByKey
+            path: cudapages/cub/cub/cub/DispatchScanByKey.mdx
+          - page: DispatchSegmentedRadixSort
+            path: cudapages/cub/cub/cub/DispatchSegmentedRadixSort.mdx
+          - page: DispatchSegmentedReduce
+            path: cudapages/cub/cub/cub/DispatchSegmentedReduce.mdx
+          - page: DispatchSegmentedSort
+            path: cudapages/cub/cub/cub/DispatchSegmentedSort.mdx
+          - page: DispatchSelectIf
+            path: cudapages/cub/cub/cub/DispatchSelectIf.mdx
+          - page: DispatchThreeWayPartitionIf
+            path: cudapages/cub/cub/cub/DispatchThreeWayPartitionIf.mdx
+          - page: DispatchUniqueByKey
+            path: cudapages/cub/cub/cub/DispatchUniqueByKey.mdx
+          - page: GridEvenShare
+            path: cudapages/cub/cub/cub/GridEvenShare.mdx
+          - page: GridQueue
+            path: cudapages/cub/cub/cub/GridQueue.mdx
+          - page: InequalityWrapper
+            path: cudapages/cub/cub/cub/InequalityWrapper.mdx
+          - page: PtxVersionCacheTag
+            path: cudapages/cub/cub/cub/PtxVersionCacheTag.mdx
+          - page: RadixSortTwiddle
+            path: cudapages/cub/cub/cub/RadixSortTwiddle.mdx
+          - page: ReduceByKeyOp
+            path: cudapages/cub/cub/cub/ReduceByKeyOp.mdx
+          - page: ReduceByKeyScanTileState
+            path: cudapages/cub/cub/cub/ReduceByKeyScanTileState.mdx
+          - page: ReduceByKeyScanTileState_ValueT_KeyT_false
+            path: cudapages/cub/cub/cub/ReduceByKeyScanTileState_ValueT_KeyT_false.mdx
+          - page: ReduceBySegmentOp
+            path: cudapages/cub/cub/cub/ReduceBySegmentOp.mdx
+          - page: ScanTileState
+            path: cudapages/cub/cub/cub/ScanTileState.mdx
+          - page: ScanTileState_T_false
+            path: cudapages/cub/cub/cub/ScanTileState_T_false.mdx
+          - page: ShiftDigitExtractor
+            path: cudapages/cub/cub/cub/ShiftDigitExtractor.mdx
+          - page: SmVersionCacheTag
+            path: cudapages/cub/cub/cub/SmVersionCacheTag.mdx
+          - page: SwizzleScanOp
+            path: cudapages/cub/cub/cub/SwizzleScanOp.mdx
+          - page: TilePrefixCallbackOp
+            path: cudapages/cub/cub/cub/TilePrefixCallbackOp.mdx
+          - page: WarpExchange
+            path: cudapages/cub/cub/cub/WarpExchange.mdx
+          - page: WarpLoad
+            path: cudapages/cub/cub/cub/WarpLoad.mdx
+          - page: WarpMergeSort
+            path: cudapages/cub/cub/cub/WarpMergeSort.mdx
+          - page: WarpReduce
+            path: cudapages/cub/cub/cub/WarpReduce.mdx
+          - page: WarpScan
+            path: cudapages/cub/cub/cub/WarpScan.mdx
+          - page: WarpStore
+            path: cudapages/cub/cub/cub/WarpStore.mdx
+      - section: Thrust
+        contents:
+          - page: allocator_delete
+            path: cudapages/thrust/thrust/thrust/allocator_delete.mdx
+          - page: array_allocator_delete
+            path: cudapages/thrust/thrust/thrust/array_allocator_delete.mdx
+          - page: bidirectional_device_iterator_tag
+            path: cudapages/thrust/thrust/thrust/bidirectional_device_iterator_tag.mdx
+          - page: bidirectional_traversal_tag
+            path: cudapages/thrust/thrust/thrust/bidirectional_traversal_tag.mdx
+          - page: compile_time_value
+            path: cudapages/thrust/thrust/thrust/compile_time_value.mdx
+          - page: complex
+            path: cudapages/thrust/thrust/thrust/complex.mdx
+          - page: constant_iterator
+            path: cudapages/thrust/thrust/thrust/constant_iterator.mdx
+          - page: counting_iterator
+            path: cudapages/thrust/thrust/thrust/counting_iterator.mdx
+          - page: device_allocator
+            path: cudapages/thrust/thrust/thrust/device_allocator.mdx
+          - page: device_execution_policy
+            path: cudapages/thrust/thrust/thrust/device_execution_policy.mdx
+          - page: device_malloc_allocator
+            path: cudapages/thrust/thrust/thrust/device_malloc_allocator.mdx
+          - page: device_new_allocator
+            path: cudapages/thrust/thrust/thrust/device_new_allocator.mdx
+          - page: device_ptr
+            path: cudapages/thrust/thrust/thrust/device_ptr.mdx
+          - page: device_ptr_memory_resource
+            path: cudapages/thrust/thrust/thrust/device_ptr_memory_resource.mdx
+          - page: device_reference
+            path: cudapages/thrust/thrust/thrust/device_reference.mdx
+          - page: device_vector
+            path: cudapages/thrust/thrust/thrust/device_vector.mdx
+          - page: discard_block_engine
+            path: cudapages/thrust/thrust/thrust/discard_block_engine.mdx
+          - page: discard_iterator
+            path: cudapages/thrust/thrust/thrust/discard_iterator.mdx
+          - page: error_category
+            path: cudapages/thrust/thrust/thrust/error_category.mdx
+          - page: error_code
+            path: cudapages/thrust/thrust/thrust/error_code.mdx
+          - page: error_condition
+            path: cudapages/thrust/thrust/thrust/error_condition.mdx
+          - page: forward_device_iterator_tag
+            path: cudapages/thrust/thrust/thrust/forward_device_iterator_tag.mdx
+          - page: forward_traversal_tag
+            path: cudapages/thrust/thrust/thrust/forward_traversal_tag.mdx
+          - page: host_execution_policy
+            path: cudapages/thrust/thrust/thrust/host_execution_policy.mdx
+          - page: host_vector
+            path: cudapages/thrust/thrust/thrust/host_vector.mdx
+          - page: incrementable_traversal_tag
+            path: cudapages/thrust/thrust/thrust/incrementable_traversal_tag.mdx
+          - page: input_device_iterator_tag
+            path: cudapages/thrust/thrust/thrust/input_device_iterator_tag.mdx
+          - page: is_error_code_enum
+            path: cudapages/thrust/thrust/thrust/is_error_code_enum.mdx
+          - page: is_error_condition_enum
+            path: cudapages/thrust/thrust/thrust/is_error_condition_enum.mdx
+          - page: iterator_adaptor
+            path: cudapages/thrust/thrust/thrust/iterator_adaptor.mdx
+          - page: iterator_core_access
+            path: cudapages/thrust/thrust/thrust/iterator_core_access.mdx
+          - page: iterator_difference
+            path: cudapages/thrust/thrust/thrust/iterator_difference.mdx
+          - page: iterator_facade
+            path: cudapages/thrust/thrust/thrust/iterator_facade.mdx
+          - page: iterator_pointer
+            path: cudapages/thrust/thrust/thrust/iterator_pointer.mdx
+          - page: iterator_reference
+            path: cudapages/thrust/thrust/thrust/iterator_reference.mdx
+          - page: iterator_system
+            path: cudapages/thrust/thrust/thrust/iterator_system.mdx
+          - page: iterator_system_const_void_ptr
+            path: cudapages/thrust/thrust/thrust/iterator_system_const_void_ptr.mdx
+          - page: iterator_system_cudaconstant_iterator_T_Index
+            path: cudapages/thrust/thrust/thrust/iterator_system_cudaconstant_iterator_T_Index.mdx
+          - page: iterator_system_cudacounting_iterator_Start
+            path: cudapages/thrust/thrust/thrust/iterator_system_cudacounting_iterator_Start.mdx
+          - page: iterator_system_cudadiscard_iterator
+            path: cudapages/thrust/thrust/thrust/iterator_system_cudadiscard_iterator.mdx
+          - page: iterator_system_cudapermutation_iterator_Iter_Offset
+            path: cudapages/thrust/thrust/thrust/iterator_system_cudapermutation_iterator_Iter_Offset.mdx
+          - page: iterator_system_cudashuffle_iterator_IndexType_Bijection
+            path: cudapages/thrust/thrust/thrust/iterator_system_cudashuffle_iterator_IndexType_Bijection.mdx
+          - page: iterator_system_cudastdreverse_iterator_Iter
+            path: cudapages/thrust/thrust/thrust/iterator_system_cudastdreverse_iterator_Iter.mdx
+          - page: iterator_system_cudastrided_iterator_Iter_Stride
+            path: cudapages/thrust/thrust/thrust/iterator_system_cudastrided_iterator_Iter_Stride.mdx
+          - page: iterator_system_cudatabulate_output_iterator_Fn_Index
+            path: cudapages/thrust/thrust/thrust/iterator_system_cudatabulate_output_iterator_Fn_Index.mdx
+          - page: iterator_system_cudatransform_input_output_iterator_InputFn_OutputFn_Iter
+            path: cudapages/thrust/thrust/thrust/iterator_system_cudatransform_input_output_iterator_InputFn_OutputFn_Iter.mdx
+          - page: iterator_system_cudatransform_iterator_Fn_Iter
+            path: cudapages/thrust/thrust/thrust/iterator_system_cudatransform_iterator_Fn_Iter.mdx
+          - page: iterator_system_cudatransform_output_iterator_Fn_Iter
+            path: cudapages/thrust/thrust/thrust/iterator_system_cudatransform_output_iterator_Fn_Iter.mdx
+          - page: iterator_system_cudazip_iterator_Iterators
+            path: cudapages/thrust/thrust/thrust/iterator_system_cudazip_iterator_Iterators.mdx
+          - page: iterator_system_cudazip_transform_iterator_Fn_Iterators
+            path: cudapages/thrust/thrust/thrust/iterator_system_cudazip_transform_iterator_Fn_Iterators.mdx
+          - page: iterator_system_void_ptr
+            path: cudapages/thrust/thrust/thrust/iterator_system_void_ptr.mdx
+          - page: iterator_traversal
+            path: cudapages/thrust/thrust/thrust/iterator_traversal.mdx
+          - page: iterator_traversal_cudaconstant_iterator_T_Index
+            path: cudapages/thrust/thrust/thrust/iterator_traversal_cudaconstant_iterator_T_Index.mdx
+          - page: iterator_traversal_cudacounting_iterator_Start
+            path: cudapages/thrust/thrust/thrust/iterator_traversal_cudacounting_iterator_Start.mdx
+          - page: iterator_traversal_cudadiscard_iterator
+            path: cudapages/thrust/thrust/thrust/iterator_traversal_cudadiscard_iterator.mdx
+          - page: iterator_traversal_cudapermutation_iterator_Iter_Offset
+            path: cudapages/thrust/thrust/thrust/iterator_traversal_cudapermutation_iterator_Iter_Offset.mdx
+          - page: iterator_traversal_cudashuffle_iterator_IndexType_Bijection
+            path: cudapages/thrust/thrust/thrust/iterator_traversal_cudashuffle_iterator_IndexType_Bijection.mdx
+          - page: iterator_traversal_cudastdreverse_iterator_Iter
+            path: cudapages/thrust/thrust/thrust/iterator_traversal_cudastdreverse_iterator_Iter.mdx
+          - page: iterator_traversal_cudastrided_iterator_Iter_Stride
+            path: cudapages/thrust/thrust/thrust/iterator_traversal_cudastrided_iterator_Iter_Stride.mdx
+          - page: iterator_traversal_cudatabulate_output_iterator_Fn_Index
+            path: cudapages/thrust/thrust/thrust/iterator_traversal_cudatabulate_output_iterator_Fn_Index.mdx
+          - page: iterator_traversal_cudatransform_input_output_iterator_InputFn_OutputFn_Iter
+            path: cudapages/thrust/thrust/thrust/iterator_traversal_cudatransform_input_output_iterator_InputFn_OutputFn_Iter.mdx
+          - page: iterator_traversal_cudatransform_iterator_Fn_Iter
+            path: cudapages/thrust/thrust/thrust/iterator_traversal_cudatransform_iterator_Fn_Iter.mdx
+          - page: iterator_traversal_cudatransform_output_iterator_Fn_Iter
+            path: cudapages/thrust/thrust/thrust/iterator_traversal_cudatransform_output_iterator_Fn_Iter.mdx
+          - page: iterator_traversal_cudazip_iterator_Iterators
+            path: cudapages/thrust/thrust/thrust/iterator_traversal_cudazip_iterator_Iterators.mdx
+          - page: iterator_traversal_cudazip_transform_iterator_Fn_Iterators
+            path: cudapages/thrust/thrust/thrust/iterator_traversal_cudazip_transform_iterator_Fn_Iterators.mdx
+          - page: iterator_value
+            path: cudapages/thrust/thrust/thrust/iterator_value.mdx
+          - page: linear_congruential_engine
+            path: cudapages/thrust/thrust/thrust/linear_congruential_engine.mdx
+          - page: linear_feedback_shift_engine
+            path: cudapages/thrust/thrust/thrust/linear_feedback_shift_engine.mdx
+          - page: no_traversal_tag
+            path: cudapages/thrust/thrust/thrust/no_traversal_tag.mdx
+          - page: normal_distribution
+            path: cudapages/thrust/thrust/thrust/normal_distribution.mdx
+          - page: offset_iterator
+            path: cudapages/thrust/thrust/thrust/offset_iterator.mdx
+          - page: output_device_iterator_tag
+            path: cudapages/thrust/thrust/thrust/output_device_iterator_tag.mdx
+          - page: per_device_allocator
+            path: cudapages/thrust/thrust/thrust/per_device_allocator.mdx
+          - page: permutation_iterator
+            path: cudapages/thrust/thrust/thrust/permutation_iterator.mdx
+          - page: pointer
+            path: cudapages/thrust/thrust/thrust/pointer.mdx
+          - page: proclaim_contiguous_iterator
+            path: cudapages/thrust/thrust/thrust/proclaim_contiguous_iterator.mdx
+          - page: project1st
+            path: cudapages/thrust/thrust/thrust/project1st.mdx
+          - page: project1st_void_void
+            path: cudapages/thrust/thrust/thrust/project1st_void_void.mdx
+          - page: project2nd
+            path: cudapages/thrust/thrust/thrust/project2nd.mdx
+          - page: project2nd_void_void
+            path: cudapages/thrust/thrust/thrust/project2nd_void_void.mdx
+          - page: random_access_device_iterator_tag
+            path: cudapages/thrust/thrust/thrust/random_access_device_iterator_tag.mdx
+          - page: random_access_traversal_tag
+            path: cudapages/thrust/thrust/thrust/random_access_traversal_tag.mdx
+          - page: runtime_value
+            path: cudapages/thrust/thrust/thrust/runtime_value.mdx
+          - page: shuffle_iterator
+            path: cudapages/thrust/thrust/thrust/shuffle_iterator.mdx
+          - page: single_pass_traversal_tag
+            path: cudapages/thrust/thrust/thrust/single_pass_traversal_tag.mdx
+          - page: square
+            path: cudapages/thrust/thrust/thrust/square.mdx
+          - page: square_void
+            path: cudapages/thrust/thrust/thrust/square_void.mdx
+          - page: strided_iterator
+            path: cudapages/thrust/thrust/thrust/strided_iterator.mdx
+          - page: subtract_with_carry_engine
+            path: cudapages/thrust/thrust/thrust/subtract_with_carry_engine.mdx
+          - page: system_error
+            path: cudapages/thrust/thrust/thrust/system_error.mdx
+          - page: tabulate_output_iterator
+            path: cudapages/thrust/thrust/thrust/tabulate_output_iterator.mdx
+          - page: tagged_deleter
+            path: cudapages/thrust/thrust/thrust/tagged_deleter.mdx
+          - page: transform_input_output_iterator
+            path: cudapages/thrust/thrust/thrust/transform_input_output_iterator.mdx
+          - page: transform_iterator
+            path: cudapages/thrust/thrust/thrust/transform_iterator.mdx
+          - page: transform_output_iterator
+            path: cudapages/thrust/thrust/thrust/transform_output_iterator.mdx
+          - page: uniform_int_distribution
+            path: cudapages/thrust/thrust/thrust/uniform_int_distribution.mdx
+          - page: uniform_real_distribution
+            path: cudapages/thrust/thrust/thrust/uniform_real_distribution.mdx
+          - page: xor_combine_engine
+            path: cudapages/thrust/thrust/thrust/xor_combine_engine.mdx
+          - page: zip_function
+            path: cudapages/thrust/thrust/thrust/zip_function.mdx
+          - page: zip_iterator
+            path: cudapages/thrust/thrust/thrust/zip_iterator.mdx
+      - section: Thrust / mr
+        contents:
+          - page: allocator
+            path: cudapages/thrust/thrust/thrust/mr/allocator.mdx
+          - page: disjoint_synchronized_pool_resource
+            path: cudapages/thrust/thrust/thrust/mr/disjoint_synchronized_pool_resource.mdx
+          - page: disjoint_unsynchronized_pool_resource
+            path: cudapages/thrust/thrust/thrust/mr/disjoint_unsynchronized_pool_resource.mdx
+          - page: fancy_pointer_resource
+            path: cudapages/thrust/thrust/thrust/mr/fancy_pointer_resource.mdx
+          - page: memory_resource
+            path: cudapages/thrust/thrust/thrust/mr/memory_resource.mdx
+          - page: memory_resource_void_ptr
+            path: cudapages/thrust/thrust/thrust/mr/memory_resource_void_ptr.mdx
+          - page: new_delete_resource
+            path: cudapages/thrust/thrust/thrust/mr/new_delete_resource.mdx
+          - page: new_delete_resource_base
+            path: cudapages/thrust/thrust/thrust/mr/new_delete_resource_base.mdx
+          - page: polymorphic_adaptor_resource
+            path: cudapages/thrust/thrust/thrust/mr/polymorphic_adaptor_resource.mdx
+          - page: pool_options
+            path: cudapages/thrust/thrust/thrust/mr/pool_options.mdx
+          - page: stateless_resource_allocator
+            path: cudapages/thrust/thrust/thrust/mr/stateless_resource_allocator.mdx
+          - page: synchronized_pool_resource
+            path: cudapages/thrust/thrust/thrust/mr/synchronized_pool_resource.mdx
+          - page: unsynchronized_pool_resource
+            path: cudapages/thrust/thrust/thrust/mr/unsynchronized_pool_resource.mdx
+          - page: validator
+            path: cudapages/thrust/thrust/thrust/mr/validator.mdx
+          - page: validator2
+            path: cudapages/thrust/thrust/thrust/mr/validator2.mdx
+          - page: validator2_T_T
+            path: cudapages/thrust/thrust/thrust/mr/validator2_T_T.mdx
+      - section: Thrust / random
+        contents:
+          - page: discard_block_engine
+            path: cudapages/thrust/thrust/thrust/random/discard_block_engine.mdx
+          - page: linear_congruential_engine
+            path: cudapages/thrust/thrust/thrust/random/linear_congruential_engine.mdx
+          - page: linear_feedback_shift_engine
+            path: cudapages/thrust/thrust/thrust/random/linear_feedback_shift_engine.mdx
+          - page: normal_distribution
+            path: cudapages/thrust/thrust/thrust/random/normal_distribution.mdx
+          - page: subtract_with_carry_engine
+            path: cudapages/thrust/thrust/thrust/random/subtract_with_carry_engine.mdx
+          - page: uniform_int_distribution
+            path: cudapages/thrust/thrust/thrust/random/uniform_int_distribution.mdx
+          - page: uniform_real_distribution
+            path: cudapages/thrust/thrust/thrust/random/uniform_real_distribution.mdx
+          - page: xor_combine_engine
+            path: cudapages/thrust/thrust/thrust/random/xor_combine_engine.mdx
+      - section: Thrust / system
+        contents:
+          - page: error_category
+            path: cudapages/thrust/thrust/thrust/system/error_category.mdx
+          - page: error_code
+            path: cudapages/thrust/thrust/thrust/system/error_code.mdx
+          - page: error_condition
+            path: cudapages/thrust/thrust/thrust/system/error_condition.mdx
+          - page: is_error_code_enum
+            path: cudapages/thrust/thrust/thrust/system/is_error_code_enum.mdx
+          - page: is_error_code_enum_cudaerrcerrc_t
+            path: cudapages/thrust/thrust/thrust/system/is_error_code_enum_cudaerrcerrc_t.mdx
+          - page: is_error_condition_enum
+            path: cudapages/thrust/thrust/thrust/system/is_error_condition_enum.mdx
+          - page: is_error_condition_enum_errcerrc_t
+            path: cudapages/thrust/thrust/thrust/system/is_error_condition_enum_errcerrc_t.mdx
+          - page: system_error
+            path: cudapages/thrust/thrust/thrust/system/system_error.mdx
+      - section: libcudacxx
+        contents:
+          - page: arch_traits_t
+            path: cudapages/cuda/cuda/cuda/arch_traits_t.mdx
+          - page: buffer
+            path: cudapages/cuda/cuda/cuda/buffer.mdx
+          - page: compute_capability
+            path: cudapages/cuda/cuda/cuda/compute_capability.mdx
+          - page: constant_iterator
+            path: cudapages/cuda/cuda/cuda/constant_iterator.mdx
+          - page: copy_configuration
+            path: cudapages/cuda/cuda/cuda/copy_configuration.mdx
+          - page: counting_iterator
+            path: cudapages/cuda/cuda/cuda/counting_iterator.mdx
+          - page: device_memory_pool
+            path: cudapages/cuda/cuda/cuda/device_memory_pool.mdx
+          - page: device_memory_pool_ref
+            path: cudapages/cuda/cuda/cuda/device_memory_pool_ref.mdx
+          - page: device_ref
+            path: cudapages/cuda/cuda/cuda/device_ref.mdx
+          - page: discard_iterator
+            path: cudapages/cuda/cuda/cuda/discard_iterator.mdx
+          - page: event
+            path: cudapages/cuda/cuda/cuda/event.mdx
+          - page: event_ref
+            path: cudapages/cuda/cuda/cuda/event_ref.mdx
+          - page: get_stream_t
+            path: cudapages/cuda/cuda/cuda/get_stream_t.mdx
+          - page: has_property
+            path: cudapages/cuda/cuda/cuda/has_property.mdx
+          - page: has_property_with
+            path: cudapages/cuda/cuda/cuda/has_property_with.mdx
+          - page: heterogeneous_iterator
+            path: cudapages/cuda/cuda/cuda/heterogeneous_iterator.mdx
+          - page: managed_memory_pool
+            path: cudapages/cuda/cuda/cuda/managed_memory_pool.mdx
+          - page: managed_memory_pool_ref
+            path: cudapages/cuda/cuda/cuda/managed_memory_pool_ref.mdx
+          - page: memory_pool_properties
+            path: cudapages/cuda/cuda/cuda/memory_pool_properties.mdx
+          - page: permutation_iterator
+            path: cudapages/cuda/cuda/cuda/permutation_iterator.mdx
+          - page: pinned_memory_pool
+            path: cudapages/cuda/cuda/cuda/pinned_memory_pool.mdx
+          - page: pinned_memory_pool_ref
+            path: cudapages/cuda/cuda/cuda/pinned_memory_pool_ref.mdx
+          - page: property_with_value
+            path: cudapages/cuda/cuda/cuda/property_with_value.mdx
+          - page: shuffle_iterator
+            path: cudapages/cuda/cuda/cuda/shuffle_iterator.mdx
+          - page: stream
+            path: cudapages/cuda/cuda/cuda/stream.mdx
+          - page: stream_ref
+            path: cudapages/cuda/cuda/cuda/stream_ref.mdx
+          - page: strided_iterator
+            path: cudapages/cuda/cuda/cuda/strided_iterator.mdx
+          - page: tabulate_output_iterator
+            path: cudapages/cuda/cuda/cuda/tabulate_output_iterator.mdx
+          - page: timed_event
+            path: cudapages/cuda/cuda/cuda/timed_event.mdx
+          - page: transform_input_output_iterator
+            path: cudapages/cuda/cuda/cuda/transform_input_output_iterator.mdx
+          - page: transform_iterator
+            path: cudapages/cuda/cuda/cuda/transform_iterator.mdx
+          - page: transform_output_iterator
+            path: cudapages/cuda/cuda/cuda/transform_output_iterator.mdx
+          - page: zip_function
+            path: cudapages/cuda/cuda/cuda/zip_function.mdx
+          - page: zip_iterator
+            path: cudapages/cuda/cuda/cuda/zip_iterator.mdx
+          - page: zip_transform_iterator
+            path: cudapages/cuda/cuda/cuda/zip_transform_iterator.mdx
+      - section: libcudacxx / device_attributes
+        contents:
+          - page: compute_capability_t
+            path: cudapages/cuda/cuda/cuda/device_attributes/compute_capability_t.mdx
+      - section: libcudacxx / mr
+        contents:
+          - page: basic_any_resource
+            path: cudapages/cuda/cuda/cuda/mr/basic_any_resource.mdx
+          - page: basic_resource_ref
+            path: cudapages/cuda/cuda/cuda/mr/basic_resource_ref.mdx
+          - page: device_accessible
+            path: cudapages/cuda/cuda/cuda/mr/device_accessible.mdx
+          - page: host_accessible
+            path: cudapages/cuda/cuda/cuda/mr/host_accessible.mdx
+          - page: legacy_managed_memory_resource
+            path: cudapages/cuda/cuda/cuda/mr/legacy_managed_memory_resource.mdx
+          - page: legacy_pinned_memory_resource
+            path: cudapages/cuda/cuda/cuda/mr/legacy_pinned_memory_resource.mdx
+          - page: properties_list
+            path: cudapages/cuda/cuda/cuda/mr/properties_list.mdx
+          - page: resource
+            path: cudapages/cuda/cuda/cuda/mr/resource.mdx
+          - page: resource_with
+            path: cudapages/cuda/cuda/cuda/mr/resource_with.mdx
+          - page: shared_resource
+            path: cudapages/cuda/cuda/cuda/mr/shared_resource.mdx
+          - page: synchronous_resource
+            path: cudapages/cuda/cuda/cuda/mr/synchronous_resource.mdx
+          - page: synchronous_resource_adapter
+            path: cudapages/cuda/cuda/cuda/mr/synchronous_resource_adapter.mdx
+          - page: synchronous_resource_with
+            path: cudapages/cuda/cuda/cuda/mr/synchronous_resource_with.mdx
+      - section: libcudacxx / std
+        contents:
+          - page: pointer_traits
+            path: cudapages/cuda/cuda/cuda/std/pointer_traits.mdx
 
 navbar-links:
   - type: minimal

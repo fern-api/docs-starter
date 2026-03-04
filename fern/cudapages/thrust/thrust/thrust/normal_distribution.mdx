@@ -1,0 +1,271 @@
+---
+title: thrust::normal_distribution
+description: "A [`normal_distribution`](/library/api/thrust::normal_distribution) random number distribution produces floating point Normally distributed random numbers."
+---
+
+A `normal_distribution` random number distribution produces floating point Normally distributed random numbers.
+
+The following code snippet demonstrates examples of using a `normal_distribution` with a random number engine to produce random values drawn from the Normal distribution with a given mean and variance:
+
+```cpp showLineNumbers={false}
+#include <thrust/normal_distribution.h>
+```
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <thrust/random/linear_congruential_engine.h>
+#include <thrust/random/normal_distribution.h>
+
+int main()
+{
+  // create a minstd_rand object to act as our source of randomness
+  thrust::minstd_rand rng;
+
+  // create a normal_distribution to produce floats from the Normal distribution
+  // with mean 2.0 and standard deviation 3.5
+  thrust::random::normal_distribution<float> dist(2.0f, 3.5f);
+
+  // write a random number to standard output
+  std::cout << dist(rng) << std::endl;
+
+  // write the mean of the distribution, just in case we forgot
+  std::cout << dist.mean() << std::endl;
+
+  // 2.0 is printed
+
+  // and the standard deviation
+  std::cout << dist.stddev() << std::endl;
+
+  // 3.5 is printed
+
+  return 0;
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="RealType" type="typename" default="double">
+The type of floating point number to produce.
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `detail::normal_distribution_base::type` (public)
+
+---
+
+## Constructors
+
+### normal_distribution <Badge intent="note" minimal>explicit</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+This constructor creates a new `normal_distribution` from two values defining the half-open interval of the distribution.
+
+<CodeBlock links={{"normal_distribution": "/library/api/thrust::normal_distribution"}}>
+```cpp showLineNumbers={false}
+thrust::random::normal_distribution<RealType>::normal_distribution(
+    RealType mean = 0.0,
+    RealType stddev = 1.0
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="mean" type="RealType" default="0.0">
+The mean (expected value) of the distribution. Defaults to `0.0`.
+</ParamField>
+
+<ParamField path="stddev" type="RealType" default="1.0">
+The standard deviation of the distribution. Defaults to `1.0`.
+</ParamField>
+
+</Tab>
+<Tab title="Copy">
+
+This constructor creates a new `normal_distribution` from a [`param_type`](/library/api/thrust::random::normal_distribution::param_type) object encapsulating the range of the distribution.
+
+<CodeBlock links={{"normal_distribution": "/library/api/thrust::normal_distribution"}}>
+```cpp showLineNumbers={false}
+thrust::random::normal_distribution<RealType>::normal_distribution(
+    const param_type &parm
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="parm" type="const param_type &">
+A [`param_type`](/library/api/thrust::random::normal_distribution::param_type) object encapsulating the parameters (i.e., the mean and standard deviation) of the distribution.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### reset
+
+Calling this member function guarantees that subsequent uses of this `normal_distribution` do not depend on values produced by any random number generator prior to invoking this function.
+
+<CodeBlock links={{"normal_distribution": "/library/api/thrust::normal_distribution"}}>
+```cpp showLineNumbers={false}
+void thrust::random::normal_distribution<RealType>::reset()
+```
+</CodeBlock>
+
+### operator()
+
+<Tabs>
+<Tab title="Overload 1">
+
+This method produces a new Normal random integer drawn from this `normal_distribution``'s` range using a `UniformRandomNumberGenerator` as a source of randomness.
+
+<CodeBlock links={{"normal_distribution": "/library/api/thrust::normal_distribution"}}>
+```cpp showLineNumbers={false}
+template <typename UniformRandomNumberGenerator>
+result_type thrust::random::normal_distribution<RealType>::operator()(
+    UniformRandomNumberGenerator &urng
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="urng" type="UniformRandomNumberGenerator &">
+The `UniformRandomNumberGenerator` to use as a source of randomness.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+This method produces a new Normal random integer as if by creating a new `normal_distribution` from the given [`param_type`](/library/api/thrust::random::normal_distribution::param_type) object, and calling its `operator()` method with the given `UniformRandomNumberGenerator` as a source of randomness.
+
+<CodeBlock links={{"normal_distribution": "/library/api/thrust::normal_distribution"}}>
+```cpp showLineNumbers={false}
+template <typename UniformRandomNumberGenerator>
+result_type thrust::random::normal_distribution<RealType>::operator()(
+    UniformRandomNumberGenerator &urng,
+    const param_type &parm
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="urng" type="UniformRandomNumberGenerator &">
+The `UniformRandomNumberGenerator` to use as a source of randomness.
+</ParamField>
+
+<ParamField path="parm" type="const param_type &">
+A [`param_type`](/library/api/thrust::random::normal_distribution::param_type) object encapsulating the parameters of the `normal_distribution` to draw from.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### mean <Badge intent="note" minimal>const</Badge>
+
+This method returns the value of the parameter with which this `normal_distribution` was constructed.
+
+<CodeBlock links={{"normal_distribution": "/library/api/thrust::normal_distribution"}}>
+```cpp showLineNumbers={false}
+result_type thrust::random::normal_distribution<RealType>::mean() const
+```
+</CodeBlock>
+
+**Returns:** The mean (expected value) of this `normal_distribution``'s` output.
+
+### stddev <Badge intent="note" minimal>const</Badge>
+
+This method returns the value of the parameter with which this `normal_distribution` was constructed.
+
+<CodeBlock links={{"normal_distribution": "/library/api/thrust::normal_distribution"}}>
+```cpp showLineNumbers={false}
+result_type thrust::random::normal_distribution<RealType>::stddev() const
+```
+</CodeBlock>
+
+**Returns:** The standard deviation of this [`uniform_real_distribution`](/library/api/thrust::uniform_real_distribution)`'s` output.
+
+### param
+
+<Tabs>
+<Tab title="Mutable">
+
+This method changes the parameters of this `normal_distribution` using the values encapsulated in a given [`param_type`](/library/api/thrust::random::normal_distribution::param_type) object.
+
+<CodeBlock links={{"normal_distribution": "/library/api/thrust::normal_distribution"}}>
+```cpp showLineNumbers={false}
+void thrust::random::normal_distribution<RealType>::param(
+    const param_type &parm
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="parm" type="const param_type &">
+A [`param_type`](/library/api/thrust::random::normal_distribution::param_type) object encapsulating the new parameters (i.e., the mean and variance) of this `normal_distribution`.
+</ParamField>
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+This method returns a [`param_type`](/library/api/thrust::random::normal_distribution::param_type) object encapsulating the parameters with which this `normal_distribution` was constructed.
+
+<CodeBlock links={{"normal_distribution": "/library/api/thrust::normal_distribution"}}>
+```cpp showLineNumbers={false}
+param_type thrust::random::normal_distribution<RealType>::param() const
+```
+</CodeBlock>
+
+**Returns:** A [`param_type`](/library/api/thrust::random::normal_distribution::param_type) object encapsulating the parameters (i.e., the mean and standard deviation) of this `normal_distribution`.
+
+</Tab>
+</Tabs>
+
+### min <Badge intent="note" minimal>const</Badge>
+
+This method returns the smallest floating point number this `normal_distribution` can potentially produce.
+
+<CodeBlock links={{"normal_distribution": "/library/api/thrust::normal_distribution"}}>
+```cpp showLineNumbers={false}
+result_type thrust::random::normal_distribution<RealType>::min() const
+```
+</CodeBlock>
+
+**Returns:** The lower bound of this `normal_distribution``'s` half-open interval.
+
+### max <Badge intent="note" minimal>const</Badge>
+
+This method returns the smallest number larger than largest floating point number this [`uniform_real_distribution`](/library/api/thrust::uniform_real_distribution) can potentially produce.
+
+<CodeBlock links={{"normal_distribution": "/library/api/thrust::normal_distribution"}}>
+```cpp showLineNumbers={false}
+result_type thrust::random::normal_distribution<RealType>::max() const
+```
+</CodeBlock>
+
+**Returns:** The upper bound of this `normal_distribution``'s` half-open interval.
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `super_t` | `typename detail::normal_distribution_base< RealType >::type` | |
+| `result_type` | `RealType` | The type of the floating point number produced by this `normal_distribution`. |
+| `param_type` | `::cuda::std::pair< RealType, RealType >` | The type of the object encapsulating this `normal_distribution``'s` parameters. |

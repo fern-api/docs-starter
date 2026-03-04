@@ -1,0 +1,229 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/tracers/_compat
+title: langchain_core.tracers._compat
+---
+
+Compatibility helpers for Pydantic v1/v2 with langsmith `Run` objects.
+
+!!! note
+
+    The generic helpers (`pydantic_to_dict`, `pydantic_copy`) detect Pydanti version
+    based on the langsmith `Run` model. They're intended for langsmith objects (`Run`,
+    `Example`) which migrate together.
+
+For general Pydantic v1/v2 handling, see `langchain_core.utils.pydantic`.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`pydantic_copy`](#langchain_core-tracers-_compat-pydantic_copy) | Copy any Pydantic model, compatible with both v1 and v2. |
+| [`pydantic_to_dict`](#langchain_core-tracers-_compat-pydantic_to_dict) | Convert any Pydantic model to dict, compatible with both v1 and v2. |
+| [`run_construct`](#langchain_core-tracers-_compat-run_construct) | Construct run without validation, compatible with both Pydantic v1 and v2. |
+| [`run_copy`](#langchain_core-tracers-_compat-run_copy) | Copy run, compatible with both Pydantic v1 and v2. |
+| [`run_to_dict`](#langchain_core-tracers-_compat-run_to_dict) | Convert run to dict, compatible with both Pydantic v1 and v2. |
+
+### Data
+
+[`T`](#langchain_core-tracers-_compat-T)
+
+[`_RUN_IS_PYDANTIC_V2`](#langchain_core-tracers-_compat-_RUN_IS_PYDANTIC_V2)
+
+### API
+
+<Anchor id="langchain_core-tracers-_compat-pydantic_copy">
+
+<CodeBlock links={{"langchain_core.tracers._compat.T":"#langchain_core-tracers-_compat-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers._compat.pydantic_copy(
+    obj: langchain_core.tracers._compat.T,
+    kwargs: typing.Any = {}
+) -> langchain_core.tracers._compat.T
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Copy any Pydantic model, compatible with both v1 and v2.
+
+**Parameters:**
+
+<ParamField path="obj" type="T">
+The Pydantic model to copy.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments passed to `model_copy`/`copy`.
+</ParamField>
+
+**Returns:** `T`
+
+A copy of the model.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-_compat-pydantic_to_dict">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers._compat.pydantic_to_dict(
+    obj: typing.Any,
+    kwargs: typing.Any = {}
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert any Pydantic model to dict, compatible with both v1 and v2.
+
+**Parameters:**
+
+<ParamField path="obj" type="Any">
+The Pydantic model to convert.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments passed to `model_dump`/`dict`.
+</ParamField>
+
+**Returns:** `dict[str, Any]`
+
+Dictionary representation of the model.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-_compat-run_construct">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers._compat.run_construct(
+    kwargs: typing.Any = {}
+) -> langchain_core.tracers.schemas.Run
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Construct run without validation, compatible with both Pydantic v1 and v2.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Fields to set on the run.
+</ParamField>
+
+**Returns:** `Run`
+
+A new `Run` instance constructed without validation.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-_compat-run_copy">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers._compat.run_copy(
+    run: langchain_core.tracers.schemas.Run,
+    kwargs: typing.Any = {}
+) -> langchain_core.tracers.schemas.Run
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Copy run, compatible with both Pydantic v1 and v2.
+
+**Parameters:**
+
+<ParamField path="run" type="Run">
+The run to copy.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments passed to `model_copy`/`copy`.
+</ParamField>
+
+**Returns:** `Run`
+
+A copy of the run.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-_compat-run_to_dict">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers._compat.run_to_dict(
+    run: langchain_core.tracers.schemas.Run,
+    kwargs: typing.Any = {}
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert run to dict, compatible with both Pydantic v1 and v2.
+
+**Parameters:**
+
+<ParamField path="run" type="Run">
+The run to convert.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments passed to `model_dump`/`dict`.
+</ParamField>
+
+**Returns:** `dict[str, Any]`
+
+Dictionary representation of the run.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-_compat-T">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers._compat.T = TypeVar('T')
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-tracers-_compat-_RUN_IS_PYDANTIC_V2">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers._compat._RUN_IS_PYDANTIC_V2 = hasattr(Run, 'model_dump')
+```
+
+</CodeBlock>
+</Anchor>
+

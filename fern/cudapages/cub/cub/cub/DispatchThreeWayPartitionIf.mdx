@@ -1,0 +1,142 @@
+---
+title: cub::DispatchThreeWayPartitionIf
+description: ""
+---
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="InputIteratorT" type="typename">
+</ParamField>
+
+<ParamField path="FirstOutputIteratorT" type="typename">
+</ParamField>
+
+<ParamField path="SecondOutputIteratorT" type="typename">
+</ParamField>
+
+<ParamField path="UnselectedOutputIteratorT" type="typename">
+</ParamField>
+
+<ParamField path="NumSelectedIteratorT" type="typename">
+</ParamField>
+
+<ParamField path="SelectFirstPartOp" type="typename">
+</ParamField>
+
+<ParamField path="SelectSecondPartOp" type="typename">
+</ParamField>
+
+<ParamField path="OffsetT" type="typename">
+</ParamField>
+
+<ParamField path="PolicyHub" type="typename" default="detail::three_way_partition::policy_hub<cub::detail::it_value_t<InputIteratorT>,                                                                  detail::three_way_partition::per_partition_offset_t>">
+</ParamField>
+
+<ParamField path="KernelSource" type="typename" default="detail::three_way_partition::DeviceThreeWayPartitionKernelSource<    typename PolicyHub::MaxPolicy,    InputIteratorT,    FirstOutputIteratorT,    SecondOutputIteratorT,    UnselectedOutputIteratorT,    NumSelectedIteratorT,    detail::three_way_partition::ScanTileStateT,    SelectFirstPartOp,    SelectSecondPartOp,    detail::three_way_partition::per_partition_offset_t,    detail::three_way_partition::streaming_context_t<OffsetT>,    OffsetT>">
+</ParamField>
+
+<ParamField path="KernelLauncherFactory" type="typename" default="CUB_DETAIL_DEFAULT_KERNEL_LAUNCHER_FACTORY">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Methods
+
+### Invoke <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+<CodeBlock links={{"DispatchThreeWayPartitionIf": "/library/api/cub::DispatchThreeWayPartitionIf"}}>
+```cpp showLineNumbers={false}
+template <typename ActivePolicyT, typename ScanInitKernelPtrT, typename SelectIfKernelPtrT>
+cudaError_t cub::DispatchThreeWayPartitionIf<InputIteratorT, FirstOutputIteratorT, SecondOutputIteratorT, UnselectedOutputIteratorT, NumSelectedIteratorT, SelectFirstPartOp, SelectSecondPartOp, OffsetT, PolicyHub, KernelSource, KernelLauncherFactory>::Invoke(
+    ActivePolicyT policy,
+    ScanInitKernelPtrT three_way_partition_init_kernel,
+    SelectIfKernelPtrT three_way_partition_kernel
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Overload 2">
+
+<CodeBlock links={{"DispatchThreeWayPartitionIf": "/library/api/cub::DispatchThreeWayPartitionIf"}}>
+```cpp showLineNumbers={false}
+template <typename ActivePolicyT>
+cudaError_t cub::DispatchThreeWayPartitionIf<InputIteratorT, FirstOutputIteratorT, SecondOutputIteratorT, UnselectedOutputIteratorT, NumSelectedIteratorT, SelectFirstPartOp, SelectSecondPartOp, OffsetT, PolicyHub, KernelSource, KernelLauncherFactory>::Invoke(
+    ActivePolicyT active_policy = {}
+)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Static methods
+
+### Dispatch <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Internal dispatch routine.
+
+<CodeBlock links={{"DispatchThreeWayPartitionIf": "/library/api/cub::DispatchThreeWayPartitionIf"}}>
+```cpp showLineNumbers={false}
+template <typename MaxPolicyT>
+static cudaError_t cub::DispatchThreeWayPartitionIf<InputIteratorT, FirstOutputIteratorT, SecondOutputIteratorT, UnselectedOutputIteratorT, NumSelectedIteratorT, SelectFirstPartOp, SelectSecondPartOp, OffsetT, PolicyHub, KernelSource, KernelLauncherFactory>::Dispatch(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    FirstOutputIteratorT d_first_part_out,
+    SecondOutputIteratorT d_second_part_out,
+    UnselectedOutputIteratorT d_unselected_out,
+    NumSelectedIteratorT d_num_selected_out,
+    SelectFirstPartOp select_first_part_op,
+    SelectSecondPartOp select_second_part_op,
+    OffsetT num_items,
+    cudaStream_t stream,
+    KernelSource kernel_source = {},
+    KernelLauncherFactory launcher_factory = {},
+    MaxPolicyT max_policy = {}
+)
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `per_partition_offset_t` | `detail::three_way_partition::per_partition_offset_t` |
+| `streaming_context_t` | `detail::three_way_partition::streaming_context_t< OffsetT >` |
+| `ScanTileStateT` | `detail::three_way_partition::ScanTileStateT` |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `partition_size` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `per_partition_offset_t` | |
+| `INIT_KERNEL_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `d_temp_storage` | `void *` | |
+| `temp_storage_bytes` | `size_t &` | |
+| `d_in` | `InputIteratorT` | |
+| `d_first_part_out` | `FirstOutputIteratorT` | |
+| `d_second_part_out` | `SecondOutputIteratorT` | |
+| `d_unselected_out` | `UnselectedOutputIteratorT` | |
+| `d_num_selected_out` | `NumSelectedIteratorT` | |
+| `select_first_part_op` | `SelectFirstPartOp` | |
+| `select_second_part_op` | `SelectSecondPartOp` | |
+| `num_items` | `OffsetT` | |
+| `stream` | `cudaStream_t` | |
+| `kernel_source` | `KernelSource` | |
+| `launcher_factory` | `KernelLauncherFactory` | |

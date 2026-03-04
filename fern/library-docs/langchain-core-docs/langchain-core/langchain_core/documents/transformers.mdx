@@ -1,0 +1,104 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/documents/transformers
+title: langchain_core.documents.transformers
+---
+
+Document transformers.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`BaseDocumentTransformer`](#langchain_core-documents-transformers-BaseDocumentTransformer) | Abstract base class for document transformation. |
+
+### API
+
+<Anchor id="langchain_core-documents-transformers-BaseDocumentTransformer">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.documents.transformers.BaseDocumentTransformer()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+Abstract base class for document transformation.
+
+A document transformation takes a sequence of `Document` objects and returns a
+sequence of transformed `Document` objects.
+
+
+<Anchor id="langchain_core-documents-transformers-BaseDocumentTransformer-atransform_documents">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.documents.transformers.BaseDocumentTransformer.atransform_documents(
+    documents: collections.abc.Sequence[langchain_core.documents.Document],
+    kwargs: typing.Any = {}
+) -> collections.abc.Sequence[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Asynchronously transform a list of documents.
+
+**Parameters:**
+
+<ParamField path="documents" type="Sequence[Document]">
+A sequence of `Document` objects to be transformed.
+</ParamField>
+
+**Returns:** `Sequence[Document]`
+
+A sequence of transformed `Document` objects.
+
+
+</Indent>
+<Anchor id="langchain_core-documents-transformers-BaseDocumentTransformer-transform_documents">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.documents.transformers.BaseDocumentTransformer.transform_documents(
+    documents: collections.abc.Sequence[langchain_core.documents.Document],
+    kwargs: typing.Any = {}
+) -> collections.abc.Sequence[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Transform a list of documents.
+
+**Parameters:**
+
+<ParamField path="documents" type="Sequence[Document]">
+A sequence of `Document` objects to be transformed.
+</ParamField>
+
+**Returns:** `Sequence[Document]`
+
+A sequence of transformed `Document` objects.
+
+
+</Indent>
+</Indent>

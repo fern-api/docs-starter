@@ -1,0 +1,656 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/example_selectors/semantic_similarity
+title: langchain_core.example_selectors.semantic_similarity
+---
+
+Example selector that selects examples based on SemanticSimilarity.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`MaxMarginalRelevanceExampleSelector`](#langchain_core-example_selectors-semantic_similarity-MaxMarginalRelevanceExampleSelector) | Select examples based on Max Marginal Relevance. |
+| [`SemanticSimilarityExampleSelector`](#langchain_core-example_selectors-semantic_similarity-SemanticSimilarityExampleSelector) | Select examples based on semantic similarity. |
+| [`_VectorStoreExampleSelector`](#langchain_core-example_selectors-semantic_similarity-_VectorStoreExampleSelector) | Example selector that selects examples based on SemanticSimilarity. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`sorted_values`](#langchain_core-example_selectors-semantic_similarity-sorted_values) | Return a list of values in dict sorted by key. |
+
+### API
+
+<Anchor id="langchain_core-example_selectors-semantic_similarity-MaxMarginalRelevanceExampleSelector">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.example_selectors.semantic_similarity.MaxMarginalRelevanceExampleSelector()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [_VectorStoreExampleSelector](#langchain_core-example_selectors-semantic_similarity-_VectorStoreExampleSelector)
+
+Select examples based on Max Marginal Relevance.
+
+This was shown to improve performance in this paper:
+https://arxiv.org/pdf/2211.13892.pdf
+
+
+<ParamField path="fetch_k" type="int = 20">
+Number of examples to fetch to rerank.
+</ParamField>
+<Anchor id="langchain_core-example_selectors-semantic_similarity-MaxMarginalRelevanceExampleSelector-afrom_examples">
+
+<CodeBlock links={{"langchain_core.embeddings.Embeddings":"/langchain-core/langchain_core/embeddings/embeddings#langchain_core-embeddings-embeddings-Embeddings","langchain_core.vectorstores.VectorStore":"/langchain-core/langchain_core/vectorstores/base#langchain_core-vectorstores-base-VectorStore","langchain_core.example_selectors.semantic_similarity.MaxMarginalRelevanceExampleSelector":"#langchain_core-example_selectors-semantic_similarity-MaxMarginalRelevanceExampleSelector"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.semantic_similarity.MaxMarginalRelevanceExampleSelector.afrom_examples(
+    examples: list[dict],
+    embeddings: langchain_core.embeddings.Embeddings,
+    vectorstore_cls: type[langchain_core.vectorstores.VectorStore],
+    k: int = 4,
+    input_keys: list[str] | None = None,
+    fetch_k: int = 20,
+    example_keys: list[str] | None = None,
+    vectorstore_kwargs: dict | None = None,
+    vectorstore_cls_kwargs: typing.Any = {}
+) -> langchain_core.example_selectors.semantic_similarity.MaxMarginalRelevanceExampleSelector
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge> <Badge>classmethod</Badge>
+
+Create k-shot example selector using example list and embeddings.
+
+Reshuffles examples dynamically based on Max Marginal Relevance.
+
+**Parameters:**
+
+<ParamField path="examples" type="list[dict]">
+List of examples to use in the prompt.
+</ParamField>
+
+<ParamField path="embeddings" type="Embeddings">
+An initialized embedding API interface, e.g. OpenAIEmbeddings().
+</ParamField>
+
+<ParamField path="vectorstore_cls" type="type[VectorStore]">
+A vector store DB interface class, e.g. FAISS.
+</ParamField>
+
+<ParamField path="k" type="int" default="4">
+Number of examples to select.
+</ParamField>
+
+<ParamField path="fetch_k" type="int" default="20">
+Number of `Document` objects to fetch to pass to MMR algorithm.
+</ParamField>
+
+<ParamField path="input_keys" type="list[str] | None" default="None">
+If provided, the search is based on the input variables
+instead of all variables.
+</ParamField>
+
+<ParamField path="example_keys" type="list[str] | None" default="None">
+If provided, keys to filter examples to.
+</ParamField>
+
+<ParamField path="vectorstore_kwargs" type="dict | None" default="None">
+Extra arguments passed to similarity_search function
+of the `VectorStore`.
+</ParamField>
+
+<ParamField path="vectorstore_cls_kwargs" type="Any" default="&#123;&#125;">
+optional kwargs containing url for vector store
+</ParamField>
+
+**Returns:** `MaxMarginalRelevanceExampleSelector`
+
+The ExampleSelector instantiated, backed by a vector store.
+
+
+</Indent>
+<Anchor id="langchain_core-example_selectors-semantic_similarity-MaxMarginalRelevanceExampleSelector-aselect_examples">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.semantic_similarity.MaxMarginalRelevanceExampleSelector.aselect_examples(
+    input_variables: dict[str, str]
+) -> list[dict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Asynchronously select examples based on Max Marginal Relevance.
+
+**Parameters:**
+
+<ParamField path="input_variables" type="dict[str, str]">
+The input variables to use for search.
+</ParamField>
+
+**Returns:** `list[dict]`
+
+The selected examples.
+
+
+</Indent>
+<Anchor id="langchain_core-example_selectors-semantic_similarity-MaxMarginalRelevanceExampleSelector-from_examples">
+
+<CodeBlock links={{"langchain_core.embeddings.Embeddings":"/langchain-core/langchain_core/embeddings/embeddings#langchain_core-embeddings-embeddings-Embeddings","langchain_core.vectorstores.VectorStore":"/langchain-core/langchain_core/vectorstores/base#langchain_core-vectorstores-base-VectorStore","langchain_core.example_selectors.semantic_similarity.MaxMarginalRelevanceExampleSelector":"#langchain_core-example_selectors-semantic_similarity-MaxMarginalRelevanceExampleSelector"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.semantic_similarity.MaxMarginalRelevanceExampleSelector.from_examples(
+    examples: list[dict],
+    embeddings: langchain_core.embeddings.Embeddings,
+    vectorstore_cls: type[langchain_core.vectorstores.VectorStore],
+    k: int = 4,
+    input_keys: list[str] | None = None,
+    fetch_k: int = 20,
+    example_keys: list[str] | None = None,
+    vectorstore_kwargs: dict | None = None,
+    vectorstore_cls_kwargs: typing.Any = {}
+) -> langchain_core.example_selectors.semantic_similarity.MaxMarginalRelevanceExampleSelector
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Create k-shot example selector using example list and embeddings.
+
+Reshuffles examples dynamically based on Max Marginal Relevance.
+
+**Parameters:**
+
+<ParamField path="examples" type="list[dict]">
+List of examples to use in the prompt.
+</ParamField>
+
+<ParamField path="embeddings" type="Embeddings">
+An initialized embedding API interface, e.g. OpenAIEmbeddings().
+</ParamField>
+
+<ParamField path="vectorstore_cls" type="type[VectorStore]">
+A vector store DB interface class, e.g. FAISS.
+</ParamField>
+
+<ParamField path="k" type="int" default="4">
+Number of examples to select.
+</ParamField>
+
+<ParamField path="fetch_k" type="int" default="20">
+Number of `Document` objects to fetch to pass to MMR algorithm.
+</ParamField>
+
+<ParamField path="input_keys" type="list[str] | None" default="None">
+If provided, the search is based on the input variables
+instead of all variables.
+</ParamField>
+
+<ParamField path="example_keys" type="list[str] | None" default="None">
+If provided, keys to filter examples to.
+</ParamField>
+
+<ParamField path="vectorstore_kwargs" type="dict | None" default="None">
+Extra arguments passed to similarity_search function
+of the `VectorStore`.
+</ParamField>
+
+<ParamField path="vectorstore_cls_kwargs" type="Any" default="&#123;&#125;">
+optional kwargs containing url for vector store
+</ParamField>
+
+**Returns:** `MaxMarginalRelevanceExampleSelector`
+
+The ExampleSelector instantiated, backed by a vector store.
+
+
+</Indent>
+<Anchor id="langchain_core-example_selectors-semantic_similarity-MaxMarginalRelevanceExampleSelector-select_examples">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.semantic_similarity.MaxMarginalRelevanceExampleSelector.select_examples(
+    input_variables: dict[str, str]
+) -> list[dict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Select examples based on Max Marginal Relevance.
+
+**Parameters:**
+
+<ParamField path="input_variables" type="dict[str, str]">
+The input variables to use for search.
+</ParamField>
+
+**Returns:** `list[dict]`
+
+The selected examples.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-example_selectors-semantic_similarity-SemanticSimilarityExampleSelector">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [_VectorStoreExampleSelector](#langchain_core-example_selectors-semantic_similarity-_VectorStoreExampleSelector)
+
+Select examples based on semantic similarity.
+
+
+<Anchor id="langchain_core-example_selectors-semantic_similarity-SemanticSimilarityExampleSelector-afrom_examples">
+
+<CodeBlock links={{"langchain_core.embeddings.Embeddings":"/langchain-core/langchain_core/embeddings/embeddings#langchain_core-embeddings-embeddings-Embeddings","langchain_core.vectorstores.VectorStore":"/langchain-core/langchain_core/vectorstores/base#langchain_core-vectorstores-base-VectorStore","langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector":"#langchain_core-example_selectors-semantic_similarity-SemanticSimilarityExampleSelector"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector.afrom_examples(
+    examples: list[dict],
+    embeddings: langchain_core.embeddings.Embeddings,
+    vectorstore_cls: type[langchain_core.vectorstores.VectorStore],
+    k: int = 4,
+    input_keys: list[str] | None = None,
+    example_keys: list[str] | None = None,
+    vectorstore_kwargs: dict | None = None,
+    vectorstore_cls_kwargs: typing.Any = {}
+) -> langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge> <Badge>classmethod</Badge>
+
+Async create k-shot example selector using example list and embeddings.
+
+Reshuffles examples dynamically based on query similarity.
+
+**Parameters:**
+
+<ParamField path="examples" type="list[dict]">
+List of examples to use in the prompt.
+</ParamField>
+
+<ParamField path="embeddings" type="Embeddings">
+An initialized embedding API interface, e.g. OpenAIEmbeddings().
+</ParamField>
+
+<ParamField path="vectorstore_cls" type="type[VectorStore]">
+A vector store DB interface class, e.g. FAISS.
+</ParamField>
+
+<ParamField path="k" type="int" default="4">
+Number of examples to select.
+</ParamField>
+
+<ParamField path="input_keys" type="list[str] | None" default="None">
+If provided, the search is based on the input variables
+instead of all variables.
+</ParamField>
+
+<ParamField path="example_keys" type="list[str] | None" default="None">
+If provided, keys to filter examples to.
+</ParamField>
+
+<ParamField path="vectorstore_kwargs" type="dict | None" default="None">
+Extra arguments passed to similarity_search function
+of the `VectorStore`.
+</ParamField>
+
+<ParamField path="vectorstore_cls_kwargs" type="Any" default="&#123;&#125;">
+optional kwargs containing url for vector store
+</ParamField>
+
+**Returns:** `SemanticSimilarityExampleSelector`
+
+The ExampleSelector instantiated, backed by a vector store.
+
+
+</Indent>
+<Anchor id="langchain_core-example_selectors-semantic_similarity-SemanticSimilarityExampleSelector-aselect_examples">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector.aselect_examples(
+    input_variables: dict[str, str]
+) -> list[dict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Asynchronously select examples based on semantic similarity.
+
+**Parameters:**
+
+<ParamField path="input_variables" type="dict[str, str]">
+The input variables to use for search.
+</ParamField>
+
+**Returns:** `list[dict]`
+
+The selected examples.
+
+
+</Indent>
+<Anchor id="langchain_core-example_selectors-semantic_similarity-SemanticSimilarityExampleSelector-from_examples">
+
+<CodeBlock links={{"langchain_core.embeddings.Embeddings":"/langchain-core/langchain_core/embeddings/embeddings#langchain_core-embeddings-embeddings-Embeddings","langchain_core.vectorstores.VectorStore":"/langchain-core/langchain_core/vectorstores/base#langchain_core-vectorstores-base-VectorStore","langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector":"#langchain_core-example_selectors-semantic_similarity-SemanticSimilarityExampleSelector"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector.from_examples(
+    examples: list[dict],
+    embeddings: langchain_core.embeddings.Embeddings,
+    vectorstore_cls: type[langchain_core.vectorstores.VectorStore],
+    k: int = 4,
+    input_keys: list[str] | None = None,
+    example_keys: list[str] | None = None,
+    vectorstore_kwargs: dict | None = None,
+    vectorstore_cls_kwargs: typing.Any = {}
+) -> langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Create k-shot example selector using example list and embeddings.
+
+Reshuffles examples dynamically based on query similarity.
+
+**Parameters:**
+
+<ParamField path="examples" type="list[dict]">
+List of examples to use in the prompt.
+</ParamField>
+
+<ParamField path="embeddings" type="Embeddings">
+An initialized embedding API interface, e.g. OpenAIEmbeddings().
+</ParamField>
+
+<ParamField path="vectorstore_cls" type="type[VectorStore]">
+A vector store DB interface class, e.g. FAISS.
+</ParamField>
+
+<ParamField path="k" type="int" default="4">
+Number of examples to select.
+</ParamField>
+
+<ParamField path="input_keys" type="list[str] | None" default="None">
+If provided, the search is based on the input variables
+instead of all variables.
+</ParamField>
+
+<ParamField path="example_keys" type="list[str] | None" default="None">
+If provided, keys to filter examples to.
+</ParamField>
+
+<ParamField path="vectorstore_kwargs" type="dict | None" default="None">
+Extra arguments passed to similarity_search function
+of the `VectorStore`.
+</ParamField>
+
+<ParamField path="vectorstore_cls_kwargs" type="Any" default="&#123;&#125;">
+optional kwargs containing url for vector store
+</ParamField>
+
+**Returns:** `SemanticSimilarityExampleSelector`
+
+The ExampleSelector instantiated, backed by a vector store.
+
+
+</Indent>
+<Anchor id="langchain_core-example_selectors-semantic_similarity-SemanticSimilarityExampleSelector-select_examples">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector.select_examples(
+    input_variables: dict[str, str]
+) -> list[dict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Select examples based on semantic similarity.
+
+**Parameters:**
+
+<ParamField path="input_variables" type="dict[str, str]">
+The input variables to use for search.
+</ParamField>
+
+**Returns:** `list[dict]`
+
+The selected examples.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-example_selectors-semantic_similarity-_VectorStoreExampleSelector">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.example_selectors.semantic_similarity._VectorStoreExampleSelector()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+**Bases:** [BaseExampleSelector](/langchain-core/langchain_core/example_selectors/base#langchain_core-example_selectors-base-BaseExampleSelector), `BaseModel`
+
+Example selector that selects examples based on SemanticSimilarity.
+
+
+<ParamField path="example_keys" type="list[str] | None = None">
+Optional keys to filter examples to.
+</ParamField>
+
+<ParamField path="input_keys" type="list[str] | None = None">
+Optional keys to filter input to. If provided, the search is based on
+the input variables instead of all variables.
+</ParamField>
+
+<ParamField path="k" type="int = 4">
+Number of examples to select.
+</ParamField>
+
+<ParamField path="model_config">
+</ParamField>
+
+<ParamField path="vectorstore" type="VectorStore">
+VectorStore that contains information about examples.
+</ParamField>
+
+<ParamField path="vectorstore_kwargs" type="dict[str, Any] | None = None">
+Extra arguments passed to similarity_search function of the `VectorStore`.
+</ParamField>
+<Anchor id="langchain_core-example_selectors-semantic_similarity-_VectorStoreExampleSelector-_documents_to_examples">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.semantic_similarity._VectorStoreExampleSelector._documents_to_examples(
+    documents: list[langchain_core.documents.Document]
+) -> list[dict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-example_selectors-semantic_similarity-_VectorStoreExampleSelector-_example_to_text">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.semantic_similarity._VectorStoreExampleSelector._example_to_text(
+    example: dict[str, str],
+    input_keys: list[str] | None
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-example_selectors-semantic_similarity-_VectorStoreExampleSelector-aadd_example">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.semantic_similarity._VectorStoreExampleSelector.aadd_example(
+    example: dict[str, str]
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async add new example to vectorstore.
+
+**Parameters:**
+
+<ParamField path="example" type="dict[str, str]">
+A dictionary with keys as input variables
+and values as their values.
+</ParamField>
+
+**Returns:** `str`
+
+The ID of the added example.
+
+
+</Indent>
+<Anchor id="langchain_core-example_selectors-semantic_similarity-_VectorStoreExampleSelector-add_example">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.semantic_similarity._VectorStoreExampleSelector.add_example(
+    example: dict[str, str]
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add a new example to vectorstore.
+
+**Parameters:**
+
+<ParamField path="example" type="dict[str, str]">
+A dictionary with keys as input variables
+and values as their values.
+</ParamField>
+
+**Returns:** `str`
+
+The ID of the added example.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-example_selectors-semantic_similarity-sorted_values">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.semantic_similarity.sorted_values(
+    values: dict[str, str]
+) -> list[typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return a list of values in dict sorted by key.
+
+**Parameters:**
+
+<ParamField path="values" type="dict[str, str]">
+A dictionary with keys as input variables
+and values as their values.
+</ParamField>
+
+**Returns:** `list[Any]`
+
+A list of values in dict sorted by key.
+
+
+</Indent>

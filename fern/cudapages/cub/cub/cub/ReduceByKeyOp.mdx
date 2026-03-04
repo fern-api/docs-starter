@@ -1,0 +1,83 @@
+---
+title: cub::ReduceByKeyOp
+description: ""
+---
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="ReductionOpT" type="typename">
+Binary reduction operator to apply to values
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### ReduceByKeyOp <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+Constructor.
+
+<CodeBlock links={{"ReduceByKeyOp": "/library/api/cub::ReduceByKeyOp"}}>
+```cpp showLineNumbers={false}
+cub::ReduceByKeyOp<ReductionOpT>::ReduceByKeyOp()
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Constructor">
+
+Constructor.
+
+<CodeBlock links={{"ReduceByKeyOp": "/library/api/cub::ReduceByKeyOp"}}>
+```cpp showLineNumbers={false}
+cub::ReduceByKeyOp<ReductionOpT>::ReduceByKeyOp(
+    ReductionOpT op
+)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### operator() <Badge intent="note" minimal>inline</Badge>
+
+Scan operator.
+
+<CodeBlock links={{"ReduceByKeyOp": "/library/api/cub::ReduceByKeyOp"}}>
+```cpp showLineNumbers={false}
+template <typename KeyValuePairT>
+KeyValuePairT cub::ReduceByKeyOp<ReductionOpT>::operator()(
+    const KeyValuePairT &first,
+    const KeyValuePairT &second
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="first" type="const KeyValuePairT &">
+First partial reduction
+</ParamField>
+
+<ParamField path="second" type="const KeyValuePairT &">
+Second partial reduction
+</ParamField>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `op` | `ReductionOpT` | Wrapped reduction operator. |

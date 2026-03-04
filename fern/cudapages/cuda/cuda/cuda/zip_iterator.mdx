@@ -1,0 +1,332 @@
+---
+title: "cuda::zip_iterator"
+description: "[`zip_iterator`](/libcudacxx/api/cuda::zip_iterator) is an iterator which represents a `tuple` of iterators."
+---
+
+`zip_iterator` is an iterator which represents a `tuple` of iterators.
+
+This iterator is useful for creating a virtual array of structures while achieving the same performance and bandwidth as the structure of arrays idiom. `zip_iterator` also facilitates kernel fusion by providing a convenient means of amortizing the execution of the same operation over multiple ranges.
+
+The following code snippet demonstrates how to create a `zip_iterator` which represents the result of "zipping" multiple ranges together.
+
+This example shows how to use `zip_iterator` to copy multiple ranges with a single call to `thrust::copy`.
+
+```cpp showLineNumbers={false}
+#include <cuda/zip_iterator.h>
+```
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <cuda/iterator>
+#include <thrust/device_vector.h>
+
+thrust::device_vector<int> int_v{0, 1, 2};
+thrust::device_vector<float> float_v{0.0f, 1.0f, 2.0f};
+thrust::device_vector<char> char_v{'a', 'b', 'c'};
+
+cuda::zip_iterator iter{int_v.begin(), float_v.begin(), char_v.begin()};
+
+*iter;   // returns (0, 0.0f, 'a')
+iter[0]; // returns (0, 0.0f, 'a')
+iter[1]; // returns (1, 1.0f, 'b')
+iter[2]; // returns (2, 2.0f, 'c')
+
+cuda::std::get<0>(iter[2]); // returns 2
+cuda::std::get<1>(iter[0]); // returns 0.0f
+cuda::std::get<2>(iter[1]); // returns 'b'
+
+// iter[3] is an out-of-bounds error
+```
+
+```cpp showLineNumbers={false}
+#include <cuda/iterator>
+#include <thrust/device_vector.h>
+
+int main()
+{
+  thrust::device_vector<int> int_in{0, 1, 2}, int_out(3);
+  thrust::device_vector<float> float_in{0.0f, 10.0f, 20.0f}, float_out(3);
+
+  thrust::copy(cuda::zip_iterator{int_in.begin(), float_in.begin()},
+               cuda::zip_iterator{int_in.end(),   float_in.end()},
+               cuda::zip_iterator{int_out.begin(),float_out.begin()});
+
+  // int_out is now [0, 1, 2]
+  // float_out is now [0.0f, 10.0f, 20.0f]
+
+  return 0;
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="_Iterators..." type="class...">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `__zv_iter_category_base< _Iterators... >` (public)
+
+---
+
+## Constructors
+
+### zip_iterator
+
+<Tabs>
+<Tab title="Default">
+
+Default-constructs a `zip_iterator` by defaulting all stored iterators.
+
+<CodeBlock links={{"zip_iterator": "/libcudacxx/api/cuda::zip_iterator"}}>
+```cpp showLineNumbers={false}
+cuda::zip_iterator<_Iterators>::zip_iterator() = default
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Overload 2">
+
+<Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>explicit</Badge>
+
+Constructs a `zip_iterator` from a tuple of iterators.
+
+<CodeBlock links={{"zip_iterator": "/libcudacxx/api/cuda::zip_iterator"}}>
+```cpp showLineNumbers={false}
+cuda::zip_iterator<_Iterators>::zip_iterator(
+    ::cuda::std::tuple<_Iterators...> __iters
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__iters" type="::cuda::std::tuple<_Iterators...>">
+A tuple of iterators
+</ParamField>
+
+</Tab>
+<Tab title="Overload 3">
+
+<Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>explicit</Badge>
+
+Constructs a `zip_iterator` from a tuple of iterators.
+
+<CodeBlock links={{"zip_iterator": "/libcudacxx/api/cuda::zip_iterator"}}>
+```cpp showLineNumbers={false}
+template <size_t _NumIterators>
+cuda::zip_iterator<_Iterators>::zip_iterator(
+    ::cuda::std::tuple<_Iterators...> __iters
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__iters" type="::cuda::std::tuple<_Iterators...>">
+A tuple of iterators
+</ParamField>
+
+</Tab>
+<Tab title="Overload 4">
+
+<Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>explicit</Badge>
+
+Constructs a `zip_iterator` from variadic set of iterators.
+
+<CodeBlock links={{"zip_iterator": "/libcudacxx/api/cuda::zip_iterator"}}>
+```cpp showLineNumbers={false}
+cuda::zip_iterator<_Iterators>::zip_iterator(
+    _Iterators... __iters
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__iters" type="_Iterators...">
+The input iterators
+</ParamField>
+
+</Tab>
+<Tab title="Converts a different `zip_iterator`">
+
+<Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge>
+
+Converts a different `zip_iterator`.
+
+<CodeBlock links={{"zip_iterator": "/libcudacxx/api/cuda::zip_iterator"}}>
+```cpp showLineNumbers={false}
+template <class... _OtherIters>
+cuda::zip_iterator<_Iterators>::zip_iterator(
+    zip_iterator<_OtherIters...> __iter
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__iter" type="zip_iterator<_OtherIters...>">
+The other `zip_iterator`
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### operator* <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Dereferences the `zip_iterator`.
+
+<CodeBlock links={{"zip_iterator": "/libcudacxx/api/cuda::zip_iterator"}}>
+```cpp showLineNumbers={false}
+auto cuda::zip_iterator<_Iterators>::operator*() const noexcept(::cuda::std::apply(__zip_op_star{}, __current_))
+```
+</CodeBlock>
+
+**Returns:** A tuple of references obtained by referencing every stored iterator
+
+### operator[] <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Subscripts the `zip_iterator` with an offset.
+
+<CodeBlock links={{"zip_iterator": "/libcudacxx/api/cuda::zip_iterator"}}>
+```cpp showLineNumbers={false}
+template <class _Constraints>
+auto cuda::zip_iterator<_Iterators>::operator[](
+    difference_type __n
+) const noexcept(::cuda::std::apply(__zip_op_index{__n}, __current_))
+```
+</CodeBlock>
+
+**Returns:** A tuple of references obtained by subscripting every stored iterator
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The additional offset
+</ParamField>
+
+### operator++ <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge>
+
+<Tabs>
+<Tab title="Pre-increment">
+
+<Badge intent="note" minimal>noexcept</Badge>
+
+Increments all stored iterators.
+
+<CodeBlock links={{"zip_iterator": "/libcudacxx/api/cuda::zip_iterator"}}>
+```cpp showLineNumbers={false}
+zip_iterator & cuda::zip_iterator<_Iterators>::operator++() noexcept(::cuda::std::apply(__zip_op_increment{}, __current_))
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Post-increment">
+
+Increments all stored iterators.
+
+<CodeBlock links={{"zip_iterator": "/libcudacxx/api/cuda::zip_iterator"}}>
+```cpp showLineNumbers={false}
+auto cuda::zip_iterator<_Iterators>::operator++(
+    int
+)
+```
+</CodeBlock>
+
+**Returns:** A copy of the original `zip_iterator` if possible
+
+</Tab>
+</Tabs>
+
+### operator-- <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge>
+
+<Tabs>
+<Tab title="Pre-decrement">
+
+<Badge intent="note" minimal>noexcept</Badge>
+
+Decrements all stored iterators.
+
+<CodeBlock links={{"zip_iterator": "/libcudacxx/api/cuda::zip_iterator"}}>
+```cpp showLineNumbers={false}
+template <class _Constraints>
+zip_iterator & cuda::zip_iterator<_Iterators>::operator--() noexcept(::cuda::std::apply(__zip_op_decrement{}, __current_))
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Post-decrement">
+
+Decrements all stored iterators.
+
+<CodeBlock links={{"zip_iterator": "/libcudacxx/api/cuda::zip_iterator"}}>
+```cpp showLineNumbers={false}
+template <class _Constraints>
+zip_iterator cuda::zip_iterator<_Iterators>::operator--(
+    int
+)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### operator+= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Increments all stored iterators by a given number of elements.
+
+<CodeBlock links={{"zip_iterator": "/libcudacxx/api/cuda::zip_iterator"}}>
+```cpp showLineNumbers={false}
+template <class _Constraints>
+zip_iterator & cuda::zip_iterator<_Iterators>::operator+=(
+    difference_type __n
+) noexcept(::cuda::std::apply(__zip_op_pe{__n}, __current_))
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The number of elements to increment
+</ParamField>
+
+### operator-= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Decrements all stored iterators by a given number of elements.
+
+<CodeBlock links={{"zip_iterator": "/libcudacxx/api/cuda::zip_iterator"}}>
+```cpp showLineNumbers={false}
+template <class _Constraints>
+zip_iterator & cuda::zip_iterator<_Iterators>::operator-=(
+    difference_type __n
+) noexcept(::cuda::std::apply(__zip_op_me{__n}, __current_))
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The number of elements to decrement
+</ParamField>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `iterator_concept` | `decltype(__get_zip_iterator_concept< _Iterators... >())` |
+| `value_type` | `::cuda::std::tuple< __zip_maybe_proxy_value_type_t< _Iterators >... >` |
+| `reference` | `::cuda::std::tuple< __zip_maybe_proxy_reference_t< _Iterators >... >` |
+| `difference_type` | `::cuda::std::common_type_t<::cuda::std::iter_difference_t< _Iterators >... >` |
+| `pointer` | `void` |

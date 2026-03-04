@@ -1,0 +1,560 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/vectorstores/in_memory
+title: langchain_core.vectorstores.in_memory
+---
+
+In-memory vector store.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`InMemoryVectorStore`](#langchain_core-vectorstores-in_memory-InMemoryVectorStore) | In-memory vector store implementation. |
+
+### Data
+
+[`_HAS_NUMPY`](#langchain_core-vectorstores-in_memory-_HAS_NUMPY)
+
+### API
+
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore">
+
+<CodeBlock links={{"langchain_core.embeddings.Embeddings":"/langchain-core/langchain_core/embeddings/embeddings#langchain_core-embeddings-embeddings-Embeddings"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.vectorstores.in_memory.InMemoryVectorStore(
+    embedding: langchain_core.embeddings.Embeddings
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [VectorStore](/langchain-core/langchain_core/vectorstores/base#langchain_core-vectorstores-base-VectorStore)
+
+In-memory vector store implementation.
+
+Uses a dictionary, and computes cosine similarity for search using numpy.
+
+Key init args — indexing params:
+
+    * embedding_function: Embeddings
+        Embedding function to use.
+
+
+<ParamField path="embeddings" type="Embeddings">
+</ParamField>
+
+<ParamField path="store" type="dict[str, dict[str, Any]] = &#123;&#125;">
+</ParamField>
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore-_similarity_search_with_score_by_vector">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory.InMemoryVectorStore._similarity_search_with_score_by_vector(
+    embedding: list[float],
+    k: int = 4,
+    filter: collections.abc.Callable[[Document], bool] | None = None
+) -> list[tuple[langchain_core.documents.Document, float, list[float]]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore-aadd_documents">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory.InMemoryVectorStore.aadd_documents(
+    documents: list[langchain_core.documents.Document],
+    ids: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore-add_documents">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory.InMemoryVectorStore.add_documents(
+    documents: list[langchain_core.documents.Document],
+    ids: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore-adelete">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory.InMemoryVectorStore.adelete(
+    ids: collections.abc.Sequence[str] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore-afrom_texts">
+
+<CodeBlock links={{"langchain_core.embeddings.Embeddings":"/langchain-core/langchain_core/embeddings/embeddings#langchain_core-embeddings-embeddings-Embeddings","langchain_core.vectorstores.in_memory.InMemoryVectorStore":"#langchain_core-vectorstores-in_memory-InMemoryVectorStore"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory.InMemoryVectorStore.afrom_texts(
+    texts: list[str],
+    embedding: langchain_core.embeddings.Embeddings,
+    metadatas: list[dict] | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.vectorstores.in_memory.InMemoryVectorStore
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge> <Badge>classmethod</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore-aget_by_ids">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory.InMemoryVectorStore.aget_by_ids(
+    ids: collections.abc.Sequence[str]
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async get documents by their ids.
+
+**Parameters:**
+
+<ParamField path="ids" type="Sequence[str]">
+The IDs of the documents to get.
+</ParamField>
+
+**Returns:** `list[Document]`
+
+A list of `Document` objects.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore-amax_marginal_relevance_search">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory.InMemoryVectorStore.amax_marginal_relevance_search(
+    query: str,
+    k: int = 4,
+    fetch_k: int = 20,
+    lambda_mult: float = 0.5,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore-asimilarity_search">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory.InMemoryVectorStore.asimilarity_search(
+    query: str,
+    k: int = 4,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore-asimilarity_search_by_vector">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory.InMemoryVectorStore.asimilarity_search_by_vector(
+    embedding: list[float],
+    k: int = 4,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore-asimilarity_search_with_score">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory.InMemoryVectorStore.asimilarity_search_with_score(
+    query: str,
+    k: int = 4,
+    kwargs: typing.Any = {}
+) -> list[tuple[langchain_core.documents.Document, float]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore-delete">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory.InMemoryVectorStore.delete(
+    ids: collections.abc.Sequence[str] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore-dump">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory.InMemoryVectorStore.dump(
+    path: str
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Dump the vector store to a file.
+
+**Parameters:**
+
+<ParamField path="path" type="str">
+The path to dump the vector store to.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore-from_texts">
+
+<CodeBlock links={{"langchain_core.embeddings.Embeddings":"/langchain-core/langchain_core/embeddings/embeddings#langchain_core-embeddings-embeddings-Embeddings","langchain_core.vectorstores.in_memory.InMemoryVectorStore":"#langchain_core-vectorstores-in_memory-InMemoryVectorStore"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory.InMemoryVectorStore.from_texts(
+    texts: list[str],
+    embedding: langchain_core.embeddings.Embeddings,
+    metadatas: list[dict] | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.vectorstores.in_memory.InMemoryVectorStore
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore-get_by_ids">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory.InMemoryVectorStore.get_by_ids(
+    ids: collections.abc.Sequence[str]
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get documents by their ids.
+
+**Parameters:**
+
+<ParamField path="ids" type="Sequence[str]">
+The IDs of the documents to get.
+</ParamField>
+
+**Returns:** `list[Document]`
+
+A list of `Document` objects.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore-load">
+
+<CodeBlock links={{"langchain_core.embeddings.Embeddings":"/langchain-core/langchain_core/embeddings/embeddings#langchain_core-embeddings-embeddings-Embeddings","langchain_core.vectorstores.in_memory.InMemoryVectorStore":"#langchain_core-vectorstores-in_memory-InMemoryVectorStore"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory.InMemoryVectorStore.load(
+    path: str,
+    embedding: langchain_core.embeddings.Embeddings,
+    kwargs: typing.Any = {}
+) -> langchain_core.vectorstores.in_memory.InMemoryVectorStore
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Load a vector store from a file.
+
+**Parameters:**
+
+<ParamField path="path" type="str">
+The path to load the vector store from.
+</ParamField>
+
+<ParamField path="embedding" type="Embeddings">
+The embedding to use.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments to pass to the constructor.
+</ParamField>
+
+**Returns:** `InMemoryVectorStore`
+
+A `VectorStore` object.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore-max_marginal_relevance_search">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory.InMemoryVectorStore.max_marginal_relevance_search(
+    query: str,
+    k: int = 4,
+    fetch_k: int = 20,
+    lambda_mult: float = 0.5,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore-max_marginal_relevance_search_by_vector">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory.InMemoryVectorStore.max_marginal_relevance_search_by_vector(
+    embedding: list[float],
+    k: int = 4,
+    fetch_k: int = 20,
+    lambda_mult: float = 0.5,
+    filter: collections.abc.Callable[[Document], bool] | None = None,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore-similarity_search">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory.InMemoryVectorStore.similarity_search(
+    query: str,
+    k: int = 4,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore-similarity_search_by_vector">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory.InMemoryVectorStore.similarity_search_by_vector(
+    embedding: list[float],
+    k: int = 4,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore-similarity_search_with_score">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory.InMemoryVectorStore.similarity_search_with_score(
+    query: str,
+    k: int = 4,
+    kwargs: typing.Any = {}
+) -> list[tuple[langchain_core.documents.Document, float]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-in_memory-InMemoryVectorStore-similarity_search_with_score_by_vector">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory.InMemoryVectorStore.similarity_search_with_score_by_vector(
+    embedding: list[float],
+    k: int = 4,
+    filter: collections.abc.Callable[[Document], bool] | None = None,
+    _kwargs: typing.Any = {}
+) -> list[tuple[langchain_core.documents.Document, float]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Search for the most similar documents to the given embedding.
+
+**Parameters:**
+
+<ParamField path="embedding" type="list[float]">
+The embedding to search for.
+</ParamField>
+
+<ParamField path="k" type="int" default="4">
+The number of documents to return.
+</ParamField>
+
+<ParamField path="filter" type="Callable[[Document], bool] | None" default="None">
+A function to filter the documents.
+</ParamField>
+
+**Returns:** `list[tuple[Document, float]]`
+
+A list of tuples of `Document` objects and their similarity scores.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-vectorstores-in_memory-_HAS_NUMPY">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.in_memory._HAS_NUMPY = True
+```
+
+</CodeBlock>
+</Anchor>
+

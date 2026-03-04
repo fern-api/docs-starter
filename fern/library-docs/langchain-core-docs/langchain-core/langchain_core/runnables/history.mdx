@@ -1,0 +1,497 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/runnables/history
+title: langchain_core.runnables.history
+---
+
+`Runnable` that manages chat message history for another `Runnable`.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`RunnableWithMessageHistory`](#langchain_core-runnables-history-RunnableWithMessageHistory) | `Runnable` that manages chat message history for another `Runnable`. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_get_parameter_names`](#langchain_core-runnables-history-_get_parameter_names) | Get the parameter names of the `Callable`. |
+
+### Data
+
+[`GetSessionHistoryCallable`](#langchain_core-runnables-history-GetSessionHistoryCallable)
+
+[`MessagesOrDictWithMessages`](#langchain_core-runnables-history-MessagesOrDictWithMessages)
+
+### API
+
+<Anchor id="langchain_core-runnables-history-RunnableWithMessageHistory">
+
+<CodeBlock links={{"langchain_core.runnables.base.Runnable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-Runnable","langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.runnables.history.MessagesOrDictWithMessages":"#langchain_core-runnables-history-MessagesOrDictWithMessages","langchain_core.language_models.base.LanguageModelLike":"/langchain-core/langchain_core/language_models/base#langchain_core-language_models-base-LanguageModelLike","langchain_core.runnables.history.GetSessionHistoryCallable":"#langchain_core-runnables-history-GetSessionHistoryCallable","langchain_core.runnables.utils.ConfigurableFieldSpec":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-ConfigurableFieldSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.history.RunnableWithMessageHistory(
+    runnable: langchain_core.runnables.base.Runnable[list[langchain_core.messages.BaseMessage], str | langchain_core.messages.BaseMessage | langchain_core.runnables.history.MessagesOrDictWithMessages] | langchain_core.runnables.base.Runnable[dict[str, typing.Any], str | langchain_core.messages.BaseMessage | langchain_core.runnables.history.MessagesOrDictWithMessages] | langchain_core.language_models.base.LanguageModelLike,
+    get_session_history: langchain_core.runnables.history.GetSessionHistoryCallable,
+    input_messages_key: str | None = None,
+    output_messages_key: str | None = None,
+    history_messages_key: str | None = None,
+    history_factory_config: collections.abc.Sequence[langchain_core.runnables.utils.ConfigurableFieldSpec] | None = None,
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RunnableBindingBase](/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-RunnableBindingBase)
+
+`Runnable` that manages chat message history for another `Runnable`.
+
+A chat message history is a sequence of messages that represent a conversation.
+
+`RunnableWithMessageHistory` wraps another `Runnable` and manages the chat message
+history for it; it is responsible for reading and updating the chat message
+history.
+
+The formats supported for the inputs and outputs of the wrapped `Runnable`
+are described below.
+
+`RunnableWithMessageHistory` must always be called with a config that contains
+the appropriate parameters for the chat message history factory.
+
+By default, the `Runnable` is expected to take a single configuration parameter
+called `session_id` which is a string. This parameter is used to create a new
+or look up an existing chat message history that matches the given `session_id`.
+
+In this case, the invocation would look like this:
+
+`with_history.invoke(..., config=&#123;"configurable": &#123;"session_id": "bar"&#125;&#125;)`
+; e.g., `&#123;"configurable": &#123;"session_id": "&lt;SESSION_ID&gt;"&#125;&#125;`.
+
+The configuration can be customized by passing in a list of
+`ConfigurableFieldSpec` objects to the `history_factory_config` parameter (see
+example below).
+
+In the examples, we will use a chat message history with an in-memory
+implementation to make it easy to experiment and see the results.
+
+For production use cases, you will want to use a persistent implementation
+of chat message history, such as `RedisChatMessageHistory`.
+
+Example: Chat message history with an in-memory implementation for testing.
+
+    ```python
+    from operator import itemgetter
+
+    from langchain_openai.chat_models import ChatOpenAI
+
+    from langchain_core.chat_history import BaseChatMessageHistory
+    from langchain_core.documents import Document
+    from langchain_core.messages import BaseMessage, AIMessage
+    from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+    from pydantic import BaseModel, Field
+    from langchain_core.runnables import (
+        RunnableLambda,
+        ConfigurableFieldSpec,
+        RunnablePassthrough,
+    )
+    from langchain_core.runnables.history import RunnableWithMessageHistory
+
+
+    class InMemoryHistory(BaseChatMessageHistory, BaseModel):
+        """In memory implementation of chat message history."""
+
+        messages: list[BaseMessage] = Field(default_factory=list)
+
+        def add_messages(self, messages: list[BaseMessage]) -> None:
+            """Add a list of messages to the store"""
+            self.messages.extend(messages)
+
+        def clear(self) -> None:
+            self.messages = []
+
+    # Here we use a global variable to store the chat message history.
+    # This will make it easier to inspect it to see the underlying results.
+    store = {}
+
+    def get_by_session_id(session_id: str) -> BaseChatMessageHistory:
+        if session_id not in store:
+            store[session_id] = InMemoryHistory()
+        return store[session_id]
+
+
+    history = get_by_session_id("1")
+    history.add_message(AIMessage(content="hello"))
+    print(store)  # noqa: T201
+
+    ```
+
+Example where the wrapped `Runnable` takes a dictionary input:
+
+    ```python
+    from typing import Optional
+
+    from langchain_anthropic import ChatAnthropic
+    from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+    from langchain_core.runnables.history import RunnableWithMessageHistory
+
+
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", "You're an assistant who's good at {ability}"),
+            MessagesPlaceholder(variable_name="history"),
+            ("human", "{question}"),
+        ]
+    )
+
+    chain = prompt | ChatAnthropic(model="claude-2")
+
+    chain_with_history = RunnableWithMessageHistory(
+        chain,
+        # Uses the get_by_session_id function defined in the example
+        # above.
+        get_by_session_id,
+        input_messages_key="question",
+        history_messages_key="history",
+    )
+
+    print(
+        chain_with_history.invoke(  # noqa: T201
+            {"ability": "math", "question": "What does cosine mean?"},
+            config={"configurable": {"session_id": "foo"}},
+        )
+    )
+
+    # Uses the store defined in the example above.
+    print(store)  # noqa: T201
+
+    print(
+        chain_with_history.invoke(  # noqa: T201
+            {"ability": "math", "question": "What's its inverse"},
+            config={"configurable": {"session_id": "foo"}},
+        )
+    )
+
+    print(store)  # noqa: T201
+    ```
+
+Example where the session factory takes two keys (`user_id` and `conversation_id`):
+
+    ```python
+    store = {}
+
+
+    def get_session_history(
+        user_id: str, conversation_id: str
+    ) -> BaseChatMessageHistory:
+        if (user_id, conversation_id) not in store:
+            store[(user_id, conversation_id)] = InMemoryHistory()
+        return store[(user_id, conversation_id)]
+
+
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", "You're an assistant who's good at {ability}"),
+            MessagesPlaceholder(variable_name="history"),
+            ("human", "{question}"),
+        ]
+    )
+
+    chain = prompt | ChatAnthropic(model="claude-2")
+
+    with_message_history = RunnableWithMessageHistory(
+        chain,
+        get_session_history=get_session_history,
+        input_messages_key="question",
+        history_messages_key="history",
+        history_factory_config=[
+            ConfigurableFieldSpec(
+                id="user_id",
+                annotation=str,
+                name="User ID",
+                description="Unique identifier for the user.",
+                default="",
+                is_shared=True,
+            ),
+            ConfigurableFieldSpec(
+                id="conversation_id",
+                annotation=str,
+                name="Conversation ID",
+                description="Unique identifier for the conversation.",
+                default="",
+                is_shared=True,
+            ),
+        ],
+    )
+
+    with_message_history.invoke(
+        {"ability": "math", "question": "What does cosine mean?"},
+        config={"configurable": {"user_id": "123", "conversation_id": "1"}},
+    )
+    ```
+
+
+<ParamField path="OutputType" type="type[Output]">
+</ParamField>
+
+<ParamField path="config_specs" type="list[ConfigurableFieldSpec]">
+Get the configuration specs for the `RunnableWithMessageHistory`.
+</ParamField>
+
+<ParamField path="get_session_history" type="GetSessionHistoryCallable">
+Function that returns a new `BaseChatMessageHistory`.
+
+This function should either take a single positional argument `session_id` of type
+string and return a corresponding chat message history instance
+</ParamField>
+
+<ParamField path="history_factory_config" type="Sequence[ConfigurableFieldSpec]">
+Configure fields that should be passed to the chat history factory.
+
+See `ConfigurableFieldSpec` for more details.
+</ParamField>
+
+<ParamField path="history_messages_key" type="str | None = None">
+Must be specified if the base `Runnable` accepts a `dict` as input and expects a
+separate key for historical messages.
+</ParamField>
+
+<ParamField path="input_messages_key" type="str | None = None">
+Must be specified if the base `Runnable` accepts a `dict` as input.
+The key in the input `dict` that contains the messages.
+</ParamField>
+
+<ParamField path="output_messages_key" type="str | None = None">
+Must be specified if the base `Runnable` returns a `dict` as output.
+The key in the output `dict` that contains the messages.
+</ParamField>
+<Anchor id="langchain_core-runnables-history-RunnableWithMessageHistory-_aenter_history">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.history.RunnableWithMessageHistory._aenter_history(
+    value: dict[str, typing.Any],
+    config: langchain_core.runnables.config.RunnableConfig
+) -> list[langchain_core.messages.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-history-RunnableWithMessageHistory-_aexit_history">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.history.RunnableWithMessageHistory._aexit_history(
+    run: langchain_core.tracers.schemas.Run,
+    config: langchain_core.runnables.config.RunnableConfig
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-history-RunnableWithMessageHistory-_enter_history">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.history.RunnableWithMessageHistory._enter_history(
+    value: typing.Any,
+    config: langchain_core.runnables.config.RunnableConfig
+) -> list[langchain_core.messages.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-history-RunnableWithMessageHistory-_exit_history">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.history.RunnableWithMessageHistory._exit_history(
+    run: langchain_core.tracers.schemas.Run,
+    config: langchain_core.runnables.config.RunnableConfig
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-history-RunnableWithMessageHistory-_get_input_messages">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.history.RunnableWithMessageHistory._get_input_messages(
+    input_val: str | langchain_core.messages.BaseMessage | collections.abc.Sequence[langchain_core.messages.BaseMessage] | dict
+) -> list[langchain_core.messages.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-history-RunnableWithMessageHistory-_get_output_messages">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.history.RunnableWithMessageHistory._get_output_messages(
+    output_val: str | langchain_core.messages.BaseMessage | collections.abc.Sequence[langchain_core.messages.BaseMessage] | dict
+) -> list[langchain_core.messages.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-history-RunnableWithMessageHistory-_merge_configs">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.history.RunnableWithMessageHistory._merge_configs(
+    configs: langchain_core.runnables.config.RunnableConfig | None = ()
+) -> langchain_core.runnables.config.RunnableConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-history-RunnableWithMessageHistory-get_input_schema">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.history.RunnableWithMessageHistory.get_input_schema(
+    config: langchain_core.runnables.config.RunnableConfig | None = None
+) -> type[pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-history-RunnableWithMessageHistory-get_output_schema">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.history.RunnableWithMessageHistory.get_output_schema(
+    config: langchain_core.runnables.config.RunnableConfig | None = None
+) -> type[pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get a Pydantic model that can be used to validate output to the `Runnable`.
+
+`Runnable` objects that leverage the `configurable_fields` and
+`configurable_alternatives` methods will have a dynamic output schema that
+depends on which configuration the `Runnable` is invoked with.
+
+This method allows to get an output schema for a specific configuration.
+
+**Parameters:**
+
+<ParamField path="config" type="RunnableConfig | None" default="None">
+A config to use when generating the schema.
+</ParamField>
+
+**Returns:** `type[BaseModel]`
+
+A Pydantic model that can be used to validate output.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-history-_get_parameter_names">
+
+<CodeBlock links={{"langchain_core.runnables.history.GetSessionHistoryCallable":"#langchain_core-runnables-history-GetSessionHistoryCallable"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.history._get_parameter_names(
+    callable_: langchain_core.runnables.history.GetSessionHistoryCallable
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the parameter names of the `Callable`.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-history-GetSessionHistoryCallable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.history.GetSessionHistoryCallable = Callable[..., BaseChatMessageHistory]
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-runnables-history-MessagesOrDictWithMessages">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.history.MessagesOrDictWithMessages = Sequence['BaseMessage'] | dict[str, Any]
+```
+
+</CodeBlock>
+</Anchor>
+

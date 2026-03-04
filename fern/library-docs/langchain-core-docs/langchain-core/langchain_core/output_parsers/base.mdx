@@ -1,0 +1,516 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/output_parsers/base
+title: langchain_core.output_parsers.base
+---
+
+Base parser for language model outputs.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`BaseGenerationOutputParser`](#langchain_core-output_parsers-base-BaseGenerationOutputParser) | Base class to parse the output of an LLM call. |
+| [`BaseLLMOutputParser`](#langchain_core-output_parsers-base-BaseLLMOutputParser) | Abstract base class for parsing the outputs of a model. |
+| [`BaseOutputParser`](#langchain_core-output_parsers-base-BaseOutputParser) | Base class to parse the output of an LLM call. |
+
+### Data
+
+[`OutputParserLike`](#langchain_core-output_parsers-base-OutputParserLike)
+
+[`T`](#langchain_core-output_parsers-base-T)
+
+### API
+
+<Anchor id="langchain_core-output_parsers-base-BaseGenerationOutputParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.output_parsers.base.BaseGenerationOutputParser()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseLLMOutputParser](#langchain_core-output_parsers-base-BaseLLMOutputParser), [RunnableSerializable[LanguageModelOutput, T]](/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-RunnableSerializable)
+
+Base class to parse the output of an LLM call.
+
+
+<ParamField path="InputType" type="Any">
+Return the input type for the parser.
+</ParamField>
+
+<ParamField path="OutputType" type="type[T]">
+Return the output type for the parser.
+</ParamField>
+<Anchor id="langchain_core-output_parsers-base-BaseGenerationOutputParser-ainvoke">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.output_parsers.base.T":"#langchain_core-output_parsers-base-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.base.BaseGenerationOutputParser.ainvoke(
+    input: str | langchain_core.messages.BaseMessage,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    kwargs: typing.Any | None = {}
+) -> langchain_core.output_parsers.base.T
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-base-BaseGenerationOutputParser-invoke">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.output_parsers.base.T":"#langchain_core-output_parsers-base-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.base.BaseGenerationOutputParser.invoke(
+    input: str | langchain_core.messages.BaseMessage,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.output_parsers.base.T
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-base-BaseLLMOutputParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.output_parsers.base.BaseLLMOutputParser()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+**Bases:** `Generic[T]`
+
+Abstract base class for parsing the outputs of a model.
+
+
+<Anchor id="langchain_core-output_parsers-base-BaseLLMOutputParser-aparse_result">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list","langchain_core.output_parsers.base.T":"#langchain_core-output_parsers-base-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.base.BaseLLMOutputParser.aparse_result(
+    result: langchain_core.output_parsers.list[langchain_core.outputs.Generation],
+    partial: bool = False
+) -> langchain_core.output_parsers.base.T
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Parse a list of candidate model `Generation` objects into a specific format.
+
+**Parameters:**
+
+<ParamField path="result" type="list[Generation]">
+A list of `Generation` to be parsed.
+
+The Generations are assumed to be different candidate outputs for a
+single model input.
+</ParamField>
+
+<ParamField path="partial" type="bool" default="False">
+Whether to parse the output as a partial result.
+
+This is useful for parsers that can parse partial results.
+</ParamField>
+
+**Returns:** `T`
+
+Structured output.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-base-BaseLLMOutputParser-parse_result">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list","langchain_core.output_parsers.base.T":"#langchain_core-output_parsers-base-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.base.BaseLLMOutputParser.parse_result(
+    result: langchain_core.output_parsers.list[langchain_core.outputs.Generation],
+    partial: bool = False
+) -> langchain_core.output_parsers.base.T
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Parse a list of candidate model `Generation` objects into a specific format.
+
+**Parameters:**
+
+<ParamField path="result" type="list[Generation]">
+A list of `Generation` to be parsed.
+
+The `Generation` objects are assumed to be different candidate outputs
+for a single model input.
+</ParamField>
+
+<ParamField path="partial" type="bool" default="False">
+Whether to parse the output as a partial result.
+
+This is useful for parsers that can parse partial results.
+</ParamField>
+
+**Returns:** `T`
+
+Structured output.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-base-BaseOutputParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.output_parsers.base.BaseOutputParser()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseLLMOutputParser](#langchain_core-output_parsers-base-BaseLLMOutputParser), [RunnableSerializable[LanguageModelOutput, T]](/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-RunnableSerializable)
+
+Base class to parse the output of an LLM call.
+
+Output parsers help structure language model responses.
+
+
+<ParamField path="InputType" type="Any">
+Return the input type for the parser.
+</ParamField>
+
+<ParamField path="OutputType" type="type[T]">
+Return the output type for the parser.
+
+This property is inferred from the first type argument of the class.
+</ParamField>
+
+<ParamField path="_type" type="str">
+Return the output parser type for serialization.
+</ParamField>
+<Anchor id="langchain_core-output_parsers-base-BaseOutputParser-ainvoke">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.output_parsers.base.T":"#langchain_core-output_parsers-base-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.base.BaseOutputParser.ainvoke(
+    input: str | langchain_core.messages.BaseMessage,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    kwargs: typing.Any | None = {}
+) -> langchain_core.output_parsers.base.T
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-base-BaseOutputParser-aparse">
+
+<CodeBlock links={{"langchain_core.output_parsers.base.T":"#langchain_core-output_parsers-base-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.base.BaseOutputParser.aparse(
+    text: str
+) -> langchain_core.output_parsers.base.T
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async parse a single string model output into some structure.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+String output of a language model.
+</ParamField>
+
+**Returns:** `T`
+
+Structured output.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-base-BaseOutputParser-aparse_result">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list","langchain_core.output_parsers.base.T":"#langchain_core-output_parsers-base-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.base.BaseOutputParser.aparse_result(
+    result: langchain_core.output_parsers.list[langchain_core.outputs.Generation],
+    partial: bool = False
+) -> langchain_core.output_parsers.base.T
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Parse a list of candidate model `Generation` objects into a specific format.
+
+The return value is parsed from only the first `Generation` in the result, which
+is assumed to be the highest-likelihood `Generation`.
+
+**Parameters:**
+
+<ParamField path="result" type="list[Generation]">
+A list of `Generation` to be parsed.
+
+The `Generation` objects are assumed to be different candidate outputs
+for a single model input.
+</ParamField>
+
+<ParamField path="partial" type="bool" default="False">
+Whether to parse the output as a partial result.
+
+This is useful for parsers that can parse partial results.
+</ParamField>
+
+**Returns:** `T`
+
+Structured output.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-base-BaseOutputParser-dict">
+
+<CodeBlock links={{"langchain_core.output_parsers.base.BaseOutputParser.dict":"/langchain-core/langchain_core/output_parsers/base/BaseOutputParser#langchain_core-output_parsers-base-BaseOutputParser-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.base.BaseOutputParser.dict(
+    kwargs: typing.Any = {}
+) -> langchain_core.output_parsers.base.BaseOutputParser.dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return dictionary representation of output parser.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-base-BaseOutputParser-get_format_instructions">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.base.BaseOutputParser.get_format_instructions() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Instructions on how the LLM output should be formatted.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-base-BaseOutputParser-invoke">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.output_parsers.base.T":"#langchain_core-output_parsers-base-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.base.BaseOutputParser.invoke(
+    input: str | langchain_core.messages.BaseMessage,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.output_parsers.base.T
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-base-BaseOutputParser-parse">
+
+<CodeBlock links={{"langchain_core.output_parsers.base.T":"#langchain_core-output_parsers-base-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.base.BaseOutputParser.parse(
+    text: str
+) -> langchain_core.output_parsers.base.T
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Parse a single string model output into some structure.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+String output of a language model.
+</ParamField>
+
+**Returns:** `T`
+
+Structured output.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-base-BaseOutputParser-parse_result">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list","langchain_core.output_parsers.base.T":"#langchain_core-output_parsers-base-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.base.BaseOutputParser.parse_result(
+    result: langchain_core.output_parsers.list[langchain_core.outputs.Generation],
+    partial: bool = False
+) -> langchain_core.output_parsers.base.T
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse a list of candidate model `Generation` objects into a specific format.
+
+The return value is parsed from only the first `Generation` in the result, which
+is assumed to be the highest-likelihood `Generation`.
+
+**Parameters:**
+
+<ParamField path="result" type="list[Generation]">
+A list of `Generation` to be parsed.
+
+The `Generation` objects are assumed to be different candidate outputs
+for a single model input.
+</ParamField>
+
+<ParamField path="partial" type="bool" default="False">
+Whether to parse the output as a partial result.
+
+This is useful for parsers that can parse partial results.
+</ParamField>
+
+**Returns:** `T`
+
+Structured output.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-base-BaseOutputParser-parse_with_prompt">
+
+<CodeBlock links={{"langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.base.BaseOutputParser.parse_with_prompt(
+    completion: str,
+    prompt: langchain_core.prompt_values.PromptValue
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse the output of an LLM call with the input prompt for context.
+
+The prompt is largely provided in the event the `OutputParser` wants to retry or
+fix the output in some way, and needs information from the prompt to do so.
+
+**Parameters:**
+
+<ParamField path="completion" type="str">
+String output of a language model.
+</ParamField>
+
+<ParamField path="prompt" type="PromptValue">
+Input `PromptValue`.
+</ParamField>
+
+**Returns:** `Any`
+
+Structured output.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-base-OutputParserLike">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.base.OutputParserLike = Runnable[LanguageModelOutput, T]
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-output_parsers-base-T">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.base.T = TypeVar('T')
+```
+
+</CodeBlock>
+</Anchor>
+

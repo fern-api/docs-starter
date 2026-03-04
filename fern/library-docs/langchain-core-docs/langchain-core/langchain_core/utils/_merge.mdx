@@ -1,0 +1,140 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/utils/_merge
+title: langchain_core.utils._merge
+---
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`merge_dicts`](#langchain_core-utils-_merge-merge_dicts) | Merge dictionaries. |
+| [`merge_lists`](#langchain_core-utils-_merge-merge_lists) | Add many lists, handling `None`. |
+| [`merge_obj`](#langchain_core-utils-_merge-merge_obj) | Merge two objects. |
+
+### API
+
+<Anchor id="langchain_core-utils-_merge-merge_dicts">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils._merge.merge_dicts(
+    left: dict[str, typing.Any],
+    others: dict[str, typing.Any] = ()
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Merge dictionaries.
+
+Merge many dicts, handling specific scenarios where a key exists in both
+dictionaries but has a value of `None` in `'left'`. In such cases, the method uses
+the value from `'right'` for that key in the merged dictionary.
+
+**Parameters:**
+
+<ParamField path="left" type="dict[str, Any]">
+The first dictionary to merge.
+</ParamField>
+
+<ParamField path="others" type="dict[str, Any]" default="()">
+The other dictionaries to merge.
+</ParamField>
+
+**Returns:** `dict[str, Any]`
+
+The merged dictionary.
+
+**Raises:**
+
+- `TypeError`: If the key exists in both dictionaries but has a different type.
+- `TypeError`: If the value has an unsupported type.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-_merge-merge_lists">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils._merge.merge_lists(
+    left: list | None,
+    others: list | None = ()
+) -> list | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add many lists, handling `None`.
+
+**Parameters:**
+
+<ParamField path="left" type="list | None">
+The first list to merge.
+</ParamField>
+
+<ParamField path="others" type="list | None" default="()">
+The other lists to merge.
+</ParamField>
+
+**Returns:** `list | None`
+
+The merged list.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-_merge-merge_obj">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils._merge.merge_obj(
+    left: typing.Any,
+    right: typing.Any
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Merge two objects.
+
+It handles specific scenarios where a key exists in both dictionaries but has a
+value of `None` in `'left'`. In such cases, the method uses the value from `'right'`
+for that key in the merged dictionary.
+
+**Parameters:**
+
+<ParamField path="left" type="Any">
+The first object to merge.
+</ParamField>
+
+<ParamField path="right" type="Any">
+The other object to merge.
+</ParamField>
+
+**Returns:** `Any`
+
+The merged object.
+
+**Raises:**
+
+- `TypeError`: If the key exists in both dictionaries but has a different type.
+- `ValueError`: If the two objects cannot be merged.
+
+
+</Indent>

@@ -1,0 +1,121 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/_api
+title: langchain_core._api
+---
+
+Helper functions for managing the LangChain API.
+
+This module is only relevant for LangChain developers, not for users.
+
+!!! warning
+
+    This module and its submodules are for internal use only. Do not use them in your
+    own code. We may change the API at any time with no warning.
+
+## Submodules
+
+- **[`langchain_core._api.beta_decorator`](/langchain-core/langchain_core/_api/beta_decorator)**
+- **[`langchain_core._api.deprecation`](/langchain-core/langchain_core/_api/deprecation)**
+- **[`langchain_core._api.internal`](/langchain-core/langchain_core/_api/internal)**
+- **[`langchain_core._api.path`](/langchain-core/langchain_core/_api/path)**
+
+## Package Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`__dir__`](#langchain_core-_api-__dir__) | Return a list of available attributes for this module. |
+| [`__getattr__`](#langchain_core-_api-__getattr__) | Dynamically import and return an attribute from a submodule. |
+
+### Data
+
+[`__all__`](#langchain_core-_api-__all__)
+
+[`_dynamic_imports`](#langchain_core-_api-_dynamic_imports)
+
+### API
+
+<Anchor id="langchain_core-_api-__dir__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._api.__dir__() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return a list of available attributes for this module.
+
+**Returns:** `list[str]`
+
+List of attribute names that can be imported from this module.
+
+
+</Indent>
+
+<Anchor id="langchain_core-_api-__getattr__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._api.__getattr__(
+    attr_name: str
+) -> object
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Dynamically import and return an attribute from a submodule.
+
+This function enables lazy loading of API functions from submodules, reducing
+initial import time and circular dependency issues.
+
+**Parameters:**
+
+<ParamField path="attr_name" type="str">
+Name of the attribute to import.
+</ParamField>
+
+**Returns:** `object`
+
+The imported attribute object.
+
+**Raises:**
+
+- `AttributeError`: If the attribute is not a valid dynamic import.
+
+
+</Indent>
+
+<Anchor id="langchain_core-_api-__all__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._api.__all__ = ('LangChainBetaWarning', 'LangChainDeprecationWarning', 'as_import_path', 'beta'...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-_api-_dynamic_imports">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._api._dynamic_imports = {'LangChainBetaWarning': 'beta_decorator', 'beta': 'beta_decorator', 'suppress_l...
+```
+
+</CodeBlock>
+</Anchor>
+

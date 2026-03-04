@@ -1,0 +1,419 @@
+---
+title: cub::BlockLoad
+description: ""
+---
+
+The BlockLoad class provides collective data movement methods for loading a linear segment of items from memory into a blocked arrangement across a CUDA thread block.
+
+## Example
+
+The code snippet below illustrates the loading of a linear segment of 512 integers into a "blocked" arrangement across 128 threads where each thread owns 4 consecutive items. The load is specialized for `BLOCK_LOAD_WARP_TRANSPOSE`, meaning memory references are efficiently coalesced using a warp-striped access pattern (after which items are locally reordered among threads).
+
+those threads will be `{ [0,1,2,3], [4,5,6,7], ..., [508,509,510,511] }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_load.cuh>
+
+__global__ void ExampleKernel(int *d_data, ...)
+{
+    // Specialize BlockLoad for a 1D block of 128 threads owning 4 integer items each
+    using BlockLoad = cub::BlockLoad<int, 128, 4, BLOCK_LOAD_WARP_TRANSPOSE>;
+
+    // Allocate shared memory for BlockLoad
+    __shared__ typename BlockLoad::TempStorage temp_storage;
+
+    // Load a segment of consecutive items that are blocked across threads
+    int thread_data[4];
+    BlockLoad(temp_storage).Load(d_data, thread_data);
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="T" type="typename">
+The data type to read into (which must be convertible from the input iterator's value type).
+</ParamField>
+
+<ParamField path="BlockDimX" type="int">
+</ParamField>
+
+<ParamField path="ItemsPerThread" type="int">
+The number of consecutive items partitioned onto each thread.
+</ParamField>
+
+<ParamField path="Algorithm" type="BlockLoadAlgorithm" default="BLOCK_LOAD_DIRECT">
+</ParamField>
+
+<ParamField path="BlockDimY" type="int" default="1">
+</ParamField>
+
+<ParamField path="BlockDimZ" type="int" default="1">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Collective constructors
+
+### BlockLoad <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+Collective constructor using a private static allocation of shared memory as temporary storage.
+
+<CodeBlock links={{"BlockLoad": "/library/api/cub::BlockLoad"}}>
+```cpp showLineNumbers={false}
+cub::BlockLoad<T, BlockDimX, ItemsPerThread, Algorithm, BlockDimY, BlockDimZ>::BlockLoad()
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+</Tab>
+<Tab title="With TempStorage">
+
+Collective constructor using the specified memory allocation as temporary storage.
+
+<CodeBlock links={{"BlockLoad": "/library/api/cub::BlockLoad"}}>
+```cpp showLineNumbers={false}
+cub::BlockLoad<T, BlockDimX, ItemsPerThread, Algorithm, BlockDimY, BlockDimZ>::BlockLoad(
+    TempStorage &temp_storage
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Parameters**
+
+<ParamField path="temp_storage" type="TempStorage &">
+Reference to memory allocation having layout type [TempStorage](/library/api/cub::_block_load::TempStorage)
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Data movement
+
+### Load <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Load a linear segment of items from memory.
+
+<CodeBlock links={{"BlockLoad": "/library/api/cub::BlockLoad"}}>
+```cpp showLineNumbers={false}
+template <typename RandomAccessIterator>
+void cub::BlockLoad<T, BlockDimX, ItemsPerThread, Algorithm, BlockDimY, BlockDimZ>::Load(
+    RandomAccessIterator block_src_it,
+    T (&dst_items)[ItemsPerThread]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Data is in a blocked arrangement across threads.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="block_src_it" type="RandomAccessIterator">
+The thread block's base iterator for loading from
+</ParamField>
+
+<ParamField path="dst_items" type="T(&)[ItemsPerThread]">
+Destination to load data into
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the loading of a linear segment of 512 integers into a "blocked" arrangement across 128 threads where each thread owns 4 consecutive items. The load is specialized for `BLOCK_LOAD_WARP_TRANSPOSE`, meaning memory references are efficiently coalesced using a warp-striped access pattern (after which items are locally reordered among threads).
+
+in those threads will be `{ [0,1,2,3], [4,5,6,7], ..., [508,509,510,511] }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_load.cuh>
+
+__global__ void ExampleKernel(int *d_data, ...)
+{
+    // Specialize BlockLoad for a 1D block of 128 threads owning 4 integer items each
+    using BlockLoad = cub::BlockLoad<int, 128, 4, BLOCK_LOAD_WARP_TRANSPOSE>;
+
+    // Allocate shared memory for BlockLoad
+    __shared__ typename BlockLoad::TempStorage temp_storage;
+
+    // Load a segment of consecutive items that are blocked across threads
+    int thread_data[4];
+    BlockLoad(temp_storage).Load(d_data, thread_data);
+}
+```
+
+</Tab>
+<Tab title="Overload 2">
+
+Load a linear segment of items from memory, guarded by range.
+
+<CodeBlock links={{"BlockLoad": "/library/api/cub::BlockLoad"}}>
+```cpp showLineNumbers={false}
+template <typename RandomAccessIterator>
+void cub::BlockLoad<T, BlockDimX, ItemsPerThread, Algorithm, BlockDimY, BlockDimZ>::Load(
+    RandomAccessIterator block_src_it,
+    T (&dst_items)[ItemsPerThread],
+    int block_items_end
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Data is in a blocked arrangement across threads.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="block_src_it" type="RandomAccessIterator">
+The thread block's base iterator for loading from
+</ParamField>
+
+<ParamField path="dst_items" type="T(&)[ItemsPerThread]">
+Destination to load data into
+</ParamField>
+
+<ParamField path="block_items_end" type="int">
+Number of valid items to load
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the guarded loading of a linear segment of 512 integers into a "blocked" arrangement across 128 threads where each thread owns 4 consecutive items. The load is specialized for `BLOCK_LOAD_WARP_TRANSPOSE`, meaning memory references are efficiently coalesced using a warp-striped access pattern (after which items are locally reordered among threads).
+
+`thread_data` across the block of threads in those threads will be `{ [0,1,2,3], [4,?,?,?], ..., [?,?,?,?] }`, with only the first two threads being unmasked to load portions of valid data (and other items remaining unassigned).
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_load.cuh>
+
+__global__ void ExampleKernel(int *d_data, int block_items_end, ...)
+{
+    // Specialize BlockLoad for a 1D block of 128 threads owning 4 integer items each
+    using BlockLoad = cub::BlockLoad<int, 128, 4, BLOCK_LOAD_WARP_TRANSPOSE>;
+
+    // Allocate shared memory for BlockLoad
+    __shared__ typename BlockLoad::TempStorage temp_storage;
+
+    // Load a segment of consecutive items that are blocked across threads
+    int thread_data[4];
+    BlockLoad(temp_storage).Load(d_data, thread_data, block_items_end);
+}
+```
+
+</Tab>
+<Tab title="Overload 3">
+
+Load a linear segment of items from memory, guarded by range, with a fall-back assignment of out-of-bound elements
+
+<CodeBlock links={{"BlockLoad": "/library/api/cub::BlockLoad"}}>
+```cpp showLineNumbers={false}
+template <typename RandomAccessIterator, typename DefaultT>
+void cub::BlockLoad<T, BlockDimX, ItemsPerThread, Algorithm, BlockDimY, BlockDimZ>::Load(
+    RandomAccessIterator block_src_it,
+    T (&dst_items)[ItemsPerThread],
+    int block_items_end,
+    DefaultT oob_default
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Data is in a blocked arrangement across threads.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="block_src_it" type="RandomAccessIterator">
+The thread block's base iterator for loading from
+</ParamField>
+
+<ParamField path="dst_items" type="T(&)[ItemsPerThread]">
+Destination to load data into
+</ParamField>
+
+<ParamField path="block_items_end" type="int">
+Number of valid items to load
+</ParamField>
+
+<ParamField path="oob_default" type="DefaultT">
+Default value to assign out-of-bound items
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the guarded loading of a linear segment of 512 integers into a "blocked" arrangement across 128 threads where each thread owns 4 consecutive items. The load is specialized for `BLOCK_LOAD_WARP_TRANSPOSE`, meaning memory references are efficiently coalesced using a warp-striped access pattern (after which items are locally reordered among threads).
+
+default is `-1`. The set of `thread_data` across the block of threads in those threads will be `{ [0,1,2,3], [4,-1,-1,-1], ..., [-1,-1,-1,-1] }`, with only the first two threads being unmasked to load portions of valid data (and other items are assigned `-1`)
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_load.cuh>
+
+__global__ void ExampleKernel(int *d_data, int block_items_end, ...)
+{
+    // Specialize BlockLoad for a 1D block of 128 threads owning 4 integer items each
+    using BlockLoad = cub::BlockLoad<int, 128, 4, BLOCK_LOAD_WARP_TRANSPOSE>;
+
+    // Allocate shared memory for BlockLoad
+    __shared__ typename BlockLoad::TempStorage temp_storage;
+
+    // Load a segment of consecutive items that are blocked across threads
+    int thread_data[4];
+    BlockLoad(temp_storage).Load(d_data, thread_data, block_items_end, -1);
+}
+```
+
+</Tab>
+</Tabs>
+
+---
+
+## Utility methods
+
+### PrivateStorage <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"BlockLoad": "/library/api/cub::BlockLoad"}}>
+```cpp showLineNumbers={false}
+_TempStorage & cub::BlockLoad<T, BlockDimX, ItemsPerThread, Algorithm, BlockDimY, BlockDimZ>::PrivateStorage()
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `InternalLoad` | `LoadInternal< Algorithm, 0 >` | |
+| `_TempStorage` | `typename InternalLoad::TempStorage` | |
+| `TempStorage` | `Uninitialized< _TempStorage >` | The operations exposed by `BlockLoad` require a temporary memory allocation of this nested type for thread communication. This opaque storage can be allocated directly using the `__shared__` keyword. Alternatively, it can be aliased to externally allocated memory (shared or global) or `union`'d with other storage allocation types to facilitate memory reuse. |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `BlockThreads` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `temp_storage` | `_TempStorage &` | |
+| `linear_tid` | `int` | |
+
+---
+
+## Inner classes
+
+### LoadInternal
+
+<CodeBlock links={{"BlockLoad": "/library/api/cub::BlockLoad"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockLoad::LoadInternal
+```
+</CodeBlock>
+
+### LoadInternal< BLOCK_LOAD_DIRECT, Dummy >
+
+<CodeBlock links={{"BlockLoad": "/library/api/cub::BlockLoad"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockLoad::LoadInternal< BLOCK_LOAD_DIRECT, Dummy >
+```
+</CodeBlock>
+
+| Name | Type | Description |
+|---|---|---|
+| `linear_tid` | `int` | |
+
+### LoadInternal< BLOCK_LOAD_STRIPED, Dummy >
+
+<CodeBlock links={{"BlockLoad": "/library/api/cub::BlockLoad"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockLoad::LoadInternal< BLOCK_LOAD_STRIPED, Dummy >
+```
+</CodeBlock>
+
+| Name | Type | Description |
+|---|---|---|
+| `linear_tid` | `int` | |
+
+### LoadInternal< BLOCK_LOAD_VECTORIZE, Dummy >
+
+<CodeBlock links={{"BlockLoad": "/library/api/cub::BlockLoad"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockLoad::LoadInternal< BLOCK_LOAD_VECTORIZE, Dummy >
+```
+</CodeBlock>
+
+| Name | Type | Description |
+|---|---|---|
+| `linear_tid` | `int` | |
+
+### LoadInternal< BLOCK_LOAD_TRANSPOSE, Dummy >
+
+<CodeBlock links={{"BlockLoad": "/library/api/cub::BlockLoad"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockLoad::LoadInternal< BLOCK_LOAD_TRANSPOSE, Dummy >
+```
+</CodeBlock>
+
+| Name | Type | Description |
+|---|---|---|
+| `temp_storage` | `_TempStorage &` | |
+| `linear_tid` | `int` | |
+
+### LoadInternal< BLOCK_LOAD_WARP_TRANSPOSE, Dummy >
+
+<CodeBlock links={{"BlockLoad": "/library/api/cub::BlockLoad"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockLoad::LoadInternal< BLOCK_LOAD_WARP_TRANSPOSE, Dummy >
+```
+</CodeBlock>
+
+| Name | Type | Description |
+|---|---|---|
+| `WARP_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `temp_storage` | `_TempStorage &` | |
+| `linear_tid` | `int` | |
+
+### LoadInternal< BLOCK_LOAD_WARP_TRANSPOSE_TIMESLICED, Dummy >
+
+<CodeBlock links={{"BlockLoad": "/library/api/cub::BlockLoad"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockLoad::LoadInternal< BLOCK_LOAD_WARP_TRANSPOSE_TIMESLICED, Dummy >
+```
+</CodeBlock>
+
+| Name | Type | Description |
+|---|---|---|
+| `WARP_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `temp_storage` | `_TempStorage &` | |
+| `linear_tid` | `int` | |

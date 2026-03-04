@@ -1,0 +1,96 @@
+---
+title: cub::BlockRakingLayout
+description: ""
+---
+
+BlockRakingLayout provides a conflict-free shared memory layout abstraction for 1D raking across thread block data.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="T" type="typename">
+The data type to be exchanged.
+</ParamField>
+
+<ParamField path="BlockThreads" type="int">
+The thread block size in threads.
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Static methods
+
+### PlacementPtr <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Returns the location for the calling thread to place data into the grid.
+
+<CodeBlock links={{"BlockRakingLayout": "/library/api/cub::BlockRakingLayout", "TempStorage": "/library/api/cub::BlockRakingLayout::TempStorage"}}>
+```cpp showLineNumbers={false}
+static T * cub::BlockRakingLayout<T, BlockThreads>::PlacementPtr(
+    TempStorage &temp_storage,
+    unsigned int linear_tid
+)
+```
+</CodeBlock>
+
+### RakingPtr <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Returns the location for the calling thread to begin sequential raking.
+
+<CodeBlock links={{"BlockRakingLayout": "/library/api/cub::BlockRakingLayout", "TempStorage": "/library/api/cub::BlockRakingLayout::TempStorage"}}>
+```cpp showLineNumbers={false}
+static T * cub::BlockRakingLayout<T, BlockThreads>::RakingPtr(
+    TempStorage &temp_storage,
+    unsigned int linear_tid
+)
+```
+</CodeBlock>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `SHARED_ELEMENTS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | The total number of elements that need to be cooperatively reduced. |
+| `MAX_RAKING_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | Maximum number of warp-synchronous raking threads. |
+| `SEGMENT_LENGTH` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | Number of raking elements per warp-synchronous raking thread (rounded up). |
+| `RAKING_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | Never use a raking thread that will have no valid data (e.g., when BlockThreads is 62 and SEGMENT_LENGTH is 2, we should only use 31 raking threads). |
+| `HAS_CONFLICTS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `bool` | Whether we will have bank conflicts (technically we should find out if the GCD is &gt; 1). |
+| `CONFLICT_DEGREE` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | Degree of bank conflicts (e.g., 4-way). |
+| `USE_SEGMENT_PADDING` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `bool` | Pad each segment length with one element if segment length is not relatively prime to warp size and can't be optimized as a vector load. |
+| `GRID_ELEMENTS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | Total number of elements in the raking grid. |
+| `UNGUARDED` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | Whether or not we need bounds checking during raking (the number of reduction elements is not a multiple of the number of raking threads). |
+
+---
+
+## Inner classes
+
+### _TempStorage
+
+<CodeBlock links={{"BlockRakingLayout": "/library/api/cub::BlockRakingLayout"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockRakingLayout::_TempStorage
+```
+</CodeBlock>
+
+Shared memory storage type.
+
+| Name | Type | Description |
+|---|---|---|
+| `buff` | `T` | |
+
+### TempStorage
+
+<CodeBlock links={{"BlockRakingLayout": "/library/api/cub::BlockRakingLayout"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockRakingLayout::TempStorage
+```
+</CodeBlock>
+
+Alias wrapper allowing storage to be unioned.
+
+**Inherits from:** `Uninitialized< _TempStorage >` (public)

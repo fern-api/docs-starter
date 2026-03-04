@@ -1,0 +1,277 @@
+---
+title: thrust::uniform_real_distribution
+description: "A [`uniform_real_distribution`](/library/api/thrust::uniform_real_distribution) random number distribution produces floating point uniform random numbers from a half-open interval."
+---
+
+A `uniform_real_distribution` random number distribution produces floating point uniform random numbers from a half-open interval.
+
+The following code snippet demonstrates examples of using a `uniform_real_distribution` with a random number engine to produce random integers drawn from a given range:
+
+```cpp showLineNumbers={false}
+#include <thrust/uniform_real_distribution.h>
+```
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <thrust/random/linear_congruential_engine.h>
+#include <thrust/random/uniform_real_distribution.h>
+
+int main()
+{
+  // create a minstd_rand object to act as our source of randomness
+  thrust::minstd_rand rng;
+
+  // create a uniform_real_distribution to produce floats from [-7,13)
+  thrust::uniform_real_distribution<float> dist(-7,13);
+
+  // write a random number from the range [-7,13) to standard output
+  std::cout << dist(rng) << std::endl;
+
+  // write the range of the distribution, just in case we forgot
+  std::cout << dist.min() << std::endl;
+
+  // -7.0 is printed
+
+  std::cout << dist.max() << std::endl;
+
+  // 13.0 is printed
+
+  // write the parameters of the distribution (which happen to be the bounds) to standard output
+  std::cout << dist.a() << std::endl;
+
+  // -7.0 is printed
+
+  std::cout << dist.b() << std::endl;
+
+  // 13.0 is printed
+
+  return 0;
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="RealType" type="typename" default="double">
+The type of floating point number to produce.
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### uniform_real_distribution <Badge intent="note" minimal>explicit</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+This constructor creates a new `uniform_real_distribution` from two values defining the half-open interval of the distribution.
+
+<CodeBlock links={{"uniform_real_distribution": "/library/api/thrust::uniform_real_distribution"}}>
+```cpp showLineNumbers={false}
+thrust::random::uniform_real_distribution<RealType>::uniform_real_distribution(
+    RealType a = 0.0,
+    RealType b = 1.0
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="a" type="RealType" default="0.0">
+The smallest floating point number to potentially produce. Defaults to `0.0`.
+</ParamField>
+
+<ParamField path="b" type="RealType" default="1.0">
+The smallest number larger than the largest floating point number to potentially produce. Defaults to `1.0`.
+</ParamField>
+
+</Tab>
+<Tab title="Copy">
+
+This constructor creates a new `uniform_real_distribution` from a [`param_type`](/library/api/thrust::random::uniform_real_distribution::param_type) object encapsulating the range of the distribution.
+
+<CodeBlock links={{"uniform_real_distribution": "/library/api/thrust::uniform_real_distribution"}}>
+```cpp showLineNumbers={false}
+thrust::random::uniform_real_distribution<RealType>::uniform_real_distribution(
+    const param_type &parm
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="parm" type="const param_type &">
+A [`param_type`](/library/api/thrust::random::uniform_real_distribution::param_type) object encapsulating the parameters (i.e., the range) of the distribution.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### reset
+
+This does nothing.
+
+It is included to conform to the requirements of the RandomDistribution concept.
+
+<CodeBlock links={{"uniform_real_distribution": "/library/api/thrust::uniform_real_distribution"}}>
+```cpp showLineNumbers={false}
+void thrust::random::uniform_real_distribution<RealType>::reset()
+```
+</CodeBlock>
+
+### operator()
+
+<Tabs>
+<Tab title="Overload 1">
+
+This method produces a new uniform random integer drawn from this `uniform_real_distribution``'s` range using a `UniformRandomNumberGenerator` as a source of randomness.
+
+<CodeBlock links={{"uniform_real_distribution": "/library/api/thrust::uniform_real_distribution"}}>
+```cpp showLineNumbers={false}
+template <typename UniformRandomNumberGenerator>
+result_type thrust::random::uniform_real_distribution<RealType>::operator()(
+    UniformRandomNumberGenerator &urng
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="urng" type="UniformRandomNumberGenerator &">
+The `UniformRandomNumberGenerator` to use as a source of randomness.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+This method produces a new uniform random integer as if by creating a new `uniform_real_distribution` from the given [`param_type`](/library/api/thrust::random::uniform_real_distribution::param_type) object, and calling its `operator()` method with the given `UniformRandomNumberGenerator` as a source of randomness.
+
+<CodeBlock links={{"uniform_real_distribution": "/library/api/thrust::uniform_real_distribution"}}>
+```cpp showLineNumbers={false}
+template <typename UniformRandomNumberGenerator>
+result_type thrust::random::uniform_real_distribution<RealType>::operator()(
+    UniformRandomNumberGenerator &urng,
+    const param_type &parm
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="urng" type="UniformRandomNumberGenerator &">
+The `UniformRandomNumberGenerator` to use as a source of randomness.
+</ParamField>
+
+<ParamField path="parm" type="const param_type &">
+A [`param_type`](/library/api/thrust::random::uniform_real_distribution::param_type) object encapsulating the parameters of the `uniform_real_distribution` to draw from.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### a <Badge intent="note" minimal>const</Badge>
+
+This method returns the value of the parameter with which this `uniform_real_distribution` was constructed.
+
+<CodeBlock links={{"uniform_real_distribution": "/library/api/thrust::uniform_real_distribution"}}>
+```cpp showLineNumbers={false}
+result_type thrust::random::uniform_real_distribution<RealType>::a() const
+```
+</CodeBlock>
+
+**Returns:** The lower bound of this `uniform_real_distribution``'s` half-open interval.
+
+### b <Badge intent="note" minimal>const</Badge>
+
+This method returns the value of the parameter with which this `uniform_real_distribution` was constructed.
+
+<CodeBlock links={{"uniform_real_distribution": "/library/api/thrust::uniform_real_distribution"}}>
+```cpp showLineNumbers={false}
+result_type thrust::random::uniform_real_distribution<RealType>::b() const
+```
+</CodeBlock>
+
+**Returns:** The upper bound of this `uniform_real_distribution``'s` half-open interval.
+
+### param
+
+<Tabs>
+<Tab title="Mutable">
+
+This method changes the parameters of this `uniform_real_distribution` using the values encapsulated in a given [`param_type`](/library/api/thrust::random::uniform_real_distribution::param_type) object.
+
+<CodeBlock links={{"uniform_real_distribution": "/library/api/thrust::uniform_real_distribution"}}>
+```cpp showLineNumbers={false}
+void thrust::random::uniform_real_distribution<RealType>::param(
+    const param_type &parm
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="parm" type="const param_type &">
+A [`param_type`](/library/api/thrust::random::uniform_real_distribution::param_type) object encapsulating the new half-open interval of this `uniform_real_distribution`.
+</ParamField>
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+This method returns a [`param_type`](/library/api/thrust::random::uniform_real_distribution::param_type) object encapsulating the parameters with which this `uniform_real_distribution` was constructed.
+
+<CodeBlock links={{"uniform_real_distribution": "/library/api/thrust::uniform_real_distribution"}}>
+```cpp showLineNumbers={false}
+param_type thrust::random::uniform_real_distribution<RealType>::param() const
+```
+</CodeBlock>
+
+**Returns:** A [`param_type`](/library/api/thrust::random::uniform_real_distribution::param_type) object enapsulating the half-open interval of this `uniform_real_distribution`.
+
+</Tab>
+</Tabs>
+
+### min <Badge intent="note" minimal>const</Badge>
+
+This method returns the smallest floating point number this `uniform_real_distribution` can potentially produce.
+
+<CodeBlock links={{"uniform_real_distribution": "/library/api/thrust::uniform_real_distribution"}}>
+```cpp showLineNumbers={false}
+result_type thrust::random::uniform_real_distribution<RealType>::min() const
+```
+</CodeBlock>
+
+**Returns:** The lower bound of this `uniform_real_distribution``'s` half-open interval.
+
+### max <Badge intent="note" minimal>const</Badge>
+
+This method returns the smallest number larger than largest floating point number this `uniform_real_distribution` can potentially produce.
+
+<CodeBlock links={{"uniform_real_distribution": "/library/api/thrust::uniform_real_distribution"}}>
+```cpp showLineNumbers={false}
+result_type thrust::random::uniform_real_distribution<RealType>::max() const
+```
+</CodeBlock>
+
+**Returns:** The upper bound of this `uniform_real_distribution``'s` half-open interval.
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `result_type` | `RealType` | The type of the floating point number produced by this `uniform_real_distribution`. |
+| `param_type` | `::cuda::std::pair< RealType, RealType >` | The type of the object encapsulating this `uniform_real_distribution``'s` parameters. |

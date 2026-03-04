@@ -1,0 +1,146 @@
+---
+title: "cuda::mr::synchronous_resource_adapter"
+description: "Adapter that allows a synchronous resource to be used as a resource It examines the resource for the presence of the allocate and deallocate members."
+---
+
+Adapter that allows a synchronous resource to be used as a resource It examines the resource for the presence of the allocate and deallocate members.
+
+If they are present, it passes through the allocate and deallocate calls to the contained resource. Otherwise, it uses the allocate_sync and deallocate_sync members (with proper synchronization in case of deallocate).
+
+```cpp showLineNumbers={false}
+#include <cuda/mr/synchronous_resource_adapter.h>
+```
+
+<Note>
+This adapter takes ownership of the contained resource.
+</Note>
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="_Resource" type="class">
+The type of the resource to be adapted
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `cuda::mr::__copy_default_queries< _Resource >` (public), `cuda::forward_property< synchronous_resource_adapter< _Resource >, _Resource >` (public)
+
+---
+
+## Constructors
+
+### synchronous_resource_adapter <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Copy">
+
+<CodeBlock links={{"synchronous_resource_adapter": "/library/api/cuda::mr::synchronous_resource_adapter"}}>
+```cpp showLineNumbers={false}
+cuda::mr::synchronous_resource_adapter<_Resource>::synchronous_resource_adapter(
+    const _Resource &__resource
+) noexcept
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Move">
+
+<CodeBlock links={{"synchronous_resource_adapter": "/library/api/cuda::mr::synchronous_resource_adapter"}}>
+```cpp showLineNumbers={false}
+cuda::mr::synchronous_resource_adapter<_Resource>::synchronous_resource_adapter(
+    _Resource &&__resource
+) noexcept
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### allocate <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<CodeBlock links={{"synchronous_resource_adapter": "/library/api/cuda::mr::synchronous_resource_adapter", "stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+void * cuda::mr::synchronous_resource_adapter<_Resource>::allocate(
+    const ::cuda::stream_ref __stream,
+    const size_t __bytes,
+    const size_t __alignment
+)
+```
+</CodeBlock>
+
+### allocate_sync <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<CodeBlock links={{"synchronous_resource_adapter": "/library/api/cuda::mr::synchronous_resource_adapter"}}>
+```cpp showLineNumbers={false}
+void * cuda::mr::synchronous_resource_adapter<_Resource>::allocate_sync(
+    const size_t __bytes,
+    const size_t __alignment
+)
+```
+</CodeBlock>
+
+### deallocate <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<CodeBlock links={{"synchronous_resource_adapter": "/library/api/cuda::mr::synchronous_resource_adapter", "stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+void cuda::mr::synchronous_resource_adapter<_Resource>::deallocate(
+    const ::cuda::stream_ref __stream,
+    void *__ptr,
+    const size_t __bytes,
+    const size_t __alignment
+) noexcept
+```
+</CodeBlock>
+
+### deallocate_sync <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<CodeBlock links={{"synchronous_resource_adapter": "/library/api/cuda::mr::synchronous_resource_adapter"}}>
+```cpp showLineNumbers={false}
+void cuda::mr::synchronous_resource_adapter<_Resource>::deallocate_sync(
+    void *__ptr,
+    const size_t __bytes,
+    const size_t __alignment
+) noexcept
+```
+</CodeBlock>
+
+### operator== <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<CodeBlock links={{"synchronous_resource_adapter": "/library/api/cuda::mr::synchronous_resource_adapter"}}>
+```cpp showLineNumbers={false}
+bool cuda::mr::synchronous_resource_adapter<_Resource>::operator==(
+    const synchronous_resource_adapter &__rhs
+) const noexcept
+```
+</CodeBlock>
+
+### upstream_resource <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+<CodeBlock links={{"synchronous_resource_adapter": "/library/api/cuda::mr::synchronous_resource_adapter"}}>
+```cpp showLineNumbers={false}
+_Resource & cuda::mr::synchronous_resource_adapter<_Resource>::upstream_resource() noexcept
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"synchronous_resource_adapter": "/library/api/cuda::mr::synchronous_resource_adapter"}}>
+```cpp showLineNumbers={false}
+const _Resource & cuda::mr::synchronous_resource_adapter<_Resource>::upstream_resource() const noexcept
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>

@@ -1,0 +1,52 @@
+---
+title: "cuda::arch_traits_t"
+description: "Architecture traits This type contains information about an architecture that is constant across devices of that architecture."
+---
+
+Architecture traits This type contains information about an architecture that is constant across devices of that architecture.
+
+```cpp showLineNumbers={false}
+#include <cuda/arch_traits.h>
+```
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `max_threads_per_block` | `int` | |
+| `max_block_dim_x` | `int` | |
+| `max_block_dim_y` | `int` | |
+| `max_block_dim_z` | `int` | |
+| `max_grid_dim_x` | `int` | |
+| `max_grid_dim_y` | `int` | |
+| `max_grid_dim_z` | `int` | |
+| `max_shared_memory_per_block` | `::cuda::std::size_t` | |
+| `total_constant_memory` | `::cuda::std::size_t` | |
+| `warp_size` | `int` | |
+| `max_resident_grids` | `int` | |
+| `gpu_overlap` | `bool` | |
+| `can_map_host_memory` | `bool` | |
+| `concurrent_kernels` | `bool` | |
+| `stream_priorities_supported` | `bool` | |
+| `global_l1_cache_supported` | `bool` | |
+| `local_l1_cache_supported` | `bool` | |
+| `max_registers_per_block` | `int` | |
+| `max_registers_per_multiprocessor` | `int` | |
+| `max_registers_per_thread` | `int` | |
+| `arch_id` | `::cuda::arch_id` | |
+| `compute_capability_major` | `int` | |
+| `compute_capability_minor` | `int` | |
+| `compute_capability` | `::cuda::compute_capability` | |
+| `max_shared_memory_per_multiprocessor` | `::cuda::std::size_t` | |
+| `max_blocks_per_multiprocessor` | `int` | |
+| `max_threads_per_multiprocessor` | `int` | |
+| `max_warps_per_multiprocessor` | `int` | |
+| `reserved_shared_memory_per_block` | `::cuda::std::size_t` | |
+| `max_shared_memory_per_block_optin` | `::cuda::std::size_t` | |
+| `cluster_supported` | `bool` | |
+| `redux_intrinisic` | `bool` | |
+| `elect_intrinsic` | `bool` | |
+| `cp_async_supported` | `bool` | |
+| `tma_supported` | `bool` | |

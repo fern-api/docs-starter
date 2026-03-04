@@ -1,0 +1,32 @@
+---
+title: cub::CastOp
+description: "Default cast functor."
+---
+
+Default cast functor.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="B" type="typename">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Methods
+
+### operator() <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Cast operator, returns `(B) a`.
+
+<CodeBlock links={{"CastOp": "/library/api/cub::CastOp"}}>
+```cpp showLineNumbers={false}
+template <typename A>
+B cub::CastOp<B>::operator()(
+    A &&a
+) const
+```
+</CodeBlock>

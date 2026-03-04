@@ -1,0 +1,1297 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/language_models/chat_models
+title: langchain_core.language_models.chat_models
+---
+
+Chat models for conversational AI.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`BaseChatModel`](#langchain_core-language_models-chat_models-BaseChatModel) | Base class for chat models. |
+| [`SimpleChatModel`](#langchain_core-language_models-chat_models-SimpleChatModel) | Simplified implementation for a chat model to inherit from. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_cleanup_llm_representation`](#langchain_core-language_models-chat_models-_cleanup_llm_representation) | Remove non-serializable objects from a serialized object. |
+| [`_format_for_tracing`](#langchain_core-language_models-chat_models-_format_for_tracing) | Format messages for tracing in `on_chat_model_start`. |
+| [`_format_ls_structured_output`](#langchain_core-language_models-chat_models-_format_ls_structured_output) | - |
+| [`_gen_info_and_msg_metadata`](#langchain_core-language_models-chat_models-_gen_info_and_msg_metadata) | - |
+| [`_generate_response_from_error`](#langchain_core-language_models-chat_models-_generate_response_from_error) | - |
+| [`agenerate_from_stream`](#langchain_core-language_models-chat_models-agenerate_from_stream) | Async generate from a stream. |
+| [`generate_from_stream`](#langchain_core-language_models-chat_models-generate_from_stream) | Generate from a stream. |
+
+### Data
+
+[`_MAX_CLEANUP_DEPTH`](#langchain_core-language_models-chat_models-_MAX_CLEANUP_DEPTH)
+
+### API
+
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.language_models.chat_models.BaseChatModel()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+**Bases:** [BaseLanguageModel[AIMessage]](/langchain-core/langchain_core/language_models/base#langchain_core-language_models-base-BaseLanguageModel)
+
+Base class for chat models.
+
+
+<ParamField path="OutputType" type="Any">
+Get the output type for this `Runnable`.
+</ParamField>
+
+<ParamField path="_llm_type" type="str">
+Return type of chat model.
+</ParamField>
+
+<ParamField path="_serialized" type="dict[str, Any]">
+</ParamField>
+
+<ParamField path="disable_streaming" type="bool | Literal['tool_calling'] = False">
+Whether to disable streaming for this model.
+
+If streaming is bypassed, then `stream`/`astream`/`astream_events` will
+defer to `invoke`/`ainvoke`.
+
+- If `True`, will always bypass streaming case.
+- If `'tool_calling'`, will bypass streaming case only when the model is called
+    with a `tools` keyword argument. In other words, LangChain will automatically
+    switch to non-streaming behavior (`invoke`) only when the tools argument is
+    provided. This offers the best of both worlds.
+- If `False` (Default), will always use streaming case if available.
+
+The main reason for this flag is that code might be written using `stream` and
+a user may want to swap out a given model for another model whose implementation
+does not properly support streaming.
+</ParamField>
+
+<ParamField path="model_config" type="= ConfigDict(arbitrary_types_allowed=True)">
+</ParamField>
+
+<ParamField path="output_version" type="str | None">
+Version of `AIMessage` output format to store in message content.
+
+`AIMessage.content_blocks` will lazily parse the contents of `content` into a
+standard format. This flag can be used to additionally store the standard format
+in message content, e.g., for serialization purposes.
+
+Supported values:
+
+- `'v0'`: provider-specific format in content (can lazily-parse with
+    `content_blocks`)
+- `'v1'`: standardized format in content (consistent with `content_blocks`)
+
+Partner packages (e.g.,
+[`langchain-openai`](https://pypi.org/project/langchain-openai)) can also use this
+field to roll out new content formats in a backward-compatible way.
+
+!!! version-added "Added in `langchain-core` 1.0.0"
+</ParamField>
+
+<ParamField path="profile" type="ModelProfile | None = Field(default=None, exclude=True)">
+Profile detailing model capabilities.
+
+!!! warning "Beta feature"
+
+    This is a beta feature. The format of model profiles is subject to change.
+
+If not specified, automatically loaded from the provider package on initialization
+if data is available.
+
+Example profile data includes context window sizes, supported modalities, or support
+for tool calling, structured output, and other features.
+
+!!! version-added "Added in `langchain-core` 1.1.0"
+</ParamField>
+
+<ParamField path="rate_limiter" type="BaseRateLimiter | None = Field(default=None, exclude=True)">
+An optional rate limiter to use for limiting the number of requests.
+</ParamField>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-_agenerate">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.outputs.ChatResult":"/langchain-core/langchain_core/outputs/chat_result#langchain_core-outputs-chat_result-ChatResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel._agenerate(
+    messages: list[langchain_core.messages.BaseMessage],
+    stop: list[str] | None = None,
+    run_manager: langchain_core.callbacks.AsyncCallbackManagerForLLMRun | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.ChatResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Generate the result.
+
+**Parameters:**
+
+<ParamField path="messages" type="list[BaseMessage]">
+The messages to generate from.
+</ParamField>
+
+<ParamField path="stop" type="list[str] | None" default="None">
+Optional list of stop words to use when generating.
+</ParamField>
+
+<ParamField path="run_manager" type="AsyncCallbackManagerForLLMRun | None" default="None">
+Optional callback manager to use for this call.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments to pass to the model.
+</ParamField>
+
+**Returns:** `ChatResult`
+
+The chat result.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-_agenerate_with_cache">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.outputs.ChatResult":"/langchain-core/langchain_core/outputs/chat_result#langchain_core-outputs-chat_result-ChatResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel._agenerate_with_cache(
+    messages: list[langchain_core.messages.BaseMessage],
+    stop: list[str] | None = None,
+    run_manager: langchain_core.callbacks.AsyncCallbackManagerForLLMRun | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.ChatResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-_astream">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel._astream(
+    messages: list[langchain_core.messages.BaseMessage],
+    stop: list[str] | None = None,
+    run_manager: langchain_core.callbacks.AsyncCallbackManagerForLLMRun | None = None,
+    kwargs: typing.Any = {}
+) -> collections.abc.AsyncIterator[langchain_core.outputs.ChatGenerationChunk]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Stream the output of the model.
+
+**Parameters:**
+
+<ParamField path="messages" type="list[BaseMessage]">
+The messages to generate from.
+</ParamField>
+
+<ParamField path="stop" type="list[str] | None" default="None">
+Optional list of stop words to use when generating.
+</ParamField>
+
+<ParamField path="run_manager" type="AsyncCallbackManagerForLLMRun | None" default="None">
+Optional callback manager to use for this call.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments to pass to the model.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-_call_async">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.callbacks.Callbacks":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-Callbacks"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel._call_async(
+    messages: list[langchain_core.messages.BaseMessage],
+    stop: list[str] | None = None,
+    callbacks: langchain_core.callbacks.Callbacks = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.messages.BaseMessage
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-_combine_llm_outputs">
+
+<CodeBlock links={{"langchain_core.language_models.chat_models.BaseChatModel.dict":"/langchain-core/langchain_core/language_models/chat_models/BaseChatModel#langchain_core-language_models-chat_models-BaseChatModel-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel._combine_llm_outputs(
+    _llm_outputs: list[langchain_core.language_models.chat_models.BaseChatModel.dict | None]
+) -> langchain_core.language_models.chat_models.BaseChatModel.dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-_convert_cached_generations">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel._convert_cached_generations(
+    cache_val: list
+) -> list[langchain_core.outputs.ChatGeneration]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert cached Generation objects to ChatGeneration objects.
+
+Handle case where cache contains Generation objects instead of
+ChatGeneration objects. This can happen due to serialization/deserialization
+issues or legacy cache data (see #22389).
+
+**Parameters:**
+
+<ParamField path="cache_val" type="list">
+List of cached generation objects.
+</ParamField>
+
+**Returns:** `list[ChatGeneration]`
+
+List of ChatGeneration objects.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-_convert_input">
+
+<CodeBlock links={{"langchain_core.language_models.base.LanguageModelInput":"/langchain-core/langchain_core/language_models/base#langchain_core-language_models-base-LanguageModelInput","langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel._convert_input(
+    model_input: langchain_core.language_models.base.LanguageModelInput
+) -> langchain_core.prompt_values.PromptValue
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-_generate">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.outputs.ChatResult":"/langchain-core/langchain_core/outputs/chat_result#langchain_core-outputs-chat_result-ChatResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel._generate(
+    messages: list[langchain_core.messages.BaseMessage],
+    stop: list[str] | None = None,
+    run_manager: langchain_core.callbacks.CallbackManagerForLLMRun | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.ChatResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Generate the result.
+
+**Parameters:**
+
+<ParamField path="messages" type="list[BaseMessage]">
+The messages to generate from.
+</ParamField>
+
+<ParamField path="stop" type="list[str] | None" default="None">
+Optional list of stop words to use when generating.
+</ParamField>
+
+<ParamField path="run_manager" type="CallbackManagerForLLMRun | None" default="None">
+Optional callback manager to use for this call.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments to pass to the model.
+</ParamField>
+
+**Returns:** `ChatResult`
+
+The chat result.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-_generate_with_cache">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.outputs.ChatResult":"/langchain-core/langchain_core/outputs/chat_result#langchain_core-outputs-chat_result-ChatResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel._generate_with_cache(
+    messages: list[langchain_core.messages.BaseMessage],
+    stop: list[str] | None = None,
+    run_manager: langchain_core.callbacks.CallbackManagerForLLMRun | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.ChatResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-_get_invocation_params">
+
+<CodeBlock links={{"langchain_core.language_models.chat_models.BaseChatModel.dict":"/langchain-core/langchain_core/language_models/chat_models/BaseChatModel#langchain_core-language_models-chat_models-BaseChatModel-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel._get_invocation_params(
+    stop: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.language_models.chat_models.BaseChatModel.dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-_get_llm_string">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel._get_llm_string(
+    stop: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-_get_ls_params">
+
+<CodeBlock links={{"langchain_core.language_models.base.LangSmithParams":"/langchain-core/langchain_core/language_models/base#langchain_core-language_models-base-LangSmithParams"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel._get_ls_params(
+    stop: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.language_models.base.LangSmithParams
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get standard params for tracing.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-_should_stream">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel._should_stream(
+    async_api: bool,
+    run_manager: langchain_core.callbacks.CallbackManagerForLLMRun | langchain_core.callbacks.AsyncCallbackManagerForLLMRun | None = None,
+    kwargs: typing.Any = {}
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Determine if a given model call should hit the streaming API.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-_stream">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel._stream(
+    messages: list[langchain_core.messages.BaseMessage],
+    stop: list[str] | None = None,
+    run_manager: langchain_core.callbacks.CallbackManagerForLLMRun | None = None,
+    kwargs: typing.Any = {}
+) -> collections.abc.Iterator[langchain_core.outputs.ChatGenerationChunk]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Stream the output of the model.
+
+**Parameters:**
+
+<ParamField path="messages" type="list[BaseMessage]">
+The messages to generate from.
+</ParamField>
+
+<ParamField path="stop" type="list[str] | None" default="None">
+Optional list of stop words to use when generating.
+</ParamField>
+
+<ParamField path="run_manager" type="CallbackManagerForLLMRun | None" default="None">
+Optional callback manager to use for this call.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments to pass to the model.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-agenerate">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.callbacks.Callbacks":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-Callbacks","langchain_core.language_models.chat_models.BaseChatModel.dict":"/langchain-core/langchain_core/language_models/chat_models/BaseChatModel#langchain_core-language_models-chat_models-BaseChatModel-dict","langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel.agenerate(
+    messages: list[list[langchain_core.messages.BaseMessage]],
+    stop: list[str] | None = None,
+    callbacks: langchain_core.callbacks.Callbacks = None,
+    tags: list[str] | None = None,
+    metadata: langchain_core.language_models.chat_models.BaseChatModel.dict[str, typing.Any] | None = None,
+    run_name: str | None = None,
+    run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.LLMResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Asynchronously pass a sequence of prompts to a model and return generations.
+
+This method should make use of batched calls for models that expose a batched
+API.
+
+Use this method when you want to:
+
+1. Take advantage of batched calls,
+2. Need more output from the model than just the top generated value,
+3. Are building chains that are agnostic to the underlying language model
+    type (e.g., pure text completion models vs chat models).
+
+**Parameters:**
+
+<ParamField path="messages" type="list[list[BaseMessage]]">
+List of list of messages.
+</ParamField>
+
+<ParamField path="stop" type="list[str] | None" default="None">
+Stop words to use when generating.
+
+Model output is cut off at the first occurrence of any of these
+substrings.
+</ParamField>
+
+<ParamField path="callbacks" type="Callbacks" default="None">
+`Callbacks` to pass through.
+
+Used for executing additional functionality, such as logging or
+streaming, throughout generation.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags to apply.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+The metadata to apply.
+</ParamField>
+
+<ParamField path="run_name" type="str | None" default="None">
+The name of the run.
+</ParamField>
+
+<ParamField path="run_id" type="uuid.UUID | None" default="None">
+The ID of the run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arbitrary additional keyword arguments.
+
+These are usually passed to the model provider API call.
+</ParamField>
+
+**Returns:** `LLMResult`
+
+An `LLMResult`, which contains a list of candidate `Generations` for each
+input prompt and additional model provider-specific output.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-agenerate_prompt">
+
+<CodeBlock links={{"langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue","langchain_core.callbacks.Callbacks":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-Callbacks","langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel.agenerate_prompt(
+    prompts: list[langchain_core.prompt_values.PromptValue],
+    stop: list[str] | None = None,
+    callbacks: langchain_core.callbacks.Callbacks = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.LLMResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-ainvoke">
+
+<CodeBlock links={{"langchain_core.language_models.base.LanguageModelInput":"/langchain-core/langchain_core/language_models/base#langchain_core-language_models-base-LanguageModelInput","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.messages.AIMessage":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel.ainvoke(
+    input: langchain_core.language_models.base.LanguageModelInput,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    stop: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.messages.AIMessage
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-astream">
+
+<CodeBlock links={{"langchain_core.language_models.base.LanguageModelInput":"/langchain-core/langchain_core/language_models/base#langchain_core-language_models-base-LanguageModelInput","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.messages.AIMessageChunk":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessageChunk"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel.astream(
+    input: langchain_core.language_models.base.LanguageModelInput,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    stop: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> collections.abc.AsyncIterator[langchain_core.messages.AIMessageChunk]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-bind_tools">
+
+<CodeBlock links={{"langchain_core.tools.BaseTool":"/langchain-core/langchain_core/tools/base#langchain_core-tools-base-BaseTool","langchain_core.runnables.Runnable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-Runnable","langchain_core.language_models.base.LanguageModelInput":"/langchain-core/langchain_core/language_models/base#langchain_core-language_models-base-LanguageModelInput","langchain_core.messages.AIMessage":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel.bind_tools(
+    tools: collections.abc.Sequence[builtins.dict[str, typing.Any] | type | collections.abc.Callable | langchain_core.tools.BaseTool],
+    tool_choice: str | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.runnables.Runnable[langchain_core.language_models.base.LanguageModelInput, langchain_core.messages.AIMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Bind tools to the model.
+
+**Parameters:**
+
+<ParamField path="tools" type="Sequence[builtins.dict[str, Any] | type | Callable | BaseTool]">
+Sequence of tools to bind to the model.
+</ParamField>
+
+<ParamField path="tool_choice" type="str | None" default="None">
+The tool to use. If "any" then any tool can be used.
+</ParamField>
+
+**Returns:** `Runnable[LanguageModelInput, AIMessage]`
+
+A Runnable that returns a message.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-dict">
+
+<CodeBlock links={{"langchain_core.language_models.chat_models.BaseChatModel.dict":"/langchain-core/langchain_core/language_models/chat_models/BaseChatModel#langchain_core-language_models-chat_models-BaseChatModel-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel.dict(
+    kwargs: typing.Any = {}
+) -> langchain_core.language_models.chat_models.BaseChatModel.dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return a dictionary of the LLM.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-generate">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.callbacks.Callbacks":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-Callbacks","langchain_core.language_models.chat_models.BaseChatModel.dict":"/langchain-core/langchain_core/language_models/chat_models/BaseChatModel#langchain_core-language_models-chat_models-BaseChatModel-dict","langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel.generate(
+    messages: list[list[langchain_core.messages.BaseMessage]],
+    stop: list[str] | None = None,
+    callbacks: langchain_core.callbacks.Callbacks = None,
+    tags: list[str] | None = None,
+    metadata: langchain_core.language_models.chat_models.BaseChatModel.dict[str, typing.Any] | None = None,
+    run_name: str | None = None,
+    run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.LLMResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Pass a sequence of prompts to the model and return model generations.
+
+This method should make use of batched calls for models that expose a batched
+API.
+
+Use this method when you want to:
+
+1. Take advantage of batched calls,
+2. Need more output from the model than just the top generated value,
+3. Are building chains that are agnostic to the underlying language model
+    type (e.g., pure text completion models vs chat models).
+
+**Parameters:**
+
+<ParamField path="messages" type="list[list[BaseMessage]]">
+List of list of messages.
+</ParamField>
+
+<ParamField path="stop" type="list[str] | None" default="None">
+Stop words to use when generating.
+
+Model output is cut off at the first occurrence of any of these
+substrings.
+</ParamField>
+
+<ParamField path="callbacks" type="Callbacks" default="None">
+`Callbacks` to pass through.
+
+Used for executing additional functionality, such as logging or
+streaming, throughout generation.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags to apply.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+The metadata to apply.
+</ParamField>
+
+<ParamField path="run_name" type="str | None" default="None">
+The name of the run.
+</ParamField>
+
+<ParamField path="run_id" type="uuid.UUID | None" default="None">
+The ID of the run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arbitrary additional keyword arguments.
+
+These are usually passed to the model provider API call.
+</ParamField>
+
+**Returns:** `LLMResult`
+
+An `LLMResult`, which contains a list of candidate `Generations` for each
+input prompt and additional model provider-specific output.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-generate_prompt">
+
+<CodeBlock links={{"langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue","langchain_core.callbacks.Callbacks":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-Callbacks","langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel.generate_prompt(
+    prompts: list[langchain_core.prompt_values.PromptValue],
+    stop: list[str] | None = None,
+    callbacks: langchain_core.callbacks.Callbacks = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.LLMResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-invoke">
+
+<CodeBlock links={{"langchain_core.language_models.base.LanguageModelInput":"/langchain-core/langchain_core/language_models/base#langchain_core-language_models-base-LanguageModelInput","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.messages.AIMessage":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel.invoke(
+    input: langchain_core.language_models.base.LanguageModelInput,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    stop: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.messages.AIMessage
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-stream">
+
+<CodeBlock links={{"langchain_core.language_models.base.LanguageModelInput":"/langchain-core/langchain_core/language_models/base#langchain_core-language_models-base-LanguageModelInput","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.messages.AIMessageChunk":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessageChunk"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel.stream(
+    input: langchain_core.language_models.base.LanguageModelInput,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    stop: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> collections.abc.Iterator[langchain_core.messages.AIMessageChunk]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-BaseChatModel-with_structured_output">
+
+<CodeBlock links={{"langchain_core.runnables.Runnable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-Runnable","langchain_core.language_models.base.LanguageModelInput":"/langchain-core/langchain_core/language_models/base#langchain_core-language_models-base-LanguageModelInput"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.BaseChatModel.with_structured_output(
+    schema: builtins.dict[str, typing.Any] | type,
+    include_raw: bool = False,
+    kwargs: typing.Any = {}
+) -> langchain_core.runnables.Runnable[langchain_core.language_models.base.LanguageModelInput, builtins.dict[str, typing.Any] | pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Model wrapper that returns outputs formatted to match the given schema.
+
+???+ example "Pydantic schema (`include_raw=False`)"
+
+    ```python
+    from pydantic import BaseModel
+
+
+    class AnswerWithJustification(BaseModel):
+        '''An answer to the user question along with justification for the answer.'''
+
+        answer: str
+        justification: str
+
+
+    model = ChatModel(model="model-name", temperature=0)
+    structured_model = model.with_structured_output(AnswerWithJustification)
+
+    structured_model.invoke(
+        "What weighs more a pound of bricks or a pound of feathers"
+    )
+
+    # -> AnswerWithJustification(
+    #     answer='They weigh the same',
+    #     justification='Both a pound of bricks and a pound of feathers weigh one pound. The weight is the same, but the volume or density of the objects may differ.'
+    # )
+    ```
+
+??? example "Pydantic schema (`include_raw=True`)"
+
+    ```python
+    from pydantic import BaseModel
+
+
+    class AnswerWithJustification(BaseModel):
+        '''An answer to the user question along with justification for the answer.'''
+
+        answer: str
+        justification: str
+
+
+    model = ChatModel(model="model-name", temperature=0)
+    structured_model = model.with_structured_output(
+        AnswerWithJustification, include_raw=True
+    )
+
+    structured_model.invoke(
+        "What weighs more a pound of bricks or a pound of feathers"
+    )
+    # -> {
+    #     'raw': AIMessage(content='', additional_kwargs={'tool_calls': [{'id': 'call_Ao02pnFYXD6GN1yzc0uXPsvF', 'function': {'arguments': '{"answer":"They weigh the same.","justification":"Both a pound of bricks and a pound of feathers weigh one pound. The weight is the same, but the volume or density of the objects may differ."}', 'name': 'AnswerWithJustification'}, 'type': 'function'}]}),
+    #     'parsed': AnswerWithJustification(answer='They weigh the same.', justification='Both a pound of bricks and a pound of feathers weigh one pound. The weight is the same, but the volume or density of the objects may differ.'),
+    #     'parsing_error': None
+    # }
+    ```
+
+??? example "Dictionary schema (`include_raw=False`)"
+
+    ```python
+    from pydantic import BaseModel
+    from langchain_core.utils.function_calling import convert_to_openai_tool
+
+
+    class AnswerWithJustification(BaseModel):
+        '''An answer to the user question along with justification for the answer.'''
+
+        answer: str
+        justification: str
+
+
+    dict_schema = convert_to_openai_tool(AnswerWithJustification)
+    model = ChatModel(model="model-name", temperature=0)
+    structured_model = model.with_structured_output(dict_schema)
+
+    structured_model.invoke(
+        "What weighs more a pound of bricks or a pound of feathers"
+    )
+    # -> {
+    #     'answer': 'They weigh the same',
+    #     'justification': 'Both a pound of bricks and a pound of feathers weigh one pound. The weight is the same, but the volume and density of the two substances differ.'
+    # }
+    ```
+
+!!! warning "Behavior changed in `langchain-core` 0.2.26"
+
+    Added support for `TypedDict` class.
+
+**Parameters:**
+
+<ParamField path="schema" type="builtins.dict[str, Any] | type">
+The output schema. Can be passed in as:
+
+- An OpenAI function/tool schema,
+- A JSON Schema,
+- A `TypedDict` class,
+- Or a Pydantic class.
+
+If `schema` is a Pydantic class then the model output will be a
+Pydantic instance of that class, and the model-generated fields will be
+validated by the Pydantic class. Otherwise the model output will be a
+dict and will not be validated.
+
+See `langchain_core.utils.function_calling.convert_to_openai_tool` for
+more on how to properly specify types and descriptions of schema fields
+when specifying a Pydantic or `TypedDict` class.
+</ParamField>
+
+<ParamField path="include_raw" type="bool" default="False">
+
+If `False` then only the parsed structured output is returned.
+
+If an error occurs during model output parsing it will be raised.
+
+If `True` then both the raw model response (a `BaseMessage`) and the
+parsed model response will be returned.
+
+If an error occurs during output parsing it will be caught and returned
+as well.
+
+The final output is always a `dict` with keys `'raw'`, `'parsed'`, and
+`'parsing_error'`.
+</ParamField>
+
+**Returns:** `Runnable[LanguageModelInput, builtins.dict[str, Any] | BaseModel]`
+
+A `Runnable` that takes same inputs as a
+`langchain_core.language_models.chat.BaseChatModel`. If `include_raw` is
+`False` and `schema` is a Pydantic class, `Runnable` outputs an instance
+of `schema` (i.e., a Pydantic object). Otherwise, if `include_raw` is
+`False` then `Runnable` outputs a `dict`.
+
+If `include_raw` is `True`, then `Runnable` outputs a `dict` with keys:
+
+- `'raw'`: `BaseMessage`
+- `'parsed'`: `None` if there was a parsing error, otherwise the type
+    depends on the `schema` as described above.
+- `'parsing_error'`: `BaseException | None`
+
+**Raises:**
+
+- `ValueError`: If there are any unsupported `kwargs`.
+- `NotImplementedError`: If the model does not implement
+`with_structured_output()`.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-language_models-chat_models-SimpleChatModel">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.language_models.chat_models.SimpleChatModel()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseChatModel](#langchain_core-language_models-chat_models-BaseChatModel)
+
+Simplified implementation for a chat model to inherit from.
+
+!!! note
+    This implementation is primarily here for backwards compatibility. For new
+    implementations, please use `BaseChatModel` directly.
+
+
+<Anchor id="langchain_core-language_models-chat_models-SimpleChatModel-_agenerate">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.outputs.ChatResult":"/langchain-core/langchain_core/outputs/chat_result#langchain_core-outputs-chat_result-ChatResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.SimpleChatModel._agenerate(
+    messages: list[langchain_core.messages.BaseMessage],
+    stop: list[str] | None = None,
+    run_manager: langchain_core.callbacks.AsyncCallbackManagerForLLMRun | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.ChatResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-SimpleChatModel-_call">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.SimpleChatModel._call(
+    messages: list[langchain_core.messages.BaseMessage],
+    stop: list[str] | None = None,
+    run_manager: langchain_core.callbacks.CallbackManagerForLLMRun | None = None,
+    kwargs: typing.Any = {}
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Simpler interface.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-chat_models-SimpleChatModel-_generate">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.outputs.ChatResult":"/langchain-core/langchain_core/outputs/chat_result#langchain_core-outputs-chat_result-ChatResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.SimpleChatModel._generate(
+    messages: list[langchain_core.messages.BaseMessage],
+    stop: list[str] | None = None,
+    run_manager: langchain_core.callbacks.CallbackManagerForLLMRun | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.outputs.ChatResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-language_models-chat_models-_cleanup_llm_representation">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models._cleanup_llm_representation(
+    serialized: typing.Any,
+    depth: int
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Remove non-serializable objects from a serialized object.
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-chat_models-_format_for_tracing">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models._format_for_tracing(
+    messages: list[langchain_core.messages.BaseMessage]
+) -> list[langchain_core.messages.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format messages for tracing in `on_chat_model_start`.
+
+- Update image content blocks to OpenAI Chat Completions format (backward
+compatibility).
+- Add `type` key to content blocks that have a single key.
+
+**Parameters:**
+
+<ParamField path="messages" type="list[BaseMessage]">
+List of messages to format.
+</ParamField>
+
+**Returns:** `list[BaseMessage]`
+
+List of messages formatted for tracing.
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-chat_models-_format_ls_structured_output">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models._format_ls_structured_output(
+    ls_structured_output_format: dict | None
+) -> dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-chat_models-_gen_info_and_msg_metadata">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models._gen_info_and_msg_metadata(
+    generation: langchain_core.outputs.ChatGeneration | langchain_core.outputs.ChatGenerationChunk
+) -> dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-chat_models-_generate_response_from_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models._generate_response_from_error(
+    error: BaseException
+) -> list[langchain_core.outputs.ChatGeneration]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-chat_models-agenerate_from_stream">
+
+<CodeBlock links={{"langchain_core.outputs.ChatResult":"/langchain-core/langchain_core/outputs/chat_result#langchain_core-outputs-chat_result-ChatResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.agenerate_from_stream(
+    stream: collections.abc.AsyncIterator[langchain_core.outputs.ChatGenerationChunk]
+) -> langchain_core.outputs.ChatResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async generate from a stream.
+
+**Parameters:**
+
+<ParamField path="stream" type="AsyncIterator[ChatGenerationChunk]">
+AsyncIterator of `ChatGenerationChunk`.
+</ParamField>
+
+**Returns:** `ChatResult`
+
+Chat result.
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-chat_models-generate_from_stream">
+
+<CodeBlock links={{"langchain_core.outputs.ChatResult":"/langchain-core/langchain_core/outputs/chat_result#langchain_core-outputs-chat_result-ChatResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models.generate_from_stream(
+    stream: collections.abc.Iterator[langchain_core.outputs.ChatGenerationChunk]
+) -> langchain_core.outputs.ChatResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Generate from a stream.
+
+**Parameters:**
+
+<ParamField path="stream" type="Iterator[ChatGenerationChunk]">
+Iterator of `ChatGenerationChunk`.
+</ParamField>
+
+**Returns:** `ChatResult`
+
+Chat result.
+
+**Raises:**
+
+- `ValueError`: If no generations are found in the stream.
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-chat_models-_MAX_CLEANUP_DEPTH">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.chat_models._MAX_CLEANUP_DEPTH = 100
+```
+
+</CodeBlock>
+</Anchor>
+

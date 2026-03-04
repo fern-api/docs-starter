@@ -1,0 +1,57 @@
+---
+title: thrust::project1st
+description: "[`project1st`](/library/api/thrust::project1st) is a function object that takes two arguments and returns its first argument; the second argument is unused."
+---
+
+`project1st` is a function object that takes two arguments and returns its first argument; the second argument is unused.
+
+It is essentially a generalization of identity to the case of a Binary Function.
+
+```cpp showLineNumbers={false}
+#include <thrust/functional.h>
+```
+
+**See also:**
+identity,
+[project2nd](/library/api/thrust::project2nd)
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <thrust/functional.h>
+#include <assert.h>
+...
+int x =  137;
+int y = -137;
+thrust::project1st<int> pj1;
+assert(x == pj1(x,y));
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="T1" type="typename" default="void">
+</ParamField>
+
+<ParamField path="T2" type="typename" default="void">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Methods
+
+### operator() <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge>
+
+Function call operator.
+
+<CodeBlock links={{"project1st": "/library/api/thrust::project1st"}}>
+```cpp showLineNumbers={false}
+const T1 & thrust::project1st<T1, T2>::operator()(
+    const T1 &lhs,
+    const T2 &
+) const
+```
+</CodeBlock>

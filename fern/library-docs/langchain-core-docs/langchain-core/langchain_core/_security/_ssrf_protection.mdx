@@ -1,0 +1,499 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/_security/_ssrf_protection
+title: langchain_core._security._ssrf_protection
+---
+
+SSRF Protection for validating URLs against Server-Side Request Forgery attacks.
+
+This module provides utilities to validate user-provided URLs and prevent SSRF attacks
+by blocking requests to:
+- Private IP ranges (RFC 1918, loopback, link-local)
+- Cloud metadata endpoints (AWS, GCP, Azure, etc.)
+- Localhost addresses
+- Invalid URL schemes
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_validate_url_ssrf_https_only`](#langchain_core-_security-_ssrf_protection-_validate_url_ssrf_https_only) | Validate URL for SSRF protection (HTTPS only, strict mode). |
+| [`_validate_url_ssrf_relaxed`](#langchain_core-_security-_ssrf_protection-_validate_url_ssrf_relaxed) | Validate URL for SSRF protection (relaxed mode - allows private IPs). |
+| [`_validate_url_ssrf_strict`](#langchain_core-_security-_ssrf_protection-_validate_url_ssrf_strict) | Validate URL for SSRF protection (strict mode). |
+| [`is_cloud_metadata`](#langchain_core-_security-_ssrf_protection-is_cloud_metadata) | Check if hostname or IP is a cloud metadata endpoint. |
+| [`is_localhost`](#langchain_core-_security-_ssrf_protection-is_localhost) | Check if hostname or IP is localhost. |
+| [`is_private_ip`](#langchain_core-_security-_ssrf_protection-is_private_ip) | Check if an IP address is in a private range. |
+| [`is_safe_url`](#langchain_core-_security-_ssrf_protection-is_safe_url) | Check if a URL is safe (non-throwing version of validate_safe_url). |
+| [`validate_safe_url`](#langchain_core-_security-_ssrf_protection-validate_safe_url) | Validate a URL for SSRF protection. |
+
+### Data
+
+[`CLOUD_METADATA_HOSTNAMES`](#langchain_core-_security-_ssrf_protection-CLOUD_METADATA_HOSTNAMES)
+
+[`CLOUD_METADATA_IPS`](#langchain_core-_security-_ssrf_protection-CLOUD_METADATA_IPS)
+
+[`LOCALHOST_NAMES`](#langchain_core-_security-_ssrf_protection-LOCALHOST_NAMES)
+
+[`PRIVATE_IP_RANGES`](#langchain_core-_security-_ssrf_protection-PRIVATE_IP_RANGES)
+
+[`SSRFProtectedHttpsUrl`](#langchain_core-_security-_ssrf_protection-SSRFProtectedHttpsUrl)
+
+[`SSRFProtectedHttpsUrlStr`](#langchain_core-_security-_ssrf_protection-SSRFProtectedHttpsUrlStr)
+
+[`SSRFProtectedUrl`](#langchain_core-_security-_ssrf_protection-SSRFProtectedUrl)
+
+[`SSRFProtectedUrlRelaxed`](#langchain_core-_security-_ssrf_protection-SSRFProtectedUrlRelaxed)
+
+### API
+
+<Anchor id="langchain_core-_security-_ssrf_protection-_validate_url_ssrf_https_only">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._security._ssrf_protection._validate_url_ssrf_https_only(
+    v: typing.Any
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Validate URL for SSRF protection (HTTPS only, strict mode).
+
+
+</Indent>
+
+<Anchor id="langchain_core-_security-_ssrf_protection-_validate_url_ssrf_relaxed">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._security._ssrf_protection._validate_url_ssrf_relaxed(
+    v: typing.Any
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Validate URL for SSRF protection (relaxed mode - allows private IPs).
+
+
+</Indent>
+
+<Anchor id="langchain_core-_security-_ssrf_protection-_validate_url_ssrf_strict">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._security._ssrf_protection._validate_url_ssrf_strict(
+    v: typing.Any
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Validate URL for SSRF protection (strict mode).
+
+
+</Indent>
+
+<Anchor id="langchain_core-_security-_ssrf_protection-is_cloud_metadata">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._security._ssrf_protection.is_cloud_metadata(
+    hostname: str,
+    ip_str: str | None = None
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if hostname or IP is a cloud metadata endpoint.
+
+**Parameters:**
+
+<ParamField path="hostname" type="str">
+Hostname to check
+</ParamField>
+
+<ParamField path="ip_str" type="str | None" default="None">
+Optional IP address to check
+</ParamField>
+
+**Returns:** `bool`
+
+True if hostname or IP is a known cloud metadata endpoint
+
+
+</Indent>
+
+<Anchor id="langchain_core-_security-_ssrf_protection-is_localhost">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._security._ssrf_protection.is_localhost(
+    hostname: str,
+    ip_str: str | None = None
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if hostname or IP is localhost.
+
+**Parameters:**
+
+<ParamField path="hostname" type="str">
+Hostname to check
+</ParamField>
+
+<ParamField path="ip_str" type="str | None" default="None">
+Optional IP address to check
+</ParamField>
+
+**Returns:** `bool`
+
+True if hostname or IP is localhost
+
+
+</Indent>
+
+<Anchor id="langchain_core-_security-_ssrf_protection-is_private_ip">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._security._ssrf_protection.is_private_ip(
+    ip_str: str
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if an IP address is in a private range.
+
+**Parameters:**
+
+<ParamField path="ip_str" type="str">
+IP address as a string (e.g., "192.168.1.1")
+</ParamField>
+
+**Returns:** `bool`
+
+True if IP is in a private range, False otherwise
+
+
+</Indent>
+
+<Anchor id="langchain_core-_security-_ssrf_protection-is_safe_url">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._security._ssrf_protection.is_safe_url(
+    url: str | pydantic.AnyHttpUrl,
+    allow_private: bool = False,
+    allow_http: bool = True
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if a URL is safe (non-throwing version of validate_safe_url).
+
+**Parameters:**
+
+<ParamField path="url" type="str | AnyHttpUrl">
+The URL to check
+</ParamField>
+
+<ParamField path="allow_private" type="bool" default="False">
+If True, allows private IPs and localhost
+</ParamField>
+
+<ParamField path="allow_http" type="bool" default="True">
+If True, allows both HTTP and HTTPS
+</ParamField>
+
+**Returns:** `bool`
+
+True if URL is safe, False otherwise
+
+**Examples:**
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+>>> is_safe_url("https://example.com")
+True
+```
+
+</CodeBlock>
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+>>> is_safe_url("http://127.0.0.1:8080")
+False
+```
+
+</CodeBlock>
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+>>> is_safe_url("http://localhost:8080", allow_private=True)
+True
+```
+
+</CodeBlock>
+
+
+</Indent>
+
+<Anchor id="langchain_core-_security-_ssrf_protection-validate_safe_url">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._security._ssrf_protection.validate_safe_url(
+    url: str | pydantic.AnyHttpUrl,
+    allow_private: bool = False,
+    allow_http: bool = True
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Validate a URL for SSRF protection.
+
+This function validates URLs to prevent Server-Side Request Forgery (SSRF) attacks
+by blocking requests to private networks and cloud metadata endpoints.
+
+**Parameters:**
+
+<ParamField path="url" type="str | AnyHttpUrl">
+The URL to validate (string or Pydantic HttpUrl)
+</ParamField>
+
+<ParamField path="allow_private" type="bool" default="False">
+If True, allows private IPs and localhost (for development).
+          Cloud metadata endpoints are ALWAYS blocked.
+</ParamField>
+
+<ParamField path="allow_http" type="bool" default="True">
+If True, allows both HTTP and HTTPS. If False, only HTTPS.
+</ParamField>
+
+**Returns:** `str`
+
+The validated URL as a string
+
+**Raises:**
+
+- `ValueError`: If URL is invalid or potentially dangerous
+
+**Examples:**
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+>>> validate_safe_url("https://hooks.slack.com/services/xxx")
+'https://hooks.slack.com/services/xxx'
+```
+
+</CodeBlock>
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+>>> validate_safe_url("http://127.0.0.1:8080")
+ValueError: Localhost URLs are not allowed
+```
+
+</CodeBlock>
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+>>> validate_safe_url("http://192.168.1.1")
+ValueError: URL resolves to private IP: 192.168.1.1
+```
+
+</CodeBlock>
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+>>> validate_safe_url("http://169.254.169.254/latest/meta-data/")
+ValueError: URL resolves to cloud metadata IP: 169.254.169.254
+```
+
+</CodeBlock>
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+>>> validate_safe_url("http://localhost:8080", allow_private=True)
+'http://localhost:8080'
+```
+
+</CodeBlock>
+
+
+</Indent>
+
+<Anchor id="langchain_core-_security-_ssrf_protection-CLOUD_METADATA_HOSTNAMES">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._security._ssrf_protection.CLOUD_METADATA_HOSTNAMES = ['metadata.google.internal', 'metadata', 'instance-data']
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-_security-_ssrf_protection-CLOUD_METADATA_IPS">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._security._ssrf_protection.CLOUD_METADATA_IPS = ['169.254.169.254', '169.254.170.2', '100.100.100.200']
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-_security-_ssrf_protection-LOCALHOST_NAMES">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._security._ssrf_protection.LOCALHOST_NAMES = ['localhost', 'localhost.localdomain']
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-_security-_ssrf_protection-PRIVATE_IP_RANGES">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._security._ssrf_protection.PRIVATE_IP_RANGES = [ipaddress.ip_network('10.0.0.0/8'), ipaddress.ip_network('172.16.0.0/12'), ipad...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-_security-_ssrf_protection-SSRFProtectedHttpsUrl">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._security._ssrf_protection.SSRFProtectedHttpsUrl = Annotated[HttpUrl, BeforeValidator(_validate_url_ssrf_https_only)]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+A Pydantic HttpUrl with SSRF protection that only allows HTTPS.
+
+This blocks private IPs, localhost, cloud metadata endpoints, and HTTP URLs.
+
+</Indent>
+
+<Anchor id="langchain_core-_security-_ssrf_protection-SSRFProtectedHttpsUrlStr">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._security._ssrf_protection.SSRFProtectedHttpsUrlStr = Annotated[str, BeforeValidator(_validate_url_ssrf_https_only)]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+A string type with SSRF protection that only allows HTTPS URLs.
+
+Same as SSRFProtectedHttpsUrl but returns a string instead of HttpUrl.
+Useful for FastAPI query parameters where you need a string URL.
+
+</Indent>
+
+<Anchor id="langchain_core-_security-_ssrf_protection-SSRFProtectedUrl">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._security._ssrf_protection.SSRFProtectedUrl = Annotated[HttpUrl, BeforeValidator(_validate_url_ssrf_strict)]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+A Pydantic HttpUrl type with built-in SSRF protection.
+
+This blocks private IPs, localhost, and cloud metadata endpoints.
+
+</Indent>
+
+<Anchor id="langchain_core-_security-_ssrf_protection-SSRFProtectedUrlRelaxed">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._security._ssrf_protection.SSRFProtectedUrlRelaxed = Annotated[HttpUrl, BeforeValidator(_validate_url_ssrf_relaxed)]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+A Pydantic HttpUrl with relaxed SSRF protection (allows private IPs).
+
+Use this for development/testing webhooks where localhost/private IPs are needed.
+Cloud metadata endpoints are still blocked.
+
+</Indent>

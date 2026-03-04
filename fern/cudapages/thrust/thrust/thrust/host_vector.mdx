@@ -1,0 +1,1365 @@
+---
+title: thrust::host_vector
+description: "A [`host_vector`](/library/api/thrust::host_vector) is a container that supports random access to elements, constant time removal of elements at the end, and linear time insertion and removal of elements at the beginning or in the middle."
+---
+
+A `host_vector` is a container that supports random access to elements, constant time removal of elements at the end, and linear time insertion and removal of elements at the beginning or in the middle.
+
+The number of elements in a `host_vector` may vary dynamically; memory management is automatic. The memory associated with a `host_vector` resides in memory accessible to hosts.
+
+```cpp showLineNumbers={false}
+#include <thrust/host_vector.h>
+```
+
+**See also:**
+[https://en.cppreference.com/w/cpp/container/vector](https://en.cppreference.com/w/cpp/container/vector),
+[device_vector](/library/api/thrust::device_vector),
+universal_vector
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="T" type="typename">
+</ParamField>
+
+<ParamField path="Alloc" type="typename" default="std::allocator<T>">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `detail::vector_base< T, std::allocator< T > >` (public)
+
+---
+
+## Constructors
+
+### host_vector <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+This constructor creates an empty `host_vector`.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+thrust::host_vector<T, Alloc>::host_vector()
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="With allocator">
+
+This constructor creates an empty `host_vector`.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+thrust::host_vector<T, Alloc>::host_vector(
+    const Alloc &alloc
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="alloc" type="const Alloc &">
+The allocator to use by this `host_vector`.
+</ParamField>
+
+</Tab>
+<Tab title="From size">
+
+<Badge intent="note" minimal>explicit</Badge>
+
+This constructor creates a `host_vector` with the given size.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+thrust::host_vector<T, Alloc>::host_vector(
+    size_type n
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="n" type="size_type">
+The number of elements to initially create.
+</ParamField>
+
+</Tab>
+<Tab title="From size, default-initialized">
+
+This constructor creates a `host_vector` with the given size, performing only default-initialization instead of value-initialization.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+thrust::host_vector<T, Alloc>::host_vector(
+    size_type n,
+    default_init_t
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="n" type="size_type">
+The number of elements to initially create.
+</ParamField>
+
+</Tab>
+<Tab title="From size, no-init">
+
+This constructor creates a `host_vector` with the given size, without initializing elements.
+
+It mandates that the element type is trivially default-constructible.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+thrust::host_vector<T, Alloc>::host_vector(
+    size_type n,
+    no_init_t
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="n" type="size_type">
+The number of elements to initially create.
+</ParamField>
+
+</Tab>
+<Tab title="From size with allocator">
+
+<Badge intent="note" minimal>explicit</Badge>
+
+This constructor creates a `host_vector` with the given size.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+thrust::host_vector<T, Alloc>::host_vector(
+    size_type n,
+    const Alloc &alloc
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="n" type="size_type">
+The number of elements to initially create.
+</ParamField>
+
+<ParamField path="alloc" type="const Alloc &">
+The allocator to use by this `host_vector`.
+</ParamField>
+
+</Tab>
+<Tab title="From size and value">
+
+<Badge intent="note" minimal>explicit</Badge>
+
+This constructor creates a `host_vector` with copies of an exemplar element.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+thrust::host_vector<T, Alloc>::host_vector(
+    size_type n,
+    const value_type &value
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="n" type="size_type">
+The number of elements to initially create.
+</ParamField>
+
+<ParamField path="value" type="const value_type &">
+An element to copy.
+</ParamField>
+
+</Tab>
+<Tab title="From size and value with allocator">
+
+<Badge intent="note" minimal>explicit</Badge>
+
+This constructor creates a `host_vector` with copies of an exemplar element.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+thrust::host_vector<T, Alloc>::host_vector(
+    size_type n,
+    const value_type &value,
+    const Alloc &alloc
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="n" type="size_type">
+The number of elements to initially create.
+</ParamField>
+
+<ParamField path="value" type="const value_type &">
+An element to copy.
+</ParamField>
+
+<ParamField path="alloc" type="const Alloc &">
+The allocator to use by this `host_vector`.
+</ParamField>
+
+</Tab>
+<Tab title="Copy">
+
+Copy constructor copies from an exemplar `host_vector`.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+thrust::host_vector<T, Alloc>::host_vector(
+    const host_vector &v
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="v" type="const host_vector &">
+The `host_vector` to copy.
+</ParamField>
+
+</Tab>
+<Tab title="Copy with allocator">
+
+Copy constructor copies from an exemplar `host_vector`.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+thrust::host_vector<T, Alloc>::host_vector(
+    const host_vector &v,
+    const Alloc &alloc
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="v" type="const host_vector &">
+The `host_vector` to copy.
+</ParamField>
+
+<ParamField path="alloc" type="const Alloc &">
+The allocator to use by this `host_vector`.
+</ParamField>
+
+</Tab>
+<Tab title="From other host_vector type">
+
+Copy constructor copies from an exemplar `host_vector` with different type.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+template <typename OtherT, typename OtherAlloc>
+thrust::host_vector<T, Alloc>::host_vector(
+    const host_vector<OtherT, OtherAlloc> &v
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="v" type="const host_vector<OtherT, OtherAlloc> &">
+The `host_vector` to copy.
+</ParamField>
+
+</Tab>
+<Tab title="From std::vector">
+
+Copy constructor copies from an exemplar `std::vector`.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+template <typename OtherT, typename OtherAlloc>
+thrust::host_vector<T, Alloc>::host_vector(
+    const std::vector<OtherT, OtherAlloc> &v
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="v" type="const std::vector<OtherT, OtherAlloc> &">
+The `std::vector` to copy.
+</ParamField>
+
+</Tab>
+<Tab title="From vector_base">
+
+Copy construct from a `vector_base` whose element type is convertible to `T`.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+template <typename OtherT, typename OtherAlloc>
+thrust::host_vector<T, Alloc>::host_vector(
+    const detail::vector_base<OtherT, OtherAlloc> &v
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="v" type="const detail::vector_base<OtherT, OtherAlloc> &">
+The `vector_base` to copy.
+</ParamField>
+
+</Tab>
+<Tab title="Move">
+
+Move constructor moves from another `host_vector`.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+thrust::host_vector<T, Alloc>::host_vector(
+    host_vector &&v
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="v" type="host_vector &&">
+The `host_vector` to move.
+</ParamField>
+
+</Tab>
+<Tab title="Move with allocator">
+
+Move constructor moves from another `host_vector`.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+thrust::host_vector<T, Alloc>::host_vector(
+    host_vector &&v,
+    const Alloc &alloc
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="v" type="host_vector &&">
+The `host_vector` to move.
+</ParamField>
+
+<ParamField path="alloc" type="const Alloc &">
+The allocator to use by this `host_vector`.
+</ParamField>
+
+</Tab>
+<Tab title="From initializer_list">
+
+This constructor builds a `host_vector` from an intializer_list.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+thrust::host_vector<T, Alloc>::host_vector(
+    ::cuda::std::initializer_list<T> il
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="il" type="::cuda::std::initializer_list<T>">
+The intializer_list.
+</ParamField>
+
+</Tab>
+<Tab title="From initializer_list with allocator">
+
+This constructor builds a `host_vector` from an intializer_list.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+thrust::host_vector<T, Alloc>::host_vector(
+    ::cuda::std::initializer_list<T> il,
+    const Alloc &alloc
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="il" type="::cuda::std::initializer_list<T>">
+The intializer_list.
+</ParamField>
+
+<ParamField path="alloc" type="const Alloc &">
+The allocator to use by this `host_vector`.
+</ParamField>
+
+</Tab>
+<Tab title="From iterator range">
+
+This constructor builds a `host_vector` from a range.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+template <typename InputIterator>
+thrust::host_vector<T, Alloc>::host_vector(
+    InputIterator first,
+    InputIterator last
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="first" type="InputIterator">
+The beginning of the range.
+</ParamField>
+
+<ParamField path="last" type="InputIterator">
+The end of the range.
+</ParamField>
+
+</Tab>
+<Tab title="From iterator range with allocator">
+
+This constructor builds a `host_vector` from a range.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+template <typename InputIterator>
+thrust::host_vector<T, Alloc>::host_vector(
+    InputIterator first,
+    InputIterator last,
+    const Alloc &alloc
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="first" type="InputIterator">
+The beginning of the range.
+</ParamField>
+
+<ParamField path="last" type="InputIterator">
+The end of the range.
+</ParamField>
+
+<ParamField path="alloc" type="const Alloc &">
+The allocator to use by this `host_vector`.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### Destructor
+
+### ~host_vector <Badge intent="note" minimal>inline</Badge>
+
+The destructor erases the elements.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+thrust::host_vector<T, Alloc>::~host_vector()
+```
+</CodeBlock>
+
+---
+
+## Assignment operators
+
+### operator= <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Copy assign">
+
+Assign operator copies from an exemplar `host_vector`.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+host_vector & thrust::host_vector<T, Alloc>::operator=(
+    const host_vector &v
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="v" type="const host_vector &">
+The `host_vector` to copy.
+</ParamField>
+
+</Tab>
+<Tab title="Move assign">
+
+Move assign operator moves from another `host_vector`.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+host_vector & thrust::host_vector<T, Alloc>::operator=(
+    host_vector &&v
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="v" type="host_vector &&">
+The `host_vector` to move.
+</ParamField>
+
+</Tab>
+<Tab title="From other host_vector type">
+
+Assign operator copies from an exemplar `host_vector` with different type.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+template <typename OtherT, typename OtherAlloc>
+host_vector & thrust::host_vector<T, Alloc>::operator=(
+    const host_vector<OtherT, OtherAlloc> &v
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="v" type="const host_vector<OtherT, OtherAlloc> &">
+The `host_vector` to copy.
+</ParamField>
+
+</Tab>
+<Tab title="From std::vector">
+
+Assign operator copies from an exemplar `std::vector`.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+template <typename OtherT, typename OtherAlloc>
+host_vector & thrust::host_vector<T, Alloc>::operator=(
+    const std::vector<OtherT, OtherAlloc> &v
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="v" type="const std::vector<OtherT, OtherAlloc> &">
+The `std::vector` to copy.
+</ParamField>
+
+</Tab>
+<Tab title="From vector_base">
+
+Assign a `vector_base` whose element type is convertible to `T`.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+template <typename OtherT, typename OtherAlloc>
+host_vector & thrust::host_vector<T, Alloc>::operator=(
+    const detail::vector_base<OtherT, OtherAlloc> &v
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="v" type="const detail::vector_base<OtherT, OtherAlloc> &">
+The `vector_base` to copy.
+</ParamField>
+
+</Tab>
+<Tab title="From initializer_list">
+
+Assign an `intializer_list` with a matching element type.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+host_vector & thrust::host_vector<T, Alloc>::operator=(
+    ::cuda::std::initializer_list<T> il
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="il" type="::cuda::std::initializer_list<T>">
+The intializer_list.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### resize
+
+<Tabs>
+<Tab title="Overload 1">
+
+Resizes this vector to the specified number of elements.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+void thrust::host_vector<T, Alloc>::resize(
+    size_type new_size,
+    const value_type &x = value_type()
+)
+```
+</CodeBlock>
+
+**Throws:** `std::length_error` If n exceeds [max_size()](/library/api/thrust::host_vector::max_size()).
+
+**Parameters**
+
+<ParamField path="new_size" type="size_type">
+Number of elements this vector should contain.
+</ParamField>
+
+<ParamField path="x" type="const value_type &" default="value_type()">
+Data with which new elements should be populated.
+</ParamField>
+
+</Tab>
+<Tab title="Default-initialized">
+
+Resizes this vector to the specified number of elements, performing default-initialization instead of value-initialization.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+void thrust::host_vector<T, Alloc>::resize(
+    size_type new_size,
+    default_init_t
+)
+```
+</CodeBlock>
+
+**Throws:** `std::length_error` If n exceeds [max_size()](/library/api/thrust::host_vector::max_size()).
+
+**Parameters**
+
+<ParamField path="new_size" type="size_type">
+Number of elements this vector should contain.
+</ParamField>
+
+</Tab>
+<Tab title="No-init">
+
+Resizes this vector to the specified number of elements, without initializing elements.
+
+It mandates that the element type is trivially default-constructible.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+void thrust::host_vector<T, Alloc>::resize(
+    size_type new_size,
+    no_init_t
+)
+```
+</CodeBlock>
+
+**Throws:** `std::length_error` If n exceeds [max_size()](/library/api/thrust::host_vector::max_size()).
+
+**Parameters**
+
+<ParamField path="new_size" type="size_type">
+Number of elements this vector should contain.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### size <Badge intent="note" minimal>const</Badge>
+
+Returns the number of elements in this vector.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+size_type thrust::host_vector<T, Alloc>::size() const
+```
+</CodeBlock>
+
+### max_size <Badge intent="note" minimal>const</Badge>
+
+Returns the [size()](/library/api/thrust::host_vector::size()) of the largest possible vector.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+size_type thrust::host_vector<T, Alloc>::max_size() const
+```
+</CodeBlock>
+
+**Returns:** The largest possible return value of [size()](/library/api/thrust::host_vector::size()).
+
+### reserve
+
+If n is less than or equal to [capacity()](/library/api/thrust::host_vector::capacity()), this call has no effect.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+void thrust::host_vector<T, Alloc>::reserve(
+    size_type n
+)
+```
+</CodeBlock>
+
+**Throws:** `std::length_error` If n exceeds [max_size()](/library/api/thrust::host_vector::max_size()).
+
+### capacity <Badge intent="note" minimal>const</Badge>
+
+Returns the number of elements which have been reserved in this vector.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+size_type thrust::host_vector<T, Alloc>::capacity() const
+```
+</CodeBlock>
+
+### shrink_to_fit
+
+This method shrinks the capacity of this vector to exactly fit its elements.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+void thrust::host_vector<T, Alloc>::shrink_to_fit()
+```
+</CodeBlock>
+
+### operator[]
+
+<Tabs>
+<Tab title="Mutable">
+
+Subscript access to the data contained in this vector_dev.
+
+This operator allows for easy, array-style, data access. Note that data access with this operator is unchecked and out_of_range lookups are not defined.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+reference thrust::host_vector<T, Alloc>::operator[](
+    size_type n
+)
+```
+</CodeBlock>
+
+**Returns:** Read/write reference to data.
+
+**Parameters**
+
+<ParamField path="n" type="size_type">
+The index of the element for which data should be accessed.
+</ParamField>
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+Subscript read access to the data contained in this vector_dev.
+
+This operator allows for easy, array-style, data access. Note that data access with this operator is unchecked and out_of_range lookups are not defined.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+const_reference thrust::host_vector<T, Alloc>::operator[](
+    size_type n
+) const
+```
+</CodeBlock>
+
+**Returns:** Read reference to data.
+
+**Parameters**
+
+<ParamField path="n" type="size_type">
+The index of the element for which data should be accessed.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### begin
+
+<Tabs>
+<Tab title="Mutable">
+
+This method returns an iterator pointing to the beginning of this vector.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+iterator thrust::host_vector<T, Alloc>::begin()
+```
+</CodeBlock>
+
+**Returns:** mStart
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+This method returns a const_iterator pointing to the beginning of this vector.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+const_iterator thrust::host_vector<T, Alloc>::begin() const
+```
+</CodeBlock>
+
+**Returns:** mStart
+
+</Tab>
+</Tabs>
+
+### cbegin <Badge intent="note" minimal>const</Badge>
+
+This method returns a const_iterator pointing to the beginning of this vector.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+const_iterator thrust::host_vector<T, Alloc>::cbegin() const
+```
+</CodeBlock>
+
+**Returns:** mStart
+
+### rbegin
+
+<Tabs>
+<Tab title="Mutable">
+
+This method returns a reverse_iterator pointing to the beginning of this vector's reversed sequence.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+reverse_iterator thrust::host_vector<T, Alloc>::rbegin()
+```
+</CodeBlock>
+
+**Returns:** A reverse_iterator pointing to the beginning of this vector's reversed sequence.
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+This method returns a const_reverse_iterator pointing to the beginning of this vector's reversed sequence.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+const_reverse_iterator thrust::host_vector<T, Alloc>::rbegin() const
+```
+</CodeBlock>
+
+**Returns:** A const_reverse_iterator pointing to the beginning of this vector's reversed sequence.
+
+</Tab>
+</Tabs>
+
+### crbegin <Badge intent="note" minimal>const</Badge>
+
+This method returns a const_reverse_iterator pointing to the beginning of this vector's reversed sequence.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+const_reverse_iterator thrust::host_vector<T, Alloc>::crbegin() const
+```
+</CodeBlock>
+
+**Returns:** A const_reverse_iterator pointing to the beginning of this vector's reversed sequence.
+
+### end
+
+<Tabs>
+<Tab title="Mutable">
+
+This method returns an iterator pointing to one element past the last of this vector.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+iterator thrust::host_vector<T, Alloc>::end()
+```
+</CodeBlock>
+
+**Returns:** [begin()](/library/api/thrust::host_vector::begin()) + [size()](/library/api/thrust::host_vector::size()).
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+This method returns a const_iterator pointing to one element past the last of this vector.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+const_iterator thrust::host_vector<T, Alloc>::end() const
+```
+</CodeBlock>
+
+**Returns:** [begin()](/library/api/thrust::host_vector::begin()) + [size()](/library/api/thrust::host_vector::size()).
+
+</Tab>
+</Tabs>
+
+### cend <Badge intent="note" minimal>const</Badge>
+
+This method returns a const_iterator pointing to one element past the last of this vector.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+const_iterator thrust::host_vector<T, Alloc>::cend() const
+```
+</CodeBlock>
+
+**Returns:** [begin()](/library/api/thrust::host_vector::begin()) + [size()](/library/api/thrust::host_vector::size()).
+
+### rend
+
+<Tabs>
+<Tab title="Mutable">
+
+This method returns a reverse_iterator pointing to one element past the last of this vector's reversed sequence.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+reverse_iterator thrust::host_vector<T, Alloc>::rend()
+```
+</CodeBlock>
+
+**Returns:** [rbegin()](/library/api/thrust::host_vector::rbegin()) + [size()](/library/api/thrust::host_vector::size()).
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+This method returns a const_reverse_iterator pointing to one element past the last of this vector's reversed sequence.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+const_reverse_iterator thrust::host_vector<T, Alloc>::rend() const
+```
+</CodeBlock>
+
+**Returns:** [rbegin()](/library/api/thrust::host_vector::rbegin()) + [size()](/library/api/thrust::host_vector::size()).
+
+</Tab>
+</Tabs>
+
+### crend <Badge intent="note" minimal>const</Badge>
+
+This method returns a const_reverse_iterator pointing to one element past the last of this vector's reversed sequence.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+const_reverse_iterator thrust::host_vector<T, Alloc>::crend() const
+```
+</CodeBlock>
+
+**Returns:** [rbegin()](/library/api/thrust::host_vector::rbegin()) + [size()](/library/api/thrust::host_vector::size()).
+
+### front
+
+<Tabs>
+<Tab title="Mutable">
+
+This method returns a reference pointing to the first element of this vector.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+reference thrust::host_vector<T, Alloc>::front()
+```
+</CodeBlock>
+
+**Returns:** The first element of this vector.
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+This method returns a const_reference referring to the first element of this vector.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+const_reference thrust::host_vector<T, Alloc>::front() const
+```
+</CodeBlock>
+
+**Returns:** The first element of this vector.
+
+</Tab>
+</Tabs>
+
+### back
+
+<Tabs>
+<Tab title="Mutable">
+
+This method returns a reference referring to the last element of this vector_dev.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+reference thrust::host_vector<T, Alloc>::back()
+```
+</CodeBlock>
+
+**Returns:** The last element of this vector.
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+This method returns a const reference pointing to the last element of this vector.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+const_reference thrust::host_vector<T, Alloc>::back() const
+```
+</CodeBlock>
+
+**Returns:** The last element of this vector.
+
+</Tab>
+</Tabs>
+
+### data
+
+<Tabs>
+<Tab title="Mutable">
+
+This method returns a pointer to this vector's first element.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector", "pointer": "/library/api/thrust::pointer"}}>
+```cpp showLineNumbers={false}
+pointer thrust::host_vector<T, Alloc>::data()
+```
+</CodeBlock>
+
+**Returns:** A pointer to the first element of this vector.
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+This method returns a const_pointer to this vector's first element.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+const_pointer thrust::host_vector<T, Alloc>::data() const
+```
+</CodeBlock>
+
+**Returns:** a const_pointer to the first element of this vector.
+
+</Tab>
+</Tabs>
+
+### clear
+
+This method resizes this vector to 0.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+void thrust::host_vector<T, Alloc>::clear()
+```
+</CodeBlock>
+
+### empty <Badge intent="note" minimal>const</Badge>
+
+This method returns true iff [size()](/library/api/thrust::host_vector::size()) == 0.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+bool thrust::host_vector<T, Alloc>::empty() const
+```
+</CodeBlock>
+
+**Returns:** true if [size()](/library/api/thrust::host_vector::size()) == 0; false, otherwise.
+
+### push_back
+
+This method appends the given element to the end of this vector.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+void thrust::host_vector<T, Alloc>::push_back(
+    const value_type &x
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="x" type="const value_type &">
+The element to append.
+</ParamField>
+
+### pop_back
+
+This method erases the last element of this vector, invalidating all iterators and references to it.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+void thrust::host_vector<T, Alloc>::pop_back()
+```
+</CodeBlock>
+
+### swap
+
+This method swaps the contents of this `host_vector` with another vector.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+void thrust::host_vector<T, Alloc>::swap(
+    host_vector &v
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="v" type="host_vector &">
+The vector with which to swap.
+</ParamField>
+
+### erase
+
+<Tabs>
+<Tab title="Single element">
+
+This method removes the element at position pos.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+iterator thrust::host_vector<T, Alloc>::erase(
+    iterator pos
+)
+```
+</CodeBlock>
+
+**Returns:** An iterator pointing to the new location of the element that followed the element at position pos.
+
+**Parameters**
+
+<ParamField path="pos" type="iterator">
+The position of the element of interest.
+</ParamField>
+
+</Tab>
+<Tab title="Range">
+
+This method removes the range of elements [first,last) from this vector.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+iterator thrust::host_vector<T, Alloc>::erase(
+    iterator first,
+    iterator last
+)
+```
+</CodeBlock>
+
+**Returns:** An iterator pointing to the new location of the element that followed the last element in the sequence [first,last).
+
+**Parameters**
+
+<ParamField path="first" type="iterator">
+The beginning of the range of elements to remove.
+</ParamField>
+
+<ParamField path="last" type="iterator">
+The end of the range of elements to remove.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### insert
+
+<Tabs>
+<Tab title="Single element">
+
+This method inserts a single copy of a given exemplar value at the specified position in this vector.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+iterator thrust::host_vector<T, Alloc>::insert(
+    iterator position,
+    const T &x
+)
+```
+</CodeBlock>
+
+**Returns:** An iterator pointing to the newly inserted element.
+
+**Parameters**
+
+<ParamField path="position" type="iterator">
+The insertion position.
+</ParamField>
+
+<ParamField path="x" type="const T &">
+The exemplar element to copy & insert.
+</ParamField>
+
+</Tab>
+<Tab title="Fill">
+
+This method inserts a copy of an exemplar value to a range at the specified position in this vector.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+void thrust::host_vector<T, Alloc>::insert(
+    iterator position,
+    size_type n,
+    const T &x
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="position" type="iterator">
+The insertion position
+</ParamField>
+
+<ParamField path="n" type="size_type">
+The number of insertions to perform.
+</ParamField>
+
+<ParamField path="x" type="const T &">
+The value to replicate and insert.
+</ParamField>
+
+</Tab>
+<Tab title="Range">
+
+This method inserts a copy of an input range at the specified position in this vector.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+template <typename InputIterator>
+void thrust::host_vector<T, Alloc>::insert(
+    iterator position,
+    InputIterator first,
+    InputIterator last
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="InputIterator" type="typename">
+Is a model of [Input Iterator](https://en.cppreference.com/w/cpp/iterator/input_iterator), and `InputIterator's` `value_type` is a model of [Assignable.](https://en.cppreference.com/w/cpp/named_req/CopyAssignable)
+</ParamField>
+
+**Parameters**
+
+<ParamField path="position" type="iterator">
+The insertion position.
+</ParamField>
+
+<ParamField path="first" type="InputIterator">
+The beginning of the range to copy.
+</ParamField>
+
+<ParamField path="last" type="InputIterator">
+The end of the range to copy.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### assign
+
+<Tabs>
+<Tab title="Fill">
+
+This version of `assign` replicates a given exemplar `n` times into this vector.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+void thrust::host_vector<T, Alloc>::assign(
+    size_type n,
+    const T &x
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="n" type="size_type">
+The number of times to copy `x`.
+</ParamField>
+
+<ParamField path="x" type="const T &">
+The exemplar element to replicate.
+</ParamField>
+
+</Tab>
+<Tab title="Range">
+
+This version of `assign` makes this vector a copy of a given input range.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+template <typename InputIterator>
+void thrust::host_vector<T, Alloc>::assign(
+    InputIterator first,
+    InputIterator last
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="InputIterator" type="typename">
+Is a model of [Input Iterator](https://en.cppreference.com/w/cpp/named_req/InputIterator).
+</ParamField>
+
+**Parameters**
+
+<ParamField path="first" type="InputIterator">
+The beginning of the range to copy.
+</ParamField>
+
+<ParamField path="last" type="InputIterator">
+The end of the range to copy.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### get_allocator <Badge intent="note" minimal>const</Badge>
+
+This method returns a copy of this vector's allocator.
+
+<CodeBlock links={{"host_vector": "/library/api/thrust::host_vector"}}>
+```cpp showLineNumbers={false}
+allocator_type thrust::host_vector<T, Alloc>::get_allocator() const
+```
+</CodeBlock>
+
+**Returns:** A copy of the allocator used by this vector.
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `Parent` | `detail::vector_base< T, Alloc >` |

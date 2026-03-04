@@ -1,0 +1,70 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/messages/human
+title: langchain_core.messages.human
+---
+
+Human message.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`HumanMessage`](#langchain_core-messages-human-HumanMessage) | Message from the user. |
+| [`HumanMessageChunk`](#langchain_core-messages-human-HumanMessageChunk) | Human Message chunk. |
+
+### API
+
+<Anchor id="langchain_core-messages-human-HumanMessage">
+
+<CodeBlock links={{"langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.messages.human.HumanMessage(
+    content: str | list[str | dict] | None = None,
+    content_blocks: list[langchain_core.messages.content.ContentBlock] | None = None,
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseMessage](/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage)
+
+Message from the user.
+
+A `HumanMessage` is a message that is passed in from a user to the model.
+
+
+<ParamField path="type" type="Literal['human'] = 'human'">
+The type of the message (used for serialization).
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-messages-human-HumanMessageChunk">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.messages.human.HumanMessageChunk()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [HumanMessage](#langchain_core-messages-human-HumanMessage), [BaseMessageChunk](/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessageChunk)
+
+Human Message chunk.
+
+
+<ParamField path="type" type="Literal['HumanMessageChunk'] = 'HumanMessageChunk'">
+The type of the message (used for serialization).
+</ParamField>
+</Indent>

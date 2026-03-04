@@ -1,0 +1,36 @@
+---
+title: "cuda::has_property_with"
+description: "The `has_property_with` concept verifies that a Resource satisfies a given stateful Property."
+---
+
+<Badge intent="info">C++20 concept</Badge>
+
+The `has_property_with` concept verifies that a Resource satisfies a given stateful Property.
+
+<CodeBlock>
+```cpp showLineNumbers={false}
+template <class _Resource, class _Property, class _Return>
+concept has_property_with = /* see description */;
+```
+</CodeBlock>
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="_Resource" type="class">
+</ParamField>
+
+<ParamField path="_Property" type="class">
+</ParamField>
+
+<ParamField path="_Return" type="class">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Description
+
+For \c has_property_with we require the following free function to be callable and its return type to exactly match the `value_type` of the Property

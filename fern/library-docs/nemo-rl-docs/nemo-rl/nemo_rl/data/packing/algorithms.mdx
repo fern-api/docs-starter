@@ -1,0 +1,791 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/data/packing/algorithms
+title: nemo_rl.data.packing.algorithms
+---
+
+Sequence packing algorithms for efficient batching of variable-length sequences.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`ConcatenativePacker`](#nemo_rl-data-packing-algorithms-ConcatenativePacker) | Concatenative packing algorithm. |
+| [`FirstFitDecreasingPacker`](#nemo_rl-data-packing-algorithms-FirstFitDecreasingPacker) | First-Fit Decreasing (FFD) algorithm for sequence packing. |
+| [`FirstFitPacker`](#nemo_rl-data-packing-algorithms-FirstFitPacker) | Base class for First-Fit algorithms. |
+| [`FirstFitShufflePacker`](#nemo_rl-data-packing-algorithms-FirstFitShufflePacker) | First-Fit Shuffle algorithm for sequence packing. |
+| [`ModifiedFirstFitDecreasingPacker`](#nemo_rl-data-packing-algorithms-ModifiedFirstFitDecreasingPacker) | Modified First-Fit Decreasing (MFFD) algorithm for sequence packing. |
+| [`PackingAlgorithm`](#nemo_rl-data-packing-algorithms-PackingAlgorithm) | Enum for supported sequence packing algorithms. |
+| [`SequencePacker`](#nemo_rl-data-packing-algorithms-SequencePacker) | Abstract base class for sequence packing algorithms. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`get_packer`](#nemo_rl-data-packing-algorithms-get_packer) | Factory function to get a sequence packer based on the algorithm. |
+
+### API
+
+<Anchor id="nemo_rl-data-packing-algorithms-ConcatenativePacker">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.packing.algorithms.ConcatenativePacker()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [SequencePacker](#nemo_rl-data-packing-algorithms-SequencePacker)
+
+Concatenative packing algorithm.
+
+This algorithm simply concatenates sequences in order until reaching the bin capacity,
+then starts a new bin. It doesn't try to optimize the packing in any way.
+
+Time complexity: O(n) where n is the number of sequences.
+
+Example:
+<CodeBlock showLineNumbers={false}>
+
+```python
+>>> examples = {
+...     "sequence_lengths": [4, 1, 3, 2, 1, 3, 4, 5]
+... }
+>>> # If packed with seq_length=5:
+... {"bins": [ [0, 1], [2, 3], [4, 5], [6], [7] ]}
+>>> # If packed with seq_length=8:
+... {"bins": [ [0, 1, 2], [3, 4, 5], [6], [7] ]}
+```
+
+</CodeBlock>
+
+
+<ParamField path="max_sequences_per_bin" type="= -1">
+</ParamField>
+<Anchor id="nemo_rl-data-packing-algorithms-ConcatenativePacker-_pack_implementation">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.packing.algorithms.ConcatenativePacker._pack_implementation(
+    sequence_lengths: typing.List[int]
+) -> typing.List[typing.List[int]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Pack sequences using the Concatenative algorithm.
+
+**Parameters:**
+
+<ParamField path="sequence_lengths" type="List[int]">
+A list of sequence lengths to pack.
+</ParamField>
+
+**Returns:** `List[List[int]]`
+
+A list of bins, where each bin is a list of indices into the original
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-data-packing-algorithms-FirstFitDecreasingPacker">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.packing.algorithms.FirstFitDecreasingPacker()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [FirstFitPacker](#nemo_rl-data-packing-algorithms-FirstFitPacker)
+
+First-Fit Decreasing (FFD) algorithm for sequence packing.
+
+This algorithm sorts sequences by length in descending order and then
+places each sequence into the first bin where it fits.
+
+Time complexity: O(n log n) for sorting + O(n * m) for packing,
+where n is the number of sequences and m is the number of bins.
+
+
+<Anchor id="nemo_rl-data-packing-algorithms-FirstFitDecreasingPacker-_prepare_sequences">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.packing.algorithms.FirstFitDecreasingPacker._prepare_sequences(
+    sequence_lengths: typing.List[int]
+) -> typing.List[typing.Tuple[int, int]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Prepare sequences for packing by sorting them in descending order.
+
+**Parameters:**
+
+<ParamField path="sequence_lengths" type="List[int]">
+A list of sequence lengths to pack.
+</ParamField>
+
+**Returns:** `List[Tuple[int, int]]`
+
+A list of (length, index) pairs sorted by length in descending order.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-data-packing-algorithms-FirstFitPacker">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.packing.algorithms.FirstFitPacker()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [SequencePacker](#nemo_rl-data-packing-algorithms-SequencePacker)
+
+Base class for First-Fit algorithms.
+
+First-Fit algorithms place each sequence into the first bin where it fits.
+If no bin can fit the sequence, a new bin is created.
+
+This is an abstract base class that provides the common implementation for
+First-Fit variants. Subclasses must implement the _prepare_sequences method
+to determine the order in which sequences are processed.
+
+
+<Anchor id="nemo_rl-data-packing-algorithms-FirstFitPacker-_pack_implementation">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.packing.algorithms.FirstFitPacker._pack_implementation(
+    sequence_lengths: typing.List[int]
+) -> typing.List[typing.List[int]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Pack sequences using the First-Fit algorithm.
+
+**Parameters:**
+
+<ParamField path="sequence_lengths" type="List[int]">
+A list of sequence lengths to pack.
+</ParamField>
+
+**Returns:** `List[List[int]]`
+
+A list of bins, where each bin is a list of indices into the original
+
+
+</Indent>
+<Anchor id="nemo_rl-data-packing-algorithms-FirstFitPacker-_prepare_sequences">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.packing.algorithms.FirstFitPacker._prepare_sequences(
+    sequence_lengths: typing.List[int]
+) -> typing.List[typing.Tuple[int, int]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Prepare sequences for packing.
+
+This method determines the order in which sequences are processed.
+Subclasses must override this method.
+
+**Parameters:**
+
+<ParamField path="sequence_lengths" type="List[int]">
+A list of sequence lengths to pack.
+</ParamField>
+
+**Returns:** `List[Tuple[int, int]]`
+
+A list of (length, index) pairs.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-data-packing-algorithms-FirstFitShufflePacker">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.packing.algorithms.FirstFitShufflePacker()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [FirstFitPacker](#nemo_rl-data-packing-algorithms-FirstFitPacker)
+
+First-Fit Shuffle algorithm for sequence packing.
+
+This algorithm randomly shuffles the sequences and then places each
+sequence into the first bin where it fits.
+
+Time complexity: O(n * m) for packing, where n is the number of sequences
+and m is the number of bins.
+
+
+<Anchor id="nemo_rl-data-packing-algorithms-FirstFitShufflePacker-_prepare_sequences">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.packing.algorithms.FirstFitShufflePacker._prepare_sequences(
+    sequence_lengths: typing.List[int]
+) -> typing.List[typing.Tuple[int, int]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Prepare sequences for packing by randomly shuffling them.
+
+**Parameters:**
+
+<ParamField path="sequence_lengths" type="List[int]">
+A list of sequence lengths to pack.
+</ParamField>
+
+**Returns:** `List[Tuple[int, int]]`
+
+A list of (length, index) pairs in random order.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-data-packing-algorithms-ModifiedFirstFitDecreasingPacker">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.packing.algorithms.ModifiedFirstFitDecreasingPacker()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [SequencePacker](#nemo_rl-data-packing-algorithms-SequencePacker)
+
+Modified First-Fit Decreasing (MFFD) algorithm for sequence packing.
+
+This algorithm implements the Johnson & Garey (1985) Modified First-Fit-Decreasing
+heuristic. It classifies items into four categories (large, medium, small, tiny)
+and uses a sophisticated 5-phase packing strategy to achieve better bin utilization
+than standard First-Fit Decreasing.
+
+The algorithm phases:
+1. Classify items by size relative to bin capacity
+2. Create one bin per large item
+3. Add medium items to large bins (forward pass)
+4. Add pairs of small items to bins with medium items (backward pass)
+5. Greedily fit remaining items
+6. Apply FFD to any leftovers
+
+Time complexity: O(n log n) for sorting + O(n * m) for packing,
+where n is the number of sequences and m is the number of bins.
+
+
+<Anchor id="nemo_rl-data-packing-algorithms-ModifiedFirstFitDecreasingPacker-_classify_items">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.packing.algorithms.ModifiedFirstFitDecreasingPacker._classify_items(
+    items: typing.List[typing.Tuple[int, int]]
+) -> typing.Tuple[typing.List[typing.Tuple[int, int]], typing.List[typing.Tuple[int, int]], typing.List[typing.Tuple[int, int]], typing.List[typing.Tuple[int, int]]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Split items into large / medium / small / tiny classes.
+
+Follows the classification used by Johnson & Garey:
+    large   : (C/2, C]
+    medium  : (C/3, C/2]
+    small   : (C/6, C/3]
+    tiny    : (0  , C/6]
+
+**Parameters:**
+
+<ParamField path="items" type="List[Tuple[int, int]]">
+List of (index, size) tuples
+</ParamField>
+
+**Returns:** `Tuple[List[Tuple[int, int]], List[Tuple[int, int]], List[Tuple[int, int]], List[Tuple[int, int]]]`
+
+Tuple of four lists (large, medium, small, tiny) without additional sorting.
+
+
+</Indent>
+<Anchor id="nemo_rl-data-packing-algorithms-ModifiedFirstFitDecreasingPacker-_pack_implementation">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.packing.algorithms.ModifiedFirstFitDecreasingPacker._pack_implementation(
+    sequence_lengths: typing.List[int]
+) -> typing.List[typing.List[int]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Pack sequences using the Modified First-Fit Decreasing algorithm.
+
+**Parameters:**
+
+<ParamField path="sequence_lengths" type="List[int]">
+A list of sequence lengths to pack.
+</ParamField>
+
+**Returns:** `List[List[int]]`
+
+A list of bins, where each bin is a list of indices into the original
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-data-packing-algorithms-PackingAlgorithm">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.packing.algorithms.PackingAlgorithm
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `enum.Enum`
+
+Enum for supported sequence packing algorithms.
+
+<ParamField path="CONCATENATIVE" type="= 'concatenative'">
+</ParamField>
+
+<ParamField path="FIRST_FIT_DECREASING" type="= 'first_fit_decreasing'">
+</ParamField>
+
+<ParamField path="FIRST_FIT_SHUFFLE" type="= 'first_fit_shuffle'">
+</ParamField>
+
+<ParamField path="MODIFIED_FIRST_FIT_DECREASING" type="= 'modified_first_fit_decreasing'">
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-data-packing-algorithms-SequencePacker">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.data.packing.algorithms.SequencePacker(
+    bin_capacity: int,
+    collect_metrics: bool = False,
+    min_bin_count: typing.Optional[int] = None,
+    bin_count_multiple: typing.Optional[int] = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+Abstract base class for sequence packing algorithms.
+
+Sequence packing is the process of efficiently arranging sequences of different
+lengths into fixed-capacity bins (batches) to maximize computational efficiency.
+
+
+<Anchor id="nemo_rl-data-packing-algorithms-SequencePacker-_adjust_bin_count">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.packing.algorithms.SequencePacker._adjust_bin_count(
+    bins: typing.List[typing.List[int]]
+) -> typing.List[typing.List[int]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Adjust the number of bins to meet minimum and multiple constraints.
+
+This method preserves the existing bin packing as much as possible and only
+moves sequences one at a time to create additional bins when needed.
+
+**Parameters:**
+
+<ParamField path="bins" type="List[List[int]]">
+The original bins from the packing algorithm.
+</ParamField>
+
+**Returns:** `List[List[int]]`
+
+Adjusted bins with minimal changes to meet constraints.
+
+**Raises:**
+
+- `ValueError`: If there aren't enough sequences to fill the required number of bins.
+
+
+</Indent>
+<Anchor id="nemo_rl-data-packing-algorithms-SequencePacker-_create_indexed_lengths">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.packing.algorithms.SequencePacker._create_indexed_lengths(
+    sequence_lengths: typing.List[int],
+    reverse: bool = False
+) -> typing.List[typing.Tuple[int, int]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a list of (length, index) pairs from sequence lengths.
+
+**Parameters:**
+
+<ParamField path="sequence_lengths" type="List[int]">
+A list of sequence lengths.
+</ParamField>
+
+<ParamField path="reverse" type="bool" default="False">
+Whether to sort in descending order (True) or ascending order (False).
+</ParamField>
+
+**Returns:** `List[Tuple[int, int]]`
+
+A list of (length, index) pairs, optionally sorted.
+
+
+</Indent>
+<Anchor id="nemo_rl-data-packing-algorithms-SequencePacker-_estimate_bins_needed">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.packing.algorithms.SequencePacker._estimate_bins_needed(
+    sequence_lengths: typing.List[int]
+) -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Estimate the number of bins needed based on total length.
+
+**Parameters:**
+
+<ParamField path="sequence_lengths" type="List[int]">
+A list of sequence lengths.
+</ParamField>
+
+**Returns:** `int`
+
+Estimated number of bins needed.
+
+
+</Indent>
+<Anchor id="nemo_rl-data-packing-algorithms-SequencePacker-_pack_implementation">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.packing.algorithms.SequencePacker._pack_implementation(
+    sequence_lengths: typing.List[int]
+) -> typing.List[typing.List[int]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Implementation of the packing algorithm.
+
+**Parameters:**
+
+<ParamField path="sequence_lengths" type="List[int]">
+A list of sequence lengths to pack.
+</ParamField>
+
+**Returns:** `List[List[int]]`
+
+A list of bins, where each bin is a list of indices into the original
+
+
+</Indent>
+<Anchor id="nemo_rl-data-packing-algorithms-SequencePacker-_validate_sequence_lengths">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.packing.algorithms.SequencePacker._validate_sequence_lengths(
+    sequence_lengths: typing.List[int]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Validate that all sequence lengths are within bin capacity.
+
+**Parameters:**
+
+<ParamField path="sequence_lengths" type="List[int]">
+A list of sequence lengths to validate.
+</ParamField>
+
+**Raises:**
+
+- `ValueError`: If any sequence length exceeds bin capacity.
+
+
+</Indent>
+<Anchor id="nemo_rl-data-packing-algorithms-SequencePacker-compute_metrics">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.packing.algorithms.SequencePacker.compute_metrics(
+    sequence_lengths: typing.List[int],
+    bins: typing.List[typing.List[int]]
+) -> typing.Dict[str, float]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Calculate metrics for a packing solution without updating the metrics tracker.
+
+**Parameters:**
+
+<ParamField path="sequence_lengths" type="List[int]">
+List of sequence lengths
+</ParamField>
+
+<ParamField path="bins" type="List[List[int]]">
+List of bins, where each bin is a list of indices
+</ParamField>
+
+**Returns:** `Dict[str, float]`
+
+Dictionary of packing metrics
+
+
+</Indent>
+<Anchor id="nemo_rl-data-packing-algorithms-SequencePacker-get_aggregated_metrics">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.packing.algorithms.SequencePacker.get_aggregated_metrics() -> typing.Dict[str, float]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get aggregated metrics across all packing operations.
+
+**Returns:** `Dict[str, float]`
+
+Dictionary of aggregated metrics, or empty dict if not collecting
+
+
+</Indent>
+<Anchor id="nemo_rl-data-packing-algorithms-SequencePacker-pack">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.packing.algorithms.SequencePacker.pack(
+    sequence_lengths: typing.List[int]
+) -> typing.List[typing.List[int]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Pack sequences into bins and update metrics if enabled.
+
+**Parameters:**
+
+<ParamField path="sequence_lengths" type="List[int]">
+A list of sequence lengths to pack.
+</ParamField>
+
+**Returns:** `List[List[int]]`
+
+A list of bins, where each bin is a list of indices into the original
+
+
+</Indent>
+<Anchor id="nemo_rl-data-packing-algorithms-SequencePacker-print_metrics">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.packing.algorithms.SequencePacker.print_metrics() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Print the current metrics in a formatted way.
+
+
+</Indent>
+<Anchor id="nemo_rl-data-packing-algorithms-SequencePacker-reset_metrics">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.packing.algorithms.SequencePacker.reset_metrics() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Reset collected metrics.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-data-packing-algorithms-get_packer">
+
+<CodeBlock links={{"nemo_rl.data.packing.algorithms.PackingAlgorithm":"#nemo_rl-data-packing-algorithms-PackingAlgorithm","nemo_rl.data.packing.algorithms.SequencePacker":"#nemo_rl-data-packing-algorithms-SequencePacker"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.data.packing.algorithms.get_packer(
+    algorithm: typing.Union[nemo_rl.data.packing.algorithms.PackingAlgorithm, str],
+    bin_capacity: int,
+    collect_metrics: bool = False,
+    min_bin_count: typing.Optional[int] = None,
+    bin_count_multiple: typing.Optional[int] = None
+) -> nemo_rl.data.packing.algorithms.SequencePacker
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Factory function to get a sequence packer based on the algorithm.
+
+**Parameters:**
+
+<ParamField path="algorithm" type="Union[PackingAlgorithm, str]">
+The packing algorithm to use. Can be either a PackingAlgorithm enum value
+      or a string (case-insensitive) matching one of the enum names.
+</ParamField>
+
+<ParamField path="bin_capacity" type="int">
+The maximum capacity of each bin.
+</ParamField>
+
+<ParamField path="collect_metrics" type="bool" default="False">
+Whether to collect metrics across multiple packing operations.
+</ParamField>
+
+<ParamField path="min_bin_count" type="Optional[int]" default="None">
+Minimum number of bins to create, even if fewer would suffice.
+          If None, no minimum is enforced.
+</ParamField>
+
+<ParamField path="bin_count_multiple" type="Optional[int]" default="None">
+The total number of bins must be a multiple of this value.
+               If None, no multiple constraint is enforced.
+</ParamField>
+
+**Returns:** `SequencePacker`
+
+A SequencePacker instance for the specified algorithm.
+
+**Raises:**
+
+- `ValueError`: If the algorithm is not recognized.
+
+
+</Indent>

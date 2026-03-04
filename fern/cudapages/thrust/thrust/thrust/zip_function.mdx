@@ -1,0 +1,140 @@
+---
+title: thrust::zip_function
+description: "[`zip_function`](/library/api/thrust::zip_function) is a function object that allows the easy use of N-ary function objects with `zip_iterators` without redefining them to take a `tuple` instead of N arguments."
+---
+
+`zip_function` is a function object that allows the easy use of N-ary function objects with `zip_iterators` without redefining them to take a `tuple` instead of N arguments.
+
+This means that if a functor that takes 2 arguments which could be used with the `transform` function and `device_iterators` can be extended to take 3 arguments and `zip_iterators` without rewriting the functor in terms of `tuple`.
+
+The `make_zip_function` convenience function is provided to avoid having to explicitly define the type of the functor when creating a `zip_function`, whic is especially helpful when using lambdas as the functor.
+
+```cpp showLineNumbers={false}
+#include <thrust/zip_function.h>
+```
+
+**See also:**
+make_zip_function,
+[zip_iterator](/library/api/thrust::zip_iterator)
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <thrust/iterator/zip_iterator.h>
+#include <thrust/device_vector.h>
+#include <thrust/transform.h>
+#include <thrust/zip_function.h>
+
+struct SumTuple {
+  float operator()(auto tup) const {
+    return cuda::std::get<0>(tup) + cuda::std::get<1>(tup) + ::cuda::std::get<2>(tup);
+  }
+};
+struct SumArgs {
+  float operator()(float a, float b, float c) const {
+    return a + b + c;
+  }
+};
+
+int main() {
+  thrust::device_vector<float> A{0.f, 1.f, 2.f};
+  thrust::device_vector<float> B{1.f, 2.f, 3.f};
+  thrust::device_vector<float> C{2.f, 3.f, 4.f};
+  thrust::device_vector<float> D(3);
+
+  auto begin = thrust::make_zip_iterator(A.begin(), B.begin(), C.begin());
+  auto end = thrust::make_zip_iterator(A.end(), B.end(), C.end());
+
+  // The following four invocations of transform are equivalent:
+  // Transform with 3-tuple
+  thrust::transform(begin, end, D.begin(), SumTuple{});
+
+  // Transform with 3 parameters
+  thrust::zip_function<SumArgs> adapted{};
+  thrust::transform(begin, end, D.begin(), adapted);
+
+  // Transform with 3 parameters with convenience function
+  thrust::transform(begin, end, D.begin(), thrust::make_zip_function(SumArgs{}));
+
+  // Transform with 3 parameters with convenience function and lambda
+  thrust::transform(begin, end, D.begin(), thrust::make_zip_function([] (float a, float b, float c) {
+                                                                       return a + b + c;
+                                                                     }));
+  return 0;
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="Function" type="typename">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### zip_function
+
+<Tabs>
+<Tab title="Default">
+
+Default constructs the contained function object.
+
+<CodeBlock links={{"zip_function": "/library/api/thrust::zip_function"}}>
+```cpp showLineNumbers={false}
+thrust::zip_function<Function>::zip_function() = default
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Overload 2">
+
+<Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"zip_function": "/library/api/thrust::zip_function"}}>
+```cpp showLineNumbers={false}
+thrust::zip_function<Function>::zip_function(
+    Function func
+)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### operator() <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"zip_function": "/library/api/thrust::zip_function"}}>
+```cpp showLineNumbers={false}
+template <typename Tuple>
+decltype(
+    auto
+) const
+```
+</CodeBlock>
+
+### underlying_function <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Returns a reference to the underlying function.
+
+<CodeBlock links={{"zip_function": "/library/api/thrust::zip_function"}}>
+```cpp showLineNumbers={false}
+Function & thrust::zip_function<Function>::underlying_function() const
+```
+</CodeBlock>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `func` | `Function` | |

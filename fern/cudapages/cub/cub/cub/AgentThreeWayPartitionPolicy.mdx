@@ -1,0 +1,40 @@
+---
+title: cub::AgentThreeWayPartitionPolicy
+description: ""
+---
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="BlockThreads" type="int">
+</ParamField>
+
+<ParamField path="ItemsPerThread" type="int">
+</ParamField>
+
+<ParamField path="LoadAlgorithm" type="BlockLoadAlgorithm">
+</ParamField>
+
+<ParamField path="LoadModifier" type="CacheLoadModifier">
+</ParamField>
+
+<ParamField path="ScanAlgorithm" type="BlockScanAlgorithm">
+</ParamField>
+
+<ParamField path="DelayConstructorT" type="class" default="detail::fixed_delay_constructor_t<350, 450>">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `BLOCK_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `ITEMS_PER_THREAD` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `LOAD_ALGORITHM` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `BlockLoadAlgorithm` | |
+| `LOAD_MODIFIER` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `CacheLoadModifier` | |
+| `SCAN_ALGORITHM` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `BlockScanAlgorithm` | |

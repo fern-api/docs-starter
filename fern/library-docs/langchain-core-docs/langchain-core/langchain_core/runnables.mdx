@@ -1,0 +1,117 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/runnables
+title: langchain_core.runnables
+---
+
+LangChain **Runnable** and the **LangChain Expression Language (LCEL)**.
+
+The LangChain Expression Language (LCEL) offers a declarative method to build
+production-grade programs that harness the power of LLMs.
+
+Programs created using LCEL and LangChain `Runnable` objects inherently suppor
+synchronous asynchronous, batch, and streaming operations.
+
+Support for **async** allows servers hosting LCEL based programs to scale bette for
+higher concurrent loads.
+
+**Batch** operations allow for processing multiple inputs in parallel.
+
+**Streaming** of intermediate outputs, as they're being generated, allows for creating
+more responsive UX.
+
+This module contains schema and implementation of LangChain `Runnable` object
+primitives.
+
+## Submodules
+
+- **[`langchain_core.runnables.base`](/langchain-core/langchain_core/runnables/base)**
+- **[`langchain_core.runnables.branch`](/langchain-core/langchain_core/runnables/branch)**
+- **[`langchain_core.runnables.config`](/langchain-core/langchain_core/runnables/config)**
+- **[`langchain_core.runnables.configurable`](/langchain-core/langchain_core/runnables/configurable)**
+- **[`langchain_core.runnables.fallbacks`](/langchain-core/langchain_core/runnables/fallbacks)**
+- **[`langchain_core.runnables.graph`](/langchain-core/langchain_core/runnables/graph)**
+- **[`langchain_core.runnables.graph_ascii`](/langchain-core/langchain_core/runnables/graph_ascii)**
+- **[`langchain_core.runnables.graph_mermaid`](/langchain-core/langchain_core/runnables/graph_mermaid)**
+- **[`langchain_core.runnables.graph_png`](/langchain-core/langchain_core/runnables/graph_png)**
+- **[`langchain_core.runnables.history`](/langchain-core/langchain_core/runnables/history)**
+- **[`langchain_core.runnables.passthrough`](/langchain-core/langchain_core/runnables/passthrough)**
+- **[`langchain_core.runnables.retry`](/langchain-core/langchain_core/runnables/retry)**
+- **[`langchain_core.runnables.router`](/langchain-core/langchain_core/runnables/router)**
+- **[`langchain_core.runnables.schema`](/langchain-core/langchain_core/runnables/schema)**
+- **[`langchain_core.runnables.utils`](/langchain-core/langchain_core/runnables/utils)**
+
+## Package Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`__dir__`](#langchain_core-runnables-__dir__) | - |
+| [`__getattr__`](#langchain_core-runnables-__getattr__) | - |
+
+### Data
+
+[`__all__`](#langchain_core-runnables-__all__)
+
+[`_dynamic_imports`](#langchain_core-runnables-_dynamic_imports)
+
+### API
+
+<Anchor id="langchain_core-runnables-__dir__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.__dir__() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-__getattr__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.__getattr__(
+    attr_name: str
+) -> object
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-__all__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.__all__ = ('AddableDict', 'ConfigurableField', 'ConfigurableFieldMultiOption', 'Configurab...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-runnables-_dynamic_imports">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables._dynamic_imports = {'chain': 'base', 'Runnable': 'base', 'RunnableBinding': 'base', 'RunnableGenera...
+```
+
+</CodeBlock>
+</Anchor>
+

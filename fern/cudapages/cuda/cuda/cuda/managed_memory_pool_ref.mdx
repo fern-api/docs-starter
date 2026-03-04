@@ -1,0 +1,50 @@
+---
+title: "cuda::managed_memory_pool_ref"
+description: ""
+---
+
+`managed_memory_pool_ref` allocates managed memory using `cudaMallocFromPoolAsync / cudaFreeAsync
+&lt;https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY__POOLS.html&gt;`__
+for allocation/deallocation. A `managed_memory_pool_ref` is a thin wrapper around a \c cudaMemPool_t with the allocation type set to \c cudaMemAllocationTypeManaged.
+
+.. warning::
+
+   `managed_memory_pool_ref` does not own the pool and it is the responsibility of the user to ensure that the lifetime of the pool exceeds the lifetime of the `managed_memory_pool_ref`.
+
+```cpp showLineNumbers={false}
+#include <cuda/managed_memory_pool.h>
+```
+
+**Inherits from:** `cuda::__memory_pool_base` (public)
+
+---
+
+## Constructors
+
+### managed_memory_pool_ref <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>explicit</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Constructs the `managed_memory_pool_ref` from a `cudaMemPool_t`.
+
+<CodeBlock links={{"managed_memory_pool_ref": "/libcudacxx/api/cuda::managed_memory_pool_ref"}}>
+```cpp showLineNumbers={false}
+cuda::managed_memory_pool_ref::managed_memory_pool_ref(
+    ::cudaMemPool_t __pool
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__pool" type="::cudaMemPool_t">
+The `cudaMemPool_t` used to allocate memory.
+</ParamField>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `default_queries` | `::cuda::mr::properties_list<::cuda::mr::device_accessible, ::cuda::mr::host_accessible >` |

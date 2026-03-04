@@ -1,0 +1,140 @@
+---
+title: "cuda::device_memory_pool"
+description: ""
+---
+
+`device_memory_pool` allocates device memory using `cudaMallocFromPoolAsync / cudaFreeAsync
+&lt;https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY__POOLS.html&gt;`__
+for allocation/deallocation. When constructed it creates an underlying \c cudaMemPool_t with the location type set to \c cudaMemLocationTypeDevice and owns it.
+
+```cpp showLineNumbers={false}
+#include <cuda/device_memory_pool.h>
+```
+
+**Inherits from:** `cuda::device_memory_pool_ref` (public)
+
+---
+
+## Constructors
+
+### device_memory_pool <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Constructs a `device_memory_pool` with the optionally specified initial pool size and release threshold.
+
+If the pool size grows beyond the release threshold, unused memory held by the pool will be released at the next synchronization event.
+
+<CodeBlock links={{"device_memory_pool": "/libcudacxx/api/cuda::device_memory_pool", "device_ref": "/libcudacxx/api/cuda::device_ref", "memory_pool_properties": "/libcudacxx/api/cuda::memory_pool_properties"}}>
+```cpp showLineNumbers={false}
+cuda::device_memory_pool::device_memory_pool(
+    ::cuda::device_ref __device_id,
+    memory_pool_properties __properties = {}
+)
+```
+</CodeBlock>
+
+**Throws:** `cuda_error` if the CUDA version does not support `cudaMallocAsync`.
+
+**Parameters**
+
+<ParamField path="__device_id" type="::cuda::device_ref">
+The device id of the device the stream pool is constructed on.
+</ParamField>
+
+<ParamField path="__properties" type="memory_pool_properties" default="{}">
+Optional, additional properties of the pool to be created.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 3">
+
+<Badge intent="note" minimal>noexcept</Badge>
+
+<CodeBlock links={{"device_memory_pool": "/libcudacxx/api/cuda::device_memory_pool"}}>
+```cpp showLineNumbers={false}
+cuda::device_memory_pool::device_memory_pool(
+    ::cudaMemPool_t __pool
+) noexcept
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Copy (deleted)">
+
+<CodeBlock links={{"device_memory_pool": "/libcudacxx/api/cuda::device_memory_pool"}}>
+```cpp showLineNumbers={false}
+cuda::device_memory_pool::device_memory_pool(
+    const device_memory_pool &
+) = delete
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### Destructor
+
+### ~device_memory_pool <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<CodeBlock links={{"device_memory_pool": "/libcudacxx/api/cuda::device_memory_pool"}}>
+```cpp showLineNumbers={false}
+cuda::device_memory_pool::~device_memory_pool() noexcept
+```
+</CodeBlock>
+
+---
+
+## Assignment operators
+
+### operator=
+
+<CodeBlock links={{"device_memory_pool": "/libcudacxx/api/cuda::device_memory_pool"}}>
+```cpp showLineNumbers={false}
+device_memory_pool & cuda::device_memory_pool::operator=(
+    const device_memory_pool &
+) = delete
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### as_ref <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Returns a [`device_memory_pool_ref`](/libcudacxx/api/cuda::device_memory_pool_ref) for this `device_memory_pool`.
+
+We return by reference to ensure that we can subsequently convert to a resource_ref
+
+<CodeBlock links={{"device_memory_pool": "/libcudacxx/api/cuda::device_memory_pool"}}>
+```cpp showLineNumbers={false}
+device_memory_pool_ref & cuda::device_memory_pool::as_ref() noexcept
+```
+</CodeBlock>
+
+---
+
+## Static methods
+
+### from_native_handle <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<CodeBlock links={{"device_memory_pool": "/libcudacxx/api/cuda::device_memory_pool"}}>
+```cpp showLineNumbers={false}
+static device_memory_pool cuda::device_memory_pool::from_native_handle(
+    ::cudaMemPool_t __pool
+) noexcept
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `reference_type` | `device_memory_pool_ref` |
+| `default_queries` | `::cuda::mr::properties_list<::cuda::mr::device_accessible >` |

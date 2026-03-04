@@ -1,0 +1,241 @@
+---
+title: cub::DispatchReduce
+description: "Utility class for dispatching the appropriately-tuned kernels for device-wide reduction."
+---
+
+Utility class for dispatching the appropriately-tuned kernels for device-wide reduction.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="InputIteratorT" type="typename">
+Random-access input iterator type for reading input items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+Output iterator type for recording the reduced aggregate (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OffsetT" type="typename">
+Signed integer type for global offsets
+</ParamField>
+
+<ParamField path="ReductionOpT" type="typename">
+Binary reduction functor type having member `auto operator()(const T &a, const U &b)`
+</ParamField>
+
+<ParamField path="InitT" type="typename" default="cub::detail::non_void_value_t<OutputIteratorT, cub::detail::it_value_t<InputIteratorT>>">
+Initial value type
+</ParamField>
+
+<ParamField path="AccumT" type="typename" default="::cuda::std::__accumulator_t<ReductionOpT, cub::detail::it_value_t<InputIteratorT>, InitT>">
+</ParamField>
+
+<ParamField path="TransformOpT" type="typename" default="::cuda::std::identity">
+</ParamField>
+
+<ParamField path="PolicyHub" type="typename" default="detail::reduce::policy_hub<AccumT, OffsetT, ReductionOpT>">
+</ParamField>
+
+<ParamField path="KernelSource" type="typename" default="detail::reduce::DeviceReduceKernelSource<            detail::reduce::policy_selector_from_hub<PolicyHub>,            InputIteratorT,            OutputIteratorT,            OffsetT,            ReductionOpT,            InitT,            AccumT,            TransformOpT>">
+</ParamField>
+
+<ParamField path="KernelLauncherFactory" type="typename" default="CUB_DETAIL_DEFAULT_KERNEL_LAUNCHER_FACTORY">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### DispatchReduce <Badge intent="note" minimal>inline</Badge>
+
+Constructor.
+
+<CodeBlock links={{"DispatchReduce": "/library/api/cub::DispatchReduce"}}>
+```cpp showLineNumbers={false}
+cub::DispatchReduce<InputIteratorT, OutputIteratorT, OffsetT, ReductionOpT, InitT, AccumT, TransformOpT, PolicyHub, KernelSource, KernelLauncherFactory>::DispatchReduce(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    OutputIteratorT d_out,
+    OffsetT num_items,
+    ReductionOpT reduction_op,
+    InitT init,
+    cudaStream_t stream,
+    int ptx_version,
+    TransformOpT transform_op = {},
+    KernelSource kernel_source = {},
+    KernelLauncherFactory launcher_factory = {}
+)
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### InvokeSingleTile <Badge intent="note" minimal>inline</Badge>
+
+Invoke a single block block to reduce in-core.
+
+<CodeBlock links={{"DispatchReduce": "/library/api/cub::DispatchReduce"}}>
+```cpp showLineNumbers={false}
+template <typename ActivePolicyT, typename SingleTileKernelT>
+cudaError_t cub::DispatchReduce<InputIteratorT, OutputIteratorT, OffsetT, ReductionOpT, InitT, AccumT, TransformOpT, PolicyHub, KernelSource, KernelLauncherFactory>::InvokeSingleTile(
+    SingleTileKernelT single_tile_kernel,
+    ActivePolicyT policy = {}
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="ActivePolicyT" type="typename">
+Umbrella policy active for the target device
+</ParamField>
+
+<ParamField path="SingleTileKernelT" type="typename">
+Function type of cub::DeviceReduceSingleTileKernel
+</ParamField>
+
+**Parameters**
+
+<ParamField path="single_tile_kernel" type="SingleTileKernelT">
+Kernel function pointer to parameterization of cub::DeviceReduceSingleTileKernel
+</ParamField>
+
+### InvokePasses <Badge intent="note" minimal>inline</Badge>
+
+Invoke two-passes to reduce.
+
+<CodeBlock links={{"DispatchReduce": "/library/api/cub::DispatchReduce"}}>
+```cpp showLineNumbers={false}
+template <typename ActivePolicyT, typename ReduceKernelT, typename SingleTileKernelT>
+cudaError_t cub::DispatchReduce<InputIteratorT, OutputIteratorT, OffsetT, ReductionOpT, InitT, AccumT, TransformOpT, PolicyHub, KernelSource, KernelLauncherFactory>::InvokePasses(
+    ReduceKernelT reduce_kernel,
+    SingleTileKernelT single_tile_kernel,
+    ActivePolicyT active_policy = {}
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="ActivePolicyT" type="typename">
+Umbrella policy active for the target device
+</ParamField>
+
+<ParamField path="ReduceKernelT" type="typename">
+Function type of cub::DeviceReduceKernel
+</ParamField>
+
+<ParamField path="SingleTileKernelT" type="typename">
+Function type of cub::DeviceReduceSingleTileKernel
+</ParamField>
+
+**Parameters**
+
+<ParamField path="reduce_kernel" type="ReduceKernelT">
+Kernel function pointer to parameterization of cub::DeviceReduceKernel
+</ParamField>
+
+<ParamField path="single_tile_kernel" type="SingleTileKernelT">
+Kernel function pointer to parameterization of cub::DeviceReduceSingleTileKernel
+</ParamField>
+
+### Invoke <Badge intent="note" minimal>inline</Badge>
+
+Invocation.
+
+<CodeBlock links={{"DispatchReduce": "/library/api/cub::DispatchReduce"}}>
+```cpp showLineNumbers={false}
+template <typename ActivePolicyT>
+cudaError_t cub::DispatchReduce<InputIteratorT, OutputIteratorT, OffsetT, ReductionOpT, InitT, AccumT, TransformOpT, PolicyHub, KernelSource, KernelLauncherFactory>::Invoke(
+    ActivePolicyT active_policy = {}
+)
+```
+</CodeBlock>
+
+---
+
+## Static methods
+
+### Dispatch <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Internal dispatch routine for computing a device-wide reduction.
+
+<CodeBlock links={{"DispatchReduce": "/library/api/cub::DispatchReduce"}}>
+```cpp showLineNumbers={false}
+template <typename MaxPolicyT>
+static cudaError_t cub::DispatchReduce<InputIteratorT, OutputIteratorT, OffsetT, ReductionOpT, InitT, AccumT, TransformOpT, PolicyHub, KernelSource, KernelLauncherFactory>::Dispatch(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    OutputIteratorT d_out,
+    OffsetT num_items,
+    ReductionOpT reduction_op,
+    InitT init,
+    cudaStream_t stream,
+    TransformOpT transform_op = {},
+    KernelSource kernel_source = {},
+    KernelLauncherFactory launcher_factory = {},
+    MaxPolicyT max_policy = {}
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to [`temp_storage_bytes`](/library/api/cub::_dispatch_reduce::temp_storage_bytes) and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of [`d_temp_storage`](/library/api/cub::_dispatch_reduce::d_temp_storage) allocation
+</ParamField>
+
+<ParamField path="d_in" type="InputIteratorT">
+Pointer to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Pointer to the output aggregate
+</ParamField>
+
+<ParamField path="num_items" type="OffsetT">
+Total number of input items (i.e., length of [`d_in`](/library/api/cub::_dispatch_reduce::d_in))
+</ParamField>
+
+<ParamField path="reduction_op" type="ReductionOpT">
+Binary reduction functor
+</ParamField>
+
+<ParamField path="init" type="InitT">
+The initial value of the reduction
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t">
+**[optional]** CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `d_temp_storage` | `void *` | Device-accessible allocation of temporary storage. |
+| `temp_storage_bytes` | `size_t &` | Reference to size in bytes of [`d_temp_storage`](/library/api/cub::_dispatch_reduce::d_temp_storage) allocation. |
+| `d_in` | `InputIteratorT` | Pointer to the input sequence of data items. |
+| `d_out` | `OutputIteratorT` | Pointer to the output aggregate. |
+| `num_items` | `OffsetT` | Total number of input items (i.e., length of [`d_in`](/library/api/cub::_dispatch_reduce::d_in)). |
+| `reduction_op` | `ReductionOpT` | Binary reduction functor. |
+| `init` | `InitT` | The initial value of the reduction. |
+| `stream` | `cudaStream_t` | CUDA stream to launch kernels within. Default is stream<sub>0</sub>. |
+| `ptx_version` | `int` | |
+| `transform_op` | `TransformOpT` | |
+| `kernel_source` | `KernelSource` | |
+| `launcher_factory` | `KernelLauncherFactory` | |

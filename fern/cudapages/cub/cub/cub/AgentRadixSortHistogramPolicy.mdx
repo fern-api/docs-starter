@@ -1,0 +1,50 @@
+---
+title: cub::AgentRadixSortHistogramPolicy
+description: ""
+---
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="BlockThreads" type="int">
+</ParamField>
+
+<ParamField path="ItemsPerThread" type="int">
+</ParamField>
+
+<ParamField path="NOMINAL_4B_NUM_PARTS" type="int">
+</ParamField>
+
+<ParamField path="ComputeT" type="typename">
+If void, use NOMINAL_4B_NUM_PARTS directly for NUM_PARTS. Otherwise, perform scaling.
+</ParamField>
+
+<ParamField path="RadixBits" type="int">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Static methods
+
+### num_parts_helper <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge>
+
+<CodeBlock links={{"AgentRadixSortHistogramPolicy": "/library/api/cub::AgentRadixSortHistogramPolicy"}}>
+```cpp showLineNumbers={false}
+template <typename ComputeType>
+static constexpr int cub::AgentRadixSortHistogramPolicy<BlockThreads, ItemsPerThread, NOMINAL_4B_NUM_PARTS, ComputeT, RadixBits>::num_parts_helper()
+```
+</CodeBlock>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `BLOCK_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `ITEMS_PER_THREAD` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `NUM_PARTS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | NUM_PARTS is the number of private histograms (parts) each histogram is split into. |
+| `RADIX_BITS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |

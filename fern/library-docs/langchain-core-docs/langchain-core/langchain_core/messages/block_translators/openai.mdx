@@ -1,0 +1,408 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/messages/block_translators/openai
+title: langchain_core.messages.block_translators.openai
+---
+
+Derivations of standard content blocks from OpenAI content.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_convert_annotation_to_v1`](#langchain_core-messages-block_translators-openai-_convert_annotation_to_v1) | - |
+| [`_convert_from_v03_ai_message`](#langchain_core-messages-block_translators-openai-_convert_from_v03_ai_message) | Convert v0 AIMessage into `output_version="responses/v1"` format. |
+| [`_convert_from_v1_to_chat_completions`](#langchain_core-messages-block_translators-openai-_convert_from_v1_to_chat_completions) | Convert a v1 message to the Chat Completions format. |
+| [`_convert_openai_format_to_data_block`](#langchain_core-messages-block_translators-openai-_convert_openai_format_to_data_block) | Convert OpenAI image/audio/file content block to respective v1 multimodal block. |
+| [`_convert_to_v1_from_chat_completions`](#langchain_core-messages-block_translators-openai-_convert_to_v1_from_chat_completions) | Mutate a Chat Completions message to v1 format. |
+| [`_convert_to_v1_from_chat_completions_chunk`](#langchain_core-messages-block_translators-openai-_convert_to_v1_from_chat_completions_chunk) | Mutate a Chat Completions chunk to v1 format. |
+| [`_convert_to_v1_from_chat_completions_input`](#langchain_core-messages-block_translators-openai-_convert_to_v1_from_chat_completions_input) | Convert OpenAI Chat Completions format blocks to v1 format. |
+| [`_convert_to_v1_from_responses`](#langchain_core-messages-block_translators-openai-_convert_to_v1_from_responses) | Convert a Responses message to v1 format. |
+| [`_explode_reasoning`](#langchain_core-messages-block_translators-openai-_explode_reasoning) | - |
+| [`_register_openai_translator`](#langchain_core-messages-block_translators-openai-_register_openai_translator) | Register the OpenAI translator with the central registry. |
+| [`convert_to_openai_data_block`](#langchain_core-messages-block_translators-openai-convert_to_openai_data_block) | Format standard data content block to format expected by OpenAI. |
+| [`convert_to_openai_image_block`](#langchain_core-messages-block_translators-openai-convert_to_openai_image_block) | Convert `ImageContentBlock` to format expected by OpenAI Chat Completions. |
+| [`translate_content`](#langchain_core-messages-block_translators-openai-translate_content) | Derive standard content blocks from a message with OpenAI content. |
+| [`translate_content_chunk`](#langchain_core-messages-block_translators-openai-translate_content_chunk) | Derive standard content blocks from a message chunk with OpenAI content. |
+
+### Data
+
+[`_FUNCTION_CALL_IDS_MAP_KEY`](#langchain_core-messages-block_translators-openai-_FUNCTION_CALL_IDS_MAP_KEY)
+
+### API
+
+<Anchor id="langchain_core-messages-block_translators-openai-_convert_annotation_to_v1">
+
+<CodeBlock links={{"langchain_core.messages.content.Annotation":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-Annotation"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.openai._convert_annotation_to_v1(
+    annotation: dict[str, typing.Any]
+) -> langchain_core.messages.content.Annotation
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-openai-_convert_from_v03_ai_message">
+
+<CodeBlock links={{"langchain_core.messages.AIMessage":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.openai._convert_from_v03_ai_message(
+    message: langchain_core.messages.AIMessage
+) -> langchain_core.messages.AIMessage
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert v0 AIMessage into `output_version="responses/v1"` format.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-openai-_convert_from_v1_to_chat_completions">
+
+<CodeBlock links={{"langchain_core.messages.AIMessage":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.openai._convert_from_v1_to_chat_completions(
+    message: langchain_core.messages.AIMessage
+) -> langchain_core.messages.AIMessage
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert a v1 message to the Chat Completions format.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-openai-_convert_openai_format_to_data_block">
+
+<CodeBlock links={{"langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.openai._convert_openai_format_to_data_block(
+    block: dict
+) -> langchain_core.messages.content.ContentBlock | dict[typing.Any, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert OpenAI image/audio/file content block to respective v1 multimodal block.
+
+We expect that the incoming block is verified to be in OpenAI Chat Completions
+format.
+
+If parsing fails, passes block through unchanged.
+
+Mappings (Chat Completions to LangChain v1):
+- Image -&gt; `ImageContentBlock`
+- Audio -&gt; `AudioContentBlock`
+- File -&gt; `FileContentBlock`
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-openai-_convert_to_v1_from_chat_completions">
+
+<CodeBlock links={{"langchain_core.messages.AIMessage":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessage","langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.openai._convert_to_v1_from_chat_completions(
+    message: langchain_core.messages.AIMessage
+) -> list[langchain_core.messages.content.ContentBlock]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Mutate a Chat Completions message to v1 format.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-openai-_convert_to_v1_from_chat_completions_chunk">
+
+<CodeBlock links={{"langchain_core.messages.AIMessageChunk":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessageChunk","langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.openai._convert_to_v1_from_chat_completions_chunk(
+    chunk: langchain_core.messages.AIMessageChunk
+) -> list[langchain_core.messages.content.ContentBlock]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Mutate a Chat Completions chunk to v1 format.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-openai-_convert_to_v1_from_chat_completions_input">
+
+<CodeBlock links={{"langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.openai._convert_to_v1_from_chat_completions_input(
+    content: list[langchain_core.messages.content.ContentBlock]
+) -> list[langchain_core.messages.content.ContentBlock]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert OpenAI Chat Completions format blocks to v1 format.
+
+During the `content_blocks` parsing process, we wrap blocks not recognized as a v1
+block as a `'non_standard'` block with the original block stored in the `value`
+field. This function attempts to unpack those blocks and convert any blocks that
+might be OpenAI format to v1 ContentBlocks.
+
+If conversion fails, the block is left as a `'non_standard'` block.
+
+**Parameters:**
+
+<ParamField path="content" type="list[types.ContentBlock]">
+List of content blocks to process.
+</ParamField>
+
+**Returns:** `list[types.ContentBlock]`
+
+Updated list with OpenAI blocks converted to v1 format.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-openai-_convert_to_v1_from_responses">
+
+<CodeBlock links={{"langchain_core.messages.AIMessage":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessage","langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.openai._convert_to_v1_from_responses(
+    message: langchain_core.messages.AIMessage
+) -> list[langchain_core.messages.content.ContentBlock]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert a Responses message to v1 format.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-openai-_explode_reasoning">
+
+<CodeBlock links={{"langchain_core.messages.content.ReasoningContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ReasoningContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.openai._explode_reasoning(
+    block: dict[str, typing.Any]
+) -> collections.abc.Iterator[langchain_core.messages.content.ReasoningContentBlock]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-openai-_register_openai_translator">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.openai._register_openai_translator() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Register the OpenAI translator with the central registry.
+
+Run automatically when the module is imported.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-openai-convert_to_openai_data_block">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.openai.convert_to_openai_data_block(
+    block: dict,
+    api: typing.Literal['chat/completions', 'responses'] = 'chat/completions'
+) -> dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format standard data content block to format expected by OpenAI.
+
+"Standard data content block" can include old-style LangChain v0 blocks
+(URLContentBlock, Base64ContentBlock, IDContentBlock) or new ones.
+
+**Parameters:**
+
+<ParamField path="block" type="dict">
+The content block to convert.
+</ParamField>
+
+<ParamField path="api" type="Literal['chat/completions', 'responses']" default="'chat/completions'">
+The OpenAI API being targeted. Either "chat/completions" or "responses".
+</ParamField>
+
+**Returns:** `dict`
+
+The formatted content block.
+
+**Raises:**
+
+- `ValueError`: If required keys are missing.
+- `ValueError`: If file URLs are used with Chat Completions API.
+- `ValueError`: If block type is unsupported.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-openai-convert_to_openai_image_block">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.openai.convert_to_openai_image_block(
+    block: dict[str, typing.Any]
+) -> dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert `ImageContentBlock` to format expected by OpenAI Chat Completions.
+
+**Parameters:**
+
+<ParamField path="block" type="dict[str, Any]">
+The image content block to convert.
+</ParamField>
+
+**Returns:** `dict`
+
+The formatted image content block.
+
+**Raises:**
+
+- `ValueError`: If required keys are missing.
+- `ValueError`: If source type is unsupported.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-openai-translate_content">
+
+<CodeBlock links={{"langchain_core.messages.AIMessage":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessage","langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.openai.translate_content(
+    message: langchain_core.messages.AIMessage
+) -> list[langchain_core.messages.content.ContentBlock]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Derive standard content blocks from a message with OpenAI content.
+
+**Parameters:**
+
+<ParamField path="message" type="AIMessage">
+The message to translate.
+</ParamField>
+
+**Returns:** `list[types.ContentBlock]`
+
+The derived content blocks.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-openai-translate_content_chunk">
+
+<CodeBlock links={{"langchain_core.messages.AIMessageChunk":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessageChunk","langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.openai.translate_content_chunk(
+    message: langchain_core.messages.AIMessageChunk
+) -> list[langchain_core.messages.content.ContentBlock]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Derive standard content blocks from a message chunk with OpenAI content.
+
+**Parameters:**
+
+<ParamField path="message" type="AIMessageChunk">
+The message chunk to translate.
+</ParamField>
+
+**Returns:** `list[types.ContentBlock]`
+
+The derived content blocks.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-openai-_FUNCTION_CALL_IDS_MAP_KEY">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.openai._FUNCTION_CALL_IDS_MAP_KEY = '__openai_function_call_ids__'
+```
+
+</CodeBlock>
+</Anchor>
+

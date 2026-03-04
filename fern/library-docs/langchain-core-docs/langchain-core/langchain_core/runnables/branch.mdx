@@ -1,0 +1,287 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/runnables/branch
+title: langchain_core.runnables.branch
+---
+
+Runnable that selects which branch to run based on a condition.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`RunnableBranch`](#langchain_core-runnables-branch-RunnableBranch) | `Runnable` that selects which branch to run based on a condition. |
+
+### Data
+
+[`_MIN_BRANCHES`](#langchain_core-runnables-branch-_MIN_BRANCHES)
+
+### API
+
+<Anchor id="langchain_core-runnables-branch-RunnableBranch">
+
+<CodeBlock links={{"langchain_core.runnables.base.Runnable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-Runnable","langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.base.RunnableLike":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-RunnableLike"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.branch.RunnableBranch(
+    branches: tuple[langchain_core.runnables.base.Runnable[langchain_core.runnables.utils.Input, bool] | collections.abc.Callable[[Input], bool] | collections.abc.Callable[[Input], collections.abc.Awaitable[bool]], langchain_core.runnables.base.RunnableLike] | langchain_core.runnables.base.RunnableLike = ()
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RunnableSerializable[Input, Output]](/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-RunnableSerializable)
+
+`Runnable` that selects which branch to run based on a condition.
+
+The `Runnable` is initialized with a list of `(condition, Runnable)` pairs and
+a default branch.
+
+When operating on an input, the first condition that evaluates to True is
+selected, and the corresponding `Runnable` is run on the input.
+
+If no condition evaluates to `True`, the default branch is run on the input.
+
+**Examples:**
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+from langchain_core.runnables import RunnableBranch
+
+branch = RunnableBranch(
+    (lambda x: isinstance(x, str), lambda x: x.upper()),
+    (lambda x: isinstance(x, int), lambda x: x + 1),
+    (lambda x: isinstance(x, float), lambda x: x * 2),
+    lambda x: "goodbye",
+)
+
+branch.invoke("hello")  # "HELLO"
+branch.invoke(None)  # "goodbye"
+```
+
+</CodeBlock>
+
+
+<ParamField path="branches" type="Sequence[tuple[Runnable[Input, bool], Runnable[Input, Output]]]">
+A list of `(condition, Runnable)` pairs.
+</ParamField>
+
+<ParamField path="config_specs" type="list[ConfigurableFieldSpec]">
+</ParamField>
+
+<ParamField path="default" type="Runnable[Input, Output]">
+A `Runnable` to run if no condition is met.
+</ParamField>
+
+<ParamField path="model_config" type="= ConfigDict(arbitrary_types_allowed=True)">
+</ParamField>
+<Anchor id="langchain_core-runnables-branch-RunnableBranch-ainvoke">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.branch.RunnableBranch.ainvoke(
+    input: langchain_core.runnables.utils.Input,
+    config: langchain_core.runnables.config.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.runnables.utils.Output
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-branch-RunnableBranch-astream">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.branch.RunnableBranch.astream(
+    input: langchain_core.runnables.utils.Input,
+    config: langchain_core.runnables.config.RunnableConfig | None = None,
+    kwargs: typing.Any | None = {}
+) -> collections.abc.AsyncIterator[langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+First evaluates the condition, then delegate to `True` or `False` branch.
+
+**Parameters:**
+
+<ParamField path="input" type="Input">
+The input to the `Runnable`.
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig | None" default="None">
+The configuration for the `Runnable`.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any | None" default="&#123;&#125;">
+Additional keyword arguments to pass to the `Runnable`.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-branch-RunnableBranch-get_input_schema">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.branch.RunnableBranch.get_input_schema(
+    config: langchain_core.runnables.config.RunnableConfig | None = None
+) -> type[pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-branch-RunnableBranch-get_lc_namespace">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.branch.RunnableBranch.get_lc_namespace() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Get the namespace of the LangChain object.
+
+**Returns:** `list[str]`
+
+`["langchain", "schema", "runnable"]`
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-branch-RunnableBranch-invoke">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.branch.RunnableBranch.invoke(
+    input: langchain_core.runnables.utils.Input,
+    config: langchain_core.runnables.config.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.runnables.utils.Output
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+First evaluates the condition, then delegate to `True` or `False` branch.
+
+**Parameters:**
+
+<ParamField path="input" type="Input">
+The input to the `Runnable`.
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig | None" default="None">
+The configuration for the `Runnable`.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments to pass to the `Runnable`.
+</ParamField>
+
+**Returns:** `Output`
+
+The output of the branch that was run.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-branch-RunnableBranch-is_lc_serializable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.branch.RunnableBranch.is_lc_serializable() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Return `True` as this class is serializable.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-branch-RunnableBranch-stream">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.branch.RunnableBranch.stream(
+    input: langchain_core.runnables.utils.Input,
+    config: langchain_core.runnables.config.RunnableConfig | None = None,
+    kwargs: typing.Any | None = {}
+) -> collections.abc.Iterator[langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+First evaluates the condition, then delegate to `True` or `False` branch.
+
+**Parameters:**
+
+<ParamField path="input" type="Input">
+The input to the `Runnable`.
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig | None" default="None">
+The configuration for the `Runnable`.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any | None" default="&#123;&#125;">
+Additional keyword arguments to pass to the `Runnable`.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-branch-_MIN_BRANCHES">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.branch._MIN_BRANCHES = 2
+```
+
+</CodeBlock>
+</Anchor>
+

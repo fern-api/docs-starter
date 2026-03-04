@@ -1,0 +1,82 @@
+---
+title: cub::ShiftDigitExtractor
+description: "A wrapper type to extract digits."
+---
+
+A wrapper type to extract digits.
+
+Uses a combination of shift and bitwise and to extract digits.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="KeyT" type="typename">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `cub::BaseDigitExtractor< KeyT >` (public)
+
+---
+
+## Constructors
+
+### ShiftDigitExtractor <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>explicit</Badge>
+
+<CodeBlock links={{"ShiftDigitExtractor": "/library/api/cub::ShiftDigitExtractor"}}>
+```cpp showLineNumbers={false}
+cub::ShiftDigitExtractor<KeyT>::ShiftDigitExtractor(
+    ::cuda::std::uint32_t bit_start = 0,
+    ::cuda::std::uint32_t num_bits = 0
+)
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### Digit <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"ShiftDigitExtractor": "/library/api/cub::ShiftDigitExtractor"}}>
+```cpp showLineNumbers={false}
+::cuda::std::uint32_t cub::ShiftDigitExtractor<KeyT>::Digit(
+    UnsignedBits key
+) const
+```
+</CodeBlock>
+
+---
+
+## Static methods
+
+### ProcessFloatMinusZero <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"ShiftDigitExtractor": "/library/api/cub::ShiftDigitExtractor", "BaseDigitExtractor": "/library/api/cub::BaseDigitExtractor"}}>
+```cpp showLineNumbers={false}
+static UnsignedBits cub::BaseDigitExtractor<KeyT, IsFP>::ProcessFloatMinusZero(
+    UnsignedBits key
+)
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `TraitsT` | `Traits< KeyT >` |
+| `UnsignedBits` | `typename TraitsT::UnsignedBits` |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `bit_start` | `::cuda::std::uint32_t` | |
+| `mask` | `::cuda::std::uint32_t` | |

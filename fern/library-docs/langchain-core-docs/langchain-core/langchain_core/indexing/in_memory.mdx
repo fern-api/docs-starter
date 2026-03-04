@@ -1,0 +1,151 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/indexing/in_memory
+title: langchain_core.indexing.in_memory
+---
+
+In memory document index.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`InMemoryDocumentIndex`](#langchain_core-indexing-in_memory-InMemoryDocumentIndex) | In memory document index. |
+
+### API
+
+<Anchor id="langchain_core-indexing-in_memory-InMemoryDocumentIndex">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.indexing.in_memory.InMemoryDocumentIndex()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [DocumentIndex](/langchain-core/langchain_core/indexing/base#langchain_core-indexing-base-DocumentIndex)
+
+In memory document index.
+
+This is an in-memory document index that stores documents in a dictionary.
+
+It provides a simple search API that returns documents by the number of
+counts the given query appears in the document.
+
+
+<ParamField path="store" type="dict[str, Document] = Field(default_factory=dict)">
+</ParamField>
+
+<ParamField path="top_k" type="int = 4">
+</ParamField>
+<Anchor id="langchain_core-indexing-in_memory-InMemoryDocumentIndex-_get_relevant_documents">
+
+<CodeBlock links={{"langchain_core.callbacks.CallbackManagerForRetrieverRun":"/langchain-core/langchain_core/callbacks/manager#langchain_core-callbacks-manager-CallbackManagerForRetrieverRun","langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.in_memory.InMemoryDocumentIndex._get_relevant_documents(
+    query: str,
+    run_manager: langchain_core.callbacks.CallbackManagerForRetrieverRun
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-in_memory-InMemoryDocumentIndex-delete">
+
+<CodeBlock links={{"langchain_core.indexing.base.DeleteResponse":"/langchain-core/langchain_core/indexing/base#langchain_core-indexing-base-DeleteResponse"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.in_memory.InMemoryDocumentIndex.delete(
+    ids: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.indexing.base.DeleteResponse
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Delete by IDs.
+
+**Parameters:**
+
+<ParamField path="ids" type="list[str] | None" default="None">
+List of IDs to delete.
+</ParamField>
+
+**Returns:** `DeleteResponse`
+
+A response object that contains the list of IDs that were successfully
+
+**Raises:**
+
+- `ValueError`: If IDs is None.
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-in_memory-InMemoryDocumentIndex-get">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.in_memory.InMemoryDocumentIndex.get(
+    ids: collections.abc.Sequence[str],
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-in_memory-InMemoryDocumentIndex-upsert">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document","langchain_core.indexing.UpsertResponse":"/langchain-core/langchain_core/indexing/base#langchain_core-indexing-base-UpsertResponse"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.in_memory.InMemoryDocumentIndex.upsert(
+    items: collections.abc.Sequence[langchain_core.documents.Document],
+    kwargs: typing.Any = {}
+) -> langchain_core.indexing.UpsertResponse
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Upsert documents into the index.
+
+**Parameters:**
+
+<ParamField path="items" type="Sequence[Document]">
+Sequence of documents to add to the index.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+**Returns:** `UpsertResponse`
+
+A response object that contains the list of IDs that were
+
+
+</Indent>
+</Indent>

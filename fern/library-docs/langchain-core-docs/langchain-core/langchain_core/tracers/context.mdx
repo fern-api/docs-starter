@@ -1,0 +1,239 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/tracers/context
+title: langchain_core.tracers.context
+---
+
+Context management for tracers.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_get_trace_callbacks`](#langchain_core-tracers-context-_get_trace_callbacks) | - |
+| [`_get_tracer_project`](#langchain_core-tracers-context-_get_tracer_project) | - |
+| [`_tracing_v2_is_enabled`](#langchain_core-tracers-context-_tracing_v2_is_enabled) | - |
+| [`collect_runs`](#langchain_core-tracers-context-collect_runs) | Collect all run traces in context. |
+| [`register_configure_hook`](#langchain_core-tracers-context-register_configure_hook) | Register a configure hook. |
+| [`tracing_v2_enabled`](#langchain_core-tracers-context-tracing_v2_enabled) | Instruct LangChain to log all runs in context to LangSmith. |
+
+### Data
+
+[`_configure_hooks`](#langchain_core-tracers-context-_configure_hooks)
+
+[`run_collector_var`](#langchain_core-tracers-context-run_collector_var)
+
+[`tracing_callback_var`](#langchain_core-tracers-context-tracing_callback_var)
+
+[`tracing_v2_callback_var`](#langchain_core-tracers-context-tracing_v2_callback_var)
+
+### API
+
+<Anchor id="langchain_core-tracers-context-_get_trace_callbacks">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.CallbackManager":"/langchain-core/langchain_core/callbacks/manager#langchain_core-callbacks-manager-CallbackManager","langchain_core.callbacks.manager.AsyncCallbackManager":"/langchain-core/langchain_core/callbacks/manager#langchain_core-callbacks-manager-AsyncCallbackManager","langchain_core.callbacks.base.Callbacks":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-Callbacks"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.context._get_trace_callbacks(
+    project_name: str | None = None,
+    example_id: str | uuid.UUID | None = None,
+    callback_manager: langchain_core.callbacks.manager.CallbackManager | langchain_core.callbacks.manager.AsyncCallbackManager | None = None
+) -> langchain_core.callbacks.base.Callbacks
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-context-_get_tracer_project">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.context._get_tracer_project() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-context-_tracing_v2_is_enabled">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.context._tracing_v2_is_enabled() -> bool | typing.Literal['local']
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-context-collect_runs">
+
+<CodeBlock links={{"langchain_core.tracers.run_collector.RunCollectorCallbackHandler":"/langchain-core/langchain_core/tracers/run_collector#langchain_core-tracers-run_collector-RunCollectorCallbackHandler"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.context.collect_runs() -> collections.abc.Generator[langchain_core.tracers.run_collector.RunCollectorCallbackHandler, None, None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Collect all run traces in context.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-context-register_configure_hook">
+
+<CodeBlock links={{"langchain_core.callbacks.base.BaseCallbackHandler":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-BaseCallbackHandler"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.context.register_configure_hook(
+    context_var: contextvars.ContextVar[typing.Any | None],
+    inheritable: bool,
+    handle_class: type[langchain_core.callbacks.base.BaseCallbackHandler] | None = None,
+    env_var: str | None = None
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Register a configure hook.
+
+**Parameters:**
+
+<ParamField path="context_var" type="ContextVar[Any | None]">
+The context variable.
+</ParamField>
+
+<ParamField path="inheritable" type="bool">
+Whether the context variable is inheritable.
+</ParamField>
+
+<ParamField path="handle_class" type="type[BaseCallbackHandler] | None" default="None">
+The callback handler class.
+</ParamField>
+
+<ParamField path="env_var" type="str | None" default="None">
+The environment variable.
+</ParamField>
+
+**Raises:**
+
+- `ValueError`: If `env_var` is set, `handle_class` must also be set to a non-`None`
+value.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-context-tracing_v2_enabled">
+
+<CodeBlock links={{"langchain_core.tracers.langchain.LangChainTracer":"/langchain-core/langchain_core/tracers/langchain#langchain_core-tracers-langchain-LangChainTracer"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.context.tracing_v2_enabled(
+    project_name: str | None = None,
+    example_id: str | uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    client: langsmith.Client | None = None
+) -> collections.abc.Generator[langchain_core.tracers.langchain.LangChainTracer, None, None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Instruct LangChain to log all runs in context to LangSmith.
+
+**Parameters:**
+
+<ParamField path="project_name" type="str | None" default="None">
+The name of the project.
+
+Defaults to `'default'`.
+</ParamField>
+
+<ParamField path="example_id" type="str | UUID | None" default="None">
+The ID of the example.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags to add to the run.
+</ParamField>
+
+<ParamField path="client" type="LangSmithClient | None" default="None">
+The client of the langsmith.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-context-_configure_hooks">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.context._configure_hooks: list[tuple[ContextVar[BaseCallbackHandler | None], bool, type[BaseCallbackHandler] | None, str | None]] = []
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-tracers-context-run_collector_var">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.context.run_collector_var: ContextVar[RunCollectorCallbackHandler | None] = ContextVar('run_collector', default=None)
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-tracers-context-tracing_callback_var">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.context.tracing_callback_var: Any = None
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-tracers-context-tracing_v2_callback_var">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.context.tracing_v2_callback_var: ContextVar[LangChainTracer | None] = ContextVar('tracing_callback_v2', default=None)
+```
+
+</CodeBlock>
+</Anchor>
+

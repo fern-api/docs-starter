@@ -1,0 +1,387 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/tracers/stdout
+title: langchain_core.tracers.stdout
+---
+
+Tracers that print to the console.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`ConsoleCallbackHandler`](#langchain_core-tracers-stdout-ConsoleCallbackHandler) | Tracer that prints to the console. |
+| [`FunctionCallbackHandler`](#langchain_core-tracers-stdout-FunctionCallbackHandler) | Tracer that calls a function with a single str parameter. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`elapsed`](#langchain_core-tracers-stdout-elapsed) | Get the elapsed time of a run. |
+| [`try_json_stringify`](#langchain_core-tracers-stdout-try_json_stringify) | Try to stringify an object to JSON. |
+
+### Data
+
+[`MILLISECONDS_IN_SECOND`](#langchain_core-tracers-stdout-MILLISECONDS_IN_SECOND)
+
+### API
+
+<Anchor id="langchain_core-tracers-stdout-ConsoleCallbackHandler">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tracers.stdout.ConsoleCallbackHandler(
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [FunctionCallbackHandler](#langchain_core-tracers-stdout-FunctionCallbackHandler)
+
+Tracer that prints to the console.
+
+
+<ParamField path="name" type="str = 'console_callback_handler'">
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-tracers-stdout-FunctionCallbackHandler">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tracers.stdout.FunctionCallbackHandler(
+    function: collections.abc.Callable[[str], None],
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseTracer](/langchain-core/langchain_core/tracers/base#langchain_core-tracers-base-BaseTracer)
+
+Tracer that calls a function with a single str parameter.
+
+
+<ParamField path="name" type="str = 'function_callback_handler'">
+The name of the tracer.
+
+This is used to identify the tracer in the logs.
+</ParamField>
+<Anchor id="langchain_core-tracers-stdout-FunctionCallbackHandler-_on_chain_end">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.stdout.FunctionCallbackHandler._on_chain_end(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-stdout-FunctionCallbackHandler-_on_chain_error">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.stdout.FunctionCallbackHandler._on_chain_error(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-stdout-FunctionCallbackHandler-_on_chain_start">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.stdout.FunctionCallbackHandler._on_chain_start(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-stdout-FunctionCallbackHandler-_on_llm_end">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.stdout.FunctionCallbackHandler._on_llm_end(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-stdout-FunctionCallbackHandler-_on_llm_error">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.stdout.FunctionCallbackHandler._on_llm_error(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-stdout-FunctionCallbackHandler-_on_llm_start">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.stdout.FunctionCallbackHandler._on_llm_start(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-stdout-FunctionCallbackHandler-_on_tool_end">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.stdout.FunctionCallbackHandler._on_tool_end(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-stdout-FunctionCallbackHandler-_on_tool_error">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.stdout.FunctionCallbackHandler._on_tool_error(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-stdout-FunctionCallbackHandler-_on_tool_start">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.stdout.FunctionCallbackHandler._on_tool_start(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-stdout-FunctionCallbackHandler-_persist_run">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.stdout.FunctionCallbackHandler._persist_run(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-stdout-FunctionCallbackHandler-get_breadcrumbs">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.stdout.FunctionCallbackHandler.get_breadcrumbs(
+    run: langchain_core.tracers.schemas.Run
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the breadcrumbs of a run.
+
+**Parameters:**
+
+<ParamField path="run" type="Run">
+The run to get the breadcrumbs of.
+</ParamField>
+
+**Returns:** `str`
+
+A string with the breadcrumbs of the run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-stdout-FunctionCallbackHandler-get_parents">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.stdout.FunctionCallbackHandler.get_parents(
+    run: langchain_core.tracers.schemas.Run
+) -> list[langchain_core.tracers.schemas.Run]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the parents of a run.
+
+**Parameters:**
+
+<ParamField path="run" type="Run">
+The run to get the parents of.
+</ParamField>
+
+**Returns:** `list[Run]`
+
+A list of parent runs.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-tracers-stdout-elapsed">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.stdout.elapsed(
+    run: typing.Any
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the elapsed time of a run.
+
+**Parameters:**
+
+<ParamField path="run" type="Any">
+any object with a `start_time` and `end_time` attribute.
+</ParamField>
+
+**Returns:** `str`
+
+A string with the elapsed time in seconds or milliseconds if time is less than a
+second.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-stdout-try_json_stringify">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.stdout.try_json_stringify(
+    obj: typing.Any,
+    fallback: str
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Try to stringify an object to JSON.
+
+**Parameters:**
+
+<ParamField path="obj" type="Any">
+Object to stringify.
+</ParamField>
+
+<ParamField path="fallback" type="str">
+Fallback string to return if the object cannot be stringified.
+</ParamField>
+
+**Returns:** `str`
+
+A JSON string if the object can be stringified, otherwise the fallback string.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-stdout-MILLISECONDS_IN_SECOND">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.stdout.MILLISECONDS_IN_SECOND = 1000
+```
+
+</CodeBlock>
+</Anchor>
+

@@ -1,0 +1,338 @@
+---
+title: cub::DeviceTopK
+description: ""
+---
+
+DeviceTopK provides device-wide, parallel operations for finding the largest (or smallest) K items from sequences of unordered data items residing within device-accessible memory.
+
+## Performance considerations
+
+@linear_performance&#123;top-k&#125;
+
+---
+
+## Static methods
+
+### MaxPairs <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"DeviceTopK": "/library/api/cub::DeviceTopK"}}>
+```cpp showLineNumbers={false}
+template <typename KeyInputIteratorT,
+          typename KeyOutputIteratorT,
+          typename ValueInputIteratorT,
+          typename ValueOutputIteratorT,
+          typename NumItemsT,
+          typename NumOutItemsT,
+          typename EnvT>
+static cudaError_t cub::DeviceTopK::MaxPairs(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyInputIteratorT d_keys_in,
+    KeyOutputIteratorT d_keys_out,
+    ValueInputIteratorT d_values_in,
+    ValueOutputIteratorT d_values_out,
+    NumItemsT num_items,
+    NumOutItemsT k,
+    EnvT env = {}
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="KeyInputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input keys (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="KeyOutputIteratorT" type="typename">
+**[inferred]** Random-access output iterator type for writing output keys (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="ValueInputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input values (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="ValueOutputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for writing output values (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="NumItemsT" type="typename">
+The integral type of variable num_items
+</ParamField>
+
+<ParamField path="NumOutItemsT" type="typename">
+The integral type of variable k
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_keys_in" type="KeyInputIteratorT">
+Random-access iterator to the input sequence containing the keys
+</ParamField>
+
+<ParamField path="d_keys_out" type="KeyOutputIteratorT">
+Random-access iterator to the output sequence of keys, where K values will be written to
+</ParamField>
+
+<ParamField path="d_values_in" type="ValueInputIteratorT">
+Random-access iterator to the input sequence containing the values associated to each key
+</ParamField>
+
+<ParamField path="d_values_out" type="ValueOutputIteratorT">
+Random-access iterator to the output sequence of values, corresponding to the top k keys, where k values will be written to
+</ParamField>
+
+<ParamField path="num_items" type="NumItemsT">
+Number of items to be read and processed from `d_keys_in` and `d_values_in` each
+</ParamField>
+
+<ParamField path="k" type="NumOutItemsT">
+The value of K, which is the number of largest pairs to find from `num_items` pairs. Capped to a maximum of `num_items`.
+</ParamField>
+
+<ParamField path="env" type="EnvT" default="{}">
+Embed:rst:leading-asterisk 
+//!   **[optional]** Execution environment. Default is `cuda::std::execution::env{}`.
+//!
+</ParamField>
+
+### MinPairs <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"DeviceTopK": "/library/api/cub::DeviceTopK"}}>
+```cpp showLineNumbers={false}
+template <typename KeyInputIteratorT,
+          typename KeyOutputIteratorT,
+          typename ValueInputIteratorT,
+          typename ValueOutputIteratorT,
+          typename NumItemsT,
+          typename NumOutItemsT,
+          typename EnvT>
+static cudaError_t cub::DeviceTopK::MinPairs(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyInputIteratorT d_keys_in,
+    KeyOutputIteratorT d_keys_out,
+    ValueInputIteratorT d_values_in,
+    ValueOutputIteratorT d_values_out,
+    NumItemsT num_items,
+    NumOutItemsT k,
+    EnvT env = {}
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="KeyInputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input keys (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="KeyOutputIteratorT" type="typename">
+**[inferred]** Random-access output iterator type for writing output keys (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="ValueInputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input values (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="ValueOutputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for writing output values (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="NumItemsT" type="typename">
+The integral type of variable num_items
+</ParamField>
+
+<ParamField path="NumOutItemsT" type="typename">
+The integral type of variable k
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_keys_in" type="KeyInputIteratorT">
+Random-access iterator to the input sequence containing the keys
+</ParamField>
+
+<ParamField path="d_keys_out" type="KeyOutputIteratorT">
+Random-access iterator to the output sequence of keys, where K values will be written to
+</ParamField>
+
+<ParamField path="d_values_in" type="ValueInputIteratorT">
+Random-access iterator to the input sequence containing the values associated to each key
+</ParamField>
+
+<ParamField path="d_values_out" type="ValueOutputIteratorT">
+Random-access iterator to the output sequence of values, corresponding to the top k keys, where k values will be written to
+</ParamField>
+
+<ParamField path="num_items" type="NumItemsT">
+Number of items to be read and processed from `d_keys_in` and `d_values_in` each
+</ParamField>
+
+<ParamField path="k" type="NumOutItemsT">
+The value of K, which is the number of lowest pairs to find from `num_items` pairs. Capped to a maximum of `num_items`.
+</ParamField>
+
+<ParamField path="env" type="EnvT" default="{}">
+Embed:rst:leading-asterisk 
+//!   **[optional]** Execution environment. Default is `cuda::std::execution::env{}`.
+//!
+</ParamField>
+
+### MaxKeys <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"DeviceTopK": "/library/api/cub::DeviceTopK"}}>
+```cpp showLineNumbers={false}
+template <typename KeyInputIteratorT,
+          typename KeyOutputIteratorT,
+          typename NumItemsT,
+          typename NumOutItemsT,
+          typename EnvT>
+static cudaError_t cub::DeviceTopK::MaxKeys(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyInputIteratorT d_keys_in,
+    KeyOutputIteratorT d_keys_out,
+    NumItemsT num_items,
+    NumOutItemsT k,
+    EnvT env = {}
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="KeyInputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input keys (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="KeyOutputIteratorT" type="typename">
+**[inferred]** Random-access output iterator type for writing output keys (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="NumItemsT" type="typename">
+The integral type of variable num_items
+</ParamField>
+
+<ParamField path="NumOutItemsT" type="typename">
+The integral type of variable k
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_keys_in" type="KeyInputIteratorT">
+Random-access iterator to the input sequence containing the keys
+</ParamField>
+
+<ParamField path="d_keys_out" type="KeyOutputIteratorT">
+Random-access iterator to the output sequence of keys, where K values will be written to
+</ParamField>
+
+<ParamField path="num_items" type="NumItemsT">
+Number of items to be read and processed from `d_keys_in`
+</ParamField>
+
+<ParamField path="k" type="NumOutItemsT">
+The value of K, which is the number of largest pairs to find from `num_items` pairs. Capped to a maximum of `num_items`.
+</ParamField>
+
+<ParamField path="env" type="EnvT" default="{}">
+Embed:rst:leading-asterisk 
+//!   **[optional]** Execution environment. Default is `cuda::std::execution::env{}`.
+//!
+</ParamField>
+
+### MinKeys <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"DeviceTopK": "/library/api/cub::DeviceTopK"}}>
+```cpp showLineNumbers={false}
+template <typename KeyInputIteratorT,
+          typename KeyOutputIteratorT,
+          typename NumItemsT,
+          typename NumOutItemsT,
+          typename EnvT>
+static cudaError_t cub::DeviceTopK::MinKeys(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyInputIteratorT d_keys_in,
+    KeyOutputIteratorT d_keys_out,
+    NumItemsT num_items,
+    NumOutItemsT k,
+    EnvT env = {}
+)
+```
+</CodeBlock>
+
+**Template parameters**
+
+<ParamField path="KeyInputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input keys (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="KeyOutputIteratorT" type="typename">
+**[inferred]** Random-access output iterator type for writing output keys (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="NumItemsT" type="typename">
+The integral type of variable num_items
+</ParamField>
+
+<ParamField path="NumOutItemsT" type="typename">
+The integral type of variable k
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_keys_in" type="KeyInputIteratorT">
+Random-access iterator to the input sequence containing the keys
+</ParamField>
+
+<ParamField path="d_keys_out" type="KeyOutputIteratorT">
+Random-access iterator to the output sequence of keys, where K values will be written to
+</ParamField>
+
+<ParamField path="num_items" type="NumItemsT">
+Number of items to be read and processed from `d_keys_in`
+</ParamField>
+
+<ParamField path="k" type="NumOutItemsT">
+The value of K, which is the number of largest pairs to find from `num_items` pairs. Capped to a maximum of `num_items`.
+</ParamField>
+
+<ParamField path="env" type="EnvT" default="{}">
+Embed:rst:leading-asterisk 
+//!   **[optional]** Execution environment. Default is `cuda::std::execution::env{}`.
+//!
+</ParamField>

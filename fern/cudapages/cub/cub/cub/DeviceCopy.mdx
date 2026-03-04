@@ -1,0 +1,235 @@
+---
+title: cub::DeviceCopy
+description: "[cub::DeviceCopy](/library/api/cub::_device_copy) provides device-wide, parallel operations for copying data."
+---
+
+`cub::DeviceCopy` provides device-wide, parallel operations for copying data.
+
+---
+
+## Static methods
+
+### Batched <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Copies data from a batch of given source ranges to their corresponding destination ranges.
+
+.. note::
+
+If any input range aliases any output range the behavior is undefined. If any output range aliases another output range the behavior is undefined. Input ranges can alias one another.
+
+<CodeBlock links={{"DeviceCopy": "/library/api/cub::DeviceCopy"}}>
+```cpp showLineNumbers={false}
+template <typename InputIt, typename OutputIt, typename SizeIteratorT>
+static cudaError_t cub::DeviceCopy::Batched(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIt input_it,
+    OutputIt output_it,
+    SizeIteratorT sizes,
+    ::cuda::std::int64_t num_ranges,
+    cudaStream_t stream = nullptr
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="InputIt" type="typename">
+**[inferred]** Device-accessible random-access input iterator type providing the iterators to the source ranges
+</ParamField>
+
+<ParamField path="OutputIt" type="typename">
+**[inferred]** Device-accessible random-access input iterator type providing the iterators to the destination ranges
+</ParamField>
+
+<ParamField path="SizeIteratorT" type="typename">
+**[inferred]** Device-accessible random-access input iterator type providing the number of items to be copied for each pair of ranges
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="input_it" type="InputIt">
+Device-accessible iterator providing the iterators to the source ranges
+</ParamField>
+
+<ParamField path="output_it" type="OutputIt">
+Device-accessible iterator providing the iterators to the destination ranges
+</ParamField>
+
+<ParamField path="sizes" type="SizeIteratorT">
+Device-accessible iterator providing the number of elements to be copied for each pair of ranges
+</ParamField>
+
+<ParamField path="num_ranges" type="::cuda::std::int64_t">
+The total number of range pairs
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="nullptr">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates usage of DeviceCopy::Batched to perform a DeviceRunLength Decode operation.
+
+```cpp showLineNumbers={false}
+struct GetIteratorToRange
+{
+  __host__ __device__ __forceinline__ auto operator()(uint32_t index)
+  {
+    return thrust::make_constant_iterator(d_data_in[index]);
+  }
+  int32_t *d_data_in;
+};
+
+struct GetPtrToRange
+{
+  __host__ __device__ __forceinline__ auto operator()(uint32_t index)
+  {
+    return d_data_out + d_offsets[index];
+  }
+  int32_t *d_data_out;
+  uint32_t *d_offsets;
+};
+
+struct GetRunLength
+{
+  __host__ __device__ __forceinline__ uint32_t operator()(uint32_t index)
+  {
+    return d_offsets[index + 1] - d_offsets[index];
+  }
+  uint32_t *d_offsets;
+};
+
+uint32_t num_ranges = 5;
+int32_t *d_data_in;           // e.g., [4, 2, 7, 3, 1]
+int32_t *d_data_out;          // e.g., [0,                ...               ]
+uint32_t *d_offsets;          // e.g., [0, 2, 5, 6, 9, 14]
+
+// Returns a constant iterator to the element of the i-th run
+thrust::counting_iterator<uint32_t> iota(0);
+auto iterators_in = thrust::make_transform_iterator(iota, GetIteratorToRange{d_data_in});
+
+// Returns the run length of the i-th run
+auto sizes = thrust::make_transform_iterator(iota, GetRunLength{d_offsets});
+
+// Returns pointers to the output range for each run
+auto ptrs_out = thrust::make_transform_iterator(iota, GetPtrToRange{d_data_out, d_offsets});
+
+// Determine temporary device storage requirements
+void *d_temp_storage      = nullptr;
+size_t temp_storage_bytes = 0;
+cub::DeviceCopy::Batched(d_temp_storage, temp_storage_bytes, iterators_in, ptrs_out, sizes,
+num_ranges);
+
+// Allocate temporary storage
+cudaMalloc(&d_temp_storage, temp_storage_bytes);
+
+// Run batched copy algorithm (used to perform runlength decoding)
+cub::DeviceCopy::Batched(d_temp_storage, temp_storage_bytes, iterators_in, ptrs_out, sizes,
+num_ranges);
+
+// d_data_out       <-- [4, 4, 2, 2, 2, 7, 3, 3, 3, 1, 1, 1, 1, 1]
+```
+
+### Copy <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Copies data from a multidimensional source mdspan to a destination mdspan.
+
+This function performs a parallel copy operation between two mdspan objects with potentially different layouts but identical extents. The copy operation handles arbitrary-dimensional arrays and automatically manages layout transformations.
+
+<CodeBlock links={{"DeviceCopy": "/library/api/cub::DeviceCopy"}}>
+```cpp showLineNumbers={false}
+template <typename T_In,
+          typename Extents_In,
+          typename Layout_In,
+          typename Accessor_In,
+          typename T_Out,
+          typename Extents_Out,
+          typename Layout_Out,
+          typename Accessor_Out>
+static cudaError_t cub::DeviceCopy::Copy(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    ::cuda::std::mdspan<T_In, Extents_In, Layout_In, Accessor_In> mdspan_in,
+    ::cuda::std::mdspan<T_Out, Extents_Out, Layout_Out, Accessor_Out> mdspan_out,
+    ::cudaStream_t stream = nullptr
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Returns:** embed:rst:leading-asterisk 
+//!   **cudaSuccess** on success, **cudaErrorInvalidValue** if mdspan extents don't match, or error code on failure
+//!
+
+**Template parameters**
+
+<ParamField path="T_In" type="typename">
+**[inferred]** The element type of the source mdspan
+</ParamField>
+
+<ParamField path="Extents_In" type="typename">
+**[inferred]** The extents type of the source mdspan
+</ParamField>
+
+<ParamField path="Layout_In" type="typename">
+**[inferred]** The layout type of the source mdspan
+</ParamField>
+
+<ParamField path="Accessor_In" type="typename">
+**[inferred]** The accessor type of the source mdspan
+</ParamField>
+
+<ParamField path="T_Out" type="typename">
+**[inferred]** The element type of the destination mdspan
+</ParamField>
+
+<ParamField path="Extents_Out" type="typename">
+**[inferred]** The extents type of the destination mdspan
+</ParamField>
+
+<ParamField path="Layout_Out" type="typename">
+**[inferred]** The layout type of the destination mdspan
+</ParamField>
+
+<ParamField path="Accessor_Out" type="typename">
+**[inferred]** The accessor type of the destination mdspan
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="mdspan_in" type="::cuda::std::mdspan<T_In, Extents_In, Layout_In, Accessor_In>">
+Source mdspan containing the data to be copied
+</ParamField>
+
+<ParamField path="mdspan_out" type="::cuda::std::mdspan<T_Out, Extents_Out, Layout_Out, Accessor_Out>">
+Destination mdspan where the data will be copied
+</ParamField>
+
+<ParamField path="stream" type="::cudaStream_t" default="nullptr">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>

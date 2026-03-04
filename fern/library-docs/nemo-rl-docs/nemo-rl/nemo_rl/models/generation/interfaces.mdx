@@ -1,0 +1,569 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/generation/interfaces
+title: nemo_rl.models.generation.interfaces
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`ColocationConfig`](#nemo_rl-models-generation-interfaces-ColocationConfig) | - |
+| [`GenerationConfig`](#nemo_rl-models-generation-interfaces-GenerationConfig) | Configuration for generation. |
+| [`GenerationDatumSpec`](#nemo_rl-models-generation-interfaces-GenerationDatumSpec) | Specification for input data required by generation models. |
+| [`GenerationInterface`](#nemo_rl-models-generation-interfaces-GenerationInterface) | Abstract base class defining the interface for RL policies. |
+| [`GenerationOutputSpec`](#nemo_rl-models-generation-interfaces-GenerationOutputSpec) | Specification for output data returned by generation models. |
+| [`OptionalResourcesConfig`](#nemo_rl-models-generation-interfaces-OptionalResourcesConfig) | - |
+| [`ResourcesConfig`](#nemo_rl-models-generation-interfaces-ResourcesConfig) | - |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`verify_right_padding`](#nemo_rl-models-generation-interfaces-verify_right_padding) | Verify that a tensor is right-padded according to the provided lengths. |
+
+### API
+
+<Anchor id="nemo_rl-models-generation-interfaces-ColocationConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.generation.interfaces.ColocationConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="enabled" type="bool">
+
+</ParamField>
+
+<ParamField path="resources" type="OptionalResourcesConfig">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-generation-interfaces-GenerationConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.generation.interfaces.GenerationConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Configuration for generation.
+
+<ParamField path="_pad_token_id" type="NotRequired[int]">
+
+</ParamField>
+
+<ParamField path="backend" type="str">
+
+</ParamField>
+
+<ParamField path="colocated" type="NotRequired[ColocationConfig]">
+
+</ParamField>
+
+<ParamField path="max_new_tokens" type="int">
+
+</ParamField>
+
+<ParamField path="model_name" type="NotRequired[str]">
+
+</ParamField>
+
+<ParamField path="stop_strings" type="list[str] | None">
+
+</ParamField>
+
+<ParamField path="stop_token_ids" type="list[int] | None">
+
+</ParamField>
+
+<ParamField path="temperature" type="float">
+
+</ParamField>
+
+<ParamField path="top_k" type="int | None">
+
+</ParamField>
+
+<ParamField path="top_p" type="float">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-generation-interfaces-GenerationDatumSpec">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.generation.interfaces.GenerationDatumSpec
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Specification for input data required by generation models.
+
+- input_ids: Tensor of token IDs representing the input sequences (right padded)
+- input_lengths: Tensor containing the actual length of each sequence (without padding)
+- stop_strings: Optional list of strings to stop generation (per sample)
+- __extra__: Additional model-specific data fields
+
+Example of a batch with 4 entries with different sequence lengths:
+<CodeBlock showLineNumbers={false}>
+
+```python
+# Batch of 4 sequences with lengths [3, 5, 2, 4]
+
+input_ids (padded):
+[
+  [101, 2054, 2003,    0,    0],  # Length 3
+  [101, 2054, 2003, 2001, 1996],  # Length 5
+  [101, 2054,    0,    0,    0],  # Length 2
+  [101, 2054, 2003, 2001,    0],  # Length 4
+]
+
+input_lengths:
+[3, 5, 2, 4]
+```
+
+</CodeBlock>
+
+All functions receiving or returning GenerationDatumSpec should ensure
+right padding is maintained. Use verify_right_padding() to check.
+
+<ParamField path="__extra__" type="Any">
+
+</ParamField>
+
+<ParamField path="input_ids" type="Tensor">
+
+</ParamField>
+
+<ParamField path="input_lengths" type="Tensor">
+
+</ParamField>
+
+<ParamField path="stop_strings" type="NotRequired[list[str]]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-generation-interfaces-GenerationInterface">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.generation.interfaces.GenerationInterface()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+Abstract base class defining the interface for RL policies.
+
+
+<ParamField path="requires_kv_scale_sync" type="bool">
+Whether the generation backend requires KV cache scales synchronization.
+</ParamField>
+<Anchor id="nemo_rl-models-generation-interfaces-GenerationInterface-clear_logger_metrics">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.interfaces.GenerationInterface.clear_logger_metrics() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Clear logger metrics for performance reporting.
+
+This is an optional method that backends can implement to clear
+telemetry metrics. Default implementation does nothing.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-interfaces-GenerationInterface-finish_generation">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.interfaces.GenerationInterface.finish_generation(
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-interfaces-GenerationInterface-generate">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.models.generation.interfaces.GenerationDatumSpec":"#nemo_rl-models-generation-interfaces-GenerationDatumSpec","nemo_rl.models.generation.interfaces.GenerationOutputSpec":"#nemo_rl-models-generation-interfaces-GenerationOutputSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.interfaces.GenerationInterface.generate(
+    data: nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.generation.interfaces.GenerationDatumSpec],
+    greedy: bool
+) -> nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.generation.interfaces.GenerationOutputSpec]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-interfaces-GenerationInterface-get_logger_metrics">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.interfaces.GenerationInterface.get_logger_metrics() -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get logger metrics for performance reporting.
+
+This is an optional method that backends can implement to collect
+telemetry metrics. Default implementation returns empty dict.
+
+**Returns:** `dict[str, Any]`
+
+Dictionary of metrics. Format may vary by backend.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-interfaces-GenerationInterface-init_collective">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.interfaces.GenerationInterface.init_collective(
+    ip: str,
+    port: int,
+    world_size: int
+) -> list[ray.ObjectRef]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Initialize the collective communication.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-interfaces-GenerationInterface-invalidate_kv_cache">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.interfaces.GenerationInterface.invalidate_kv_cache() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-interfaces-GenerationInterface-prepare_for_generation">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.interfaces.GenerationInterface.prepare_for_generation(
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-interfaces-GenerationInterface-prepare_refit_info">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.interfaces.GenerationInterface.prepare_refit_info(
+    state_dict_info: dict[str, typing.Any]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Prepare the info for refit.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-interfaces-GenerationInterface-update_weights_from_collective">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.interfaces.GenerationInterface.update_weights_from_collective() -> list[ray.ObjectRef]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Update the model weights from collective communication.
+
+
+</Indent>
+<Anchor id="nemo_rl-models-generation-interfaces-GenerationInterface-update_weights_via_ipc_zmq">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.interfaces.GenerationInterface.update_weights_via_ipc_zmq() -> list[ray.ObjectRef]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Update the model weights from the given IPC handles.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-models-generation-interfaces-GenerationOutputSpec">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.generation.interfaces.GenerationOutputSpec
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Specification for output data returned by generation models.
+
+- output_ids: Tensor of token IDs representing the generated sequences (right padded)
+- generation_lengths: Tensor containing the actual length of each generated sequence
+- unpadded_sequence_lengths: Tensor containing the actual length of each input + generated sequence (without padding)
+- logprobs: Tensor of log probabilities for each generated token (right padded with zeros)
+- truncated: Boolean tensor indicating if each sequence was truncated (hit max_tokens limit)
+- __extra__: Additional model-specific data fields
+
+Example of a batch with 2 sequences:
+<CodeBlock showLineNumbers={false}>
+
+```python
+# Sample batch with 2 examples
+# - Example 1: Input length 3, generated response length 4
+# - Example 2: Input length 5, generated response length 2
+
+output_ids (right-padded):
+[
+  [101, 2054, 2003, 2023, 2003, 1037, 2200,    0],  # 7 valid tokens (3 input + 4 output)
+  [101, 2054, 2003, 2001, 1996, 3014, 2005,    0],  # 7 valid tokens (5 input + 2 output)
+]
+
+generation_lengths:
+[4, 2]  # Length of just the generated response part
+
+unpadded_sequence_lengths:
+[7, 7]  # Length of full valid sequence (input + generated response)
+
+logprobs (right-padded with zeros):
+[
+  [0.0, 0.0, 0.0, -1.2, -0.8, -2.1, -1.5, 0.0],  # First 3 are 0 (input tokens), next 4 are actual logprobs
+  [0.0, 0.0, 0.0, 0.0, 0.0, -0.9, -1.7, 0.0],     # First 5 are 0 (input tokens), next 2 are actual logprobs
+]
+
+truncated:
+[False, True]  # Example 2 was truncated (hit max_tokens limit without EOS)
+```
+
+</CodeBlock>
+
+All functions receiving or returning GenerationOutputSpec should ensure
+right padding is maintained. Use verify_right_padding() to check.
+
+<ParamField path="__extra__" type="Any">
+
+</ParamField>
+
+<ParamField path="generation_lengths" type="Tensor">
+
+</ParamField>
+
+<ParamField path="logprobs" type="Tensor">
+
+</ParamField>
+
+<ParamField path="output_ids" type="Tensor">
+
+</ParamField>
+
+<ParamField path="truncated" type="NotRequired[Tensor]">
+
+</ParamField>
+
+<ParamField path="unpadded_sequence_lengths" type="Tensor">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-generation-interfaces-OptionalResourcesConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.generation.interfaces.OptionalResourcesConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="gpus_per_node" type="int | None">
+
+</ParamField>
+
+<ParamField path="num_nodes" type="int | None">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-generation-interfaces-ResourcesConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.generation.interfaces.ResourcesConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="gpus_per_node" type="int">
+
+</ParamField>
+
+<ParamField path="num_nodes" type="int">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-models-generation-interfaces-verify_right_padding">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.models.generation.interfaces.GenerationDatumSpec":"#nemo_rl-models-generation-interfaces-GenerationDatumSpec","nemo_rl.models.generation.interfaces.GenerationOutputSpec":"#nemo_rl-models-generation-interfaces-GenerationOutputSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.generation.interfaces.verify_right_padding(
+    data: typing.Union[nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.generation.interfaces.GenerationDatumSpec], nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.models.generation.interfaces.GenerationOutputSpec]],
+    pad_value: int = 0,
+    raise_error: bool = True
+) -> tuple[bool, typing.Union[str, None]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Verify that a tensor is right-padded according to the provided lengths.
+
+**Parameters:**
+
+<ParamField path="data" type="Union[BatchedDataDict[GenerationDatumSpec], BatchedDataDict[GenerationOutputSpec]]">
+The BatchedDataDict to check, containing either:
+- For GenerationDatumSpec: input_ids and input_lengths
+- For GenerationOutputSpec: output_ids and unpadded_sequence_lengths
+</ParamField>
+
+<ParamField path="pad_value" type="int" default="0">
+The expected padding value (default: 0)
+</ParamField>
+
+<ParamField path="raise_error" type="bool" default="True">
+Whether to raise an error if wrong padding is detected
+</ParamField>
+
+**Returns:** `bool`
+
+Tuple of (is_right_padded, error_message)
+
+
+</Indent>

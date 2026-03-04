@@ -1,0 +1,277 @@
+---
+title: thrust::uniform_int_distribution
+description: "A [`uniform_int_distribution`](/library/api/thrust::uniform_int_distribution) random number distribution produces signed or unsigned integer uniform random numbers from a given range."
+---
+
+A `uniform_int_distribution` random number distribution produces signed or unsigned integer uniform random numbers from a given range.
+
+The following code snippet demonstrates examples of using a `uniform_int_distribution` with a random number engine to produce random integers drawn from a given range:
+
+```cpp showLineNumbers={false}
+#include <thrust/uniform_int_distribution.h>
+```
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <thrust/random/linear_congruential_engine.h>
+#include <thrust/random/uniform_int_distribution.h>
+
+int main()
+{
+  // create a minstd_rand object to act as our source of randomness
+  thrust::minstd_rand rng;
+
+  // create a uniform_int_distribution to produce ints from [-7,13]
+  thrust::uniform_int_distribution<int> dist(-7,13);
+
+  // write a random number from the range [-7,13] to standard output
+  std::cout << dist(rng) << std::endl;
+
+  // write the range of the distribution, just in case we forgot
+  std::cout << dist.min() << std::endl;
+
+  // -7 is printed
+
+  std::cout << dist.max() << std::endl;
+
+  // 13 is printed
+
+  // write the parameters of the distribution (which happen to be the bounds) to standard output
+  std::cout << dist.a() << std::endl;
+
+  // -7 is printed
+
+  std::cout << dist.b() << std::endl;
+
+  // 13 is printed
+
+  return 0;
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="IntType" type="typename" default="int">
+The type of integer to produce.
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### uniform_int_distribution <Badge intent="note" minimal>explicit</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+This constructor creates a new `uniform_int_distribution` from two values defining the range of the distribution.
+
+<CodeBlock links={{"uniform_int_distribution": "/library/api/thrust::uniform_int_distribution"}}>
+```cpp showLineNumbers={false}
+thrust::random::uniform_int_distribution<IntType>::uniform_int_distribution(
+    IntType a = 0,
+    IntType b = ::cuda::std::numeric_limits<IntType>::max()
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="a" type="IntType" default="0">
+The smallest integer to potentially produce. Defaults to `0`.
+</ParamField>
+
+<ParamField path="b" type="IntType" default="::cuda::std::numeric_limits< IntType >::max()">
+The largest integer to potentially produce. Defaults to the largest representable integer in the platform.
+</ParamField>
+
+</Tab>
+<Tab title="Copy">
+
+This constructor creates a new `uniform_int_distribution` from a [`param_type`](/library/api/thrust::random::uniform_int_distribution::param_type) object encapsulating the range of the distribution.
+
+<CodeBlock links={{"uniform_int_distribution": "/library/api/thrust::uniform_int_distribution"}}>
+```cpp showLineNumbers={false}
+thrust::random::uniform_int_distribution<IntType>::uniform_int_distribution(
+    const param_type &parm
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="parm" type="const param_type &">
+A [`param_type`](/library/api/thrust::random::uniform_int_distribution::param_type) object encapsulating the parameters (i.e., the range) of the distribution.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### reset
+
+This does nothing.
+
+It is included to conform to the requirements of the RandomDistribution concept.
+
+<CodeBlock links={{"uniform_int_distribution": "/library/api/thrust::uniform_int_distribution"}}>
+```cpp showLineNumbers={false}
+void thrust::random::uniform_int_distribution<IntType>::reset()
+```
+</CodeBlock>
+
+### operator()
+
+<Tabs>
+<Tab title="Overload 1">
+
+This method produces a new uniform random integer drawn from this `uniform_int_distribution``'s` range using a `UniformRandomNumberGenerator` as a source of randomness.
+
+<CodeBlock links={{"uniform_int_distribution": "/library/api/thrust::uniform_int_distribution"}}>
+```cpp showLineNumbers={false}
+template <typename UniformRandomNumberGenerator>
+result_type thrust::random::uniform_int_distribution<IntType>::operator()(
+    UniformRandomNumberGenerator &urng
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="urng" type="UniformRandomNumberGenerator &">
+The `UniformRandomNumberGenerator` to use as a source of randomness.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+This method produces a new uniform random integer as if by creating a new `uniform_int_distribution` from the given [`param_type`](/library/api/thrust::random::uniform_int_distribution::param_type) object, and calling its `operator()` method with the given `UniformRandomNumberGenerator` as a source of randomness.
+
+<CodeBlock links={{"uniform_int_distribution": "/library/api/thrust::uniform_int_distribution"}}>
+```cpp showLineNumbers={false}
+template <typename UniformRandomNumberGenerator>
+result_type thrust::random::uniform_int_distribution<IntType>::operator()(
+    UniformRandomNumberGenerator &urng,
+    const param_type &parm
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="urng" type="UniformRandomNumberGenerator &">
+The `UniformRandomNumberGenerator` to use as a source of randomness.
+</ParamField>
+
+<ParamField path="parm" type="const param_type &">
+A [`param_type`](/library/api/thrust::random::uniform_int_distribution::param_type) object encapsulating the parameters of the `uniform_int_distribution` to draw from.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### a <Badge intent="note" minimal>const</Badge>
+
+This method returns the value of the parameter with which this `uniform_int_distribution` was constructed.
+
+<CodeBlock links={{"uniform_int_distribution": "/library/api/thrust::uniform_int_distribution"}}>
+```cpp showLineNumbers={false}
+result_type thrust::random::uniform_int_distribution<IntType>::a() const
+```
+</CodeBlock>
+
+**Returns:** The lower bound of this `uniform_int_distribution``'s` range.
+
+### b <Badge intent="note" minimal>const</Badge>
+
+This method returns the value of the parameter with which this `uniform_int_distribution` was constructed.
+
+<CodeBlock links={{"uniform_int_distribution": "/library/api/thrust::uniform_int_distribution"}}>
+```cpp showLineNumbers={false}
+result_type thrust::random::uniform_int_distribution<IntType>::b() const
+```
+</CodeBlock>
+
+**Returns:** The upper bound of this `uniform_int_distribution``'s` range.
+
+### param
+
+<Tabs>
+<Tab title="Mutable">
+
+This method changes the parameters of this `uniform_int_distribution` using the values encapsulated in a given [`param_type`](/library/api/thrust::random::uniform_int_distribution::param_type) object.
+
+<CodeBlock links={{"uniform_int_distribution": "/library/api/thrust::uniform_int_distribution"}}>
+```cpp showLineNumbers={false}
+void thrust::random::uniform_int_distribution<IntType>::param(
+    const param_type &parm
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="parm" type="const param_type &">
+A [`param_type`](/library/api/thrust::random::uniform_int_distribution::param_type) object encapsulating the new range of this `uniform_int_distribution`.
+</ParamField>
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+This method returns a [`param_type`](/library/api/thrust::random::uniform_int_distribution::param_type) object encapsulating the parameters with which this `uniform_int_distribution` was constructed.
+
+<CodeBlock links={{"uniform_int_distribution": "/library/api/thrust::uniform_int_distribution"}}>
+```cpp showLineNumbers={false}
+param_type thrust::random::uniform_int_distribution<IntType>::param() const
+```
+</CodeBlock>
+
+**Returns:** A [`param_type`](/library/api/thrust::random::uniform_int_distribution::param_type) object enapsulating the range of this `uniform_int_distribution`.
+
+</Tab>
+</Tabs>
+
+### min <Badge intent="note" minimal>const</Badge>
+
+This method returns the smallest integer this `uniform_int_distribution` can potentially produce.
+
+<CodeBlock links={{"uniform_int_distribution": "/library/api/thrust::uniform_int_distribution"}}>
+```cpp showLineNumbers={false}
+result_type thrust::random::uniform_int_distribution<IntType>::min() const
+```
+</CodeBlock>
+
+**Returns:** The lower bound of this `uniform_int_distribution``'s` range.
+
+### max <Badge intent="note" minimal>const</Badge>
+
+This method returns the largest integer this `uniform_int_distribution` can potentially produce.
+
+<CodeBlock links={{"uniform_int_distribution": "/library/api/thrust::uniform_int_distribution"}}>
+```cpp showLineNumbers={false}
+result_type thrust::random::uniform_int_distribution<IntType>::max() const
+```
+</CodeBlock>
+
+**Returns:** The upper bound of this `uniform_int_distribution``'s` range.
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `result_type` | `IntType` | The type of the integer produced by this `uniform_int_distribution`. |
+| `param_type` | `::cuda::std::pair< IntType, IntType >` | The type of the object encapsulating this `uniform_int_distribution``'s` parameters. |

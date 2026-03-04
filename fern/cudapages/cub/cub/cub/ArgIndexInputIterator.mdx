@@ -1,0 +1,290 @@
+---
+title: cub::ArgIndexInputIterator
+description: "A random-access input wrapper for pairing dereferenced values with their corresponding indices (forming `KeyValuePair` tuples)."
+---
+
+A random-access input wrapper for pairing dereferenced values with their corresponding indices (forming `KeyValuePair` tuples).
+
+**Overview**
+
+- `ArgIndexInputIterator` wraps a random access input iterator `itr` of type `InputIteratorT`. Dereferencing an `ArgIndexInputIterator` at offset `i` produces a `KeyValuePair` value whose `key` field is `i` and whose `value` field is [`itr`](/library/api/cub::_arg_index_input_iterator::itr)`[i]`.
+- Can be used with any data type.
+- Can be constructed, manipulated, and exchanged within and between host and device functions. Wrapped host memory can only be dereferenced on the host, and wrapped device memory can only be dereferenced on the device.
+- Compatible with Thrust API v1.7 or newer.
+
+**Snippet**
+
+The code snippet below illustrates the use of `ArgIndexInputIterator` to dereference an array of doubles
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/iterator/arg_index_input_iterator.cuh>
+
+// Declare, allocate, and initialize a device array
+double *d_in;         // e.g., [8.0, 6.0, 7.0, 5.0, 3.0, 0.0, 9.0]
+
+// Create an iterator wrapper
+cub::ArgIndexInputIterator<double*> itr(d_in);
+
+// Within device code:
+cub::ArgIndexInputIterator<double*>::value_type tup = *itr;
+printf("%f @ %ld\n",
+  tup.value,
+  tup.key);   // 8.0 @ 0
+
+itr = itr + 6;
+tup = *itr;
+printf("%f @ %ld\n",
+  tup.value,
+  tup.key);   // 9.0 @ 6
+```
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="InputIteratorT" type="typename">
+The value type of the wrapped input iterator
+</ParamField>
+
+<ParamField path="OffsetT" type="typename" default="ptrdiff_t">
+The difference type of this iterator (Default: `ptrdiff_t`)
+</ParamField>
+
+<ParamField path="OutputValueT" type="typename" default="detail::it_value_t<InputIteratorT>">
+The paired value type of the &lt;offset,value&gt; tuple (Default: value type of input iterator)
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### ArgIndexInputIterator <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"ArgIndexInputIterator": "/library/api/cub::ArgIndexInputIterator"}}>
+```cpp showLineNumbers={false}
+cub::ArgIndexInputIterator<InputIteratorT, OffsetT, OutputValueT>::ArgIndexInputIterator(
+    InputIteratorT itr,
+    difference_type offset = 0
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="itr" type="InputIteratorT">
+Input iterator to wrap
+</ParamField>
+
+<ParamField path="offset" type="difference_type" default="0">
+OffsetT (in items) from `itr` denoting the position of the iterator
+</ParamField>
+
+---
+
+## Methods
+
+### operator++ <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Post-increment">
+
+Postfix increment.
+
+<CodeBlock links={{"ArgIndexInputIterator": "/library/api/cub::ArgIndexInputIterator"}}>
+```cpp showLineNumbers={false}
+self_type cub::ArgIndexInputIterator<InputIteratorT, OffsetT, OutputValueT>::operator++(
+    int
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Pre-increment">
+
+Prefix increment.
+
+<CodeBlock links={{"ArgIndexInputIterator": "/library/api/cub::ArgIndexInputIterator"}}>
+```cpp showLineNumbers={false}
+self_type cub::ArgIndexInputIterator<InputIteratorT, OffsetT, OutputValueT>::operator++()
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### operator* <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Indirection.
+
+<CodeBlock links={{"ArgIndexInputIterator": "/library/api/cub::ArgIndexInputIterator"}}>
+```cpp showLineNumbers={false}
+reference cub::ArgIndexInputIterator<InputIteratorT, OffsetT, OutputValueT>::operator*() const
+```
+</CodeBlock>
+
+### operator+ <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Addition.
+
+<CodeBlock links={{"ArgIndexInputIterator": "/library/api/cub::ArgIndexInputIterator"}}>
+```cpp showLineNumbers={false}
+template <typename Distance>
+self_type cub::ArgIndexInputIterator<InputIteratorT, OffsetT, OutputValueT>::operator+(
+    Distance n
+) const
+```
+</CodeBlock>
+
+### operator+= <Badge intent="note" minimal>inline</Badge>
+
+Addition assignment.
+
+<CodeBlock links={{"ArgIndexInputIterator": "/library/api/cub::ArgIndexInputIterator"}}>
+```cpp showLineNumbers={false}
+template <typename Distance>
+self_type & cub::ArgIndexInputIterator<InputIteratorT, OffsetT, OutputValueT>::operator+=(
+    Distance n
+)
+```
+</CodeBlock>
+
+### operator- <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<Tabs>
+<Tab title="Const">
+
+Subtraction.
+
+<CodeBlock links={{"ArgIndexInputIterator": "/library/api/cub::ArgIndexInputIterator"}}>
+```cpp showLineNumbers={false}
+template <typename Distance>
+self_type cub::ArgIndexInputIterator<InputIteratorT, OffsetT, OutputValueT>::operator-(
+    Distance n
+) const
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Const">
+
+Distance.
+
+<CodeBlock links={{"ArgIndexInputIterator": "/library/api/cub::ArgIndexInputIterator"}}>
+```cpp showLineNumbers={false}
+difference_type cub::ArgIndexInputIterator<InputIteratorT, OffsetT, OutputValueT>::operator-(
+    self_type other
+) const
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### operator-= <Badge intent="note" minimal>inline</Badge>
+
+Subtraction assignment.
+
+<CodeBlock links={{"ArgIndexInputIterator": "/library/api/cub::ArgIndexInputIterator"}}>
+```cpp showLineNumbers={false}
+template <typename Distance>
+self_type & cub::ArgIndexInputIterator<InputIteratorT, OffsetT, OutputValueT>::operator-=(
+    Distance n
+)
+```
+</CodeBlock>
+
+### operator[] <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Array subscript.
+
+<CodeBlock links={{"ArgIndexInputIterator": "/library/api/cub::ArgIndexInputIterator"}}>
+```cpp showLineNumbers={false}
+template <typename Distance>
+reference cub::ArgIndexInputIterator<InputIteratorT, OffsetT, OutputValueT>::operator[](
+    Distance n
+) const
+```
+</CodeBlock>
+
+### operator-> <Badge intent="note" minimal>inline</Badge>
+
+Structure dereference.
+
+<CodeBlock links={{"ArgIndexInputIterator": "/library/api/cub::ArgIndexInputIterator"}}>
+```cpp showLineNumbers={false}
+pointer cub::ArgIndexInputIterator<InputIteratorT, OffsetT, OutputValueT>::operator->()
+```
+</CodeBlock>
+
+### operator== <Badge intent="note" minimal>inline</Badge>
+
+Equal to.
+
+<CodeBlock links={{"ArgIndexInputIterator": "/library/api/cub::ArgIndexInputIterator"}}>
+```cpp showLineNumbers={false}
+bool cub::ArgIndexInputIterator<InputIteratorT, OffsetT, OutputValueT>::operator==(
+    const self_type &rhs
+)
+```
+</CodeBlock>
+
+### operator!= <Badge intent="note" minimal>inline</Badge>
+
+Not equal to.
+
+<CodeBlock links={{"ArgIndexInputIterator": "/library/api/cub::ArgIndexInputIterator"}}>
+```cpp showLineNumbers={false}
+bool cub::ArgIndexInputIterator<InputIteratorT, OffsetT, OutputValueT>::operator!=(
+    const self_type &rhs
+)
+```
+</CodeBlock>
+
+### normalize <Badge intent="note" minimal>inline</Badge>
+
+Normalize.
+
+<CodeBlock links={{"ArgIndexInputIterator": "/library/api/cub::ArgIndexInputIterator"}}>
+```cpp showLineNumbers={false}
+void cub::ArgIndexInputIterator<InputIteratorT, OffsetT, OutputValueT>::normalize()
+```
+</CodeBlock>
+
+### operator&lt;&lt; <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"ArgIndexInputIterator": "/library/api/cub::ArgIndexInputIterator"}}>
+```cpp showLineNumbers={false}
+friend::std::ostream & cub::ArgIndexInputIterator<InputIteratorT, OffsetT, OutputValueT>::operator<<(
+    ::std::ostream &os,
+    const self_type &
+)
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `self_type` | `ArgIndexInputIterator` | My own type. |
+| `difference_type` | `OffsetT` | Type to express the result of subtracting one iterator from another. |
+| `value_type` | `KeyValuePair< difference_type, OutputValueT >` | The type of the element the iterator can point to. |
+| `pointer` | `value_type *` | The type of a pointer to an element the iterator can point to. |
+| `reference` | `value_type` | The type of a reference to an element the iterator can point to. |
+| `iterator_category` | `THRUST_NS_QUALIFIER::detail::iterator_facade_category_t< THRUST_NS_QUALIFIER::any_system_tag, THRUST_NS_QUALIFIER::random_access_traversal_tag >` | The iterator category. |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `itr` | `InputIteratorT` | |
+| `offset` | `difference_type` | |

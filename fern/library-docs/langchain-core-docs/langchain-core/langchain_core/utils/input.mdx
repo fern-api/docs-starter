@@ -1,0 +1,185 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/utils/input
+title: langchain_core.utils.input
+---
+
+Handle chained inputs.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`get_bolded_text`](#langchain_core-utils-input-get_bolded_text) | Get bolded text. |
+| [`get_color_mapping`](#langchain_core-utils-input-get_color_mapping) | Get mapping for items to a support color. |
+| [`get_colored_text`](#langchain_core-utils-input-get_colored_text) | Get colored text. |
+| [`print_text`](#langchain_core-utils-input-print_text) | Print text with highlighting and no end characters. |
+
+### Data
+
+[`_TEXT_COLOR_MAPPING`](#langchain_core-utils-input-_TEXT_COLOR_MAPPING)
+
+### API
+
+<Anchor id="langchain_core-utils-input-get_bolded_text">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.input.get_bolded_text(
+    text: str
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get bolded text.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The text to bold.
+</ParamField>
+
+**Returns:** `str`
+
+The bolded text.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-input-get_color_mapping">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.input.get_color_mapping(
+    items: list[str],
+    excluded_colors: list | None = None
+) -> dict[str, str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get mapping for items to a support color.
+
+**Parameters:**
+
+<ParamField path="items" type="list[str]">
+The items to map to colors.
+</ParamField>
+
+<ParamField path="excluded_colors" type="list | None" default="None">
+The colors to exclude.
+</ParamField>
+
+**Returns:** `dict[str, str]`
+
+The mapping of items to colors.
+
+**Raises:**
+
+- `ValueError`: If no colors are available after applying exclusions.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-input-get_colored_text">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.input.get_colored_text(
+    text: str,
+    color: str
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get colored text.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The text to color.
+</ParamField>
+
+<ParamField path="color" type="str">
+The color to use.
+</ParamField>
+
+**Returns:** `str`
+
+The colored text.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-input-print_text">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.input.print_text(
+    text: str,
+    color: str | None = None,
+    end: str = '',
+    file: typing.TextIO | None = None
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Print text with highlighting and no end characters.
+
+If a color is provided, the text will be printed in that color.
+
+If a file is provided, the text will be written to that file.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The text to print.
+</ParamField>
+
+<ParamField path="color" type="str | None" default="None">
+The color to use.
+</ParamField>
+
+<ParamField path="end" type="str" default="''">
+The end character to use.
+</ParamField>
+
+<ParamField path="file" type="TextIO | None" default="None">
+The file to write to.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-input-_TEXT_COLOR_MAPPING">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.input._TEXT_COLOR_MAPPING = {'blue': '36;1', 'yellow': '33;1', 'pink': '38;5;200', 'green': '32;1', 'red': '...
+```
+
+</CodeBlock>
+</Anchor>
+

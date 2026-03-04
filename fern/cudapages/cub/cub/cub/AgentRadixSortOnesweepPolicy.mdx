@@ -1,0 +1,51 @@
+---
+title: cub::AgentRadixSortOnesweepPolicy
+description: ""
+---
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="NominalBlockThreads4B" type="int">
+</ParamField>
+
+<ParamField path="NominalItemsPerThread4B" type="int">
+</ParamField>
+
+<ParamField path="ComputeT" type="typename">
+</ParamField>
+
+<ParamField path="RankNumParts" type="int">
+</ParamField>
+
+<ParamField path="RankAlgorithm" type="RadixRankAlgorithm">
+</ParamField>
+
+<ParamField path="ScanAlgorithm" type="BlockScanAlgorithm">
+</ParamField>
+
+<ParamField path="StoreAlgorithm" type="RadixSortStoreAlgorithm">
+</ParamField>
+
+<ParamField path="RadixBits" type="int">
+</ParamField>
+
+<ParamField path="ScalingType" type="typename" default="detail::RegBoundScaling<NominalBlockThreads4B, NominalItemsPerThread4B, ComputeT>">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `detail::RegBoundScaling< NominalBlockThreads4B, NominalItemsPerThread4B, ComputeT >` (public)
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `RANK_NUM_PARTS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `RADIX_BITS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `RANK_ALGORITHM` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `RadixRankAlgorithm` | |
+| `SCAN_ALGORITHM` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `BlockScanAlgorithm` | |
+| `STORE_ALGORITHM` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `RadixSortStoreAlgorithm` | |

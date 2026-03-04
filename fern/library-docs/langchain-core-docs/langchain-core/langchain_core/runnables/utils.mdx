@@ -1,0 +1,1426 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/runnables/utils
+title: langchain_core.runnables.utils
+---
+
+Utility code for `Runnable` objects.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`AddableDict`](#langchain_core-runnables-utils-AddableDict) | Dictionary that can be added to another dictionary. |
+| [`ConfigurableField`](#langchain_core-runnables-utils-ConfigurableField) | Field that can be configured by the user. |
+| [`ConfigurableFieldMultiOption`](#langchain_core-runnables-utils-ConfigurableFieldMultiOption) | Field that can be configured by the user with multiple default values. |
+| [`ConfigurableFieldSingleOption`](#langchain_core-runnables-utils-ConfigurableFieldSingleOption) | Field that can be configured by the user with a default value. |
+| [`ConfigurableFieldSpec`](#langchain_core-runnables-utils-ConfigurableFieldSpec) | Field that can be configured by the user. It is a specification of a field. |
+| [`FunctionNonLocals`](#langchain_core-runnables-utils-FunctionNonLocals) | Get the nonlocal variables accessed of a function. |
+| [`GetLambdaSource`](#langchain_core-runnables-utils-GetLambdaSource) | Get the source code of a lambda function. |
+| [`IsFunctionArgDict`](#langchain_core-runnables-utils-IsFunctionArgDict) | Check if the first argument of a function is a dict. |
+| [`IsLocalDict`](#langchain_core-runnables-utils-IsLocalDict) | Check if a name is a local dict. |
+| [`NonLocals`](#langchain_core-runnables-utils-NonLocals) | Get nonlocal variables accessed. |
+| [`SupportsAdd`](#langchain_core-runnables-utils-SupportsAdd) | Protocol for objects that support addition. |
+| [`_RootEventFilter`](#langchain_core-runnables-utils-_RootEventFilter) | - |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`aadd`](#langchain_core-runnables-utils-aadd) | Asynchronously add a sequence of addable objects together. |
+| [`accepts_config`](#langchain_core-runnables-utils-accepts_config) | Check if a callable accepts a config argument. |
+| [`accepts_context`](#langchain_core-runnables-utils-accepts_context) | Check if a callable accepts a context argument. |
+| [`accepts_run_manager`](#langchain_core-runnables-utils-accepts_run_manager) | Check if a callable accepts a run_manager argument. |
+| [`add`](#langchain_core-runnables-utils-add) | Add a sequence of addable objects together. |
+| [`asyncio_accepts_context`](#langchain_core-runnables-utils-asyncio_accepts_context) | Check if asyncio.create_task accepts a `context` arg. |
+| [`coro_with_context`](#langchain_core-runnables-utils-coro_with_context) | Await a coroutine with a context. |
+| [`gated_coro`](#langchain_core-runnables-utils-gated_coro) | Run a coroutine with a semaphore. |
+| [`gather_with_concurrency`](#langchain_core-runnables-utils-gather_with_concurrency) | Gather coroutines with a limit on the number of concurrent coroutines. |
+| [`get_function_first_arg_dict_keys`](#langchain_core-runnables-utils-get_function_first_arg_dict_keys) | Get the keys of the first argument of a function if it is a dict. |
+| [`get_function_nonlocals`](#langchain_core-runnables-utils-get_function_nonlocals) | Get the nonlocal variables accessed by a function. |
+| [`get_lambda_source`](#langchain_core-runnables-utils-get_lambda_source) | Get the source code of a lambda function. |
+| [`get_unique_config_specs`](#langchain_core-runnables-utils-get_unique_config_specs) | Get the unique config specs from a sequence of config specs. |
+| [`indent_lines_after_first`](#langchain_core-runnables-utils-indent_lines_after_first) | Indent all lines of text after the first line. |
+| [`is_async_callable`](#langchain_core-runnables-utils-is_async_callable) | Check if a function is async. |
+| [`is_async_generator`](#langchain_core-runnables-utils-is_async_generator) | Check if a function is an async generator. |
+
+### Data
+
+[`Addable`](#langchain_core-runnables-utils-Addable)
+
+[`AnyConfigurableField`](#langchain_core-runnables-utils-AnyConfigurableField)
+
+[`Input`](#langchain_core-runnables-utils-Input)
+
+[`Output`](#langchain_core-runnables-utils-Output)
+
+[`_T`](#langchain_core-runnables-utils-_T)
+
+[`_T_co`](#langchain_core-runnables-utils-_T_co)
+
+[`_T_contra`](#langchain_core-runnables-utils-_T_contra)
+
+### API
+
+<Anchor id="langchain_core-runnables-utils-AddableDict">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.utils.AddableDict()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `dict[str, Any]`
+
+Dictionary that can be added to another dictionary.
+
+
+<Anchor id="langchain_core-runnables-utils-AddableDict-__add__">
+
+<CodeBlock links={{"langchain_core.runnables.utils.AddableDict":"#langchain_core-runnables-utils-AddableDict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.AddableDict.__add__(
+    other: langchain_core.runnables.utils.AddableDict
+) -> langchain_core.runnables.utils.AddableDict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add a dictionary to this dictionary.
+
+**Parameters:**
+
+<ParamField path="other" type="AddableDict">
+The other dictionary to add.
+</ParamField>
+
+**Returns:** `AddableDict`
+
+A dictionary that is the result of adding the two dictionaries.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-utils-AddableDict-__radd__">
+
+<CodeBlock links={{"langchain_core.runnables.utils.AddableDict":"#langchain_core-runnables-utils-AddableDict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.AddableDict.__radd__(
+    other: langchain_core.runnables.utils.AddableDict
+) -> langchain_core.runnables.utils.AddableDict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add this dictionary to another dictionary.
+
+**Parameters:**
+
+<ParamField path="other" type="AddableDict">
+The other dictionary to be added to.
+</ParamField>
+
+**Returns:** `AddableDict`
+
+A dictionary that is the result of adding the two dictionaries.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-ConfigurableField">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.utils.ConfigurableField()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `NamedTuple`
+
+Field that can be configured by the user.
+
+
+<ParamField path="annotation" type="Any | None = None">
+The annotation of the field.
+</ParamField>
+
+<ParamField path="description" type="str | None = None">
+The description of the field.
+</ParamField>
+
+<ParamField path="id" type="str">
+The unique identifier of the field.
+</ParamField>
+
+<ParamField path="is_shared" type="bool = False">
+Whether the field is shared.
+</ParamField>
+
+<ParamField path="name" type="str | None = None">
+The name of the field.
+</ParamField>
+<Anchor id="langchain_core-runnables-utils-ConfigurableField-__hash__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.ConfigurableField.__hash__() -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-ConfigurableFieldMultiOption">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.utils.ConfigurableFieldMultiOption()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `NamedTuple`
+
+Field that can be configured by the user with multiple default values.
+
+
+<ParamField path="default" type="Sequence[str]">
+The default values for the field.
+</ParamField>
+
+<ParamField path="description" type="str | None = None">
+The description of the field.
+</ParamField>
+
+<ParamField path="id" type="str">
+The unique identifier of the field.
+</ParamField>
+
+<ParamField path="is_shared" type="bool = False">
+Whether the field is shared.
+</ParamField>
+
+<ParamField path="name" type="str | None = None">
+The name of the field.
+</ParamField>
+
+<ParamField path="options" type="Mapping[str, Any]">
+The options for the field.
+</ParamField>
+<Anchor id="langchain_core-runnables-utils-ConfigurableFieldMultiOption-__hash__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.ConfigurableFieldMultiOption.__hash__() -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-ConfigurableFieldSingleOption">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.utils.ConfigurableFieldSingleOption()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `NamedTuple`
+
+Field that can be configured by the user with a default value.
+
+
+<ParamField path="default" type="str">
+The default value for the field.
+</ParamField>
+
+<ParamField path="description" type="str | None = None">
+The description of the field.
+</ParamField>
+
+<ParamField path="id" type="str">
+The unique identifier of the field.
+</ParamField>
+
+<ParamField path="is_shared" type="bool = False">
+Whether the field is shared.
+</ParamField>
+
+<ParamField path="name" type="str | None = None">
+The name of the field.
+</ParamField>
+
+<ParamField path="options" type="Mapping[str, Any]">
+The options for the field.
+</ParamField>
+<Anchor id="langchain_core-runnables-utils-ConfigurableFieldSingleOption-__hash__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.ConfigurableFieldSingleOption.__hash__() -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-ConfigurableFieldSpec">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.utils.ConfigurableFieldSpec()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `NamedTuple`
+
+Field that can be configured by the user. It is a specification of a field.
+
+
+<ParamField path="annotation" type="Any">
+The annotation of the field.
+</ParamField>
+
+<ParamField path="default" type="Any = None">
+The default value for the field.
+</ParamField>
+
+<ParamField path="dependencies" type="list[str] | None = None">
+The dependencies of the field.
+</ParamField>
+
+<ParamField path="description" type="str | None = None">
+The description of the field.
+</ParamField>
+
+<ParamField path="id" type="str">
+The unique identifier of the field.
+</ParamField>
+
+<ParamField path="is_shared" type="bool = False">
+Whether the field is shared.
+</ParamField>
+
+<ParamField path="name" type="str | None = None">
+The name of the field.
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-FunctionNonLocals">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.utils.FunctionNonLocals()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `NodeVisitor`
+
+Get the nonlocal variables accessed of a function.
+
+
+<ParamField path="nonlocals" type="set[str] = set()">
+</ParamField>
+<Anchor id="langchain_core-runnables-utils-FunctionNonLocals-visit_AsyncFunctionDef">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.FunctionNonLocals.visit_AsyncFunctionDef(
+    node: ast.AsyncFunctionDef
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Visit an async function definition.
+
+**Parameters:**
+
+<ParamField path="node" type="ast.AsyncFunctionDef">
+The node to visit.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-utils-FunctionNonLocals-visit_FunctionDef">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.FunctionNonLocals.visit_FunctionDef(
+    node: ast.FunctionDef
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Visit a function definition.
+
+**Parameters:**
+
+<ParamField path="node" type="ast.FunctionDef">
+The node to visit.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-utils-FunctionNonLocals-visit_Lambda">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.FunctionNonLocals.visit_Lambda(
+    node: ast.Lambda
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Visit a lambda function.
+
+**Parameters:**
+
+<ParamField path="node" type="ast.Lambda">
+The node to visit.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-GetLambdaSource">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.utils.GetLambdaSource()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `NodeVisitor`
+
+Get the source code of a lambda function.
+
+
+<ParamField path="count" type="= 0">
+</ParamField>
+
+<ParamField path="source" type="str | None = None">
+</ParamField>
+<Anchor id="langchain_core-runnables-utils-GetLambdaSource-visit_Lambda">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.GetLambdaSource.visit_Lambda(
+    node: ast.Lambda
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Visit a lambda function.
+
+**Parameters:**
+
+<ParamField path="node" type="ast.Lambda">
+The node to visit.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-IsFunctionArgDict">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.utils.IsFunctionArgDict()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `NodeVisitor`
+
+Check if the first argument of a function is a dict.
+
+
+<ParamField path="keys" type="set[str] = set()">
+</ParamField>
+<Anchor id="langchain_core-runnables-utils-IsFunctionArgDict-visit_AsyncFunctionDef">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.IsFunctionArgDict.visit_AsyncFunctionDef(
+    node: ast.AsyncFunctionDef
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Visit an async function definition.
+
+**Parameters:**
+
+<ParamField path="node" type="ast.AsyncFunctionDef">
+The node to visit.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-utils-IsFunctionArgDict-visit_FunctionDef">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.IsFunctionArgDict.visit_FunctionDef(
+    node: ast.FunctionDef
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Visit a function definition.
+
+**Parameters:**
+
+<ParamField path="node" type="ast.FunctionDef">
+The node to visit.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-utils-IsFunctionArgDict-visit_Lambda">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.IsFunctionArgDict.visit_Lambda(
+    node: ast.Lambda
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Visit a lambda function.
+
+**Parameters:**
+
+<ParamField path="node" type="ast.Lambda">
+The node to visit.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-IsLocalDict">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.utils.IsLocalDict(
+    name: str,
+    keys: set[str]
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `NodeVisitor`
+
+Check if a name is a local dict.
+
+
+<Anchor id="langchain_core-runnables-utils-IsLocalDict-visit_Call">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.IsLocalDict.visit_Call(
+    node: ast.Call
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Visit a call node.
+
+**Parameters:**
+
+<ParamField path="node" type="ast.Call">
+The node to visit.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-utils-IsLocalDict-visit_Subscript">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.IsLocalDict.visit_Subscript(
+    node: ast.Subscript
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Visit a subscript node.
+
+**Parameters:**
+
+<ParamField path="node" type="ast.Subscript">
+The node to visit.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-NonLocals">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.utils.NonLocals()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `NodeVisitor`
+
+Get nonlocal variables accessed.
+
+
+<ParamField path="loads" type="set[str] = set()">
+</ParamField>
+
+<ParamField path="stores" type="set[str] = set()">
+</ParamField>
+<Anchor id="langchain_core-runnables-utils-NonLocals-visit_Attribute">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.NonLocals.visit_Attribute(
+    node: ast.Attribute
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Visit an attribute node.
+
+**Parameters:**
+
+<ParamField path="node" type="ast.Attribute">
+The node to visit.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-utils-NonLocals-visit_Name">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.NonLocals.visit_Name(
+    node: ast.Name
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Visit a name node.
+
+**Parameters:**
+
+<ParamField path="node" type="ast.Name">
+The node to visit.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-SupportsAdd">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.utils.SupportsAdd()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Protocol</Badge>
+
+**Bases:** `Protocol[_T_contra, _T_co]`
+
+Protocol for objects that support addition.
+
+
+<Anchor id="langchain_core-runnables-utils-SupportsAdd-__add__">
+
+<CodeBlock links={{"langchain_core.runnables.utils._T_contra":"#langchain_core-runnables-utils-_T_contra","langchain_core.runnables.utils._T_co":"#langchain_core-runnables-utils-_T_co"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.SupportsAdd.__add__(
+    x: langchain_core.runnables.utils._T_contra
+) -> langchain_core.runnables.utils._T_co
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add the object to another object.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-_RootEventFilter">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.utils._RootEventFilter(
+    include_names: collections.abc.Sequence[str] | None = None,
+    include_types: collections.abc.Sequence[str] | None = None,
+    include_tags: collections.abc.Sequence[str] | None = None,
+    exclude_names: collections.abc.Sequence[str] | None = None,
+    exclude_types: collections.abc.Sequence[str] | None = None,
+    exclude_tags: collections.abc.Sequence[str] | None = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Anchor id="langchain_core-runnables-utils-_RootEventFilter-include_event">
+
+<CodeBlock links={{"langchain_core.runnables.schema.StreamEvent":"/langchain-core/langchain_core/runnables/schema#langchain_core-runnables-schema-StreamEvent"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils._RootEventFilter.include_event(
+    event: langchain_core.runnables.schema.StreamEvent,
+    root_type: str
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Determine whether to include an event.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-aadd">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Addable":"#langchain_core-runnables-utils-Addable"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.aadd(
+    addables: collections.abc.AsyncIterable[langchain_core.runnables.utils.Addable]
+) -> langchain_core.runnables.utils.Addable | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Asynchronously add a sequence of addable objects together.
+
+**Parameters:**
+
+<ParamField path="addables" type="AsyncIterable[Addable]">
+The addable objects to add.
+</ParamField>
+
+**Returns:** `Addable | None`
+
+The result of adding the addable objects.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-accepts_config">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.accepts_config(
+    callable: collections.abc.Callable[..., typing.Any]
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if a callable accepts a config argument.
+
+**Parameters:**
+
+<ParamField path="callable" type="Callable[..., Any]">
+The callable to check.
+</ParamField>
+
+**Returns:** `bool`
+
+`True` if the callable accepts a config argument, `False` otherwise.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-accepts_context">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.accepts_context(
+    callable: collections.abc.Callable[..., typing.Any]
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if a callable accepts a context argument.
+
+**Parameters:**
+
+<ParamField path="callable" type="Callable[..., Any]">
+The callable to check.
+</ParamField>
+
+**Returns:** `bool`
+
+`True` if the callable accepts a context argument, `False` otherwise.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-accepts_run_manager">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.accepts_run_manager(
+    callable: collections.abc.Callable[..., typing.Any]
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if a callable accepts a run_manager argument.
+
+**Parameters:**
+
+<ParamField path="callable" type="Callable[..., Any]">
+The callable to check.
+</ParamField>
+
+**Returns:** `bool`
+
+`True` if the callable accepts a run_manager argument, `False` otherwise.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-add">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Addable":"#langchain_core-runnables-utils-Addable"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.add(
+    addables: collections.abc.Iterable[langchain_core.runnables.utils.Addable]
+) -> langchain_core.runnables.utils.Addable | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add a sequence of addable objects together.
+
+**Parameters:**
+
+<ParamField path="addables" type="Iterable[Addable]">
+The addable objects to add.
+</ParamField>
+
+**Returns:** `Addable | None`
+
+The result of adding the addable objects.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-asyncio_accepts_context">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.asyncio_accepts_context() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if asyncio.create_task accepts a `context` arg.
+
+**Returns:** `bool`
+
+True if `asyncio.create_task` accepts a context argument, `False` otherwise.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-coro_with_context">
+
+<CodeBlock links={{"langchain_core.runnables.utils._T":"#langchain_core-runnables-utils-_T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.coro_with_context(
+    coro: collections.abc.Awaitable[langchain_core.runnables.utils._T],
+    context: contextvars.Context,
+    create_task: bool = False
+) -> collections.abc.Awaitable[langchain_core.runnables.utils._T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Await a coroutine with a context.
+
+**Parameters:**
+
+<ParamField path="coro" type="Awaitable[_T]">
+The coroutine to await.
+</ParamField>
+
+<ParamField path="context" type="Context">
+The context to use.
+</ParamField>
+
+<ParamField path="create_task" type="bool" default="False">
+Whether to create a task.
+</ParamField>
+
+**Returns:** `Awaitable[_T]`
+
+The coroutine with the context.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-gated_coro">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.gated_coro(
+    semaphore: asyncio.Semaphore,
+    coro: collections.abc.Coroutine
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run a coroutine with a semaphore.
+
+**Parameters:**
+
+<ParamField path="semaphore" type="asyncio.Semaphore">
+The semaphore to use.
+</ParamField>
+
+<ParamField path="coro" type="Coroutine">
+The coroutine to run.
+</ParamField>
+
+**Returns:** `Any`
+
+The result of the coroutine.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-gather_with_concurrency">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.gather_with_concurrency(
+    n: int | None,
+    coros: collections.abc.Coroutine = ()
+) -> list
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Gather coroutines with a limit on the number of concurrent coroutines.
+
+**Parameters:**
+
+<ParamField path="n" type="int | None">
+The number of coroutines to run concurrently.
+</ParamField>
+
+<ParamField path="*coros" type="Coroutine" default="()">
+The coroutines to run.
+</ParamField>
+
+**Returns:** `list`
+
+The results of the coroutines.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-get_function_first_arg_dict_keys">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.get_function_first_arg_dict_keys(
+    func: collections.abc.Callable
+) -> list[str] | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the keys of the first argument of a function if it is a dict.
+
+**Parameters:**
+
+<ParamField path="func" type="Callable">
+The function to check.
+</ParamField>
+
+**Returns:** `list[str] | None`
+
+The keys of the first argument if it is a dict, None otherwise.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-get_function_nonlocals">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.get_function_nonlocals(
+    func: collections.abc.Callable
+) -> list[typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the nonlocal variables accessed by a function.
+
+**Parameters:**
+
+<ParamField path="func" type="Callable">
+The function to check.
+</ParamField>
+
+**Returns:** `list[Any]`
+
+The nonlocal variables accessed by the function.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-get_lambda_source">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.get_lambda_source(
+    func: collections.abc.Callable
+) -> str | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the source code of a lambda function.
+
+**Parameters:**
+
+<ParamField path="func" type="Callable">
+a Callable that can be a lambda function.
+</ParamField>
+
+**Returns:** `str | None`
+
+the source code of the lambda function.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-get_unique_config_specs">
+
+<CodeBlock links={{"langchain_core.runnables.utils.ConfigurableFieldSpec":"#langchain_core-runnables-utils-ConfigurableFieldSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.get_unique_config_specs(
+    specs: collections.abc.Iterable[langchain_core.runnables.utils.ConfigurableFieldSpec]
+) -> list[langchain_core.runnables.utils.ConfigurableFieldSpec]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the unique config specs from a sequence of config specs.
+
+**Parameters:**
+
+<ParamField path="specs" type="Iterable[ConfigurableFieldSpec]">
+The config specs.
+</ParamField>
+
+**Returns:** `list[ConfigurableFieldSpec]`
+
+The unique config specs.
+
+**Raises:**
+
+- `ValueError`: If the runnable sequence contains conflicting config specs.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-indent_lines_after_first">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.indent_lines_after_first(
+    text: str,
+    prefix: str
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Indent all lines of text after the first line.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The text to indent.
+</ParamField>
+
+<ParamField path="prefix" type="str">
+Used to determine the number of spaces to indent.
+</ParamField>
+
+**Returns:** `str`
+
+The indented text.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-is_async_callable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.is_async_callable(
+    func: typing.Any
+) -> typing.TypeGuard[collections.abc.Callable[..., collections.abc.Awaitable]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if a function is async.
+
+**Parameters:**
+
+<ParamField path="func" type="Any">
+The function to check.
+</ParamField>
+
+**Returns:** `TypeGuard[Callable[..., Awaitable]]`
+
+`True` if the function is async, `False` otherwise.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-is_async_generator">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.is_async_generator(
+    func: typing.Any
+) -> typing.TypeGuard[collections.abc.Callable[..., collections.abc.AsyncIterator]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if a function is an async generator.
+
+**Parameters:**
+
+<ParamField path="func" type="Any">
+The function to check.
+</ParamField>
+
+**Returns:** `TypeGuard[Callable[..., AsyncIterator]]`
+
+`True` if the function is an async generator, `False` otherwise.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-utils-Addable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.Addable = TypeVar('Addable', bound=(SupportsAdd[Any, Any]))
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-runnables-utils-AnyConfigurableField">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.AnyConfigurableField = ConfigurableField | ConfigurableFieldSingleOption | ConfigurableFieldMultiOption
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-runnables-utils-Input">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.Input = TypeVar('Input', contravariant=True)
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-runnables-utils-Output">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils.Output = TypeVar('Output', covariant=True)
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-runnables-utils-_T">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils._T = TypeVar('_T')
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-runnables-utils-_T_co">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils._T_co = TypeVar('_T_co', covariant=True)
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-runnables-utils-_T_contra">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.utils._T_contra = TypeVar('_T_contra', contravariant=True)
+```
+
+</CodeBlock>
+</Anchor>
+

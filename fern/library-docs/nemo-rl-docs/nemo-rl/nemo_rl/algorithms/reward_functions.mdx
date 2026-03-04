@@ -1,0 +1,102 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/algorithms/reward_functions
+title: nemo_rl.algorithms.reward_functions
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`RewardShapingConfig`](#nemo_rl-algorithms-reward_functions-RewardShapingConfig) | Configuration for reward function processing. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`apply_reward_shaping`](#nemo_rl-algorithms-reward_functions-apply_reward_shaping) | Process rewards by applying penalties for responses exceeding max_response_length. Currently, this function only supports DAPO reward shaping as illustrated in the DAPO paper : https://arxiv.org/pdf/2503.14476. |
+
+### Data
+
+[`Tensor`](#nemo_rl-algorithms-reward_functions-Tensor)
+
+### API
+
+<Anchor id="nemo_rl-algorithms-reward_functions-RewardShapingConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.algorithms.reward_functions.RewardShapingConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Configuration for reward function processing.
+
+This configuration enables custom reward shaping, currently supporting DAPO-style
+penalties for responses that exceed the maximum response length threshold.
+
+<ParamField path="enabled" type="bool">
+
+</ParamField>
+
+<ParamField path="max_response_length" type="NotRequired[int]">
+
+</ParamField>
+
+<ParamField path="overlong_buffer_length" type="NotRequired[int]">
+
+</ParamField>
+
+<ParamField path="overlong_buffer_penalty" type="NotRequired[float]">
+
+</ParamField>
+
+<ParamField path="stop_properly_penalty_coef" type="NotRequired[float | None]">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-reward_functions-apply_reward_shaping">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.algorithms.reward_functions.RewardShapingConfig":"#nemo_rl-algorithms-reward_functions-RewardShapingConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.reward_functions.apply_reward_shaping(
+    batch: nemo_rl.distributed.batched_data_dict.BatchedDataDict,
+    cfg: nemo_rl.algorithms.reward_functions.RewardShapingConfig
+) -> nemo_rl.distributed.batched_data_dict.BatchedDataDict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Process rewards by applying penalties for responses exceeding max_response_length. Currently, this function only supports DAPO reward shaping as illustrated in the DAPO paper : https://arxiv.org/pdf/2503.14476.
+
+Nonetheless, it can be potentially extended to support any custom reward logic.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-reward_functions-Tensor">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.reward_functions.Tensor = TypeVar('Tensor', bound=(torch.Tensor))
+```
+
+</CodeBlock>
+</Anchor>
+

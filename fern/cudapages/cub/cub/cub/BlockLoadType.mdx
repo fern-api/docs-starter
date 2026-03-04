@@ -1,0 +1,29 @@
+---
+title: cub::BlockLoadType
+description: ""
+---
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="Policy" type="class">
+</ParamField>
+
+<ParamField path="It" type="class">
+</ParamField>
+
+<ParamField path="T" type="class" default="cub::detail::it_value_t<It>">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `type` | `cub::BlockLoad< T, Policy::BLOCK_THREADS, Policy::ITEMS_PER_THREAD, Policy::LOAD_ALGORITHM >` |

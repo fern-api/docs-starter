@@ -1,0 +1,135 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/_api/path
+title: langchain_core._api.path
+---
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`as_import_path`](#langchain_core-_api-path-as_import_path) | Path of the file as a LangChain import exclude langchain top namespace. |
+| [`get_relative_path`](#langchain_core-_api-path-get_relative_path) | Get the path of the file as a relative path to the package directory. |
+
+### Data
+
+[`HERE`](#langchain_core-_api-path-HERE)
+
+[`PACKAGE_DIR`](#langchain_core-_api-path-PACKAGE_DIR)
+
+[`SEPARATOR`](#langchain_core-_api-path-SEPARATOR)
+
+### API
+
+<Anchor id="langchain_core-_api-path-as_import_path">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._api.path.as_import_path(
+    file: pathlib.Path | str,
+    suffix: str | None = None,
+    relative_to: pathlib.Path = PACKAGE_DIR
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Path of the file as a LangChain import exclude langchain top namespace.
+
+**Parameters:**
+
+<ParamField path="file" type="Path | str">
+The file path to convert.
+</ParamField>
+
+<ParamField path="suffix" type="str | None" default="None">
+An optional suffix to append to the import path.
+</ParamField>
+
+<ParamField path="relative_to" type="Path" default="PACKAGE_DIR">
+The base path to make the file path relative to.
+</ParamField>
+
+**Returns:** `str`
+
+The import path as a string.
+
+
+</Indent>
+
+<Anchor id="langchain_core-_api-path-get_relative_path">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._api.path.get_relative_path(
+    file: pathlib.Path | str,
+    relative_to: pathlib.Path = PACKAGE_DIR
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the path of the file as a relative path to the package directory.
+
+**Parameters:**
+
+<ParamField path="file" type="Path | str">
+The file path to convert.
+</ParamField>
+
+<ParamField path="relative_to" type="Path" default="PACKAGE_DIR">
+The base path to make the file path relative to.
+</ParamField>
+
+**Returns:** `str`
+
+The relative path as a string.
+
+
+</Indent>
+
+<Anchor id="langchain_core-_api-path-HERE">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._api.path.HERE = Path(__file__).parent
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-_api-path-PACKAGE_DIR">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._api.path.PACKAGE_DIR = HERE.parent
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-_api-path-SEPARATOR">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._api.path.SEPARATOR = os.sep
+```
+
+</CodeBlock>
+</Anchor>
+

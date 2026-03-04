@@ -1,0 +1,124 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/megatron/pipeline_parallel
+title: nemo_rl.models.megatron.pipeline_parallel
+---
+
+Pipeline parallel utilities for Megatron models.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`broadcast_loss_metrics_from_last_stage`](#nemo_rl-models-megatron-pipeline_parallel-broadcast_loss_metrics_from_last_stage) | Broadcast loss metrics from the last pipeline stage to all stages. |
+| [`broadcast_obj_from_pp_rank`](#nemo_rl-models-megatron-pipeline_parallel-broadcast_obj_from_pp_rank) | Broadcast an object across pipeline parallel ranks. |
+| [`broadcast_tensors_from_last_stage`](#nemo_rl-models-megatron-pipeline_parallel-broadcast_tensors_from_last_stage) | Broadcast multiple tensors from the last pipeline stage to all stages. |
+
+### API
+
+<Anchor id="nemo_rl-models-megatron-pipeline_parallel-broadcast_loss_metrics_from_last_stage">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.pipeline_parallel.broadcast_loss_metrics_from_last_stage(
+    loss_metrics: typing.Optional[list] = None
+) -> list
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Broadcast loss metrics from the last pipeline stage to all stages.
+
+This utility handles the common pattern where loss computation happens on the last
+pipeline stage and needs to be broadcast to all other stages.
+
+**Parameters:**
+
+<ParamField path="loss_metrics" type="Optional[list]" default="None">
+List of loss metrics if on last stage, None otherwise
+</ParamField>
+
+**Returns:** `list`
+
+List of loss metrics on all ranks
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-pipeline_parallel-broadcast_obj_from_pp_rank">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.pipeline_parallel.broadcast_obj_from_pp_rank(
+    obj: typing.Any
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Broadcast an object across pipeline parallel ranks.
+
+This utility function handles broadcasting an object from the rank that owns it
+to all other pipeline parallel ranks. If only one rank has the object (non-None),
+it will be broadcast to all other ranks.
+
+**Parameters:**
+
+<ParamField path="obj" type="Any">
+The object to broadcast. Can be None on ranks that don't own it.
+</ParamField>
+
+**Returns:** `Any`
+
+The object on all ranks (either the original or the broadcast copy).
+
+**Raises:**
+
+- `ValueError`: If the object doesn't exist on any pipeline parallel rank.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-pipeline_parallel-broadcast_tensors_from_last_stage">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.pipeline_parallel.broadcast_tensors_from_last_stage(
+    tensors: dict[str, typing.Optional[torch.Tensor]]
+) -> dict[str, torch.Tensor]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Broadcast multiple tensors from the last pipeline stage to all stages.
+
+**Parameters:**
+
+<ParamField path="tensors" type="dict[str, Optional[torch.Tensor]]">
+Dictionary mapping tensor names to tensors (None on non-last stages)
+</ParamField>
+
+<ParamField path="pp_group">
+Pipeline parallel group (auto-detected if None)
+</ParamField>
+
+**Returns:** `dict[str, torch.Tensor]`
+
+Dictionary of broadcasted tensors on all ranks
+
+
+</Indent>

@@ -1,0 +1,458 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/_api/deprecation
+title: langchain_core._api.deprecation
+---
+
+Helper functions for deprecating parts of the LangChain API.
+
+This module was adapted from matplotlib's [`_api/deprecation.py`](https://github.com/matplotlib/matplotlib/blob/main/lib/matplotlib/_api/deprecation.py)
+module.
+
+!!! warning
+
+    This module is for internal use only. Do not use it in your own code. We may change
+    the API at any time with no warning.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`LangChainDeprecationWarning`](#langchain_core-_api-deprecation-LangChainDeprecationWarning) | A class for issuing deprecation warnings for LangChain users. |
+| [`LangChainPendingDeprecationWarning`](#langchain_core-_api-deprecation-LangChainPendingDeprecationWarning) | A class for issuing deprecation warnings for LangChain users. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_build_deprecation_message`](#langchain_core-_api-deprecation-_build_deprecation_message) | Build a simple deprecation message for `__deprecated__` attribute. |
+| [`_validate_deprecation_params`](#langchain_core-_api-deprecation-_validate_deprecation_params) | Validate the deprecation parameters. |
+| [`deprecated`](#langchain_core-_api-deprecation-deprecated) | Decorator to mark a function, a class, or a property as deprecated. |
+| [`rename_parameter`](#langchain_core-_api-deprecation-rename_parameter) | Decorator indicating that parameter *old* of *func* is renamed to *new*. |
+| [`suppress_langchain_deprecation_warning`](#langchain_core-_api-deprecation-suppress_langchain_deprecation_warning) | Context manager to suppress `LangChainDeprecationWarning`. |
+| [`surface_langchain_deprecation_warnings`](#langchain_core-_api-deprecation-surface_langchain_deprecation_warnings) | Unmute LangChain deprecation warnings. |
+| [`warn_deprecated`](#langchain_core-_api-deprecation-warn_deprecated) | Display a standardized deprecation. |
+
+### Data
+
+[`T`](#langchain_core-_api-deprecation-T)
+
+[`_P`](#langchain_core-_api-deprecation-_P)
+
+[`_R`](#langchain_core-_api-deprecation-_R)
+
+### API
+
+<Anchor id="langchain_core-_api-deprecation-LangChainDeprecationWarning">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core._api.deprecation.LangChainDeprecationWarning()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `DeprecationWarning`
+
+A class for issuing deprecation warnings for LangChain users.
+
+
+</Indent>
+
+<Anchor id="langchain_core-_api-deprecation-LangChainPendingDeprecationWarning">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core._api.deprecation.LangChainPendingDeprecationWarning()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `PendingDeprecationWarning`
+
+A class for issuing deprecation warnings for LangChain users.
+
+
+</Indent>
+
+<Anchor id="langchain_core-_api-deprecation-_build_deprecation_message">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._api.deprecation._build_deprecation_message(
+    alternative: str = '',
+    alternative_import: str = ''
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Build a simple deprecation message for `__deprecated__` attribute.
+
+**Parameters:**
+
+<ParamField path="alternative" type="str" default="''">
+An alternative API name.
+</ParamField>
+
+<ParamField path="alternative_import" type="str" default="''">
+A fully qualified import path for the alternative.
+</ParamField>
+
+**Returns:** `str`
+
+A deprecation message string for IDE/type checker display.
+
+
+</Indent>
+
+<Anchor id="langchain_core-_api-deprecation-_validate_deprecation_params">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._api.deprecation._validate_deprecation_params(
+    removal: str,
+    alternative: str,
+    alternative_import: str,
+    pending: bool
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Validate the deprecation parameters.
+
+
+</Indent>
+
+<Anchor id="langchain_core-_api-deprecation-deprecated">
+
+<CodeBlock links={{"langchain_core._api.deprecation.T":"#langchain_core-_api-deprecation-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._api.deprecation.deprecated(
+    since: str,
+    message: str = '',
+    name: str = '',
+    alternative: str = '',
+    alternative_import: str = '',
+    pending: bool = False,
+    obj_type: str = '',
+    addendum: str = '',
+    removal: str = '',
+    package: str = ''
+) -> collections.abc.Callable[[T], langchain_core._api.deprecation.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Decorator to mark a function, a class, or a property as deprecated.
+
+When deprecating a classmethod, a staticmethod, or a property, the `@deprecated`
+decorator should go *under* `@classmethod` and `@staticmethod` (i.e., `deprecated`
+should directly decorate the underlying callable), but *over* `@property`.
+
+When deprecating a class `C` intended to be used as a base class in a multiple
+inheritance hierarchy, `C` *must* define an `__init__` method (if `C` instead
+inherited its `__init__` from its own base class, then `@deprecated` would mess up
+`__init__` inheritance when installing its own (deprecation-emitting) `C.__init__`).
+
+Parameters are the same as for `warn_deprecated`, except that *obj_type* defaults to
+'class' if decorating a class, 'attribute' if decorating a property, and 'function'
+otherwise.
+
+**Parameters:**
+
+<ParamField path="since" type="str">
+The release at which this API became deprecated.
+</ParamField>
+
+<ParamField path="message" type="str" default="''">
+Override the default deprecation message.
+
+The `%(since)s`, `%(name)s`, `%(alternative)s`, `%(obj_type)s`,
+`%(addendum)s`, and `%(removal)s` format specifiers will be replaced by the
+values of the respective arguments passed to this function.
+</ParamField>
+
+<ParamField path="name" type="str" default="''">
+The name of the deprecated object.
+</ParamField>
+
+<ParamField path="alternative" type="str" default="''">
+An alternative API that the user may use in place of the deprecated
+API.
+
+The deprecation warning will tell the user about this alternative if
+provided.
+</ParamField>
+
+<ParamField path="alternative_import" type="str" default="''">
+An alternative import that the user may use instead.
+</ParamField>
+
+<ParamField path="pending" type="bool" default="False">
+If `True`, uses a `PendingDeprecationWarning` instead of a
+`DeprecationWarning`.
+
+Cannot be used together with removal.
+</ParamField>
+
+<ParamField path="obj_type" type="str" default="''">
+The object type being deprecated.
+</ParamField>
+
+<ParamField path="addendum" type="str" default="''">
+Additional text appended directly to the final message.
+</ParamField>
+
+<ParamField path="removal" type="str" default="''">
+The expected removal version.
+
+With the default (an empty string), a removal version is automatically
+computed from since. Set to other Falsy values to not schedule a removal
+date.
+
+Cannot be used together with pending.
+</ParamField>
+
+<ParamField path="package" type="str" default="''">
+The package of the deprecated object.
+</ParamField>
+
+**Returns:** `Callable[[T], T]`
+
+A decorator to mark a function or class as deprecated.
+
+
+</Indent>
+
+<Anchor id="langchain_core-_api-deprecation-rename_parameter">
+
+<CodeBlock links={{"langchain_core._api.deprecation._P":"#langchain_core-_api-deprecation-_P","langchain_core._api.deprecation._R":"#langchain_core-_api-deprecation-_R"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._api.deprecation.rename_parameter(
+    since: str,
+    removal: str,
+    old: str,
+    new: str
+) -> collections.abc.Callable[[Callable[_P, _R]], collections.abc.Callable[langchain_core._api.deprecation._P, langchain_core._api.deprecation._R]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Decorator indicating that parameter *old* of *func* is renamed to *new*.
+
+The actual implementation of *func* should use *new*, not *old*. If *old* is passed
+to *func*, a `DeprecationWarning` is emitted, and its value is used, even if *new*
+is also passed by keyword.
+
+**Parameters:**
+
+<ParamField path="since" type="str">
+The version in which the parameter was renamed.
+</ParamField>
+
+<ParamField path="removal" type="str">
+The version in which the old parameter will be removed.
+</ParamField>
+
+<ParamField path="old" type="str">
+The old parameter name.
+</ParamField>
+
+<ParamField path="new" type="str">
+The new parameter name.
+</ParamField>
+
+**Returns:** `Callable[[Callable[_P, _R]], Callable[_P, _R]]`
+
+A decorator indicating that a parameter was renamed.
+
+
+</Indent>
+
+<Anchor id="langchain_core-_api-deprecation-suppress_langchain_deprecation_warning">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._api.deprecation.suppress_langchain_deprecation_warning() -> collections.abc.Generator[None, None, None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Context manager to suppress `LangChainDeprecationWarning`.
+
+
+</Indent>
+
+<Anchor id="langchain_core-_api-deprecation-surface_langchain_deprecation_warnings">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._api.deprecation.surface_langchain_deprecation_warnings() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Unmute LangChain deprecation warnings.
+
+
+</Indent>
+
+<Anchor id="langchain_core-_api-deprecation-warn_deprecated">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._api.deprecation.warn_deprecated(
+    since: str,
+    message: str = '',
+    name: str = '',
+    alternative: str = '',
+    alternative_import: str = '',
+    pending: bool = False,
+    obj_type: str = '',
+    addendum: str = '',
+    removal: str = '',
+    package: str = ''
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Display a standardized deprecation.
+
+**Parameters:**
+
+<ParamField path="since" type="str">
+The release at which this API became deprecated.
+</ParamField>
+
+<ParamField path="message" type="str" default="''">
+Override the default deprecation message.
+
+The `%(since)s`, `%(name)s`, `%(alternative)s`, `%(obj_type)s`,
+`%(addendum)s`, and `%(removal)s` format specifiers will be replaced by the
+values of the respective arguments passed to this function.
+</ParamField>
+
+<ParamField path="name" type="str" default="''">
+The name of the deprecated object.
+</ParamField>
+
+<ParamField path="alternative" type="str" default="''">
+An alternative API that the user may use in place of the
+deprecated API.
+
+The deprecation warning will tell the user about this alternative if
+provided.
+</ParamField>
+
+<ParamField path="alternative_import" type="str" default="''">
+An alternative import that the user may use instead.
+</ParamField>
+
+<ParamField path="pending" type="bool" default="False">
+If `True`, uses a `PendingDeprecationWarning` instead of a
+`DeprecationWarning`.
+
+Cannot be used together with removal.
+</ParamField>
+
+<ParamField path="obj_type" type="str" default="''">
+The object type being deprecated.
+</ParamField>
+
+<ParamField path="addendum" type="str" default="''">
+Additional text appended directly to the final message.
+</ParamField>
+
+<ParamField path="removal" type="str" default="''">
+The expected removal version.
+
+With the default (an empty string), a removal version is automatically
+computed from since. Set to other Falsy values to not schedule a removal
+date.
+
+Cannot be used together with pending.
+</ParamField>
+
+<ParamField path="package" type="str" default="''">
+The package of the deprecated object.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="langchain_core-_api-deprecation-T">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._api.deprecation.T = TypeVar('T', bound=(type | Callable[..., Any] | Any))
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-_api-deprecation-_P">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._api.deprecation._P = ParamSpec('_P')
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-_api-deprecation-_R">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._api.deprecation._R = TypeVar('_R')
+```
+
+</CodeBlock>
+</Anchor>
+

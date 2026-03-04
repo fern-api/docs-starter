@@ -1,0 +1,65 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/_import_utils
+title: langchain_core._import_utils
+---
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`import_attr`](#langchain_core-_import_utils-import_attr) | Import an attribute from a module located in a package. |
+
+### API
+
+<Anchor id="langchain_core-_import_utils-import_attr">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core._import_utils.import_attr(
+    attr_name: str,
+    module_name: str | None,
+    package: str | None
+) -> object
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Import an attribute from a module located in a package.
+
+This utility function is used in custom `__getattr__` methods within `__init__.py`
+files to dynamically import attributes.
+
+**Parameters:**
+
+<ParamField path="attr_name" type="str">
+The name of the attribute to import.
+</ParamField>
+
+<ParamField path="module_name" type="str | None">
+The name of the module to import from.
+
+If `None`, the attribute is imported from the package itself.
+</ParamField>
+
+<ParamField path="package" type="str | None">
+The name of the package where the module is located.
+</ParamField>
+
+**Returns:** `object`
+
+The imported attribute.
+
+**Raises:**
+
+- `ImportError`: If the module cannot be found.
+- `AttributeError`: If the attribute does not exist in the module or package.
+
+
+</Indent>

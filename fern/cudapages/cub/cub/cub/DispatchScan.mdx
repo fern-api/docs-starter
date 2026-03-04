@@ -1,0 +1,241 @@
+---
+title: cub::DispatchScan
+description: "Utility class for dispatching the appropriately-tuned kernels for [DeviceScan](/library/api/cub::_device_scan)."
+---
+
+Utility class for dispatching the appropriately-tuned kernels for [DeviceScan](/library/api/cub::_device_scan).
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="InputIteratorT" type="typename">
+Random-access input iterator type for reading scan inputs (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+Random-access output iterator type for writing scan outputs (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="ScanOpT" type="typename">
+Binary scan functor type having member `auto operator()(const T &a, const U &b)`
+</ParamField>
+
+<ParamField path="InitValueT" type="typename">
+The init_value element type for ScanOpT (cub::NullType for inclusive scans)
+</ParamField>
+
+<ParamField path="OffsetT" type="typename">
+Unsigned integer type for global offsets
+</ParamField>
+
+<ParamField path="AccumT" type="typename" default="::cuda::std::__accumulator_t<ScanOpT,                                                                 cub::detail::it_value_t<InputIteratorT>,                                                                 ::cuda::std::_If<::cuda::std::is_same_v<InitValueT, NullType>,                                                                                  cub::detail::it_value_t<InputIteratorT>,                                                                                  typename InitValueT::value_type>>">
+</ParamField>
+
+<ParamField path="EnforceInclusive" type="ForceInclusive" default="ForceInclusive::No">
+Enum flag to specify whether to enforce inclusive scan.
+</ParamField>
+
+<ParamField path="PolicyHub" type="typename" default="detail::scan:: policy_hub<detail::it_value_t<InputIteratorT>, detail::it_value_t<OutputIteratorT>, AccumT, OffsetT, ScanOpT>">
+</ParamField>
+
+<ParamField path="KernelSource" type="typename" default="detail::scan::DeviceScanKernelSource<    typename PolicyHub::MaxPolicy,    THRUST_NS_QUALIFIER::try_unwrap_contiguous_iterator_t<InputIteratorT>,    THRUST_NS_QUALIFIER::try_unwrap_contiguous_iterator_t<OutputIteratorT>,    ScanOpT,    InitValueT,    OffsetT,    AccumT,    EnforceInclusive>">
+</ParamField>
+
+<ParamField path="KernelLauncherFactory" type="typename" default="CUB_DETAIL_DEFAULT_KERNEL_LAUNCHER_FACTORY">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### DispatchScan <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"DispatchScan": "/library/api/cub::DispatchScan"}}>
+```cpp showLineNumbers={false}
+cub::DispatchScan<InputIteratorT, OutputIteratorT, ScanOpT, InitValueT, OffsetT, AccumT, EnforceInclusive, PolicyHub, KernelSource, KernelLauncherFactory>::DispatchScan(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    OutputIteratorT d_out,
+    OffsetT num_items,
+    ScanOpT scan_op,
+    InitValueT init_value,
+    cudaStream_t stream,
+    int ptx_version,
+    KernelSource kernel_source = {},
+    KernelLauncherFactory launcher_factory = {}
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to [`temp_storage_bytes`](/library/api/cub::_dispatch_scan::temp_storage_bytes) and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of [`d_temp_storage`](/library/api/cub::_dispatch_scan::d_temp_storage) allocation
+</ParamField>
+
+<ParamField path="d_in" type="InputIteratorT">
+Iterator to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Iterator to the output sequence of data items
+</ParamField>
+
+<ParamField path="num_items" type="OffsetT">
+Total number of input items (i.e., the length of [`d_in`](/library/api/cub::_dispatch_scan::d_in))
+</ParamField>
+
+<ParamField path="scan_op" type="ScanOpT">
+Binary scan functor
+</ParamField>
+
+<ParamField path="init_value" type="InitValueT">
+Initial value to seed the exclusive scan
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t">
+**[optional]** CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+<ParamField path="kernel_source" type="KernelSource" default="{}">
+Object specifying implementation kernels
+</ParamField>
+
+<ParamField path="launcher_factory" type="KernelLauncherFactory" default="{}">
+Object to execute implementation kernels on the given stream
+</ParamField>
+
+---
+
+## Methods
+
+### Invoke <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+<CodeBlock links={{"DispatchScan": "/library/api/cub::DispatchScan"}}>
+```cpp showLineNumbers={false}
+template <typename ActivePolicyT, typename InitKernelT, typename ScanKernelT>
+cudaError_t cub::DispatchScan<InputIteratorT, OutputIteratorT, ScanOpT, InitValueT, OffsetT, AccumT, EnforceInclusive, PolicyHub, KernelSource, KernelLauncherFactory>::Invoke(
+    InitKernelT init_kernel,
+    ScanKernelT scan_kernel,
+    ActivePolicyT policy = {}
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Overload 2">
+
+<CodeBlock links={{"DispatchScan": "/library/api/cub::DispatchScan"}}>
+```cpp showLineNumbers={false}
+template <typename ActivePolicyT>
+cudaError_t cub::DispatchScan<InputIteratorT, OutputIteratorT, ScanOpT, InitValueT, OffsetT, AccumT, EnforceInclusive, PolicyHub, KernelSource, KernelLauncherFactory>::Invoke(
+    ActivePolicyT active_policy = {}
+)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Static methods
+
+### Dispatch <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Internal dispatch routine.
+
+<CodeBlock links={{"DispatchScan": "/library/api/cub::DispatchScan"}}>
+```cpp showLineNumbers={false}
+template <typename MaxPolicyT>
+static cudaError_t cub::DispatchScan<InputIteratorT, OutputIteratorT, ScanOpT, InitValueT, OffsetT, AccumT, EnforceInclusive, PolicyHub, KernelSource, KernelLauncherFactory>::Dispatch(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    OutputIteratorT d_out,
+    ScanOpT scan_op,
+    InitValueT init_value,
+    OffsetT num_items,
+    cudaStream_t stream,
+    KernelSource kernel_source = {},
+    KernelLauncherFactory launcher_factory = {},
+    MaxPolicyT max_policy = {}
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to [`temp_storage_bytes`](/library/api/cub::_dispatch_scan::temp_storage_bytes) and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of [`d_temp_storage`](/library/api/cub::_dispatch_scan::d_temp_storage) allocation
+</ParamField>
+
+<ParamField path="d_in" type="InputIteratorT">
+Iterator to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Iterator to the output sequence of data items
+</ParamField>
+
+<ParamField path="scan_op" type="ScanOpT">
+Binary scan functor
+</ParamField>
+
+<ParamField path="init_value" type="InitValueT">
+Initial value to seed the exclusive scan
+</ParamField>
+
+<ParamField path="num_items" type="OffsetT">
+Total number of input items (i.e., the length of [`d_in`](/library/api/cub::_dispatch_scan::d_in))
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t">
+**[optional]** CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+<ParamField path="kernel_source" type="KernelSource" default="{}">
+Object specifying implementation kernels
+</ParamField>
+
+<ParamField path="launcher_factory" type="KernelLauncherFactory" default="{}">
+Object to execute implementation kernels on the given stream
+</ParamField>
+
+<ParamField path="max_policy" type="MaxPolicyT" default="{}">
+Struct encoding chain of algorithm tuning policies
+</ParamField>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `INIT_KERNEL_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `d_temp_storage` | `void *` | Device-accessible allocation of temporary storage. |
+| `temp_storage_bytes` | `size_t &` | Reference to size in bytes of `d_temp_storage` allocation. |
+| `d_in` | `InputIteratorT` | Iterator to the input sequence of data items. |
+| `d_out` | `OutputIteratorT` | Iterator to the output sequence of data items. |
+| `scan_op` | `ScanOpT` | Binary scan functor. |
+| `init_value` | `InitValueT` | Initial value to seed the exclusive scan. |
+| `num_items` | `OffsetT` | Total number of input items (i.e., the length of `d_in`). |
+| `stream` | `cudaStream_t` | CUDA stream to launch kernels within. Default is stream<sub>0</sub>. |
+| `ptx_version` | `int` | |
+| `kernel_source` | `KernelSource` | |
+| `launcher_factory` | `KernelLauncherFactory` | |

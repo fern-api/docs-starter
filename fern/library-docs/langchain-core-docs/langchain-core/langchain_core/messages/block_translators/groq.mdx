@@ -1,0 +1,176 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/messages/block_translators/groq
+title: langchain_core.messages.block_translators.groq
+---
+
+Derivations of standard content blocks from Groq content.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_convert_to_v1_from_groq`](#langchain_core-messages-block_translators-groq-_convert_to_v1_from_groq) | Convert groq message content to v1 format. |
+| [`_parse_code_json`](#langchain_core-messages-block_translators-groq-_parse_code_json) | Extract Python code from Groq built-in tool content. |
+| [`_populate_extras`](#langchain_core-messages-block_translators-groq-_populate_extras) | Mutate a block, populating extras. |
+| [`_register_groq_translator`](#langchain_core-messages-block_translators-groq-_register_groq_translator) | Register the groq translator with the central registry. |
+| [`translate_content`](#langchain_core-messages-block_translators-groq-translate_content) | Derive standard content blocks from a message with groq content. |
+| [`translate_content_chunk`](#langchain_core-messages-block_translators-groq-translate_content_chunk) | Derive standard content blocks from a message chunk with groq content. |
+
+### API
+
+<Anchor id="langchain_core-messages-block_translators-groq-_convert_to_v1_from_groq">
+
+<CodeBlock links={{"langchain_core.messages.AIMessage":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessage","langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.groq._convert_to_v1_from_groq(
+    message: langchain_core.messages.AIMessage
+) -> list[langchain_core.messages.content.ContentBlock]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert groq message content to v1 format.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-groq-_parse_code_json">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.groq._parse_code_json(
+    s: str
+) -> dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Extract Python code from Groq built-in tool content.
+
+Extracts the value of the 'code' field from a string of the form:
+&#123;"code": some_arbitrary_text_with_unescaped_quotes&#125;
+
+As Groq may not escape quotes in the executed tools, e.g.:
+<CodeBlock showLineNumbers={false}>
+
+```python
+'{"code": "import math; print("The square root of 101 is: "); print(math.sqrt(101))"}'
+```
+
+</CodeBlock>
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-groq-_populate_extras">
+
+<CodeBlock links={{"langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.groq._populate_extras(
+    standard_block: langchain_core.messages.content.ContentBlock,
+    block: dict[str, typing.Any],
+    known_fields: set[str]
+) -> langchain_core.messages.content.ContentBlock
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Mutate a block, populating extras.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-groq-_register_groq_translator">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.groq._register_groq_translator() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Register the groq translator with the central registry.
+
+Run automatically when the module is imported.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-groq-translate_content">
+
+<CodeBlock links={{"langchain_core.messages.AIMessage":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessage","langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.groq.translate_content(
+    message: langchain_core.messages.AIMessage
+) -> list[langchain_core.messages.content.ContentBlock]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Derive standard content blocks from a message with groq content.
+
+**Parameters:**
+
+<ParamField path="message" type="AIMessage">
+The message to translate.
+</ParamField>
+
+**Returns:** `list[types.ContentBlock]`
+
+The derived content blocks.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-groq-translate_content_chunk">
+
+<CodeBlock links={{"langchain_core.messages.AIMessageChunk":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessageChunk","langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.groq.translate_content_chunk(
+    message: langchain_core.messages.AIMessageChunk
+) -> list[langchain_core.messages.content.ContentBlock]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Derive standard content blocks from a message chunk with groq content.
+
+**Parameters:**
+
+<ParamField path="message" type="AIMessageChunk">
+The message chunk to translate.
+</ParamField>
+
+**Returns:** `list[types.ContentBlock]`
+
+The derived content blocks.
+
+
+</Indent>

@@ -1,0 +1,306 @@
+---
+title: "cuda::stream_ref"
+description: "A non-owning wrapper for a `cudaStream_t`."
+---
+
+A non-owning wrapper for a `cudaStream_t`.
+
+```cpp showLineNumbers={false}
+#include <cuda/stream_ref.h>
+```
+
+---
+
+## Constructors
+
+### stream_ref
+
+<Tabs>
+<Tab title="Default">
+
+Constructs a `stream_ref` of the "default" CUDA stream.
+
+For behavior of the default stream,
+
+<CodeBlock links={{"stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+cuda::stream_ref::stream_ref() = default
+```
+</CodeBlock>
+
+**See also:**
+//! [https://docs.nvidia.com/cuda/cuda-runtime-api/stream-sync-behavior.html](https://docs.nvidia.com/cuda/cuda-runtime-api/stream-sync-behavior.html)
+
+
+</Tab>
+<Tab title="Overload 2">
+
+<Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Constructs a `stream_ref` from a `cudaStream_t` handle.
+
+This constructor provides implicit conversion from `cudaStream_t`.
+
+<CodeBlock links={{"stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+cuda::stream_ref::stream_ref(
+    value_type __stream_
+) noexcept
+```
+</CodeBlock>
+
+<Note>
+: It is the callers responsibility to ensure the `stream_ref` does not outlive the stream identified by the `cudaStream_t` handle.
+</Note>
+
+</Tab>
+<Tab title="Overload 3">
+
+<Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>explicit</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Constructs a `stream_ref` from the [`cuda::invalid_stream_t`](/libcudacxx/api/cuda::invalid_stream_t).
+
+<CodeBlock links={{"stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+cuda::stream_ref::stream_ref(
+    invalid_stream_t
+) noexcept
+```
+</CodeBlock>
+
+<Note>
+Any CUDA APIs called on the created object will result in an CUDA error.
+</Note>
+
+</Tab>
+<Tab title="Deleted overloads">
+
+The following overloads are deleted to prevent misuse:
+
+<CodeBlock links={{"stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+cuda::stream_ref::stream_ref(int) = delete;
+cuda::stream_ref::stream_ref(::cuda::std::nullptr_t) = delete;
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### get <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Returns the wrapped `cudaStream_t` handle.
+
+<CodeBlock links={{"stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+value_type cuda::stream_ref::get() const noexcept
+```
+</CodeBlock>
+
+### sync <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Synchronizes the wrapped stream.
+
+<CodeBlock links={{"stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+void cuda::stream_ref::sync() const
+```
+</CodeBlock>
+
+**Throws:** `cuda::cuda_error` if synchronization fails.
+
+### wait <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<Tabs>
+<Tab title="Const">
+
+Deprecated.
+
+Use [sync()](/libcudacxx/api/cuda::stream_ref::sync()) instead.
+
+<CodeBlock links={{"stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+void cuda::stream_ref::wait() const
+```
+</CodeBlock>
+
+<Error title="Deprecated">
+Use [sync()](/libcudacxx/api/cuda::stream_ref::sync()) instead.
+</Error>
+
+</Tab>
+<Tab title="Const">
+
+Make all future work submitted into this stream depend on completion of the specified event.
+
+<CodeBlock links={{"stream_ref": "/libcudacxx/api/cuda::stream_ref", "event_ref": "/libcudacxx/api/cuda::event_ref"}}>
+```cpp showLineNumbers={false}
+void cuda::stream_ref::wait(
+    event_ref __ev
+) const
+```
+</CodeBlock>
+
+**Throws:** `cuda_error` if inserting the dependency fails
+
+**Parameters**
+
+<ParamField path="__ev" type="event_ref">
+Event that this stream should wait for
+</ParamField>
+
+</Tab>
+<Tab title="Const">
+
+Make all future work submitted into this stream depend on completion of all work from the specified stream.
+
+<CodeBlock links={{"stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+void cuda::stream_ref::wait(
+    stream_ref __other
+) const
+```
+</CodeBlock>
+
+**Throws:** `cuda_error` if inserting the dependency fails
+
+**Parameters**
+
+<ParamField path="__other" type="stream_ref">
+Stream that this stream should wait for
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### is_done <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Queries if all operations on the stream have completed.
+
+<CodeBlock links={{"stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+bool cuda::stream_ref::is_done() const
+```
+</CodeBlock>
+
+**Returns:** `true` if all operations have completed, or `false` if not.
+
+**Throws:** `cuda::cuda_error` if the query fails.
+
+### ready <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Queries if all operations on the wrapped stream have completed.
+
+<CodeBlock links={{"stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+bool cuda::stream_ref::ready() const
+```
+</CodeBlock>
+
+**Returns:** `true` if all operations have completed, or `false` if not.
+
+**Throws:** `cuda::cuda_error` if the query fails.
+
+### priority <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Queries the priority of the wrapped stream.
+
+<CodeBlock links={{"stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+int cuda::stream_ref::priority() const
+```
+</CodeBlock>
+
+**Returns:** value representing the priority of the wrapped stream.
+
+**Throws:** `cuda::cuda_error` if the query fails.
+
+### id <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Get the unique ID of the stream.
+
+Stream handles are sometimes reused, but ID is guaranteed to be unique.
+
+<CodeBlock links={{"stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+stream_id cuda::stream_ref::id() const
+```
+</CodeBlock>
+
+**Returns:** The unique ID of the stream
+
+**Throws:** `cuda_error` if the ID query fails
+
+### record_event <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Create a new event and record it into this stream.
+
+<CodeBlock links={{"stream_ref": "/libcudacxx/api/cuda::stream_ref", "event": "/libcudacxx/api/cuda::event"}}>
+```cpp showLineNumbers={false}
+event cuda::stream_ref::record_event(
+    event_flags __flags = event_flags::none
+) const
+```
+</CodeBlock>
+
+**Returns:** A new event that was recorded into this stream
+
+**Throws:** `cuda_error` if event creation or record failed
+
+### record_timed_event <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Create a new timed event and record it into this stream.
+
+<CodeBlock links={{"stream_ref": "/libcudacxx/api/cuda::stream_ref", "timed_event": "/libcudacxx/api/cuda::timed_event"}}>
+```cpp showLineNumbers={false}
+timed_event cuda::stream_ref::record_timed_event(
+    event_flags __flags = event_flags::none
+) const
+```
+</CodeBlock>
+
+**Returns:** A new timed event that was recorded into this stream
+
+**Throws:** `cuda_error` if event creation or record failed
+
+### device <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Get device under which this stream was created.
+
+Note: In case of a stream created under a `green_context` the device on which that `green_context` was created is returned
+
+<CodeBlock links={{"stream_ref": "/libcudacxx/api/cuda::stream_ref", "device_ref": "/libcudacxx/api/cuda::device_ref"}}>
+```cpp showLineNumbers={false}
+device_ref cuda::stream_ref::device() const
+```
+</CodeBlock>
+
+**Throws:** `cuda_error` if device check fails
+
+### query <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Queries the `stream_ref` for itself.
+
+This makes `stream_ref` usable in places where we expect an environment with a [`get_stream_t`](/libcudacxx/api/cuda::get_stream_t) query
+
+<CodeBlock links={{"stream_ref": "/libcudacxx/api/cuda::stream_ref", "get_stream_t": "/libcudacxx/api/cuda::get_stream_t"}}>
+```cpp showLineNumbers={false}
+stream_ref cuda::stream_ref::query(
+    const ::cuda::get_stream_t &
+) const noexcept
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `value_type` | `::cudaStream_t` |

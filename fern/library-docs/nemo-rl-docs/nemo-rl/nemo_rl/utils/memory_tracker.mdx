@@ -1,0 +1,122 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/utils/memory_tracker
+title: nemo_rl.utils.memory_tracker
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`MemoryTracker`](#nemo_rl-utils-memory_tracker-MemoryTracker) | - |
+| [`MemoryTrackerDataPoint`](#nemo_rl-utils-memory_tracker-MemoryTrackerDataPoint) | - |
+
+### API
+
+<Anchor id="nemo_rl-utils-memory_tracker-MemoryTracker">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.utils.memory_tracker.MemoryTracker()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `BaseModel`
+
+<ParamField path="data_points" type="List[MemoryTrackerDataPoint] = Field(default_factory=list)">
+</ParamField>
+<Anchor id="nemo_rl-utils-memory_tracker-MemoryTracker-model_post_init">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.memory_tracker.MemoryTracker.model_post_init(
+    context
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-utils-memory_tracker-MemoryTracker-snapshot_start_of_stage">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.memory_tracker.MemoryTracker.snapshot_start_of_stage(
+    new_stage: str,
+    all_current_variables: typing.List[str]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-utils-memory_tracker-MemoryTrackerDataPoint">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.utils.memory_tracker.MemoryTrackerDataPoint()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `BaseModel`
+
+<ParamField path="mem_used_diff_gb" type="float">
+</ParamField>
+
+<ParamField path="memory_used_after_stage_gb" type="Optional[float] = None">
+</ParamField>
+
+<ParamField path="memory_used_before_stage_gb" type="float">
+</ParamField>
+
+<ParamField path="new_variables" type="List[str]">
+</ParamField>
+
+<ParamField path="stage" type="str">
+</ParamField>
+
+<ParamField path="variables_after_stage" type="Optional[List[str]] = None">
+</ParamField>
+
+<ParamField path="variables_before_stage" type="List[str]">
+</ParamField>
+<Anchor id="nemo_rl-utils-memory_tracker-MemoryTrackerDataPoint-get_snapshot_str">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.memory_tracker.MemoryTrackerDataPoint.get_snapshot_str() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>

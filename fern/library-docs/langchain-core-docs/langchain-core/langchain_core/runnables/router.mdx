@@ -1,0 +1,241 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/runnables/router
+title: langchain_core.runnables.router
+---
+
+`Runnable` that routes to a set of `Runnable` objects.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`RouterInput`](#langchain_core-runnables-router-RouterInput) | Router input. |
+| [`RouterRunnable`](#langchain_core-runnables-router-RouterRunnable) | `Runnable` that routes to a set of `Runnable` based on `Input['key']`. |
+
+### API
+
+<Anchor id="langchain_core-runnables-router-RouterInput">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.router.RouterInput
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Router input.
+
+<ParamField path="input" type="Any">
+The input to pass to the selected `Runnable`.
+</ParamField>
+
+<ParamField path="key" type="str">
+The key to route on.
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-router-RouterRunnable">
+
+<CodeBlock links={{"langchain_core.runnables.base.Runnable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-Runnable","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.router.RouterRunnable(
+    runnables: collections.abc.Mapping[str, langchain_core.runnables.base.Runnable[typing.Any, langchain_core.runnables.utils.Output] | collections.abc.Callable[[Any], langchain_core.runnables.utils.Output]]
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RunnableSerializable[RouterInput, Output]](/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-RunnableSerializable)
+
+`Runnable` that routes to a set of `Runnable` based on `Input['key']`.
+
+Returns the output of the selected Runnable.
+
+
+<ParamField path="config_specs" type="list[ConfigurableFieldSpec]">
+</ParamField>
+
+<ParamField path="model_config" type="= ConfigDict(arbitrary_types_allowed=True)">
+</ParamField>
+
+<ParamField path="runnables" type="Mapping[str, Runnable[Any, Output]]">
+</ParamField>
+<Anchor id="langchain_core-runnables-router-RouterRunnable-abatch">
+
+<CodeBlock links={{"langchain_core.runnables.router.RouterInput":"#langchain_core-runnables-router-RouterInput","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.router.RouterRunnable.abatch(
+    inputs: list[langchain_core.runnables.router.RouterInput],
+    config: langchain_core.runnables.config.RunnableConfig | list[langchain_core.runnables.config.RunnableConfig] | None = None,
+    return_exceptions: bool = False,
+    kwargs: typing.Any | None = {}
+) -> list[langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-router-RouterRunnable-ainvoke">
+
+<CodeBlock links={{"langchain_core.runnables.router.RouterInput":"#langchain_core-runnables-router-RouterInput","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.router.RouterRunnable.ainvoke(
+    input: langchain_core.runnables.router.RouterInput,
+    config: langchain_core.runnables.config.RunnableConfig | None = None,
+    kwargs: typing.Any | None = {}
+) -> langchain_core.runnables.utils.Output
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-router-RouterRunnable-astream">
+
+<CodeBlock links={{"langchain_core.runnables.router.RouterInput":"#langchain_core-runnables-router-RouterInput","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.router.RouterRunnable.astream(
+    input: langchain_core.runnables.router.RouterInput,
+    config: langchain_core.runnables.config.RunnableConfig | None = None,
+    kwargs: typing.Any | None = {}
+) -> collections.abc.AsyncIterator[langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-router-RouterRunnable-batch">
+
+<CodeBlock links={{"langchain_core.runnables.router.RouterInput":"#langchain_core-runnables-router-RouterInput","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.router.RouterRunnable.batch(
+    inputs: list[langchain_core.runnables.router.RouterInput],
+    config: langchain_core.runnables.config.RunnableConfig | list[langchain_core.runnables.config.RunnableConfig] | None = None,
+    return_exceptions: bool = False,
+    kwargs: typing.Any | None = {}
+) -> list[langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-router-RouterRunnable-get_lc_namespace">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.router.RouterRunnable.get_lc_namespace() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Get the namespace of the LangChain object.
+
+**Returns:** `list[str]`
+
+`["langchain", "schema", "runnable"]`
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-router-RouterRunnable-invoke">
+
+<CodeBlock links={{"langchain_core.runnables.router.RouterInput":"#langchain_core-runnables-router-RouterInput","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.router.RouterRunnable.invoke(
+    input: langchain_core.runnables.router.RouterInput,
+    config: langchain_core.runnables.config.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.runnables.utils.Output
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-router-RouterRunnable-is_lc_serializable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.router.RouterRunnable.is_lc_serializable() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Return `True` as this class is serializable.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-router-RouterRunnable-stream">
+
+<CodeBlock links={{"langchain_core.runnables.router.RouterInput":"#langchain_core-runnables-router-RouterInput","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.router.RouterRunnable.stream(
+    input: langchain_core.runnables.router.RouterInput,
+    config: langchain_core.runnables.config.RunnableConfig | None = None,
+    kwargs: typing.Any | None = {}
+) -> collections.abc.Iterator[langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>

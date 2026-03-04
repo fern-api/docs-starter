@@ -1,0 +1,177 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/load/dump
+title: langchain_core.load.dump
+---
+
+Serialize LangChain objects to JSON.
+
+Provides `dumps` (to JSON string) and `dumpd` (to dict) for serializing
+`Serializable` objects.
+
+## Escaping
+
+During serialization, plain dicts (user data) that contain an `'lc'` key are escaped
+by wrapping them: `&#123;"__lc_escaped__": &#123;...original...&#125;&#125;`. This prevents injection
+attacks where malicious data could trick the deserializer into instantiating
+arbitrary classes. The escape marker is removed during deserialization.
+
+This is an allowlist approach: only dicts explicitly produced by
+`Serializable.to_json()` are treated as LC objects; everything else is escaped if it
+could be confused with the LC format.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_dump_pydantic_models`](#langchain_core-load-dump-_dump_pydantic_models) | Convert nested Pydantic models to dicts for JSON serialization. |
+| [`default`](#langchain_core-load-dump-default) | Return a default value for an object. |
+| [`dumpd`](#langchain_core-load-dump-dumpd) | Return a dict representation of an object. |
+| [`dumps`](#langchain_core-load-dump-dumps) | Return a JSON string representation of an object. |
+
+### API
+
+<Anchor id="langchain_core-load-dump-_dump_pydantic_models">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load.dump._dump_pydantic_models(
+    obj: typing.Any
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert nested Pydantic models to dicts for JSON serialization.
+
+Handles the special case where a `ChatGeneration` contains an `AIMessage`
+with a parsed Pydantic model in `additional_kwargs["parsed"]`. Since
+Pydantic models aren't directly JSON serializable, this converts them to
+dicts.
+
+**Parameters:**
+
+<ParamField path="obj" type="Any">
+The object to process.
+</ParamField>
+
+**Returns:** `Any`
+
+A copy of the object with nested Pydantic models converted to dicts, or
+the original object unchanged if no conversion was needed.
+
+
+</Indent>
+
+<Anchor id="langchain_core-load-dump-default">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load.dump.default(
+    obj: typing.Any
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return a default value for an object.
+
+**Parameters:**
+
+<ParamField path="obj" type="Any">
+The object to serialize to json if it is a Serializable object.
+</ParamField>
+
+**Returns:** `Any`
+
+A JSON serializable object or a SerializedNotImplemented object.
+
+
+</Indent>
+
+<Anchor id="langchain_core-load-dump-dumpd">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load.dump.dumpd(
+    obj: typing.Any
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return a dict representation of an object.
+
+**Parameters:**
+
+<ParamField path="obj" type="Any">
+The object to dump.
+</ParamField>
+
+**Returns:** `Any`
+
+Dictionary that can be serialized to json using `json.dumps`.
+
+
+</Indent>
+
+<Anchor id="langchain_core-load-dump-dumps">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load.dump.dumps(
+    obj: typing.Any,
+    pretty: bool = False,
+    kwargs: typing.Any = {}
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return a JSON string representation of an object.
+
+**Parameters:**
+
+<ParamField path="obj" type="Any">
+The object to dump.
+</ParamField>
+
+<ParamField path="pretty" type="bool" default="False">
+Whether to pretty print the json.
+
+If `True`, the json will be indented by either 2 spaces or the amount
+provided in the `indent` kwarg.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments to pass to `json.dumps`
+</ParamField>
+
+**Returns:** `str`
+
+A JSON string representation of the object.
+
+**Raises:**
+
+- `ValueError`: If `default` is passed as a kwarg.
+
+
+</Indent>

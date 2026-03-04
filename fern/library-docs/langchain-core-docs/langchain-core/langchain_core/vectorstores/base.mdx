@@ -1,0 +1,1712 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/vectorstores/base
+title: langchain_core.vectorstores.base
+---
+
+A vector store stores embedded data and performs vector search.
+
+One of the most common ways to store and search over unstructured data is to
+embed it and store the resulting embedding vectors, and then query the store
+and retrieve the data that are 'most similar' to the embedded query.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`VectorStore`](#langchain_core-vectorstores-base-VectorStore) | Interface for vector store. |
+| [`VectorStoreRetriever`](#langchain_core-vectorstores-base-VectorStoreRetriever) | Base Retriever class for VectorStore. |
+
+### Data
+
+[`VST`](#langchain_core-vectorstores-base-VST)
+
+[`logger`](#langchain_core-vectorstores-base-logger)
+
+### API
+
+<Anchor id="langchain_core-vectorstores-base-VectorStore">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.vectorstores.base.VectorStore()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+Interface for vector store.
+
+
+<ParamField path="embeddings" type="Embeddings | None">
+Access the query embedding object if available.
+</ParamField>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-_asimilarity_search_with_relevance_scores">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore._asimilarity_search_with_relevance_scores(
+    query: str,
+    k: int = 4,
+    kwargs: typing.Any = {}
+) -> list[tuple[langchain_core.documents.Document, float]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Default similarity search with relevance scores.
+
+Modify if necessary in subclass.
+Return docs and relevance scores in the range `[0, 1]`.
+
+`0` is dissimilar, `1` is most similar.
+
+**Parameters:**
+
+<ParamField path="query" type="str">
+Input text.
+</ParamField>
+
+<ParamField path="k" type="int" default="4">
+Number of `Document` objects to return.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Kwargs to be passed to similarity search.
+
+Should include `score_threshold`, an optional floating point value
+between `0` to `1` to filter the resulting set of retrieved docs.
+</ParamField>
+
+**Returns:** `list[tuple[Document, float]]`
+
+List of tuples of `(doc, similarity_score)`
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-_cosine_relevance_score_fn">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore._cosine_relevance_score_fn(
+    distance: float
+) -> float
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+Normalize the distance to a score on a scale [0, 1].
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-_euclidean_relevance_score_fn">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore._euclidean_relevance_score_fn(
+    distance: float
+) -> float
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+Return a similarity score on a scale [0, 1].
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-_get_retriever_tags">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore._get_retriever_tags() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get tags for retriever.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-_max_inner_product_relevance_score_fn">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore._max_inner_product_relevance_score_fn(
+    distance: float
+) -> float
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+Normalize the distance to a score on a scale [0, 1].
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-_select_relevance_score_fn">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore._select_relevance_score_fn() -> collections.abc.Callable[[float], float]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+The 'correct' relevance function.
+
+May differ depending on a few things, including:
+
+- The distance / similarity metric used by the VectorStore
+- The scale of your embeddings (OpenAI's are unit normed. Many others are not!)
+- Embedding dimensionality
+- etc.
+
+Vectorstores should define their own selection-based method of relevance.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-_similarity_search_with_relevance_scores">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore._similarity_search_with_relevance_scores(
+    query: str,
+    k: int = 4,
+    kwargs: typing.Any = {}
+) -> list[tuple[langchain_core.documents.Document, float]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Default similarity search with relevance scores.
+
+Modify if necessary in subclass.
+Return docs and relevance scores in the range `[0, 1]`.
+
+`0` is dissimilar, `1` is most similar.
+
+**Parameters:**
+
+<ParamField path="query" type="str">
+Input text.
+</ParamField>
+
+<ParamField path="k" type="int" default="4">
+Number of `Document` objects to return.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Kwargs to be passed to similarity search.
+
+Should include `score_threshold`, an optional floating point value
+between `0` to `1` to filter the resulting set of retrieved docs.
+</ParamField>
+
+**Returns:** `list[tuple[Document, float]]`
+
+List of tuples of `(doc, similarity_score)`
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-aadd_documents">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.aadd_documents(
+    documents: list[langchain_core.documents.Document],
+    kwargs: typing.Any = {}
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async run more documents through the embeddings and add to the `VectorStore`.
+
+**Parameters:**
+
+<ParamField path="documents" type="list[Document]">
+Documents to add to the `VectorStore`.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+**Returns:** `list[str]`
+
+List of IDs of the added texts.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-aadd_texts">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.aadd_texts(
+    texts: collections.abc.Iterable[str],
+    metadatas: list[dict] | None = None,
+    ids: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async run more texts through the embeddings and add to the `VectorStore`.
+
+**Parameters:**
+
+<ParamField path="texts" type="Iterable[str]">
+Iterable of strings to add to the `VectorStore`.
+</ParamField>
+
+<ParamField path="metadatas" type="list[dict] | None" default="None">
+Optional list of metadatas associated with the texts.
+</ParamField>
+
+<ParamField path="ids" type="list[str] | None" default="None">
+Optional list
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+`VectorStore` specific parameters.
+</ParamField>
+
+**Returns:** `list[str]`
+
+List of IDs from adding the texts into the `VectorStore`.
+
+**Raises:**
+
+- `ValueError`: If the number of metadatas does not match the number of texts.
+- `ValueError`: If the number of IDs does not match the number of texts.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-add_documents">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.add_documents(
+    documents: list[langchain_core.documents.Document],
+    kwargs: typing.Any = {}
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add or update documents in the `VectorStore`.
+
+**Parameters:**
+
+<ParamField path="documents" type="list[Document]">
+Documents to add to the `VectorStore`.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+
+If kwargs contains IDs and documents contain ids, the IDs in the kwargs
+will receive precedence.
+</ParamField>
+
+**Returns:** `list[str]`
+
+List of IDs of the added texts.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-add_texts">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.add_texts(
+    texts: collections.abc.Iterable[str],
+    metadatas: list[dict] | None = None,
+    ids: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run more texts through the embeddings and add to the `VectorStore`.
+
+**Parameters:**
+
+<ParamField path="texts" type="Iterable[str]">
+Iterable of strings to add to the `VectorStore`.
+</ParamField>
+
+<ParamField path="metadatas" type="list[dict] | None" default="None">
+Optional list of metadatas associated with the texts.
+</ParamField>
+
+<ParamField path="ids" type="list[str] | None" default="None">
+Optional list of IDs associated with the texts.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+`VectorStore` specific parameters.
+
+One of the kwargs should be `ids` which is a list of ids
+associated with the texts.
+</ParamField>
+
+**Returns:** `list[str]`
+
+List of IDs from adding the texts into the `VectorStore`.
+
+**Raises:**
+
+- `ValueError`: If the number of metadatas does not match the number of texts.
+- `ValueError`: If the number of IDs does not match the number of texts.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-adelete">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.adelete(
+    ids: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> bool | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async delete by vector ID or other criteria.
+
+**Parameters:**
+
+<ParamField path="ids" type="list[str] | None" default="None">
+List of IDs to delete. If `None`, delete all.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Other keyword arguments that subclasses might use.
+</ParamField>
+
+**Returns:** `bool | None`
+
+`True` if deletion is successful, `False` otherwise, `None` if not
+implemented.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-afrom_documents">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document","langchain_core.embeddings.Embeddings":"/langchain-core/langchain_core/embeddings/embeddings#langchain_core-embeddings-embeddings-Embeddings"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.afrom_documents(
+    documents: list[langchain_core.documents.Document],
+    embedding: langchain_core.embeddings.Embeddings,
+    kwargs: typing.Any = {}
+) -> typing_extensions.Self
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge> <Badge>classmethod</Badge>
+
+Async return `VectorStore` initialized from documents and embeddings.
+
+**Parameters:**
+
+<ParamField path="documents" type="list[Document]">
+List of `Document` objects to add to the `VectorStore`.
+</ParamField>
+
+<ParamField path="embedding" type="Embeddings">
+Embedding function to use.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+**Returns:** `Self`
+
+`VectorStore` initialized from documents and embeddings.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-afrom_texts">
+
+<CodeBlock links={{"langchain_core.embeddings.Embeddings":"/langchain-core/langchain_core/embeddings/embeddings#langchain_core-embeddings-embeddings-Embeddings"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.afrom_texts(
+    texts: list[str],
+    embedding: langchain_core.embeddings.Embeddings,
+    metadatas: list[dict] | None = None,
+    ids: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> typing_extensions.Self
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge> <Badge>classmethod</Badge>
+
+Async return `VectorStore` initialized from texts and embeddings.
+
+**Parameters:**
+
+<ParamField path="texts" type="list[str]">
+Texts to add to the `VectorStore`.
+</ParamField>
+
+<ParamField path="embedding" type="Embeddings">
+Embedding function to use.
+</ParamField>
+
+<ParamField path="metadatas" type="list[dict] | None" default="None">
+Optional list of metadatas associated with the texts.
+</ParamField>
+
+<ParamField path="ids" type="list[str] | None" default="None">
+Optional list of IDs associated with the texts.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+**Returns:** `Self`
+
+`VectorStore` initialized from texts and embeddings.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-aget_by_ids">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.aget_by_ids(
+    ids: collections.abc.Sequence[str]
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async get documents by their IDs.
+
+The returned documents are expected to have the ID field set to the ID of the
+document in the vector store.
+
+Fewer documents may be returned than requested if some IDs are not found or
+if there are duplicated IDs.
+
+Users should not assume that the order of the returned documents matches
+the order of the input IDs. Instead, users should rely on the ID field of the
+returned documents.
+
+This method should **NOT** raise exceptions if no documents are found for
+some IDs.
+
+**Parameters:**
+
+<ParamField path="ids" type="Sequence[str]">
+List of IDs to retrieve.
+</ParamField>
+
+**Returns:** `list[Document]`
+
+List of `Document` objects.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-amax_marginal_relevance_search">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.amax_marginal_relevance_search(
+    query: str,
+    k: int = 4,
+    fetch_k: int = 20,
+    lambda_mult: float = 0.5,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async return docs selected using the maximal marginal relevance.
+
+Maximal marginal relevance optimizes for similarity to query AND diversity
+among selected documents.
+
+**Parameters:**
+
+<ParamField path="query" type="str">
+Text to look up documents similar to.
+</ParamField>
+
+<ParamField path="k" type="int" default="4">
+Number of `Document` objects to return.
+</ParamField>
+
+<ParamField path="fetch_k" type="int" default="20">
+Number of `Document` objects to fetch to pass to MMR algorithm.
+</ParamField>
+
+<ParamField path="lambda_mult" type="float" default="0.5">
+Number between `0` and `1` that determines the degree of
+diversity among the results with `0` corresponding to maximum diversity
+and `1` to minimum diversity.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arguments to pass to the search method.
+</ParamField>
+
+**Returns:** `list[Document]`
+
+List of `Document` objects selected by maximal marginal relevance.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-amax_marginal_relevance_search_by_vector">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.amax_marginal_relevance_search_by_vector(
+    embedding: list[float],
+    k: int = 4,
+    fetch_k: int = 20,
+    lambda_mult: float = 0.5,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async return docs selected using the maximal marginal relevance.
+
+Maximal marginal relevance optimizes for similarity to query AND diversity
+among selected documents.
+
+**Parameters:**
+
+<ParamField path="embedding" type="list[float]">
+Embedding to look up documents similar to.
+</ParamField>
+
+<ParamField path="k" type="int" default="4">
+Number of `Document` objects to return.
+</ParamField>
+
+<ParamField path="fetch_k" type="int" default="20">
+Number of `Document` objects to fetch to pass to MMR algorithm.
+</ParamField>
+
+<ParamField path="lambda_mult" type="float" default="0.5">
+Number between `0` and `1` that determines the degree of
+diversity among the results with `0` corresponding to maximum diversity
+and `1` to minimum diversity.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arguments to pass to the search method.
+</ParamField>
+
+**Returns:** `list[Document]`
+
+List of `Document` objects selected by maximal marginal relevance.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-as_retriever">
+
+<CodeBlock links={{"langchain_core.vectorstores.base.VectorStoreRetriever":"#langchain_core-vectorstores-base-VectorStoreRetriever"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.as_retriever(
+    kwargs: typing.Any = {}
+) -> langchain_core.vectorstores.base.VectorStoreRetriever
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return `VectorStoreRetriever` initialized from this `VectorStore`.
+
+Examples:
+<CodeBlock showLineNumbers={false}>
+
+```python
+# Retrieve more documents with higher diversity
+# Useful if your dataset has many similar documents
+docsearch.as_retriever(
+    search_type="mmr", search_kwargs={"k": 6, "lambda_mult": 0.25}
+)
+
+# Fetch more documents for the MMR algorithm to consider
+# But only return the top 5
+docsearch.as_retriever(search_type="mmr", search_kwargs={"k": 5, "fetch_k": 50})
+
+# Only retrieve documents that have a relevance score
+# Above a certain threshold
+docsearch.as_retriever(
+    search_type="similarity_score_threshold",
+    search_kwargs={"score_threshold": 0.8},
+)
+
+# Only get the single most similar document from the dataset
+docsearch.as_retriever(search_kwargs={"k": 1})
+
+# Use a filter to only retrieve documents from a specific paper
+docsearch.as_retriever(
+    search_kwargs={"filter": {"paper_title": "GPT-4 Technical Report"}}
+)
+```
+
+</CodeBlock>
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to pass to the search function.
+
+Can include:
+
+* `search_type`: Defines the type of search that the Retriever should
+    perform. Can be `'similarity'` (default), `'mmr'`, or
+    `'similarity_score_threshold'`.
+* `search_kwargs`: Keyword arguments to pass to the search function.
+
+    Can include things like:
+
+    * `k`: Amount of documents to return (Default: `4`)
+    * `score_threshold`: Minimum relevance threshold
+        for `similarity_score_threshold`
+    * `fetch_k`: Amount of documents to pass to MMR algorithm
+        (Default: `20`)
+    * `lambda_mult`: Diversity of results returned by MMR;
+        `1` for minimum diversity and 0 for maximum. (Default: `0.5`)
+    * `filter`: Filter by document metadata
+</ParamField>
+
+**Returns:** `VectorStoreRetriever`
+
+Retriever class for `VectorStore`.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-asearch">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.asearch(
+    query: str,
+    search_type: str,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async return docs most similar to query using a specified search type.
+
+**Parameters:**
+
+<ParamField path="query" type="str">
+Input text.
+</ParamField>
+
+<ParamField path="search_type" type="str">
+Type of search to perform.
+
+Can be `'similarity'`, `'mmr'`, or `'similarity_score_threshold'`.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arguments to pass to the search method.
+</ParamField>
+
+**Returns:** `list[Document]`
+
+List of `Document` objects most similar to the query.
+
+**Raises:**
+
+- `ValueError`: If `search_type` is not one of `'similarity'`,
+`'mmr'`, or `'similarity_score_threshold'`.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-asimilarity_search">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.asimilarity_search(
+    query: str,
+    k: int = 4,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async return docs most similar to query.
+
+**Parameters:**
+
+<ParamField path="query" type="str">
+Input text.
+</ParamField>
+
+<ParamField path="k" type="int" default="4">
+Number of `Document` objects to return.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arguments to pass to the search method.
+</ParamField>
+
+**Returns:** `list[Document]`
+
+List of `Document` objects most similar to the query.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-asimilarity_search_by_vector">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.asimilarity_search_by_vector(
+    embedding: list[float],
+    k: int = 4,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async return docs most similar to embedding vector.
+
+**Parameters:**
+
+<ParamField path="embedding" type="list[float]">
+Embedding to look up documents similar to.
+</ParamField>
+
+<ParamField path="k" type="int" default="4">
+Number of `Document` objects to return.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arguments to pass to the search method.
+</ParamField>
+
+**Returns:** `list[Document]`
+
+List of `Document` objects most similar to the query vector.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-asimilarity_search_with_relevance_scores">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.asimilarity_search_with_relevance_scores(
+    query: str,
+    k: int = 4,
+    kwargs: typing.Any = {}
+) -> list[tuple[langchain_core.documents.Document, float]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async return docs and relevance scores in the range `[0, 1]`.
+
+`0` is dissimilar, `1` is most similar.
+
+**Parameters:**
+
+<ParamField path="query" type="str">
+Input text.
+</ParamField>
+
+<ParamField path="k" type="int" default="4">
+Number of `Document` objects to return.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Kwargs to be passed to similarity search.
+
+Should include `score_threshold`, an optional floating point value
+between `0` to `1` to filter the resulting set of retrieved docs.
+</ParamField>
+
+**Returns:** `list[tuple[Document, float]]`
+
+List of tuples of `(doc, similarity_score)`
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-asimilarity_search_with_score">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.asimilarity_search_with_score(
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+) -> list[tuple[langchain_core.documents.Document, float]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async run similarity search with distance.
+
+**Parameters:**
+
+<ParamField path="*args" type="Any" default="()">
+Arguments to pass to the search method.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arguments to pass to the search method.
+</ParamField>
+
+**Returns:** `list[tuple[Document, float]]`
+
+List of tuples of `(doc, similarity_score)`.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-delete">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.delete(
+    ids: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> bool | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Delete by vector ID or other criteria.
+
+**Parameters:**
+
+<ParamField path="ids" type="list[str] | None" default="None">
+List of IDs to delete. If `None`, delete all.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Other keyword arguments that subclasses might use.
+</ParamField>
+
+**Returns:** `bool | None`
+
+`True` if deletion is successful, `False` otherwise, `None` if not
+implemented.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-from_documents">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document","langchain_core.embeddings.Embeddings":"/langchain-core/langchain_core/embeddings/embeddings#langchain_core-embeddings-embeddings-Embeddings"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.from_documents(
+    documents: list[langchain_core.documents.Document],
+    embedding: langchain_core.embeddings.Embeddings,
+    kwargs: typing.Any = {}
+) -> typing_extensions.Self
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Return `VectorStore` initialized from documents and embeddings.
+
+**Parameters:**
+
+<ParamField path="documents" type="list[Document]">
+List of `Document` objects to add to the `VectorStore`.
+</ParamField>
+
+<ParamField path="embedding" type="Embeddings">
+Embedding function to use.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+**Returns:** `Self`
+
+`VectorStore` initialized from documents and embeddings.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-from_texts">
+
+<CodeBlock links={{"langchain_core.embeddings.Embeddings":"/langchain-core/langchain_core/embeddings/embeddings#langchain_core-embeddings-embeddings-Embeddings","langchain_core.vectorstores.base.VST":"#langchain_core-vectorstores-base-VST"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.from_texts(
+    texts: list[str],
+    embedding: langchain_core.embeddings.Embeddings,
+    metadatas: list[dict] | None = None,
+    ids: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.vectorstores.base.VST
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge> <Badge>abstract</Badge>
+
+Return `VectorStore` initialized from texts and embeddings.
+
+**Parameters:**
+
+<ParamField path="texts" type="list[str]">
+Texts to add to the `VectorStore`.
+</ParamField>
+
+<ParamField path="embedding" type="Embeddings">
+Embedding function to use.
+</ParamField>
+
+<ParamField path="metadatas" type="list[dict] | None" default="None">
+Optional list of metadatas associated with the texts.
+</ParamField>
+
+<ParamField path="ids" type="list[str] | None" default="None">
+Optional list of IDs associated with the texts.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+**Returns:** `VST`
+
+`VectorStore` initialized from texts and embeddings.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-get_by_ids">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.get_by_ids(
+    ids: collections.abc.Sequence[str]
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get documents by their IDs.
+
+The returned documents are expected to have the ID field set to the ID of the
+document in the vector store.
+
+Fewer documents may be returned than requested if some IDs are not found or
+if there are duplicated IDs.
+
+Users should not assume that the order of the returned documents matches
+the order of the input IDs. Instead, users should rely on the ID field of the
+returned documents.
+
+This method should **NOT** raise exceptions if no documents are found for
+some IDs.
+
+**Parameters:**
+
+<ParamField path="ids" type="Sequence[str]">
+List of IDs to retrieve.
+</ParamField>
+
+**Returns:** `list[Document]`
+
+List of `Document` objects.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-max_marginal_relevance_search">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.max_marginal_relevance_search(
+    query: str,
+    k: int = 4,
+    fetch_k: int = 20,
+    lambda_mult: float = 0.5,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return docs selected using the maximal marginal relevance.
+
+Maximal marginal relevance optimizes for similarity to query AND diversity
+among selected documents.
+
+**Parameters:**
+
+<ParamField path="query" type="str">
+Text to look up documents similar to.
+</ParamField>
+
+<ParamField path="k" type="int" default="4">
+Number of `Document` objects to return.
+</ParamField>
+
+<ParamField path="fetch_k" type="int" default="20">
+Number of `Document` objects to fetch to pass to MMR algorithm.
+</ParamField>
+
+<ParamField path="lambda_mult" type="float" default="0.5">
+Number between `0` and `1` that determines the degree of
+diversity among the results with `0` corresponding to maximum diversity
+and `1` to minimum diversity.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arguments to pass to the search method.
+</ParamField>
+
+**Returns:** `list[Document]`
+
+List of `Document` objects selected by maximal marginal relevance.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-max_marginal_relevance_search_by_vector">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.max_marginal_relevance_search_by_vector(
+    embedding: list[float],
+    k: int = 4,
+    fetch_k: int = 20,
+    lambda_mult: float = 0.5,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return docs selected using the maximal marginal relevance.
+
+Maximal marginal relevance optimizes for similarity to query AND diversity
+among selected documents.
+
+**Parameters:**
+
+<ParamField path="embedding" type="list[float]">
+Embedding to look up documents similar to.
+</ParamField>
+
+<ParamField path="k" type="int" default="4">
+Number of `Document` objects to return.
+</ParamField>
+
+<ParamField path="fetch_k" type="int" default="20">
+Number of `Document` objects to fetch to pass to MMR algorithm.
+</ParamField>
+
+<ParamField path="lambda_mult" type="float" default="0.5">
+Number between `0` and `1` that determines the degree of
+diversity among the results with `0` corresponding to maximum diversity
+and `1` to minimum diversity.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arguments to pass to the search method.
+</ParamField>
+
+**Returns:** `list[Document]`
+
+List of `Document` objects selected by maximal marginal relevance.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-search">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.search(
+    query: str,
+    search_type: str,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return docs most similar to query using a specified search type.
+
+**Parameters:**
+
+<ParamField path="query" type="str">
+Input text.
+</ParamField>
+
+<ParamField path="search_type" type="str">
+Type of search to perform.
+
+Can be `'similarity'`, `'mmr'`, or `'similarity_score_threshold'`.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arguments to pass to the search method.
+</ParamField>
+
+**Returns:** `list[Document]`
+
+List of `Document` objects most similar to the query.
+
+**Raises:**
+
+- `ValueError`: If `search_type` is not one of `'similarity'`,
+`'mmr'`, or `'similarity_score_threshold'`.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-similarity_search">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.similarity_search(
+    query: str,
+    k: int = 4,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Return docs most similar to query.
+
+**Parameters:**
+
+<ParamField path="query" type="str">
+Input text.
+</ParamField>
+
+<ParamField path="k" type="int" default="4">
+Number of `Document` objects to return.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arguments to pass to the search method.
+</ParamField>
+
+**Returns:** `list[Document]`
+
+List of `Document` objects most similar to the query.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-similarity_search_by_vector">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.similarity_search_by_vector(
+    embedding: list[float],
+    k: int = 4,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return docs most similar to embedding vector.
+
+**Parameters:**
+
+<ParamField path="embedding" type="list[float]">
+Embedding to look up documents similar to.
+</ParamField>
+
+<ParamField path="k" type="int" default="4">
+Number of `Document` objects to return.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arguments to pass to the search method.
+</ParamField>
+
+**Returns:** `list[Document]`
+
+List of `Document` objects most similar to the query vector.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-similarity_search_with_relevance_scores">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.similarity_search_with_relevance_scores(
+    query: str,
+    k: int = 4,
+    kwargs: typing.Any = {}
+) -> list[tuple[langchain_core.documents.Document, float]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return docs and relevance scores in the range `[0, 1]`.
+
+`0` is dissimilar, `1` is most similar.
+
+**Parameters:**
+
+<ParamField path="query" type="str">
+Input text.
+</ParamField>
+
+<ParamField path="k" type="int" default="4">
+Number of `Document` objects to return.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Kwargs to be passed to similarity search.
+
+Should include `score_threshold`, an optional floating point value
+between `0` to `1` to filter the resulting set of retrieved docs.
+</ParamField>
+
+**Returns:** `list[tuple[Document, float]]`
+
+List of tuples of `(doc, similarity_score)`.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStore-similarity_search_with_score">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStore.similarity_search_with_score(
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+) -> list[tuple[langchain_core.documents.Document, float]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run similarity search with distance.
+
+**Parameters:**
+
+<ParamField path="*args" type="Any" default="()">
+Arguments to pass to the search method.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Arguments to pass to the search method.
+</ParamField>
+
+**Returns:** `list[tuple[Document, float]]`
+
+List of tuples of `(doc, similarity_score)`.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-vectorstores-base-VectorStoreRetriever">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.vectorstores.base.VectorStoreRetriever()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseRetriever](/langchain-core/langchain_core/retrievers#langchain_core-retrievers-BaseRetriever)
+
+Base Retriever class for VectorStore.
+
+
+<ParamField path="allowed_search_types" type="Collection[str]">
+</ParamField>
+
+<ParamField path="model_config" type="= ConfigDict(arbitrary_types_allowed=True)">
+</ParamField>
+
+<ParamField path="search_kwargs" type="dict = Field(default_factory=dict)">
+Keyword arguments to pass to the search function.
+</ParamField>
+
+<ParamField path="search_type" type="str = 'similarity'">
+Type of search to perform.
+</ParamField>
+
+<ParamField path="vectorstore" type="VectorStore">
+VectorStore to use for retrieval.
+</ParamField>
+<Anchor id="langchain_core-vectorstores-base-VectorStoreRetriever-_aget_relevant_documents">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.AsyncCallbackManagerForRetrieverRun":"/langchain-core/langchain_core/callbacks/manager#langchain_core-callbacks-manager-AsyncCallbackManagerForRetrieverRun","langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStoreRetriever._aget_relevant_documents(
+    query: str,
+    run_manager: langchain_core.callbacks.manager.AsyncCallbackManagerForRetrieverRun,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStoreRetriever-_get_ls_params">
+
+<CodeBlock links={{"langchain_core.retrievers.LangSmithRetrieverParams":"/langchain-core/langchain_core/retrievers#langchain_core-retrievers-LangSmithRetrieverParams"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStoreRetriever._get_ls_params(
+    kwargs: typing.Any = {}
+) -> langchain_core.retrievers.LangSmithRetrieverParams
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get standard params for tracing.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStoreRetriever-_get_relevant_documents">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.CallbackManagerForRetrieverRun":"/langchain-core/langchain_core/callbacks/manager#langchain_core-callbacks-manager-CallbackManagerForRetrieverRun","langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStoreRetriever._get_relevant_documents(
+    query: str,
+    run_manager: langchain_core.callbacks.manager.CallbackManagerForRetrieverRun,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStoreRetriever-aadd_documents">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStoreRetriever.aadd_documents(
+    documents: list[langchain_core.documents.Document],
+    kwargs: typing.Any = {}
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async add documents to the `VectorStore`.
+
+**Parameters:**
+
+<ParamField path="documents" type="list[Document]">
+Documents to add to the `VectorStore`.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Other keyword arguments that subclasses might use.
+</ParamField>
+
+**Returns:** `list[str]`
+
+List of IDs of the added texts.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStoreRetriever-add_documents">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStoreRetriever.add_documents(
+    documents: list[langchain_core.documents.Document],
+    kwargs: typing.Any = {}
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add documents to the `VectorStore`.
+
+**Parameters:**
+
+<ParamField path="documents" type="list[Document]">
+Documents to add to the `VectorStore`.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Other keyword arguments that subclasses might use.
+</ParamField>
+
+**Returns:** `list[str]`
+
+List of IDs of the added texts.
+
+
+</Indent>
+<Anchor id="langchain_core-vectorstores-base-VectorStoreRetriever-validate_search_type">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VectorStoreRetriever.validate_search_type(
+    values: dict
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Validate search type.
+
+**Parameters:**
+
+<ParamField path="values" type="dict">
+Values to validate.
+</ParamField>
+
+**Returns:** `Any`
+
+Validated values.
+
+**Raises:**
+
+- `ValueError`: If `search_type` is not one of the allowed search types.
+- `ValueError`: If `score_threshold` is not specified with a float value(`0~1`)
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-vectorstores-base-VST">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.VST = TypeVar('VST', bound='VectorStore')
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-vectorstores-base-logger">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.base.logger = logging.getLogger(__name__)
+```
+
+</CodeBlock>
+</Anchor>
+

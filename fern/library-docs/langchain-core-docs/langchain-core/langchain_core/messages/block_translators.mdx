@@ -1,0 +1,159 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/messages/block_translators
+title: langchain_core.messages.block_translators
+---
+
+Derivations of standard content blocks from provider content.
+
+`AIMessage` will first attempt to use a provider-specific translator if
+`model_provider` is set in `response_metadata` on the message. Consequently, each
+provider translator must handle all possible content response types from the provider,
+including text.
+
+If no provider is set, or if the provider does not have a registered translator,
+`AIMessage` will fall back to best-effort parsing of the content into blocks using
+the implementation in `BaseMessage`.
+
+## Submodules
+
+- **[`langchain_core.messages.block_translators.anthropic`](/langchain-core/langchain_core/messages/block_translators/anthropic)**
+- **[`langchain_core.messages.block_translators.bedrock`](/langchain-core/langchain_core/messages/block_translators/bedrock)**
+- **[`langchain_core.messages.block_translators.bedrock_converse`](/langchain-core/langchain_core/messages/block_translators/bedrock_converse)**
+- **[`langchain_core.messages.block_translators.google_genai`](/langchain-core/langchain_core/messages/block_translators/google_genai)**
+- **[`langchain_core.messages.block_translators.google_vertexai`](/langchain-core/langchain_core/messages/block_translators/google_vertexai)**
+- **[`langchain_core.messages.block_translators.groq`](/langchain-core/langchain_core/messages/block_translators/groq)**
+- **[`langchain_core.messages.block_translators.langchain_v0`](/langchain-core/langchain_core/messages/block_translators/langchain_v0)**
+- **[`langchain_core.messages.block_translators.openai`](/langchain-core/langchain_core/messages/block_translators/openai)**
+
+## Package Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_register_translators`](#langchain_core-messages-block_translators-_register_translators) | Register all translators in langchain-core. |
+| [`get_translator`](#langchain_core-messages-block_translators-get_translator) | Get the translator functions for a provider. |
+| [`register_translator`](#langchain_core-messages-block_translators-register_translator) | Register content translators for a provider in `PROVIDER_TRANSLATORS`. |
+
+### Data
+
+[`PROVIDER_TRANSLATORS`](#langchain_core-messages-block_translators-PROVIDER_TRANSLATORS)
+
+### API
+
+<Anchor id="langchain_core-messages-block_translators-_register_translators">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators._register_translators() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Register all translators in langchain-core.
+
+A unit test ensures all modules in `block_translators` are represented here.
+
+For translators implemented outside langchain-core, they can be registered by
+calling `register_translator` from within the integration package.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-get_translator">
+
+<CodeBlock links={{"langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.get_translator(
+    provider: str
+) -> dict[str, collections.abc.Callable[..., list[langchain_core.messages.content.ContentBlock]]] | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the translator functions for a provider.
+
+**Parameters:**
+
+<ParamField path="provider" type="str">
+The model provider name.
+</ParamField>
+
+**Returns:** `dict[str, Callable[..., list[types.ContentBlock]]] | None`
+
+Dictionary with `'translate_content'` and `'translate_content_chunk'`
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-register_translator">
+
+<CodeBlock links={{"langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.register_translator(
+    provider: str,
+    translate_content: collections.abc.Callable[[AIMessage], list[langchain_core.messages.content.ContentBlock]],
+    translate_content_chunk: collections.abc.Callable[[AIMessageChunk], list[langchain_core.messages.content.ContentBlock]]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Register content translators for a provider in `PROVIDER_TRANSLATORS`.
+
+**Parameters:**
+
+<ParamField path="provider" type="str">
+The model provider name (e.g. `'openai'`, `'anthropic'`).
+</ParamField>
+
+<ParamField path="translate_content" type="Callable[[AIMessage], list[types.ContentBlock]]">
+Function to translate `AIMessage` content.
+</ParamField>
+
+<ParamField path="translate_content_chunk" type="Callable[[AIMessageChunk], list[types.ContentBlock]]">
+Function to translate `AIMessageChunk` content.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-PROVIDER_TRANSLATORS">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.PROVIDER_TRANSLATORS: dict[str, dict[str, Callable[..., list[ContentBlock]]]] = {}
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Map model provider names to translator functions.
+
+The dictionary maps provider names (e.g. `'openai'`, `'anthropic'`) to another
+dictionary with two keys:
+- `'translate_content'`: Function to translate `AIMessage` content.
+- `'translate_content_chunk'`: Function to translate `AIMessageChunk` content.
+
+When calling `content_blocks` on an `AIMessage` or `AIMessageChunk`, if
+`model_provider` is set in `response_metadata`, the corresponding translator
+functions will be used to parse the content into blocks. Otherwise, best-effort parsing
+in `BaseMessage` will be used.
+
+</Indent>

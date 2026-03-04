@@ -1,0 +1,200 @@
+---
+title: thrust::random::linear_congruential_engine
+description: "A [`linear_congruential_engine`](/library/api/thrust::random::linear_congruential_engine) random number engine produces unsigned integer random numbers using a linear congruential random number generation algorithm."
+---
+
+A `linear_congruential_engine` random number engine produces unsigned integer random numbers using a linear congruential random number generation algorithm.
+
+The generation algorithm has the form `x_i = (a * x_{i-1} + c) mod m`.
+
+The following code snippet shows examples of use of a `linear_congruential_engine` instance:
+
+```cpp showLineNumbers={false}
+#include <thrust/random/linear_congruential_engine.h>
+```
+
+<Note>
+Inexperienced users should not use this class template directly. Instead, use `minstd_rand` or `minstd_rand0`.
+</Note>
+
+**See also:**
+thrust::random::minstd_rand,
+thrust::random::minstd_rand0
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <thrust/random/linear_congruential_engine.h>
+#include <iostream>
+
+int main()
+{
+  // create a minstd_rand object, which is an instance of linear_congruential_engine
+  thrust::minstd_rand rng1;
+
+  // output some random values to cout
+  std::cout << rng1() << std::endl;
+
+  // a random value is printed
+
+  // create a new minstd_rand from a seed
+  thrust::minstd_rand rng2(13);
+
+  // discard some random values
+  rng2.discard(13);
+
+  // stream the object to an iostream
+  std::cout << rng2 << std::endl;
+
+  // rng2's current state is printed
+
+  // print the minimum and maximum values that minstd_rand can produce
+  std::cout << thrust::minstd_rand::min << std::endl;
+  std::cout << thrust::minstd_rand::max << std::endl;
+
+  // the range of minstd_rand is printed
+
+  // save the state of rng2 to a different object
+  thrust::minstd_rand rng3 = rng2;
+
+  // compare rng2 and rng3
+  std::cout << (rng2 == rng3) << std::endl;
+
+  // 1 is printed
+
+  // re-seed rng2 with a different seed
+  rng2.seed(7);
+
+  // compare rng2 and rng3
+  std::cout << (rng2 == rng3) << std::endl;
+
+  // 0 is printed
+
+  return 0;
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="UIntType" type="typename">
+The type of unsigned integer to produce.
+</ParamField>
+
+<ParamField path="a" type="UIntType">
+The multiplier used in the generation algorithm.
+</ParamField>
+
+<ParamField path="c" type="UIntType">
+The increment used in the generation algorithm.
+</ParamField>
+
+<ParamField path="m" type="UIntType">
+The modulus used in the generation algorithm.
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### linear_congruential_engine <Badge intent="note" minimal>explicit</Badge>
+
+This constructor, which optionally accepts a seed, initializes a new `linear_congruential_engine`.
+
+<CodeBlock links={{"linear_congruential_engine": "/library/api/thrust::random::linear_congruential_engine"}}>
+```cpp showLineNumbers={false}
+thrust::random::linear_congruential_engine<UIntType, a, c, m>::linear_congruential_engine(
+    result_type s = default_seed
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="s" type="result_type" default="default_seed">
+The seed used to initialize this `linear_congruential_engine``'s` state.
+</ParamField>
+
+---
+
+## Methods
+
+### seed
+
+This method initializes this `linear_congruential_engine``'s` state, and optionally accepts a seed value.
+
+<CodeBlock links={{"linear_congruential_engine": "/library/api/thrust::random::linear_congruential_engine"}}>
+```cpp showLineNumbers={false}
+void thrust::random::linear_congruential_engine<UIntType, a, c, m>::seed(
+    result_type s = default_seed
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="s" type="result_type" default="default_seed">
+The seed used to initializes this `linear_congruential_engine``'s` state.
+</ParamField>
+
+### operator()
+
+This member function produces a new random value and updates this `linear_congruential_engine``'s` state.
+
+<CodeBlock links={{"linear_congruential_engine": "/library/api/thrust::random::linear_congruential_engine"}}>
+```cpp showLineNumbers={false}
+result_type thrust::random::linear_congruential_engine<UIntType, a, c, m>::operator()(
+    void
+)
+```
+</CodeBlock>
+
+**Returns:** A new random number.
+
+### discard
+
+This member function advances this `linear_congruential_engine``'s` state a given number of times and discards the results.
+
+<CodeBlock links={{"linear_congruential_engine": "/library/api/thrust::random::linear_congruential_engine"}}>
+```cpp showLineNumbers={false}
+void thrust::random::linear_congruential_engine<UIntType, a, c, m>::discard(
+    unsigned long long z
+)
+```
+</CodeBlock>
+
+<Note>
+This function is provided because an implementation may be able to accelerate it.
+</Note>
+
+**Parameters**
+
+<ParamField path="z" type="unsigned long long">
+The number of random values to discard.
+</ParamField>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `result_type` | `UIntType` | The type of the unsigned integer produced by this `linear_congruential_engine`. |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `multiplier` <Badge intent="note" minimal>static</Badge> | `const result_type` | The multiplier used in the generation algorithm. |
+| `increment` <Badge intent="note" minimal>static</Badge> | `const result_type` | The increment used in the generation algorithm. |
+| `modulus` <Badge intent="note" minimal>static</Badge> | `const result_type` | The modulus used in the generation algorithm. |
+| `min` <Badge intent="note" minimal>static</Badge> | `const result_type` | The smallest value this `linear_congruential_engine` may potentially produce. |
+| `max` <Badge intent="note" minimal>static</Badge> | `const result_type` | The largest value this `linear_congruential_engine` may potentially produce. |
+| `default_seed` <Badge intent="note" minimal>static</Badge> | `const result_type` | The default seed of this `linear_congruential_engine`. |

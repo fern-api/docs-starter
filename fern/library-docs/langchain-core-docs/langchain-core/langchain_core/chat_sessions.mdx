@@ -1,0 +1,46 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/chat_sessions
+title: langchain_core.chat_sessions
+---
+
+**Chat Sessions** are a collection of messages and function calls.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`ChatSession`](#langchain_core-chat_sessions-ChatSession) | Chat Session. |
+
+### API
+
+<Anchor id="langchain_core-chat_sessions-ChatSession">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.chat_sessions.ChatSession
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Chat Session.
+
+Chat Session represents a single conversation, channel, or other group of messages.
+
+<ParamField path="functions" type="Sequence[dict]">
+A sequence of the function calling specs for the messages.
+</ParamField>
+
+<ParamField path="messages" type="Sequence[BaseMessage]">
+A sequence of the LangChain chat messages loaded from the source.
+</ParamField>
+
+</Indent>

@@ -1,0 +1,1003 @@
+---
+title: cub::BlockDiscontinuity
+description: ""
+---
+
+The BlockDiscontinuity class provides collective methods for flagging discontinuities within an ordered set of items partitioned across a CUDA thread block.
+
+## Performance considerations
+
+- Performance is sensitive to the degree of data movement across the block.
+- Incurs zero bank conflicts for most types
+
+## Example
+
+The code snippet below illustrates the head flagging of 512 integer items that are partitioned in a blocked arrangement across 128 threads where each thread owns 4 consecutive items.
+
+`{ [0,0,1,1], [1,1,1,1], [2,3,3,3], [3,4,4,4], ... }`. The corresponding output `head_flags` in those threads will be `{ [1,0,1,0], [0,0,0,0], [1,1,0,0], [0,1,0,0], ... }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_discontinuity.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize BlockDiscontinuity for a 1D block of 128 threads of type int
+    using BlockDiscontinuity = cub::BlockDiscontinuity<int, 128>;
+
+    // Allocate shared memory for BlockDiscontinuity
+    __shared__ typename BlockDiscontinuity::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_data[4];
+    ...
+
+    // Collectively compute head flags for discontinuities in the segment
+    int head_flags[4];
+    BlockDiscontinuity(temp_storage).FlagHeads(head_flags, thread_data, cub::Inequality());
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="T" type="typename">
+The data type to be flagged.
+</ParamField>
+
+<ParamField path="BlockDimX" type="int">
+The thread block length in threads along the X dimension
+</ParamField>
+
+<ParamField path="BlockDimY" type="int" default="1">
+**[optional]** The thread block length in threads along the Y dimension (default: 1)
+</ParamField>
+
+<ParamField path="BlockDimZ" type="int" default="1">
+**[optional]** The thread block length in threads along the Z dimension (default: 1)
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Collective constructors
+
+### BlockDiscontinuity <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+Collective constructor using a private static allocation of shared memory as temporary storage.
+
+<CodeBlock links={{"BlockDiscontinuity": "/library/api/cub::BlockDiscontinuity"}}>
+```cpp showLineNumbers={false}
+cub::BlockDiscontinuity<T, BlockDimX, BlockDimY, BlockDimZ>::BlockDiscontinuity()
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+</Tab>
+<Tab title="With TempStorage">
+
+Collective constructor using the specified memory allocation as temporary storage.
+
+<CodeBlock links={{"BlockDiscontinuity": "/library/api/cub::BlockDiscontinuity", "TempStorage": "/library/api/cub::BlockDiscontinuity::TempStorage"}}>
+```cpp showLineNumbers={false}
+cub::BlockDiscontinuity<T, BlockDimX, BlockDimY, BlockDimZ>::BlockDiscontinuity(
+    TempStorage &temp_storage
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Parameters**
+
+<ParamField path="temp_storage" type="TempStorage &">
+Reference to memory allocation having layout type [TempStorage](/library/api/cub::BlockDiscontinuity::TempStorage)
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Head flag operations
+
+### FlagHeads <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Multiple items per thread">
+
+Sets head flags indicating discontinuities between items partitioned across the thread block, for which the first item has no reference and is always flagged.
+
+<CodeBlock links={{"BlockDiscontinuity": "/library/api/cub::BlockDiscontinuity"}}>
+```cpp showLineNumbers={false}
+template <int ITEMS_PER_THREAD, typename FlagT, typename FlagOp>
+void cub::BlockDiscontinuity<T, BlockDimX, BlockDimY, BlockDimZ>::FlagHeads(
+    FlagT (&head_flags)[ITEMS_PER_THREAD],
+    T (&input)[ITEMS_PER_THREAD],
+    FlagOp flag_op
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+The flag `head_flags[i]` is set for item `input[i]` when `flag_op(previous-item, input[i])` returns `true` (where `previous-item` is either the preceding item in the same thread or the last item in the previous thread).
+For *thread*<sub>0</sub>, item `input[0]` is always flagged.
+Data is in a blocked arrangement across threads.
+Performance is sensitive to the degree of data movement across the block.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="ITEMS_PER_THREAD" type="int">
+**[inferred]** The number of consecutive items partitioned onto each thread
+</ParamField>
+
+<ParamField path="FlagT" type="typename">
+**[inferred]** The flag type (must be an integer type)
+</ParamField>
+
+<ParamField path="FlagOp" type="typename">
+**[inferred]** Binary predicate functor type having member `T operator()(const T &a, const T &b)` or member `T operator()(const T &a, const T &b, unsigned int b_index)`, and returning `true` if a discontinuity exists between `a` and `b`, otherwise `false`. `b_index` is the rank of b in the aggregate tile of data.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="head_flags" type="FlagT(&)[ITEMS_PER_THREAD]">
+Calling thread's discontinuity head_flags
+</ParamField>
+
+<ParamField path="input" type="T(&)[ITEMS_PER_THREAD]">
+Calling thread's input items
+</ParamField>
+
+<ParamField path="flag_op" type="FlagOp">
+Binary boolean flag predicate
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the head-flagging of 512 integer items that are partitioned in a blocked arrangement across 128 threads where each thread owns 4 consecutive items.
+
+`{ [0,0,1,1], [1,1,1,1], [2,3,3,3], [3,4,4,4], ... }`. The corresponding output `head_flags` in those threads will be `{ [1,0,1,0], [0,0,0,0], [1,1,0,0], [0,1,0,0], ... }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_discontinuity.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize BlockDiscontinuity for a 1D block of 128 threads of type int
+    using BlockDiscontinuity = cub::BlockDiscontinuity<int, 128>;
+
+    // Allocate shared memory for BlockDiscontinuity
+    __shared__ typename BlockDiscontinuity::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_data[4];
+    ...
+
+    // Collectively compute head flags for discontinuities in the segment
+    int head_flags[4];
+    BlockDiscontinuity(temp_storage).FlagHeads(head_flags, thread_data, cub::Inequality());
+}
+```
+
+</Tab>
+<Tab title="Multiple items per thread">
+
+Sets head flags indicating discontinuities between items partitioned across the thread block.
+
+<CodeBlock links={{"BlockDiscontinuity": "/library/api/cub::BlockDiscontinuity"}}>
+```cpp showLineNumbers={false}
+template <int ITEMS_PER_THREAD, typename FlagT, typename FlagOp>
+void cub::BlockDiscontinuity<T, BlockDimX, BlockDimY, BlockDimZ>::FlagHeads(
+    FlagT (&head_flags)[ITEMS_PER_THREAD],
+    T (&input)[ITEMS_PER_THREAD],
+    FlagOp flag_op,
+    T tile_predecessor_item
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+The flag `head_flags[i]` is set for item `input[i]` when `flag_op(previous-item, input[i])` returns `true` (where `previous-item` is either the preceding item in the same thread or the last item in the previous thread).
+For *thread*<sub>0</sub>, item `input[0]` is compared against `tile_predecessor_item`.
+Data is in a blocked arrangement across threads.
+Performance is sensitive to the degree of data movement across the block.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="ITEMS_PER_THREAD" type="int">
+**[inferred]** The number of consecutive items partitioned onto each thread.
+</ParamField>
+
+<ParamField path="FlagT" type="typename">
+**[inferred]** The flag type (must be an integer type)
+</ParamField>
+
+<ParamField path="FlagOp" type="typename">
+**[inferred]** Binary predicate functor type having member `T operator()(const T &a, const T &b)` or member `T operator()(const T &a, const T &b, unsigned int b_index)`, and returning `true` if a discontinuity exists between `a` and `b`, otherwise `false`. `b_index` is the rank of b in the aggregate tile of data.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="head_flags" type="FlagT(&)[ITEMS_PER_THREAD]">
+Calling thread's discontinuity `head_flags`
+</ParamField>
+
+<ParamField path="input" type="T(&)[ITEMS_PER_THREAD]">
+Calling thread's input items
+</ParamField>
+
+<ParamField path="flag_op" type="FlagOp">
+Binary boolean flag predicate
+</ParamField>
+
+<ParamField path="tile_predecessor_item" type="T">
+Embed:rst:leading-asterisk 
+//!   *thread*\ :sub:`0` only item with which to compare the first tile item (``input[0]`` from *thread*\ :sub:`0`).
+//!
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the head-flagging of 512 integer items that are partitioned in a blocked arrangement across 128 threads where each thread owns 4 consecutive items.
+
+`{ [0,0,1,1], [1,1,1,1], [2,3,3,3], [3,4,4,4], ... }`, and that `tile_predecessor_item` is `0`. The corresponding output `head_flags` in those threads will be `{ [0,0,1,0], [0,0,0,0], [1,1,0,0], [0,1,0,0], ... }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_discontinuity.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize BlockDiscontinuity for a 1D block of 128 threads of type int
+    using BlockDiscontinuity = cub::BlockDiscontinuity<int, 128>;
+
+    // Allocate shared memory for BlockDiscontinuity
+    __shared__ typename BlockDiscontinuity::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_data[4];
+    ...
+
+    // Have thread0 obtain the predecessor item for the entire tile
+    int tile_predecessor_item;
+    if (threadIdx.x == 0) tile_predecessor_item == ...
+
+    // Collectively compute head flags for discontinuities in the segment
+    int head_flags[4];
+    BlockDiscontinuity(temp_storage).FlagHeads(head_flags, thread_data,
+                                               cub::Inequality(), tile_predecessor_item);
+}
+```
+
+</Tab>
+</Tabs>
+
+---
+
+## Tail flag operations
+
+### FlagTails <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Multiple items per thread">
+
+Sets tail flags indicating discontinuities between items partitioned across the thread block, for which the last item has no reference and is always flagged.
+
+<CodeBlock links={{"BlockDiscontinuity": "/library/api/cub::BlockDiscontinuity"}}>
+```cpp showLineNumbers={false}
+template <int ITEMS_PER_THREAD, typename FlagT, typename FlagOp>
+void cub::BlockDiscontinuity<T, BlockDimX, BlockDimY, BlockDimZ>::FlagTails(
+    FlagT (&tail_flags)[ITEMS_PER_THREAD],
+    T (&input)[ITEMS_PER_THREAD],
+    FlagOp flag_op
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+The flag `tail_flags[i]` is set for item `input[i]` when `flag_op(input[i], next-item)` returns `true` (where `next-item` is either the next item in the same thread or the first item in the next thread).
+For *thread*<sub>BLOCK_THREADS - 1</sub>, item `input[ITEMS_PER_THREAD - 1]` is always flagged.
+Data is in a blocked arrangement across threads.
+Performance is sensitive to the degree of data movement across the block.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="ITEMS_PER_THREAD" type="int">
+**[inferred]** The number of consecutive items partitioned onto each thread.
+</ParamField>
+
+<ParamField path="FlagT" type="typename">
+**[inferred]** The flag type (must be an integer type)
+</ParamField>
+
+<ParamField path="FlagOp" type="typename">
+**[inferred]** Binary predicate functor type having member `T operator()(const T &a, const T &b)` or member `T operator()(const T &a, const T &b, unsigned int b_index)`, and returning `true` if a discontinuity exists between `a` and `b`, otherwise `false`. `b_index` is the rank of `b` in the aggregate tile of data.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="tail_flags" type="FlagT(&)[ITEMS_PER_THREAD]">
+Calling thread's discontinuity tail_flags
+</ParamField>
+
+<ParamField path="input" type="T(&)[ITEMS_PER_THREAD]">
+Calling thread's input items
+</ParamField>
+
+<ParamField path="flag_op" type="FlagOp">
+Binary boolean flag predicate
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the tail-flagging of 512 integer items that are partitioned in a blocked arrangement across 128 threads where each thread owns 4 consecutive items.
+
+`{ [0,0,1,1], [1,1,1,1], [2,3,3,3], ..., [124,125,125,125] }`. The corresponding output `tail_flags` in those threads will be `{ [0,1,0,0], [0,0,0,1], [1,0,0,...], ..., [1,0,0,1] }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_discontinuity.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize BlockDiscontinuity for a 1D block of 128 threads of type int
+    using BlockDiscontinuity = cub::BlockDiscontinuity<int, 128>;
+
+    // Allocate shared memory for BlockDiscontinuity
+    __shared__ typename BlockDiscontinuity::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_data[4];
+    ...
+
+    // Collectively compute tail flags for discontinuities in the segment
+    int tail_flags[4];
+    BlockDiscontinuity(temp_storage).FlagTails(tail_flags, thread_data, cub::Inequality());
+}
+```
+
+</Tab>
+<Tab title="Multiple items per thread">
+
+Sets tail flags indicating discontinuities between items partitioned across the thread block.
+
+<CodeBlock links={{"BlockDiscontinuity": "/library/api/cub::BlockDiscontinuity"}}>
+```cpp showLineNumbers={false}
+template <int ITEMS_PER_THREAD, typename FlagT, typename FlagOp>
+void cub::BlockDiscontinuity<T, BlockDimX, BlockDimY, BlockDimZ>::FlagTails(
+    FlagT (&tail_flags)[ITEMS_PER_THREAD],
+    T (&input)[ITEMS_PER_THREAD],
+    FlagOp flag_op,
+    T tile_successor_item
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+The flag `tail_flags[i]` is set for item `input[i]` when `flag_op(input[i], next-item)` returns `true` (where `next-item` is either the next item in the same thread or the first item in the next thread).
+For *thread*<sub>BLOCK_THREADS - 1</sub>, item `input[ITEMS_PER_THREAD - 1]` is compared against `tile_successor_item`.
+Data is in a blocked arrangement across threads.
+Performance is sensitive to the degree of data movement across the block.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="ITEMS_PER_THREAD" type="int">
+**[inferred]** The number of consecutive items partitioned onto each thread.
+</ParamField>
+
+<ParamField path="FlagT" type="typename">
+**[inferred]** The flag type (must be an integer type)
+</ParamField>
+
+<ParamField path="FlagOp" type="typename">
+**[inferred]** Binary predicate functor type having member `T operator()(const T &a, const T &b)` or member `T operator()(const T &a, const T &b, unsigned int b_index)`, and returning `true` if a discontinuity exists between `a` and `b`, otherwise `false`. `b_index` is the rank of `b` in the aggregate tile of data.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="tail_flags" type="FlagT(&)[ITEMS_PER_THREAD]">
+Calling thread's discontinuity tail_flags
+</ParamField>
+
+<ParamField path="input" type="T(&)[ITEMS_PER_THREAD]">
+Calling thread's input items
+</ParamField>
+
+<ParamField path="flag_op" type="FlagOp">
+Binary boolean flag predicate
+</ParamField>
+
+<ParamField path="tile_successor_item" type="T">
+Embed:rst:leading-asterisk 
+//!   *thread*\ :sub:`BLOCK_THREADS - 1` only item with which to
+//!   compare the last tile item (``input[ITEMS_PER_THREAD - 1]`` from
+//!   *thread*\ :sub:`BLOCK_THREADS - 1`).
+//!
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the tail-flagging of 512 integer items that are partitioned in a blocked arrangement across 128 threads where each thread owns 4 consecutive items.
+
+`{ [0,0,1,1], [1,1,1,1], [2,3,3,3], ..., [124,125,125,125] }` and that `tile_successor_item` is `125`. The corresponding output `tail_flags` in those threads will be `{ [0,1,0,0], [0,0,0,1], [1,0,0,...], ..., [1,0,0,0] }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_discontinuity.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize BlockDiscontinuity for a 1D block of 128 threads of type int
+    using BlockDiscontinuity = cub::BlockDiscontinuity<int, 128>;
+
+    // Allocate shared memory for BlockDiscontinuity
+    __shared__ typename BlockDiscontinuity::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_data[4];
+    ...
+
+    // Have thread127 obtain the successor item for the entire tile
+    int tile_successor_item;
+    if (threadIdx.x == 127) tile_successor_item == ...
+
+    // Collectively compute tail flags for discontinuities in the segment
+    int tail_flags[4];
+    BlockDiscontinuity(temp_storage).FlagTails(tail_flags, thread_data,
+                                               cub::Inequality(), tile_successor_item);
+}
+```
+
+</Tab>
+</Tabs>
+
+---
+
+## Head & tail flag operations
+
+### FlagHeadsAndTails <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Multiple items per thread">
+
+Sets both head and tail flags indicating discontinuities between items partitioned across the thread block.
+
+<CodeBlock links={{"BlockDiscontinuity": "/library/api/cub::BlockDiscontinuity"}}>
+```cpp showLineNumbers={false}
+template <int ITEMS_PER_THREAD, typename FlagT, typename FlagOp>
+void cub::BlockDiscontinuity<T, BlockDimX, BlockDimY, BlockDimZ>::FlagHeadsAndTails(
+    FlagT (&head_flags)[ITEMS_PER_THREAD],
+    FlagT (&tail_flags)[ITEMS_PER_THREAD],
+    T (&input)[ITEMS_PER_THREAD],
+    FlagOp flag_op
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+The flag `head_flags[i]` is set for item `input[i]` when `flag_op(previous-item, input[i])` returns `true` (where `previous-item` is either the preceding item in the same thread or the last item in the previous thread).
+For *thread*<sub>0</sub>, item `input[0]` is always flagged.
+The flag `tail_flags[i]` is set for item `input[i]` when `flag_op(input[i], next-item)` returns `true` (where next-item is either the next item in the same thread or the first item in the next thread).
+For *thread*<sub>BLOCK_THREADS - 1</sub>, item `input[ITEMS_PER_THREAD - 1]` is always flagged.
+Data is in a blocked arrangement across threads.
+Performance is sensitive to the degree of data movement across the block.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="ITEMS_PER_THREAD" type="int">
+**[inferred]** The number of consecutive items partitioned onto each thread.
+</ParamField>
+
+<ParamField path="FlagT" type="typename">
+**[inferred]** The flag type (must be an integer type)
+</ParamField>
+
+<ParamField path="FlagOp" type="typename">
+**[inferred]** Binary predicate functor type having member `T operator()(const T &a, const T &b)` or member `T operator()(const T &a, const T &b, unsigned int b_index)`, and returning `true` if a discontinuity exists between `a` and `b`, otherwise `false`. `b_index` is the rank of `b` in the aggregate tile of data.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="head_flags" type="FlagT(&)[ITEMS_PER_THREAD]">
+Calling thread's discontinuity head_flags
+</ParamField>
+
+<ParamField path="tail_flags" type="FlagT(&)[ITEMS_PER_THREAD]">
+Calling thread's discontinuity tail_flags
+</ParamField>
+
+<ParamField path="input" type="T(&)[ITEMS_PER_THREAD]">
+Calling thread's input items
+</ParamField>
+
+<ParamField path="flag_op" type="FlagOp">
+Binary boolean flag predicate
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the head- and tail-flagging of 512 integer items that are partitioned in a blocked arrangement across 128 threads where each thread owns 4 consecutive items.
+
+`{ [0,0,1,1], [1,1,1,1], [2,3,3,3], ..., [124,125,125,125] }` and that the tile_successor_item is `125`. The corresponding output `head_flags` in those threads will be `{ [1,0,1,0], [0,0,0,0], [1,1,0,0], [0,1,0,0], ... }`. and the corresponding output `tail_flags` in those threads will be `{ [0,1,0,0], [0,0,0,1], [1,0,0,...], ..., [1,0,0,1] }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_discontinuity.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize BlockDiscontinuity for a 1D block of 128 threads of type int
+    using BlockDiscontinuity = cub::BlockDiscontinuity<int, 128>;
+
+    // Allocate shared memory for BlockDiscontinuity
+    __shared__ typename BlockDiscontinuity::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_data[4];
+    ...
+
+    // Collectively compute head and flags for discontinuities in the segment
+    int head_flags[4];
+    int tail_flags[4];
+    BlockDiscontinuity(temp_storage).FlagHeadsAndTails(head_flags, tail_flags, thread_data,
+                                                       cub::Inequality());
+}
+```
+
+</Tab>
+<Tab title="Multiple items per thread">
+
+Sets both head and tail flags indicating discontinuities between items partitioned across the thread block.
+
+<CodeBlock links={{"BlockDiscontinuity": "/library/api/cub::BlockDiscontinuity"}}>
+```cpp showLineNumbers={false}
+template <int ITEMS_PER_THREAD, typename FlagT, typename FlagOp>
+void cub::BlockDiscontinuity<T, BlockDimX, BlockDimY, BlockDimZ>::FlagHeadsAndTails(
+    FlagT (&head_flags)[ITEMS_PER_THREAD],
+    FlagT (&tail_flags)[ITEMS_PER_THREAD],
+    T tile_successor_item,
+    T (&input)[ITEMS_PER_THREAD],
+    FlagOp flag_op
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+The flag `head_flags[i]` is set for item `input[i]` when `flag_op(previous-item, input[i])` returns `true` (where `previous-item` is either the preceding item in the same thread or the last item in the previous thread).
+For *thread*<sub>0</sub>, item `input[0]` is always flagged.
+The flag `tail_flags[i]` is set for item `input[i]` when `flag_op(input[i], next-item)` returns `true` (where `next-item` is either the next item in the same thread or the first item in the next thread).
+For *thread*<sub>BLOCK_THREADS - 1</sub>, item `input[ITEMS_PER_THREAD - 1]` is compared against `tile_predecessor_item`.
+Data is in a blocked arrangement across threads.
+Performance is sensitive to the degree of data movement across the block.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="ITEMS_PER_THREAD" type="int">
+**[inferred]** The number of consecutive items partitioned onto each thread.
+</ParamField>
+
+<ParamField path="FlagT" type="typename">
+**[inferred]** The flag type (must be an integer type)
+</ParamField>
+
+<ParamField path="FlagOp" type="typename">
+**[inferred]** Binary predicate functor type having member `T operator()(const T &a, const T &b)` or member `T operator()(const T &a, const T &b, unsigned int b_index)`, and returning `true` if a discontinuity exists between `a` and `b`, otherwise `false`. `b_index` is the rank of b in the aggregate tile of data.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="head_flags" type="FlagT(&)[ITEMS_PER_THREAD]">
+Calling thread's discontinuity head_flags
+</ParamField>
+
+<ParamField path="tail_flags" type="FlagT(&)[ITEMS_PER_THREAD]">
+Calling thread's discontinuity tail_flags
+</ParamField>
+
+<ParamField path="tile_successor_item" type="T">
+Embed:rst:leading-asterisk 
+//!   *thread*\ :sub:`BLOCK_THREADS - 1` only item with which to compare
+//!   the last tile item (``input[ITEMS_PER_THREAD - 1]`` from
+//!   *thread*\ :sub:`BLOCK_THREADS - 1`).
+//!
+</ParamField>
+
+<ParamField path="input" type="T(&)[ITEMS_PER_THREAD]">
+Calling thread's input items
+</ParamField>
+
+<ParamField path="flag_op" type="FlagOp">
+Binary boolean flag predicate
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the head- and tail-flagging of 512 integer items that are partitioned in a blocked arrangement across 128 threads where each thread owns 4 consecutive items.
+
+`{ [0,0,1,1], [1,1,1,1], [2,3,3,3], ..., [124,125,125,125] }` and that the tile_successor_item is `125`. The corresponding output `head_flags` in those threads will be `{ [1,0,1,0], [0,0,0,0], [1,1,0,0], [0,1,0,0], ... }`. and the corresponding output `tail_flags` in those threads will be `{ [0,1,0,0], [0,0,0,1], [1,0,0,...], ..., [1,0,0,0] }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_discontinuity.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize BlockDiscontinuity for a 1D block of 128 threads of type int
+    using BlockDiscontinuity = cub::BlockDiscontinuity<int, 128>;
+
+    // Allocate shared memory for BlockDiscontinuity
+    __shared__ typename BlockDiscontinuity::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_data[4];
+    ...
+
+    // Have thread127 obtain the successor item for the entire tile
+    int tile_successor_item;
+    if (threadIdx.x == 127) tile_successor_item == ...
+
+    // Collectively compute head and flags for discontinuities in the segment
+    int head_flags[4];
+    int tail_flags[4];
+    BlockDiscontinuity(temp_storage).FlagHeadsAndTails(head_flags, tail_flags,
+                                                       tile_successor_item, thread_data,
+                                                       cub::Inequality());
+}
+```
+
+</Tab>
+<Tab title="Multiple items per thread">
+
+Sets both head and tail flags indicating discontinuities between items partitioned across the thread block.
+
+<CodeBlock links={{"BlockDiscontinuity": "/library/api/cub::BlockDiscontinuity"}}>
+```cpp showLineNumbers={false}
+template <int ITEMS_PER_THREAD, typename FlagT, typename FlagOp>
+void cub::BlockDiscontinuity<T, BlockDimX, BlockDimY, BlockDimZ>::FlagHeadsAndTails(
+    FlagT (&head_flags)[ITEMS_PER_THREAD],
+    T tile_predecessor_item,
+    FlagT (&tail_flags)[ITEMS_PER_THREAD],
+    T (&input)[ITEMS_PER_THREAD],
+    FlagOp flag_op
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+The flag `head_flags[i]` is set for item `input[i]` when `flag_op(previous-item, input[i])` returns `true` (where `previous-item` is either the preceding item in the same thread or the last item in the previous thread).
+For *thread*<sub>0</sub>, item `input[0]` is compared against `tile_predecessor_item`.
+The flag `tail_flags[i]` is set for item `input[i]` when `flag_op(input[i], next-item)` returns `true` (where `next-item` is either the next item in the same thread or the first item in the next thread).
+For *thread*<sub>BLOCK_THREADS - 1</sub>, item `input[ITEMS_PER_THREAD - 1]` is always flagged.
+Data is in a blocked arrangement across threads.
+Performance is sensitive to the degree of data movement across the block.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="ITEMS_PER_THREAD" type="int">
+**[inferred]** The number of consecutive items partitioned onto each thread.
+</ParamField>
+
+<ParamField path="FlagT" type="typename">
+**[inferred]** The flag type (must be an integer type)
+</ParamField>
+
+<ParamField path="FlagOp" type="typename">
+**[inferred]** Binary predicate functor type having member `T operator()(const T &a, const T &b)` or member `T operator()(const T &a, const T &b, unsigned int b_index)`, and returning `true` if a discontinuity exists between `a` and `b`, otherwise `false`. `b_index` is the rank of b in the aggregate tile of data.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="head_flags" type="FlagT(&)[ITEMS_PER_THREAD]">
+Calling thread's discontinuity head_flags
+</ParamField>
+
+<ParamField path="tile_predecessor_item" type="T">
+Embed:rst:leading-asterisk 
+//!   *thread*\ :sub:`0` only item with which to compare the first tile item (``input[0]`` from *thread*\ :sub:`0`).
+//!
+</ParamField>
+
+<ParamField path="tail_flags" type="FlagT(&)[ITEMS_PER_THREAD]">
+Calling thread's discontinuity tail_flags
+</ParamField>
+
+<ParamField path="input" type="T(&)[ITEMS_PER_THREAD]">
+Calling thread's input items
+</ParamField>
+
+<ParamField path="flag_op" type="FlagOp">
+Binary boolean flag predicate
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the head- and tail-flagging of 512 integer items that are partitioned in a blocked arrangement across 128 threads where each thread owns 4 consecutive items.
+
+`{ [0,0,1,1], [1,1,1,1], [2,3,3,3], ..., [124,125,125,125] }`, that the `tile_predecessor_item` is `0`, and that the `tile_successor_item` is `125`. The corresponding output `head_flags` in those threads will be `{ [0,0,1,0], [0,0,0,0], [1,1,0,0], [0,1,0,0], ... }`, and the corresponding output `tail_flags` in those threads will be `{ [0,1,0,0], [0,0,0,1], [1,0,0,...], ..., [1,0,0,1] }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_discontinuity.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize BlockDiscontinuity for a 1D block of 128 threads of type int
+    using BlockDiscontinuity = cub::BlockDiscontinuity<int, 128>;
+
+    // Allocate shared memory for BlockDiscontinuity
+    __shared__ typename BlockDiscontinuity::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_data[4];
+    ...
+
+    // Have thread0 obtain the predecessor item for the entire tile
+    int tile_predecessor_item;
+    if (threadIdx.x == 0) tile_predecessor_item == ...
+
+    // Have thread127 obtain the successor item for the entire tile
+    int tile_successor_item;
+    if (threadIdx.x == 127) tile_successor_item == ...
+
+    // Collectively compute head and flags for discontinuities in the segment
+    int head_flags[4];
+    int tail_flags[4];
+    BlockDiscontinuity(temp_storage).FlagHeadsAndTails(head_flags, tile_predecessor_item,
+                                                       tail_flags, tile_successor_item,
+                                                       thread_data, cub::Inequality());
+}
+```
+
+</Tab>
+<Tab title="Multiple items per thread">
+
+Sets both head and tail flags indicating discontinuities between items partitioned across the thread block.
+
+<CodeBlock links={{"BlockDiscontinuity": "/library/api/cub::BlockDiscontinuity"}}>
+```cpp showLineNumbers={false}
+template <int ITEMS_PER_THREAD, typename FlagT, typename FlagOp>
+void cub::BlockDiscontinuity<T, BlockDimX, BlockDimY, BlockDimZ>::FlagHeadsAndTails(
+    FlagT (&head_flags)[ITEMS_PER_THREAD],
+    T tile_predecessor_item,
+    FlagT (&tail_flags)[ITEMS_PER_THREAD],
+    T tile_successor_item,
+    T (&input)[ITEMS_PER_THREAD],
+    FlagOp flag_op
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+The flag `head_flags[i]` is set for item `input[i]` when `flag_op(previous-item, input[i])` returns `true` (where `previous-item` is either the preceding item in the same thread or the last item in the previous thread).
+For *thread*<sub>0</sub>, item `input[0]` is compared against `tile_predecessor_item`.
+The flag `tail_flags[i]` is set for item `input[i]` when `flag_op(input[i], next-item)` returns `true` (where `next-item` is either the next item in the same thread or the first item in the next thread).
+For *thread*<sub>BLOCK_THREADS - 1</sub>, item `input[ITEMS_PER_THREAD - 1]` is compared against `tile_successor_item`.
+Data is in a blocked arrangement across threads.
+Performance is sensitive to the degree of data movement across the block.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="ITEMS_PER_THREAD" type="int">
+**[inferred]** The number of consecutive items partitioned onto each thread.
+</ParamField>
+
+<ParamField path="FlagT" type="typename">
+**[inferred]** The flag type (must be an integer type)
+</ParamField>
+
+<ParamField path="FlagOp" type="typename">
+**[inferred]** Binary predicate functor type having member `T operator()(const T &a, const T &b)` or member `T operator()(const T &a, const T &b, unsigned int b_index)`, and returning `true` if a discontinuity exists between `a` and `b`, otherwise `false`. `b_index` is the rank of `b` in the aggregate tile of data.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="head_flags" type="FlagT(&)[ITEMS_PER_THREAD]">
+Calling thread's discontinuity head_flags
+</ParamField>
+
+<ParamField path="tile_predecessor_item" type="T">
+Embed:rst:leading-asterisk 
+//!   *thread*\ :sub:`0` only item with which to compare the first tile item (``input[0]`` from *thread*\ :sub:`0`).
+//!
+</ParamField>
+
+<ParamField path="tail_flags" type="FlagT(&)[ITEMS_PER_THREAD]">
+Calling thread's discontinuity tail_flags
+</ParamField>
+
+<ParamField path="tile_successor_item" type="T">
+Embed:rst:leading-asterisk 
+//!   *thread*\ :sub:`BLOCK_THREADS - 1` only item with which to compare the last tile item
+//!   (``input[ITEMS_PER_THREAD - 1]`` from *thread*\ :sub:`BLOCK_THREADS - 1`).
+//!
+</ParamField>
+
+<ParamField path="input" type="T(&)[ITEMS_PER_THREAD]">
+Calling thread's input items
+</ParamField>
+
+<ParamField path="flag_op" type="FlagOp">
+Binary boolean flag predicate
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the head- and tail-flagging of 512 integer items that are partitioned in a blocked arrangement across 128 threads where each thread owns 4 consecutive items.
+
+`{ [0,0,1,1], [1,1,1,1], [2,3,3,3], ..., [124,125,125,125] }`, that the `tile_predecessor_item` is `0`, and that the `tile_successor_item` is `125`. The corresponding output `head_flags` in those threads will be `{ [0,0,1,0], [0,0,0,0], [1,1,0,0], [0,1,0,0], ... }`. and the corresponding output `tail_flags` in those threads will be `{ [0,1,0,0], [0,0,0,1], [1,0,0,...], ..., [1,0,0,0] }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_discontinuity.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize BlockDiscontinuity for a 1D block of 128 threads of type int
+    using BlockDiscontinuity = cub::BlockDiscontinuity<int, 128>;
+
+    // Allocate shared memory for BlockDiscontinuity
+    __shared__ typename BlockDiscontinuity::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_data[4];
+    ...
+
+    // Have thread0 obtain the predecessor item for the entire tile
+    int tile_predecessor_item;
+    if (threadIdx.x == 0) tile_predecessor_item == ...
+
+    // Have thread127 obtain the successor item for the entire tile
+    int tile_successor_item;
+    if (threadIdx.x == 127) tile_successor_item == ...
+
+    // Collectively compute head and flags for discontinuities in the segment
+    int head_flags[4];
+    int tail_flags[4];
+    BlockDiscontinuity(temp_storage).FlagHeadsAndTails(head_flags, tile_predecessor_item,
+                                                       tail_flags, tile_successor_item,
+                                                       thread_data, cub::Inequality());
+}
+```
+
+</Tab>
+</Tabs>
+
+---
+
+## Utility methods
+
+### PrivateStorage <Badge intent="note" minimal>inline</Badge>
+
+Internal storage allocator.
+
+<CodeBlock links={{"BlockDiscontinuity": "/library/api/cub::BlockDiscontinuity", "_TempStorage": "/library/api/cub::BlockDiscontinuity::_TempStorage"}}>
+```cpp showLineNumbers={false}
+_TempStorage & cub::BlockDiscontinuity<T, BlockDimX, BlockDimY, BlockDimZ>::PrivateStorage()
+```
+</CodeBlock>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `BLOCK_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | The thread block size in threads. |
+| `temp_storage` | `_TempStorage &` | Shared storage reference. |
+| `linear_tid` | `unsigned int` | Linear thread-id. |
+
+---
+
+## Inner classes
+
+### _TempStorage
+
+<CodeBlock links={{"BlockDiscontinuity": "/library/api/cub::BlockDiscontinuity"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockDiscontinuity::_TempStorage
+```
+</CodeBlock>
+
+Shared memory storage layout type (last element from each thread's input).
+
+| Name | Type | Description |
+|---|---|---|
+| `first_items` | `T` | |
+| `last_items` | `T` | |
+
+### ApplyOp
+
+<CodeBlock links={{"BlockDiscontinuity": "/library/api/cub::BlockDiscontinuity"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockDiscontinuity::ApplyOp
+```
+</CodeBlock>
+
+Specialization for when FlagOp has third index param.
+
+### ApplyOp< FlagOp, false >
+
+<CodeBlock links={{"BlockDiscontinuity": "/library/api/cub::BlockDiscontinuity"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockDiscontinuity::ApplyOp< FlagOp, false >
+```
+</CodeBlock>
+
+Specialization for when FlagOp does not have a third index param.
+
+### Iterate
+
+<CodeBlock links={{"BlockDiscontinuity": "/library/api/cub::BlockDiscontinuity"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockDiscontinuity::Iterate
+```
+</CodeBlock>
+
+Templated unrolling of item comparison (inductive case).
+
+### TempStorage
+
+<CodeBlock links={{"BlockDiscontinuity": "/library/api/cub::BlockDiscontinuity"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockDiscontinuity::TempStorage
+```
+</CodeBlock>
+
+The operations exposed by `BlockDiscontinuity` require a temporary memory allocation of this nested type for thread communication. This opaque storage can be allocated directly using the `__shared__` keyword. Alternatively, it can be aliased to externally allocated memory (shared or global) or `union`'d with other storage allocation types to facilitate memory reuse.
+
+**Inherits from:** `Uninitialized< _TempStorage >` (public)

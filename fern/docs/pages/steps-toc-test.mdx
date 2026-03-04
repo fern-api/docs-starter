@@ -1,0 +1,92 @@
+---
+title: Steps TOC Depth Test
+subtitle: Testing that Steps respect heading rank in the table of contents
+slug: steps-toc-test
+---
+
+This page tests that the TOC sidebar correctly nests `<Steps toc={true}>` based on the heading level used inside them, rather than always hardcoding depth 3.
+
+## Section A: H2 headings inside Steps
+
+The steps below use `##` headings. With the fix, they should appear at **depth 2** in the TOC (same level as "Section A" above). Before the fix, they'd incorrectly appear at depth 3.
+
+<Steps toc={true}>
+
+## Install dependencies
+
+Run the following command:
+
+```bash
+npm install my-package
+```
+
+## Configure the client
+
+Create a configuration file:
+
+```typescript
+const client = new Client({ apiKey: "your-key" });
+```
+
+## Make your first request
+
+Send a test request:
+
+```typescript
+const response = await client.get("/health");
+console.log(response.status);
+```
+
+</Steps>
+
+## Section B: H3 headings inside Steps (default behavior)
+
+These steps use `###` headings — the original default. They should appear at **depth 3** in the TOC, nesting under "Section B".
+
+<Steps toc={true}>
+
+### Set up authentication
+
+Configure your API keys in the dashboard.
+
+### Create a webhook
+
+Register a webhook endpoint to receive events.
+
+### Test the integration
+
+Verify everything works end-to-end.
+
+</Steps>
+
+## Section C: Explicit Step components (no headings)
+
+These use the explicit `<Step>` syntax without heading-based migration. TOC depth should default to 3 (unchanged behavior).
+
+<Steps toc={true}>
+  <Step title="Create an account">
+    Sign up at the dashboard.
+  </Step>
+  <Step title="Generate an API key">
+    Navigate to Settings and create a key.
+  </Step>
+  <Step title="Start building">
+    Use the SDK to make your first call.
+  </Step>
+</Steps>
+
+## Section D: Steps without toc (control group)
+
+These steps do **not** have `toc={true}`, so they should NOT appear in the TOC at all.
+
+<Steps>
+
+### Hidden step 1
+
+This should not be in the TOC.
+
+### Hidden step 2
+
+Neither should this.
+
+</Steps>

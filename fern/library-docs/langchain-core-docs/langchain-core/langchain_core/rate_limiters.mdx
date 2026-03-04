@@ -1,0 +1,300 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/rate_limiters
+title: langchain_core.rate_limiters
+---
+
+Interface for a rate limiter and an in-memory rate limiter.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`BaseRateLimiter`](#langchain_core-rate_limiters-BaseRateLimiter) | Base class for rate limiters. |
+| [`InMemoryRateLimiter`](#langchain_core-rate_limiters-InMemoryRateLimiter) | An in memory rate limiter based on a token bucket algorithm. |
+
+### Data
+
+[`__all__`](#langchain_core-rate_limiters-__all__)
+
+### API
+
+<Anchor id="langchain_core-rate_limiters-BaseRateLimiter">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.rate_limiters.BaseRateLimiter()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+**Bases:** `ABC`
+
+Base class for rate limiters.
+
+Usage of the base limiter is through the acquire and aacquire methods depending
+on whether running in a sync or async context.
+
+Implementations are free to add a timeout parameter to their initialize method
+to allow users to specify a timeout for acquiring the necessary tokens when
+using a blocking call.
+
+Current limitations:
+
+- Rate limiting information is not surfaced in tracing or callbacks. This means
+    that the total time it takes to invoke a chat model will encompass both
+    the time spent waiting for tokens and the time spent making the request.
+
+
+<Anchor id="langchain_core-rate_limiters-BaseRateLimiter-aacquire">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.rate_limiters.BaseRateLimiter.aacquire(
+    blocking: bool = True
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge> <Badge>abstract</Badge>
+
+Attempt to acquire the necessary tokens for the rate limiter.
+
+This method blocks until the required tokens are available if `blocking`
+is set to `True`.
+
+If `blocking` is set to `False`, the method will immediately return the result
+of the attempt to acquire the tokens.
+
+**Parameters:**
+
+<ParamField path="blocking" type="bool" default="True">
+If `True`, the method will block until the tokens are available.
+If `False`, the method will return immediately with the result of
+the attempt.
+</ParamField>
+
+**Returns:** `bool`
+
+`True` if the tokens were successfully acquired, `False` otherwise.
+
+
+</Indent>
+<Anchor id="langchain_core-rate_limiters-BaseRateLimiter-acquire">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.rate_limiters.BaseRateLimiter.acquire(
+    blocking: bool = True
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Attempt to acquire the necessary tokens for the rate limiter.
+
+This method blocks until the required tokens are available if `blocking`
+is set to `True`.
+
+If `blocking` is set to `False`, the method will immediately return the result
+of the attempt to acquire the tokens.
+
+**Parameters:**
+
+<ParamField path="blocking" type="bool" default="True">
+If `True`, the method will block until the tokens are available.
+If `False`, the method will return immediately with the result of
+the attempt.
+</ParamField>
+
+**Returns:** `bool`
+
+`True` if the tokens were successfully acquired, `False` otherwise.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-rate_limiters-InMemoryRateLimiter">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.rate_limiters.InMemoryRateLimiter(
+    requests_per_second: float = 1,
+    check_every_n_seconds: float = 0.1,
+    max_bucket_size: float = 1
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseRateLimiter](#langchain_core-rate_limiters-BaseRateLimiter)
+
+An in memory rate limiter based on a token bucket algorithm.
+
+This is an in memory rate limiter, so it cannot rate limit across
+different processes.
+
+The rate limiter only allows time-based rate limiting and does not
+take into account any information about the input or the output, so it
+cannot be used to rate limit based on the size of the request.
+
+It is thread safe and can be used in either a sync or async context.
+
+The in memory rate limiter is based on a token bucket. The bucket is filled
+with tokens at a given rate. Each request consumes a token. If there are
+not enough tokens in the bucket, the request is blocked until there are
+enough tokens.
+
+These tokens have nothing to do with LLM tokens. They are just
+a way to keep track of how many requests can be made at a given time.
+
+Current limitations:
+
+- The rate limiter is not designed to work across different processes. It is
+    an in-memory rate limiter, but it is thread safe.
+- The rate limiter only supports time-based rate limiting. It does not take
+    into account the size of the request or any other factors.
+
+
+<ParamField path="_consume_lock" type="= threading.Lock()">
+</ParamField>
+
+<ParamField path="available_tokens" type="= 0.0">
+</ParamField>
+
+<ParamField path="last" type="float | None = None">
+</ParamField>
+<Anchor id="langchain_core-rate_limiters-InMemoryRateLimiter-_consume">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.rate_limiters.InMemoryRateLimiter._consume() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Try to consume a token.
+
+**Returns:** `bool`
+
+True means that the tokens were consumed, and the caller can proceed to
+
+
+</Indent>
+<Anchor id="langchain_core-rate_limiters-InMemoryRateLimiter-aacquire">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.rate_limiters.InMemoryRateLimiter.aacquire(
+    blocking: bool = True
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Attempt to acquire a token from the rate limiter. Async version.
+
+This method blocks until the required tokens are available if `blocking`
+is set to `True`.
+
+If `blocking` is set to `False`, the method will immediately return the result
+of the attempt to acquire the tokens.
+
+**Parameters:**
+
+<ParamField path="blocking" type="bool" default="True">
+If `True`, the method will block until the tokens are available.
+If `False`, the method will return immediately with the result of
+the attempt.
+</ParamField>
+
+**Returns:** `bool`
+
+`True` if the tokens were successfully acquired, `False` otherwise.
+
+
+</Indent>
+<Anchor id="langchain_core-rate_limiters-InMemoryRateLimiter-acquire">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.rate_limiters.InMemoryRateLimiter.acquire(
+    blocking: bool = True
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Attempt to acquire a token from the rate limiter.
+
+This method blocks until the required tokens are available if `blocking`
+is set to `True`.
+
+If `blocking` is set to `False`, the method will immediately return the result
+of the attempt to acquire the tokens.
+
+**Parameters:**
+
+<ParamField path="blocking" type="bool" default="True">
+If `True`, the method will block until the tokens are available.
+If `False`, the method will return immediately with the result of
+the attempt.
+</ParamField>
+
+**Returns:** `bool`
+
+`True` if the tokens were successfully acquired, `False` otherwise.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-rate_limiters-__all__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.rate_limiters.__all__ = ['BaseRateLimiter', 'InMemoryRateLimiter']
+```
+
+</CodeBlock>
+</Anchor>
+

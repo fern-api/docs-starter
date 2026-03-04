@@ -1,0 +1,524 @@
+---
+title: cub::DeviceAdjacentDifference
+description: ""
+---
+
+DeviceAdjacentDifference provides device-wide, parallel operations for computing the differences of adjacent elements residing within device-accessible memory.
+
+## Example
+
+The code snippet below illustrates how to use `DeviceAdjacentDifference` to compute the left difference between adjacent elements.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>
+// or equivalently <cub/device/device_adjacent_difference.cuh>
+
+// Declare, allocate, and initialize device-accessible pointers
+int  num_items;       // e.g., 8
+int  *d_values;       // e.g., [1, 2, 1, 2, 1, 2, 1, 2]
+//...
+
+// Determine temporary device storage requirements
+void     *d_temp_storage = nullptr;
+size_t   temp_storage_bytes = 0;
+
+cub::DeviceAdjacentDifference::SubtractLeft(
+  d_temp_storage, temp_storage_bytes, d_values, num_items);
+
+// Allocate temporary storage
+cudaMalloc(&d_temp_storage, temp_storage_bytes);
+
+// Run operation
+cub::DeviceAdjacentDifference::SubtractLeft(
+  d_temp_storage, temp_storage_bytes, d_values, num_items);
+
+// d_values <-- [1, 1, -1, 1, -1, 1, -1, 1]
+```
+
+---
+
+## Methods
+
+### AdjacentDifference <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"DeviceAdjacentDifference": "/library/api/cub::DeviceAdjacentDifference"}}>
+```cpp showLineNumbers={false}
+template <MayAlias AliasOpt,
+          ReadOption,
+          typename NumItemsT,
+          typename InputIteratorT,
+          typename OutputIteratorT,
+          typename DifferenceOpT>
+static cudaError_t cub::DeviceAdjacentDifference::AdjacentDifference(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_input,
+    OutputIteratorT d_output,
+    NumItemsT num_items,
+    DifferenceOpT difference_op,
+    cudaStream_t stream
+)
+```
+</CodeBlock>
+
+---
+
+## Static methods
+
+### SubtractLeftCopy <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Subtracts the left element of each adjacent pair of elements residing within device-accessible memory
+
+<CodeBlock links={{"DeviceAdjacentDifference": "/library/api/cub::DeviceAdjacentDifference"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT,
+          typename OutputIteratorT,
+          typename DifferenceOpT,
+          typename NumItemsT>
+static cudaError_t cub::DeviceAdjacentDifference::SubtractLeftCopy(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_input,
+    OutputIteratorT d_output,
+    NumItemsT num_items,
+    DifferenceOpT difference_op = {},
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="InputIteratorT" type="typename">
+Embed:rst:leading-asterisk 
+//!   is a model of `Input Iterator <https://en.cppreference.com/w/cpp/iterator/input_iterator>`_,
+//!   and ``x`` and ``y`` are objects of ``InputIteratorT``'s ``value_type``, then
+//!   ``x - y`` is defined, and ``InputIteratorT``'s ``value_type`` is convertible to
+//!   a type in ``OutputIteratorT``'s set of ``value_types``, and the return type
+//!   of ``x - y`` is convertible to a type in ``OutputIteratorT``'s set of
+//!   ``value_types``.
+//!
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+Embed:rst:leading-asterisk 
+//!   is a model of `Output Iterator <https://en.cppreference.com/w/cpp/iterator/output_iterator>`_.
+//!
+</ParamField>
+
+<ParamField path="DifferenceOpT" type="typename">
+Its `result_type` is convertible to a type in `OutputIteratorT`'s set of `value_types`.
+</ParamField>
+
+<ParamField path="NumItemsT" type="typename">
+**[inferred]** Type of num_items
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_input" type="InputIteratorT">
+Pointer to the input sequence
+</ParamField>
+
+<ParamField path="d_output" type="OutputIteratorT">
+Pointer to the output sequence
+</ParamField>
+
+<ParamField path="num_items" type="NumItemsT">
+Number of items in the input sequence
+</ParamField>
+
+<ParamField path="difference_op" type="DifferenceOpT" default="{}">
+The binary function used to compute differences
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`
+//!
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates how to use `DeviceAdjacentDifference` to compute the difference between adjacent elements.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>
+// or equivalently <cub/device/device_adjacent_difference.cuh>
+
+struct CustomDifference
+{
+  template <typename DataType>
+  __host__ DataType operator()(DataType &lhs, DataType &rhs)
+  {
+    return lhs - rhs;
+  }
+};
+
+// Declare, allocate, and initialize device-accessible pointers
+int  num_items;      // e.g., 8
+int  *d_input;       // e.g., [1, 2, 1, 2, 1, 2, 1, 2]
+int  *d_output;
+...
+
+// Determine temporary device storage requirements
+void     *d_temp_storage = nullptr;
+size_t   temp_storage_bytes = 0;
+
+cub::DeviceAdjacentDifference::SubtractLeftCopy(
+  d_temp_storage, temp_storage_bytes,
+  d_input, d_output,
+  num_items, CustomDifference());
+
+// Allocate temporary storage
+cudaMalloc(&d_temp_storage, temp_storage_bytes);
+
+// Run operation
+cub::DeviceAdjacentDifference::SubtractLeftCopy(
+  d_temp_storage, temp_storage_bytes,
+  d_input, d_output,
+  num_items, CustomDifference());
+
+// d_input  <-- [1, 2, 1, 2, 1, 2, 1, 2]
+// d_output <-- [1, 1, -1, 1, -1, 1, -1, 1]
+```
+
+### SubtractLeft <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Subtracts the left element of each adjacent pair of elements residing within device-accessible memory.
+
+<CodeBlock links={{"DeviceAdjacentDifference": "/library/api/cub::DeviceAdjacentDifference"}}>
+```cpp showLineNumbers={false}
+template <typename RandomAccessIteratorT, typename DifferenceOpT, typename NumItemsT>
+static cudaError_t cub::DeviceAdjacentDifference::SubtractLeft(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    RandomAccessIteratorT d_input,
+    NumItemsT num_items,
+    DifferenceOpT difference_op = {},
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="RandomAccessIteratorT" type="typename">
+Embed:rst:leading-asterisk 
+//!   is a model of `Random Access Iterator <https://en.cppreference.com/w/cpp/iterator/random_access_iterator>`_,
+//!   ``RandomAccessIteratorT`` is mutable. If ``x`` and ``y`` are objects of
+//!   ``RandomAccessIteratorT``'s ``value_type``, and ``x - y`` is defined, then the
+//!   return type of ``x - y`` should be convertible to a type in
+//!   ``RandomAccessIteratorT``'s set of ``value_types``.
+//!
+</ParamField>
+
+<ParamField path="DifferenceOpT" type="typename">
+Its `result_type` is convertible to a type in `RandomAccessIteratorT`'s set of `value_types`.
+</ParamField>
+
+<ParamField path="NumItemsT" type="typename">
+**[inferred]** Type of `num_items`
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_input" type="RandomAccessIteratorT">
+Pointer to the input sequence and the result
+</ParamField>
+
+<ParamField path="num_items" type="NumItemsT">
+Number of items in the input sequence
+</ParamField>
+
+<ParamField path="difference_op" type="DifferenceOpT" default="{}">
+The binary function used to compute differences
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates how to use `DeviceAdjacentDifference` to compute the difference between adjacent elements.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>
+// or equivalently <cub/device/device_adjacent_difference.cuh>
+
+struct CustomDifference
+{
+  template <typename DataType>
+  __host__ DataType operator()(DataType &lhs, DataType &rhs)
+  {
+    return lhs - rhs;
+  }
+};
+
+// Declare, allocate, and initialize device-accessible pointers
+int  num_items;     // e.g., 8
+int  *d_data;       // e.g., [1, 2, 1, 2, 1, 2, 1, 2]
+...
+
+// Determine temporary device storage requirements
+void     *d_temp_storage = nullptr;
+size_t   temp_storage_bytes = 0;
+cub::DeviceAdjacentDifference::SubtractLeft(
+  d_temp_storage, temp_storage_bytes,
+  d_data, num_items, CustomDifference());
+
+// Allocate temporary storage
+cudaMalloc(&d_temp_storage, temp_storage_bytes);
+
+// Run operation
+cub::DeviceAdjacentDifference::SubtractLeft(
+  d_temp_storage, temp_storage_bytes,
+  d_data, num_items, CustomDifference());
+
+// d_data <-- [1, 1, -1, 1, -1, 1, -1, 1]
+```
+
+### SubtractRightCopy <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Subtracts the right element of each adjacent pair of elements residing within device-accessible memory.
+
+<CodeBlock links={{"DeviceAdjacentDifference": "/library/api/cub::DeviceAdjacentDifference"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT,
+          typename OutputIteratorT,
+          typename DifferenceOpT,
+          typename NumItemsT>
+static cudaError_t cub::DeviceAdjacentDifference::SubtractRightCopy(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_input,
+    OutputIteratorT d_output,
+    NumItemsT num_items,
+    DifferenceOpT difference_op = {},
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="InputIteratorT" type="typename">
+Embed:rst:leading-asterisk 
+//!   is a model of `Input Iterator <https://en.cppreference.com/w/cpp/iterator/input_iterator>`_,
+//!   and ``x`` and ``y`` are objects of ``InputIteratorT``'s ``value_type``, then
+//!   ``x - y`` is defined, and ``InputIteratorT``'s ``value_type`` is convertible to
+//!   a type in ``OutputIteratorT``'s set of ``value_types``, and the return type
+//!   of ``x - y`` is convertible to a type in ``OutputIteratorT``'s set of
+//!   ``value_types``.
+//!
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+Embed:rst:leading-asterisk 
+//!   is a model of `Output Iterator <https://en.cppreference.com/w/cpp/iterator/output_iterator>`_.
+//!
+</ParamField>
+
+<ParamField path="DifferenceOpT" type="typename">
+Its `result_type` is convertible to a type in `RandomAccessIteratorT`'s set of `value_types`.
+</ParamField>
+
+<ParamField path="NumItemsT" type="typename">
+**[inferred]** Type of num_items
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_input" type="InputIteratorT">
+Pointer to the input sequence
+</ParamField>
+
+<ParamField path="d_output" type="OutputIteratorT">
+Pointer to the output sequence
+</ParamField>
+
+<ParamField path="num_items" type="NumItemsT">
+Number of items in the input sequence
+</ParamField>
+
+<ParamField path="difference_op" type="DifferenceOpT" default="{}">
+The binary function used to compute differences.
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates how to use `DeviceAdjacentDifference` to compute the difference between adjacent elements.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>
+// or equivalently <cub/device/device_adjacent_difference.cuh>
+
+struct CustomDifference
+{
+  template <typename DataType>
+  __host__ DataType operator()(DataType &lhs, DataType &rhs)
+  {
+    return lhs - rhs;
+  }
+};
+
+// Declare, allocate, and initialize device-accessible pointers
+int  num_items;     // e.g., 8
+int  *d_input;      // e.g., [1, 2, 1, 2, 1, 2, 1, 2]
+int  *d_output;
+..
+
+// Determine temporary device storage requirements
+void *d_temp_storage = nullptr;
+size_t temp_storage_bytes = 0;
+cub::DeviceAdjacentDifference::SubtractRightCopy(
+  d_temp_storage, temp_storage_bytes,
+  d_input, d_output, num_items, CustomDifference());
+
+// Allocate temporary storage
+cudaMalloc(&d_temp_storage, temp_storage_bytes);
+
+// Run operation
+cub::DeviceAdjacentDifference::SubtractRightCopy(
+  d_temp_storage, temp_storage_bytes,
+  d_input, d_output, num_items, CustomDifference());
+
+// d_input <-- [1, 2, 1, 2, 1, 2, 1, 2]
+// d_data  <-- [-1, 1, -1, 1, -1, 1, -1, 2]
+```
+
+### SubtractRight <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Subtracts the right element of each adjacent pair of elements residing within device-accessible memory.
+
+<CodeBlock links={{"DeviceAdjacentDifference": "/library/api/cub::DeviceAdjacentDifference"}}>
+```cpp showLineNumbers={false}
+template <typename RandomAccessIteratorT, typename DifferenceOpT, typename NumItemsT>
+static cudaError_t cub::DeviceAdjacentDifference::SubtractRight(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    RandomAccessIteratorT d_input,
+    NumItemsT num_items,
+    DifferenceOpT difference_op = {},
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="RandomAccessIteratorT" type="typename">
+Embed:rst:leading-asterisk 
+//!   is a model of `Random Access Iterator <https://en.cppreference.com/w/cpp/iterator/random_access_iterator>`_,
+//!   ``RandomAccessIteratorT`` is mutable. If ``x`` and ``y`` are objects of
+//!   ``RandomAccessIteratorT``'s `value_type`, and ``x - y`` is defined, then the
+//!   return type of ``x - y`` should be convertible to a type in
+//!   ``RandomAccessIteratorT``'s set of ``value_types``.
+//!
+</ParamField>
+
+<ParamField path="DifferenceOpT" type="typename">
+Its `result_type` is convertible to a type in `RandomAccessIteratorT`'s set of `value_types`.
+</ParamField>
+
+<ParamField path="NumItemsT" type="typename">
+**[inferred]** Type of num_items
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_input" type="RandomAccessIteratorT">
+Pointer to the input sequence
+</ParamField>
+
+<ParamField path="num_items" type="NumItemsT">
+Number of items in the input sequence
+</ParamField>
+
+<ParamField path="difference_op" type="DifferenceOpT" default="{}">
+The binary function used to compute differences
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates how to use `DeviceAdjacentDifference` to compute the difference between adjacent elements.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>
+// or equivalently <cub/device/device_adjacent_difference.cuh>
+
+// Declare, allocate, and initialize device-accessible pointers
+int  num_items;    // e.g., 8
+int  *d_data;      // e.g., [1, 2, 1, 2, 1, 2, 1, 2]
+...
+
+// Determine temporary device storage requirements
+void *d_temp_storage = nullptr;
+size_t temp_storage_bytes = 0;
+cub::DeviceAdjacentDifference::SubtractRight(
+  d_temp_storage, temp_storage_bytes, d_data, num_items);
+
+// Allocate temporary storage
+cudaMalloc(&d_temp_storage, temp_storage_bytes);
+
+// Run operation
+cub::DeviceAdjacentDifference::SubtractRight(
+  d_temp_storage, temp_storage_bytes, d_data, num_items);
+
+// d_data  <-- [-1, 1, -1, 1, -1, 1, -1, 2]
+```

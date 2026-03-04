@@ -1,0 +1,1181 @@
+---
+title: cub::DeviceSegmentedReduce
+description: ""
+---
+
+DeviceSegmentedReduce provides device-wide, parallel operations for computing a reduction across multiple sequences of data items residing within device-accessible memory.
+
+---
+
+## Static methods
+
+### Reduce <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Computes a device-wide segmented reduction using the specified binary `reduction_op` functor.
+
+<CodeBlock links={{"DeviceSegmentedReduce": "/library/api/cub::DeviceSegmentedReduce"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT,
+          typename OutputIteratorT,
+          typename BeginOffsetIteratorT,
+          typename EndOffsetIteratorT,
+          typename ReductionOpT,
+          typename T>
+static cudaError_t cub::DeviceSegmentedReduce::Reduce(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    OutputIteratorT d_out,
+    ::cuda::std::int64_t num_segments,
+    BeginOffsetIteratorT d_begin_offsets,
+    EndOffsetIteratorT d_end_offsets,
+    ReductionOpT reduction_op,
+    T initial_value,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Does not support binary reduction operators that are non-commutative.
+Provides "run-to-run" determinism for pseudo-associative reduction (e.g., addition of floating point types) on the same GPU device. However, results for pseudo-associative reduction may be inconsistent from one device to a another device of a different compute-capability because CUB can employ different tile-sizing for different architectures.
+When input a contiguous sequence of segments, a single sequence `segment_offsets` (of length `num_segments + 1`) can be aliased for both the `d_begin_offsets` and `d_end_offsets` parameters (where the latter is specified as `segment_offsets + 1`).
+Let `s` be in `[0, num_segments)`. The range `[d_out + d_begin_offsets[s], d_out + d_end_offsets[s])` shall not overlap `[d_in + d_begin_offsets[s], d_in + d_end_offsets[s])`, `[d_begin_offsets, d_begin_offsets + num_segments)` nor `[d_end_offsets, d_end_offsets + num_segments)`.
+@devicestorage
+</Note>
+
+**Template parameters**
+
+<ParamField path="InputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the reduced aggregate (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="BeginOffsetIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading segment beginning offsets (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="EndOffsetIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading segment ending offsets (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="ReductionOpT" type="typename">
+**[inferred]** Binary reduction functor type having member `T operator()(const T &a, const T &b)`
+</ParamField>
+
+<ParamField path="T" type="typename">
+**[inferred]** Data element type that is convertible to the `value` type of `InputIteratorT`
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_in" type="InputIteratorT">
+Pointer to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Pointer to the output aggregate
+</ParamField>
+
+<ParamField path="num_segments" type="::cuda::std::int64_t">
+The number of segments that comprise the segmented reduction data
+</ParamField>
+
+<ParamField path="d_begin_offsets" type="BeginOffsetIteratorT">
+Embed:rst:leading-asterisk 
+//!   Random-access input iterator to the sequence of beginning offsets of
+//!   length ``num_segments``, such that ``d_begin_offsets[i]`` is the first
+//!   element of the *i*\ :sup:`th` data segment in ``d_in``
+//!
+</ParamField>
+
+<ParamField path="d_end_offsets" type="EndOffsetIteratorT">
+Embed:rst:leading-asterisk 
+//!   Random-access input iterator to the sequence of ending offsets of length
+//!   ``num_segments``, such that ``d_end_offsets[i] - 1`` is the last element of
+//!   the *i*\ :sup:`th` data segment in ``d_in``.
+//!   If ``d_end_offsets[i] - 1 <= d_begin_offsets[i]``, the *i*\ :sup:`th` is considered empty.
+//!
+</ParamField>
+
+<ParamField path="reduction_op" type="ReductionOpT">
+Binary reduction functor
+</ParamField>
+
+<ParamField path="initial_value" type="T">
+Initial value of the reduction for each segment
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Computes a device-wide segmented reduction using the specified binary `reduction_op` functor and a fixed segment size.
+
+<CodeBlock links={{"DeviceSegmentedReduce": "/library/api/cub::DeviceSegmentedReduce"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT,
+          typename OutputIteratorT,
+          typename ReductionOpT,
+          typename T>
+static cudaError_t cub::DeviceSegmentedReduce::Reduce(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    OutputIteratorT d_out,
+    ::cuda::std::int64_t num_segments,
+    int segment_size,
+    ReductionOpT reduction_op,
+    T initial_value,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v3.2.0. First appears in CUDA Toolkit 13.2.*
+
+<Note>
+Does not support binary reduction operators that are non-commutative.
+Provides "run-to-run" determinism for pseudo-associative reduction (e.g., addition of floating point types) on the same GPU device. However, results for pseudo-associative reduction may be inconsistent from one device to a another device of a different compute-capability because CUB can employ different tile-sizing for different architectures.
+@devicestorage
+</Note>
+
+**Template parameters**
+
+<ParamField path="InputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the reduced aggregate (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="ReductionOpT" type="typename">
+**[inferred]** Binary reduction functor type having member `T operator()(const T &a, const T &b)`
+</ParamField>
+
+<ParamField path="T" type="typename">
+**[inferred]** Data element type that is convertible to the `value` type of `InputIteratorT`
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_in" type="InputIteratorT">
+Pointer to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Pointer to the output aggregates
+</ParamField>
+
+<ParamField path="num_segments" type="::cuda::std::int64_t">
+The number of segments that comprise the segmented reduction data
+</ParamField>
+
+<ParamField path="segment_size" type="int">
+The fixed segment size of each segment
+</ParamField>
+
+<ParamField path="reduction_op" type="ReductionOpT">
+Binary reduction functor
+</ParamField>
+
+<ParamField path="initial_value" type="T">
+Initial value of the reduction for each segment
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### Sum <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Computes a device-wide segmented sum using the addition (`+`) operator.
+
+<CodeBlock links={{"DeviceSegmentedReduce": "/library/api/cub::DeviceSegmentedReduce"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT,
+          typename OutputIteratorT,
+          typename BeginOffsetIteratorT,
+          typename EndOffsetIteratorT,
+          typename>
+static cudaError_t cub::DeviceSegmentedReduce::Sum(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    OutputIteratorT d_out,
+    ::cuda::std::int64_t num_segments,
+    BeginOffsetIteratorT d_begin_offsets,
+    EndOffsetIteratorT d_end_offsets,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Uses `0` as the initial value of the reduction for each segment.
+When input a contiguous sequence of segments, a single sequence `segment_offsets` (of length `num_segments + 1`) can be aliased for both the `d_begin_offsets` and `d_end_offsets` parameters (where the latter is specified as `segment_offsets + 1`).
+Does not support `+` operators that are non-commutative.
+Let `s` be in `[0, num_segments)`. The range `[d_out + d_begin_offsets[s], d_out + d_end_offsets[s])` shall not overlap `[d_in + d_begin_offsets[s], d_in + d_end_offsets[s])`, `[d_begin_offsets, d_begin_offsets + num_segments)` nor `[d_end_offsets, d_end_offsets + num_segments)`.
+@devicestorage
+</Note>
+
+**Template parameters**
+
+<ParamField path="InputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the reduced aggregate (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="BeginOffsetIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading segment beginning offsets (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="EndOffsetIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading segment ending offsets (may be a simple pointer type)
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_in" type="InputIteratorT">
+Pointer to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Pointer to the output aggregate
+</ParamField>
+
+<ParamField path="num_segments" type="::cuda::std::int64_t">
+The number of segments that comprise the segmented reduction data
+</ParamField>
+
+<ParamField path="d_begin_offsets" type="BeginOffsetIteratorT">
+Embed:rst:leading-asterisk 
+//!   Random-access input iterator to the sequence of beginning offsets of
+//!   length ``num_segments`, such that ``d_begin_offsets[i]`` is the first
+//!   element of the *i*\ :sup:`th` data segment in ``d_in``
+//!
+</ParamField>
+
+<ParamField path="d_end_offsets" type="EndOffsetIteratorT">
+Embed:rst:leading-asterisk 
+//!   Random-access input iterator to the sequence of ending offsets of length
+//!   ``num_segments``, such that ``d_end_offsets[i] - 1`` is the last element of
+//!   the *i*\ :sup:`th` data segment in ``d_in``.
+//!   If ``d_end_offsets[i] - 1 <= d_begin_offsets[i]``, the *i*\ :sup:`th` is considered empty.
+//!
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Computes a device-wide segmented sum using the addition (`+`) operator.
+
+<CodeBlock links={{"DeviceSegmentedReduce": "/library/api/cub::DeviceSegmentedReduce"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT,
+          typename OutputIteratorT,
+          typename BeginOffsetIteratorT,
+          typename EndOffsetIteratorT,
+          typename,
+          typename EnvT>
+static cudaError_t cub::DeviceSegmentedReduce::Sum(
+    InputIteratorT d_in,
+    OutputIteratorT d_out,
+    ::cuda::std::int64_t num_segments,
+    BeginOffsetIteratorT d_begin_offsets,
+    EndOffsetIteratorT d_end_offsets,
+    EnvT env = {}
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Uses `0` as the initial value of the reduction for each segment.
+When input a contiguous sequence of segments, a single sequence `segment_offsets` (of length `num_segments + 1`) can be aliased for both the `d_begin_offsets` and `d_end_offsets` parameters (where the latter is specified as `segment_offsets + 1`).
+Does not support `+` operators that are non-commutative.
+Let `s` be in `[0, num_segments)`. The range `[d_out + d_begin_offsets[s], d_out + d_end_offsets[s])` shall not overlap `[d_in + d_begin_offsets[s], d_in + d_end_offsets[s])`, `[d_begin_offsets, d_begin_offsets + num_segments)` nor `[d_end_offsets, d_end_offsets + num_segments)`.
+Can use a specific stream or cuda memory resource through the `env` parameter
+@devicestorage
+</Note>
+
+**Template parameters**
+
+<ParamField path="InputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the reduced aggregate (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="BeginOffsetIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading segment beginning offsets (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="EndOffsetIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading segment ending offsets (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="EnvT" type="typename">
+**[inferred]** Execution environment type. Default is `cuda::std::execution::env<>`.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_in" type="InputIteratorT">
+Pointer to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Pointer to the output aggregate
+</ParamField>
+
+<ParamField path="num_segments" type="::cuda::std::int64_t">
+The number of segments that comprise the segmented reduction data
+</ParamField>
+
+<ParamField path="d_begin_offsets" type="BeginOffsetIteratorT">
+Embed:rst:leading-asterisk 
+//!   Random-access input iterator to the sequence of beginning offsets of
+//!   length ``num_segments`, such that ``d_begin_offsets[i]`` is the first
+//!   element of the *i*\ :sup:`th` data segment in ``d_in``
+//!
+</ParamField>
+
+<ParamField path="d_end_offsets" type="EndOffsetIteratorT">
+Embed:rst:leading-asterisk 
+//!   Random-access input iterator to the sequence of ending offsets of length
+//!   ``num_segments``, such that ``d_end_offsets[i] - 1`` is the last element of
+//!   the *i*\ :sup:`th` data segment in ``d_in``.
+//!   If ``d_end_offsets[i] - 1 <= d_begin_offsets[i]``, the *i*\ :sup:`th` is considered empty.
+//!
+</ParamField>
+
+<ParamField path="env" type="EnvT" default="{}">
+Embed:rst:leading-asterisk 
+//!   **[optional]** Execution environment. Default is ``cuda::std::execution::env{}``.
+//!
+</ParamField>
+
+</Tab>
+<Tab title="Overload 3">
+
+Computes a device-wide segmented sum using the addition (`+`) operator.
+
+<CodeBlock links={{"DeviceSegmentedReduce": "/library/api/cub::DeviceSegmentedReduce"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT, typename OutputIteratorT>
+static cudaError_t cub::DeviceSegmentedReduce::Sum(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    OutputIteratorT d_out,
+    ::cuda::std::int64_t num_segments,
+    int segment_size,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v3.2.0. First appears in CUDA Toolkit 13.2.*
+
+<Note>
+Uses `0` as the initial value of the reduction for each segment.
+@devicestorage
+</Note>
+
+**Template parameters**
+
+<ParamField path="InputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the reduced aggregate (may be a simple pointer type)
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_in" type="InputIteratorT">
+Pointer to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Pointer to the output aggregate
+</ParamField>
+
+<ParamField path="num_segments" type="::cuda::std::int64_t">
+The number of segments that comprise the segmented reduction data
+</ParamField>
+
+<ParamField path="segment_size" type="int">
+The fixed segment size of each segment
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### Min <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Computes a device-wide segmented minimum using the less-than (`<`) operator.
+
+<CodeBlock links={{"DeviceSegmentedReduce": "/library/api/cub::DeviceSegmentedReduce"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT,
+          typename OutputIteratorT,
+          typename BeginOffsetIteratorT,
+          typename EndOffsetIteratorT,
+          typename>
+static cudaError_t cub::DeviceSegmentedReduce::Min(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    OutputIteratorT d_out,
+    ::cuda::std::int64_t num_segments,
+    BeginOffsetIteratorT d_begin_offsets,
+    EndOffsetIteratorT d_end_offsets,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Uses `::cuda::std::numeric_limits<T>::max()` as the initial value of the reduction for each segment.
+When input a contiguous sequence of segments, a single sequence `segment_offsets` (of length `num_segments + 1`) can be aliased for both the `d_begin_offsets` and `d_end_offsets` parameters (where the latter is specified as `segment_offsets + 1`).
+Does not support `<` operators that are non-commutative.
+Let `s` be in `[0, num_segments)`. The range `[d_out + d_begin_offsets[s], d_out + d_end_offsets[s])` shall not overlap `[d_in + d_begin_offsets[s], d_in + d_end_offsets[s])`, `[d_begin_offsets, d_begin_offsets + num_segments)` nor `[d_end_offsets, d_end_offsets + num_segments)`.
+@devicestorage
+</Note>
+
+**Template parameters**
+
+<ParamField path="InputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the reduced aggregate (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="BeginOffsetIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading segment beginning offsets (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="EndOffsetIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading segment ending offsets (may be a simple pointer type)
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_in" type="InputIteratorT">
+Pointer to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Pointer to the output aggregate
+</ParamField>
+
+<ParamField path="num_segments" type="::cuda::std::int64_t">
+The number of segments that comprise the segmented reduction data
+</ParamField>
+
+<ParamField path="d_begin_offsets" type="BeginOffsetIteratorT">
+Embed:rst:leading-asterisk 
+//!   Random-access input iterator to the sequence of beginning offsets of
+//!   length ``num_segments``, such that ``d_begin_offsets[i]`` is the first
+//!   element of the *i*\ :sup:`th` data segment in ``d_in``
+//!
+</ParamField>
+
+<ParamField path="d_end_offsets" type="EndOffsetIteratorT">
+Embed:rst:leading-asterisk 
+//!   Random-access input iterator to the sequence of ending offsets of length
+//!   ``num_segments``, such that ``d_end_offsets[i] - 1`` is the last element of
+//!   the *i*\ :sup:`th` data segment in ``d_in``.
+//!   If ``d_end_offsets[i] - 1 <= d_begin_offsets[i]``, the *i*\ :sup:`th` is considered empty.
+//!
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Computes a device-wide segmented minimum using the less-than (`<`) operator.
+
+<CodeBlock links={{"DeviceSegmentedReduce": "/library/api/cub::DeviceSegmentedReduce"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT, typename OutputIteratorT>
+static cudaError_t cub::DeviceSegmentedReduce::Min(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    OutputIteratorT d_out,
+    ::cuda::std::int64_t num_segments,
+    int segment_size,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v3.2.0. First appears in CUDA Toolkit 13.2.*
+
+<Note>
+Uses `::cuda::std::numeric_limits<T>::max()` as the initial value of the reduction for each segment.
+</Note>
+
+**Template parameters**
+
+<ParamField path="InputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the reduced aggregate (may be a simple pointer type)
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_in" type="InputIteratorT">
+Pointer to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Pointer to the output aggregate
+</ParamField>
+
+<ParamField path="num_segments" type="::cuda::std::int64_t">
+The number of segments that comprise the segmented reduction data
+</ParamField>
+
+<ParamField path="segment_size" type="int">
+The fixed segment size of each segment
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### ArgMin <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Finds the first device-wide minimum in each segment using the less-than (`<`) operator, also returning the in-segment index of that item.
+
+<CodeBlock links={{"DeviceSegmentedReduce": "/library/api/cub::DeviceSegmentedReduce"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT,
+          typename OutputIteratorT,
+          typename BeginOffsetIteratorT,
+          typename EndOffsetIteratorT,
+          typename>
+static cudaError_t cub::DeviceSegmentedReduce::ArgMin(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    OutputIteratorT d_out,
+    ::cuda::std::int64_t num_segments,
+    BeginOffsetIteratorT d_begin_offsets,
+    EndOffsetIteratorT d_end_offsets,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+The output value type of `d_out` is `cub::KeyValuePair<int, T>` (assuming the value type of `d_in` is `T`)
+The minimum of the *i*<sup>th</sup> segment is written to `d_out[i].value` and its offset in that segment is written to `d_out[i].key`.
+The `{1, ::cuda::std::numeric_limits<T>::max()}` tuple is produced for zero-length inputs
+When input a contiguous sequence of segments, a single sequence `segment_offsets` (of length `num_segments + 1`) can be aliased for both the `d_begin_offsets` and `d_end_offsets` parameters (where the latter is specified as `segment_offsets + 1`).
+Does not support `<` operators that are non-commutative.
+Let `s` be in `[0, num_segments)`. The range `[d_out + d_begin_offsets[s], d_out + d_end_offsets[s])` shall not overlap `[d_in + d_begin_offsets[s], d_in + d_end_offsets[s])`, `[d_begin_offsets, d_begin_offsets + num_segments)` nor `[d_end_offsets, d_end_offsets + num_segments)`.
+@devicestorage
+</Note>
+
+**Template parameters**
+
+<ParamField path="InputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input items (of some type `T`) (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the reduced aggregate (having value type `KeyValuePair<int, T>`) (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="BeginOffsetIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading segment beginning offsets (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="EndOffsetIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading segment ending offsets (may be a simple pointer type)
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_in" type="InputIteratorT">
+Pointer to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Pointer to the output aggregate
+</ParamField>
+
+<ParamField path="num_segments" type="::cuda::std::int64_t">
+The number of segments that comprise the segmented reduction data
+</ParamField>
+
+<ParamField path="d_begin_offsets" type="BeginOffsetIteratorT">
+Embed:rst:leading-asterisk 
+//!   Random-access input iterator to the sequence of beginning offsets of
+//!   length ``num_segments``, such that ``d_begin_offsets[i]`` is the first
+//!   element of the *i*\ :sup:`th` data segment in ``d_in``
+//!
+</ParamField>
+
+<ParamField path="d_end_offsets" type="EndOffsetIteratorT">
+Embed:rst:leading-asterisk 
+//!   Random-access input iterator to the sequence of ending offsets of length
+//!   ``num_segments``, such that ``d_end_offsets[i] - 1`` is the last element of
+//!   the *i*\ :sup:`th` data segment in ``d_in``.
+//!   If ``d_end_offsets[i] - 1 <= d_begin_offsets[i]``, the *i*\ :sup:`th` is considered empty.
+//!
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Finds the first device-wide minimum in each segment using the less-than (`<`) operator, also returning the in-segment index of that item.
+
+<CodeBlock links={{"DeviceSegmentedReduce": "/library/api/cub::DeviceSegmentedReduce"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT, typename OutputIteratorT>
+static cudaError_t cub::DeviceSegmentedReduce::ArgMin(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    OutputIteratorT d_out,
+    ::cuda::std::int64_t num_segments,
+    int segment_size,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v3.2.0. First appears in CUDA Toolkit 13.2.*
+
+<Note>
+The output value type of `d_out` is `::cuda::std::pair<int, T>` (assuming the value type of `d_in` is `T`)
+The minimum of the *i*<sup>th</sup> segment is written to `d_out[i].second` and its offset in that segment is written to `d_out[i].first`.
+The `{1, ::cuda::std::numeric_limits<T>::max()}` tuple is produced for zero-length inputs
+</Note>
+
+**Template parameters**
+
+<ParamField path="InputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input items (of some type `T`) (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the reduced aggregate (having value type `cuda::std::pair<int, T>`) (may be a simple pointer type)
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_in" type="InputIteratorT">
+Pointer to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Pointer to the output aggregate
+</ParamField>
+
+<ParamField path="num_segments" type="::cuda::std::int64_t">
+The number of segments that comprise the segmented reduction data
+</ParamField>
+
+<ParamField path="segment_size" type="int">
+The fixed segment size of each segment
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### Max <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Computes a device-wide segmented maximum using the greater-than (`>`) operator.
+
+<CodeBlock links={{"DeviceSegmentedReduce": "/library/api/cub::DeviceSegmentedReduce"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT,
+          typename OutputIteratorT,
+          typename BeginOffsetIteratorT,
+          typename EndOffsetIteratorT,
+          typename>
+static cudaError_t cub::DeviceSegmentedReduce::Max(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    OutputIteratorT d_out,
+    ::cuda::std::int64_t num_segments,
+    BeginOffsetIteratorT d_begin_offsets,
+    EndOffsetIteratorT d_end_offsets,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Uses `::cuda::std::numeric_limits<T>::lowest()` as the initial value of the reduction.
+When input a contiguous sequence of segments, a single sequence `segment_offsets` (of length `num_segments + 1`) can be aliased for both the `d_begin_offsets` and `d_end_offsets` parameters (where the latter is specified as `segment_offsets + 1`).
+Does not support `>` operators that are non-commutative.
+Let `s` be in `[0, num_segments)`. The range `[d_out + d_begin_offsets[s], d_out + d_end_offsets[s])` shall not overlap `[d_in + d_begin_offsets[s], d_in + d_end_offsets[s])`, `[d_begin_offsets, d_begin_offsets + num_segments)` nor `[d_end_offsets, d_end_offsets + num_segments)`.
+@devicestorage
+</Note>
+
+**Template parameters**
+
+<ParamField path="InputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the reduced aggregate (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="BeginOffsetIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading segment beginning offsets (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="EndOffsetIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading segment ending offsets (may be a simple pointer type)
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_in" type="InputIteratorT">
+Pointer to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Pointer to the output aggregate
+</ParamField>
+
+<ParamField path="num_segments" type="::cuda::std::int64_t">
+The number of segments that comprise the segmented reduction data
+</ParamField>
+
+<ParamField path="d_begin_offsets" type="BeginOffsetIteratorT">
+Embed:rst:leading-asterisk 
+//!   Random-access input iterator to the sequence of beginning offsets of
+//!   length ``num_segments``, such that ``d_begin_offsets[i]`` is the first
+//!   element of the *i*\ :sup:`th` data segment in ``d_in``
+//!
+</ParamField>
+
+<ParamField path="d_end_offsets" type="EndOffsetIteratorT">
+Embed:rst:leading-asterisk 
+//!   Random-access input iterator to the sequence of ending offsets of length
+//!   ``num_segments``, such that ``d_end_offsets[i] - 1`` is the last element of
+//!   the *i*\ :sup:`th` data segment in ``d_in``.
+//!   If ``d_end_offsets[i] - 1 <= d_begin_offsets[i]``, the *i*\ :sup:`th` is considered empty.
+//!
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Computes a device-wide segmented maximum using the greater-than (`>`) operator.
+
+<CodeBlock links={{"DeviceSegmentedReduce": "/library/api/cub::DeviceSegmentedReduce"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT, typename OutputIteratorT>
+static cudaError_t cub::DeviceSegmentedReduce::Max(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    OutputIteratorT d_out,
+    ::cuda::std::int64_t num_segments,
+    int segment_size,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v3.2.0. First appears in CUDA Toolkit 13.2.*
+
+<Note>
+Uses `::cuda::std::numeric_limits<T>::lowest()` as the initial value of the reduction.
+</Note>
+
+**Template parameters**
+
+<ParamField path="InputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the reduced aggregate (may be a simple pointer type)
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_in" type="InputIteratorT">
+Pointer to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Pointer to the output aggregate
+</ParamField>
+
+<ParamField path="num_segments" type="::cuda::std::int64_t">
+The number of segments that comprise the segmented reduction data
+</ParamField>
+
+<ParamField path="segment_size" type="int">
+The fixed segment size of each segment
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### ArgMax <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Finds the first device-wide maximum in each segment using the greater-than (`>`) operator, also returning the in-segment index of that item
+
+<CodeBlock links={{"DeviceSegmentedReduce": "/library/api/cub::DeviceSegmentedReduce"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT,
+          typename OutputIteratorT,
+          typename BeginOffsetIteratorT,
+          typename EndOffsetIteratorT,
+          typename>
+static cudaError_t cub::DeviceSegmentedReduce::ArgMax(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    OutputIteratorT d_out,
+    ::cuda::std::int64_t num_segments,
+    BeginOffsetIteratorT d_begin_offsets,
+    EndOffsetIteratorT d_end_offsets,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+The output value type of `d_out` is `cub::KeyValuePair<int, T>` (assuming the value type of `d_in` is `T`)
+The maximum of the *i*<sup>th</sup> segment is written to `d_out[i].value` and its offset in that segment is written to `d_out[i].key`.
+The `{1, ::cuda::std::numeric_limits<T>::lowest()}` tuple is produced for zero-length inputs
+When input a contiguous sequence of segments, a single sequence `segment_offsets` (of length `num_segments + 1`) can be aliased for both the `d_begin_offsets` and `d_end_offsets` parameters (where the latter is specified as `segment_offsets + 1`).
+Does not support `>` operators that are non-commutative.
+Let `s` be in `[0, num_segments)`. The range `[d_out + d_begin_offsets[s], d_out + d_end_offsets[s])` shall not overlap `[d_in + d_begin_offsets[s], d_in + d_end_offsets[s])`, `[d_begin_offsets, d_begin_offsets + num_segments)` nor `[d_end_offsets, d_end_offsets + num_segments)`.
+@devicestorage
+</Note>
+
+**Template parameters**
+
+<ParamField path="InputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input items (of some type `T`) (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the reduced aggregate (having value type `KeyValuePair<int, T>`) (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="BeginOffsetIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading segment beginning offsets (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="EndOffsetIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading segment ending offsets (may be a simple pointer type)
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_in" type="InputIteratorT">
+Pointer to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Pointer to the output aggregate
+</ParamField>
+
+<ParamField path="num_segments" type="::cuda::std::int64_t">
+The number of segments that comprise the segmented reduction data
+</ParamField>
+
+<ParamField path="d_begin_offsets" type="BeginOffsetIteratorT">
+Embed:rst:leading-asterisk 
+//!   Random-access input iterator to the sequence of beginning offsets of
+//!   length `num_segments`, such that ``d_begin_offsets[i]`` is the first
+//!   element of the *i*\ :sup:`th` data segment in ``d_in``
+//!
+</ParamField>
+
+<ParamField path="d_end_offsets" type="EndOffsetIteratorT">
+Embed:rst:leading-asterisk 
+//!   Random-access input iterator to the sequence of ending offsets of length
+//!   ``num_segments``, such that ``d_end_offsets[i] - 1`` is the last element of
+//!   the *i*\ :sup:`th` data segment in ``d_in``.
+//!   If ``d_end_offsets[i] - 1 <= d_begin_offsets[i]``, the *i*\ :sup:`th` is considered empty.
+//!
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Finds the first device-wide maximum in each segment using the greater-than (`>`) operator, also returning the in-segment index of that item
+
+<CodeBlock links={{"DeviceSegmentedReduce": "/library/api/cub::DeviceSegmentedReduce"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT, typename OutputIteratorT>
+static cudaError_t cub::DeviceSegmentedReduce::ArgMax(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    OutputIteratorT d_out,
+    ::cuda::std::int64_t num_segments,
+    int segment_size,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v3.2.0. First appears in CUDA Toolkit 13.2.*
+
+<Note>
+The output value type of `d_out` is `::cuda::std::pair<int, T>` (assuming the value type of `d_in` is `T`)
+The maximum of the *i*<sup>th</sup> segment is written to `d_out[i].second` and its offset in that segment is written to `d_out[i].first`.
+The `{1, ::cuda::std::numeric_limits<T>::lowest()}` tuple is produced for zero-length inputs
+</Note>
+
+**Template parameters**
+
+<ParamField path="InputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input items (of some type `T`) (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the reduced aggregate (having value type `cuda::std::pair<int, T>`) (may be a simple pointer type)
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_in" type="InputIteratorT">
+Pointer to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Pointer to the output aggregate
+</ParamField>
+
+<ParamField path="num_segments" type="::cuda::std::int64_t">
+The number of segments that comprise the segmented reduction data
+</ParamField>
+
+<ParamField path="segment_size" type="int">
+The fixed segment size of each segment
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+</Tab>
+</Tabs>

@@ -1,0 +1,1753 @@
+---
+title: cub::BlockRadixSort
+description: ""
+---
+
+BlockRadixSort class provides collective methods for sorting items partitioned across a CUDA thread block using a radix sorting method.
+
+![](../../img/sorting_logo.png)
+
+The [radix sorting method](http://en.wikipedia.org/wiki/Radix_sort) arranges items into ascending order. It relies upon a positional representation for keys, i.e., each key is comprised of an ordered sequence of symbols (e.g., digits, characters, etc.) specified from least-significant to most-significant. For a given input sequence of keys and a set of rules specifying a total ordering of the symbolic alphabet, the radix sorting method produces a lexicographic ordering of those keys.
+
+Assumes threads are in row-major order.
+
+
+BlockRadixSort can sort all of the built-in C++ numeric primitive types (`unsigned char`, `int`, `double`, etc.) as well as CUDA's `__half` half-precision floating-point type. User-defined types are supported as long as decomposer object is provided.
+
+
+- Positive and negative zeros are considered equivalent, and will be treated
+  as such in the output.
+- No special handling is implemented for NaN values; these are sorted
+  according to their bit representations after any transformations.
+
+
+Although the direct radix sorting method can only be applied to unsigned integral types, BlockRadixSort is able to sort signed and floating-point types via simple bit-wise transformations that ensure lexicographic key ordering.
+
+These transformations must be considered when restricting the `[begin_bit, end_bit)` range, as the bitwise transformations will occur before the bit-range truncation.
+
+Any transformations applied to the keys prior to sorting are reversed while writing to the final output buffer.
+
+
+To convert the input values into a radix-sortable bitwise representation, the following transformations take place prior to sorting:
+
+* For unsigned integral values, the keys are used directly.
+* For signed integral values, the sign bit is inverted.
+* For positive floating point values, the sign bit is inverted.
+* For negative floating point values, the full key is inverted.
+
+
+Unlike `DeviceRadixSort`, `BlockRadixSort` does not invert the input key bits when performing a descending sort. Instead, it has special logic to reverse the order of the keys while sorting.
+
+
+BlockRadixSort is stable. For floating-point types -0.0 and +0.0 are considered equal and appear in the result in the same order as they appear in the input.
+
+
+
+* Performance is sensitive to the degree of data movement across the block.
+
+
+
+
+The code snippet below illustrates a sort of 512 integer keys that are partitioned in a [<em>blocked arrangement</em>](../index.html#sec5sec3) across 128 threads where each thread owns 4 consecutive items.
+
+.. tab-set-code::
+
+Suppose the set of input `thread_keys` across the block of threads is `{ [0,511,1,510], [2,509,3,508], [4,507,5,506], ..., [254,257,255,256] }`. The corresponding output `thread_keys` in those threads will be `{ [0,1,2,3], [4,5,6,7], [8,9,10,11], ..., [508,509,510,511] }`.
+
+
+The `block/example_block_reduce_dyn_smem.cu` example illustrates usage of dynamically shared memory with BlockReduce and how to re-purpose the same memory region.
+
+This example can be easily adapted to the storage required by BlockRadixSort.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="KeyT" type="typename">
+KeyT type
+</ParamField>
+
+<ParamField path="BlockDimX" type="int">
+The thread block length in threads along the X dimension
+</ParamField>
+
+<ParamField path="ItemsPerThread" type="int">
+The number of items per thread
+</ParamField>
+
+<ParamField path="ValueT" type="typename" default="NullType">
+**[optional]** ValueT type (default: cub::NullType, which indicates a keys-only sort)
+</ParamField>
+
+<ParamField path="RadixBits" type="int" default="4">
+**[optional]** The number of radix bits per digit place (default: 4 bits)
+</ParamField>
+
+<ParamField path="MemoizeOuterScan" type="bool" default="true">
+**[optional]** Whether or not to buffer outer raking scan partials to incur fewer shared memory reads at the expense of higher register pressure (default: true for architectures SM35 and newer, false otherwise).
+</ParamField>
+
+<ParamField path="InnerScanAlgorithm" type="BlockScanAlgorithm" default="BLOCK_SCAN_WARP_SCANS">
+**[optional]** The [cub::BlockScanAlgorithm](/library/api/cub::BlockScanAlgorithm) algorithm to use (default: [cub::BLOCK_SCAN_WARP_SCANS](/library/api/cub::BLOCK_SCAN_WARP_SCANS))
+</ParamField>
+
+<ParamField path="SMemConfig" type="cudaSharedMemConfig" default="cudaSharedMemBankSizeFourByte">
+**[Optional]*8 Shared memory bank mode (default: `cudaSharedMemBankSizeFourByte`)
+</ParamField>
+
+<ParamField path="BlockDimY" type="int" default="1">
+**[optional]** The thread block length in threads along the Y dimension (default: 1)
+</ParamField>
+
+<ParamField path="BlockDimZ" type="int" default="1">
+**[optional]** The thread block length in threads along the Z dimension (default: 1)
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Collective constructors
+
+### BlockRadixSort <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+Collective constructor using a private static allocation of shared memory as temporary storage.
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::BlockRadixSort()
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+</Tab>
+<Tab title="With TempStorage">
+
+Collective constructor using the specified memory allocation as temporary storage.
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort", "TempStorage": "/library/api/cub::BlockRadixSort::TempStorage"}}>
+```cpp showLineNumbers={false}
+cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::BlockRadixSort(
+    TempStorage &temp_storage
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Parameters**
+
+<ParamField path="temp_storage" type="TempStorage &">
+Reference to memory allocation having layout type [TempStorage](/library/api/cub::BlockRadixSort::TempStorage)
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Sorting (blocked arrangements)
+
+### Sort <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Performs an ascending block-wide radix sort over a blocked arrangement of keys.
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+void cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::Sort(
+    KeyT (&keys)[ItemsPerThread],
+    int begin_bit = 0,
+    int end_bit = sizeof(KeyT) *8
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Performance is sensitive to the degree of data movement across the block.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="begin_bit" type="int" default="0">
+**[optional]** The beginning (least-significant) bit index needed for key comparison
+</ParamField>
+
+<ParamField path="end_bit" type="int" default="sizeof(KeyT) *8">
+**[optional]** The past-the-end (most-significant) bit index needed for key comparison
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates a sort of 512 integer keys that are partitioned in a blocked arrangement across 128 threads where each thread owns 4 consecutive keys.
+
+`{ [0,511,1,510], [2,509,3,508], [4,507,5,506], ..., [254,257,255,256] }`. The corresponding output `thread_keys` in those threads will be `{ [0,1,2,3], [4,5,6,7], [8,9,10,11], ..., [508,509,510,511] }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_radix_sort.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize BlockRadixSort for a 1D block of 128 threads owning 4 integer keys each
+    using BlockRadixSort = cub::BlockRadixSort<int, 128, 4>;
+
+    // Allocate shared memory for BlockRadixSort
+    __shared__ typename BlockRadixSort::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_keys[4];
+    ...
+
+    // Collectively sort the keys
+    BlockRadixSort(temp_storage).Sort(thread_keys);
+```
+
+</Tab>
+<Tab title="Overload 2">
+
+Performs an ascending block-wide radix sort over a blocked arrangement of keys.
+
+Let's consider a user-defined `custom_t` type below. To sort an array of `custom_t` objects, we have to tell CUB about relevant members of the `custom_t` type. We do this by providing a decomposer that returns a tuple of references to relevant members of the key.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin custom-type :end-before: example-end custom-type
+
+The code snippet below illustrates a sort of 2 keys that are partitioned in a blocked arrangement across 2 threads where each thread owns 1 key.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin keys-bits :end-before: example-end keys-bits
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+template <class DecomposerT>
+::cuda::std::enable_if_t<!::cuda::std::is_convertible_v<DecomposerT, int>> cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::Sort(
+    KeyT (&keys)[ItemsPerThread],
+    DecomposerT decomposer,
+    int begin_bit,
+    int end_bit
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* Performance is sensitive to the degree of data movement across the block. * The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="DecomposerT" type="class">
+**[inferred]** Type of a callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types: `::cuda::std::tuple<ArithmeticTs&...> operator()(KeyT &key)`. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="decomposer" type="DecomposerT">
+Callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+<ParamField path="begin_bit" type="int">
+The least-significant bit index (inclusive) needed for key comparison
+</ParamField>
+
+<ParamField path="end_bit" type="int">
+The most-significant bit index (exclusive) needed for key comparison (e.g., `(sizeof(float) + sizeof(long long int)) * 8`)
+</ParamField>
+
+</Tab>
+<Tab title="Overload 3">
+
+Performs an ascending block-wide radix sort over a blocked arrangement of keys.
+
+Let's consider a user-defined `custom_t` type below. To sort an array of `custom_t` objects, we have to tell CUB about relevant members of the `custom_t` type. We do this by providing a decomposer that returns a tuple of references to relevant members of the key.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin custom-type :end-before: example-end custom-type
+
+The code snippet below illustrates a sort of 6 keys that are partitioned in a blocked arrangement across 2 threads where each thread owns 3 consecutive keys.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin keys :end-before: example-end keys
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+template <class DecomposerT>
+::cuda::std::enable_if_t<!::cuda::std::is_convertible_v<DecomposerT, int>> cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::Sort(
+    KeyT (&keys)[ItemsPerThread],
+    DecomposerT decomposer
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* Performance is sensitive to the degree of data movement across the block. * The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="DecomposerT" type="class">
+**[inferred]** Type of a callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types: `::cuda::std::tuple<ArithmeticTs&...> operator()(KeyT &key)`. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="decomposer" type="DecomposerT">
+Callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 4">
+
+Performs an ascending block-wide radix sort across a blocked arrangement of keys and values.
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+void cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::Sort(
+    KeyT (&keys)[ItemsPerThread],
+    ValueT (&values)[ItemsPerThread],
+    int begin_bit = 0,
+    int end_bit = sizeof(KeyT) *8
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+BlockRadixSort can only accommodate one associated tile of values. To "truck along" more than one tile of values, simply perform a key-value sort of the keys paired with a temporary value array that enumerates the key indices. The reordered indices can then be used as a gather-vector for exchanging other associated tile data through shared memory.
+Performance is sensitive to the degree of data movement across the block.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="values" type="ValueT(&)[ItemsPerThread]">
+Values to sort
+</ParamField>
+
+<ParamField path="begin_bit" type="int" default="0">
+**[optional]** The beginning (least-significant) bit index needed for key comparison
+</ParamField>
+
+<ParamField path="end_bit" type="int" default="sizeof(KeyT) *8">
+**[optional]** The past-the-end (most-significant) bit index needed for key comparison
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates a sort of 512 integer keys and values that are partitioned in a blocked arrangement across 128 threads where each thread owns 4 consecutive pairs.
+
+Suppose the set of input `thread_keys` across the block of threads is `{ [0,511,1,510], [2,509,3,508], [4,507,5,506], ..., [254,257,255,256] }`. The corresponding output `thread_keys` in those threads will be `{ [0,1,2,3], [4,5,6,7], [8,9,10,11], ..., [508,509,510,511] }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_radix_sort.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize BlockRadixSort for a 1D block of 128 threads owning 4 integer keys and values each
+    using BlockRadixSort = cub::BlockRadixSort<int, 128, 4, int>;
+
+    // Allocate shared memory for BlockRadixSort
+    __shared__ typename BlockRadixSort::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_keys[4];
+    int thread_values[4];
+    ...
+
+    // Collectively sort the keys and values among block threads
+    BlockRadixSort(temp_storage).Sort(thread_keys, thread_values);
+```
+
+</Tab>
+<Tab title="Overload 5">
+
+Performs an ascending block-wide radix sort over a blocked arrangement of keys and values.
+
+Let's consider a user-defined `custom_t` type below. To sort an array of `custom_t` objects, we have to tell CUB about relevant members of the `custom_t` type. We do this by providing a decomposer that returns a tuple of references to relevant members of the key.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin custom-type :end-before: example-end custom-type
+
+The code snippet below illustrates a sort of 2 keys and values that are partitioned in a blocked arrangement across 2 threads where each thread owns 1 pair.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin pairs-bits :end-before: example-end pairs-bits
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+template <class DecomposerT>
+::cuda::std::enable_if_t<!::cuda::std::is_convertible_v<DecomposerT, int>> cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::Sort(
+    KeyT (&keys)[ItemsPerThread],
+    ValueT (&values)[ItemsPerThread],
+    DecomposerT decomposer,
+    int begin_bit,
+    int end_bit
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* BlockRadixSort can only accommodate one associated tile of values. To "truck along"   more than one tile of values, simply perform a key-value sort of the keys paired with a temporary value array that enumerates the key indices. The reordered indices can then be used as a gather-vector for exchanging other associated tile data through shared memory. * Performance is sensitive to the degree of data movement across the block. * The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="DecomposerT" type="class">
+**[inferred]** Type of a callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types: `::cuda::std::tuple<ArithmeticTs&...> operator()(KeyT &key)`. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="values" type="ValueT(&)[ItemsPerThread]">
+Values to sort
+</ParamField>
+
+<ParamField path="decomposer" type="DecomposerT">
+Callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+<ParamField path="begin_bit" type="int">
+The least-significant bit index (inclusive) needed for key comparison
+</ParamField>
+
+<ParamField path="end_bit" type="int">
+The most-significant bit index (exclusive) needed for key comparison (e.g., `(sizeof(float) + sizeof(long long int)) * 8`)
+</ParamField>
+
+</Tab>
+<Tab title="Overload 6">
+
+Performs an ascending block-wide radix sort over a blocked arrangement of keys and values.
+
+Let's consider a user-defined `custom_t` type below. To sort an array of `custom_t` objects, we have to tell CUB about relevant members of the `custom_t` type. We do this by providing a decomposer that returns a tuple of references to relevant members of the key.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin custom-type :end-before: example-end custom-type
+
+The code snippet below illustrates a sort of 6 keys and values that are partitioned in a blocked arrangement across 2 threads where each thread owns 3 consecutive pairs.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin pairs :end-before: example-end pairs
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+template <class DecomposerT>
+::cuda::std::enable_if_t<!::cuda::std::is_convertible_v<DecomposerT, int>> cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::Sort(
+    KeyT (&keys)[ItemsPerThread],
+    ValueT (&values)[ItemsPerThread],
+    DecomposerT decomposer
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* BlockRadixSort can only accommodate one associated tile of values. To "truck along"   more than one tile of values, simply perform a key-value sort of the keys paired with a temporary value array that enumerates the key indices. The reordered indices can then be used as a gather-vector for exchanging other associated tile data through shared memory. * Performance is sensitive to the degree of data movement across the block. * The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="DecomposerT" type="class">
+**[inferred]** Type of a callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types: `::cuda::std::tuple<ArithmeticTs&...> operator()(KeyT &key)`. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="values" type="ValueT(&)[ItemsPerThread]">
+Values to sort
+</ParamField>
+
+<ParamField path="decomposer" type="DecomposerT">
+Callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### SortDescending <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Performs a descending block-wide radix sort over a blocked arrangement of keys.
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+void cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::SortDescending(
+    KeyT (&keys)[ItemsPerThread],
+    int begin_bit = 0,
+    int end_bit = sizeof(KeyT) *8
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Performance is sensitive to the degree of data movement across the block.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="begin_bit" type="int" default="0">
+**[optional]** The beginning (least-significant) bit index needed for key comparison
+</ParamField>
+
+<ParamField path="end_bit" type="int" default="sizeof(KeyT) *8">
+**[optional]** The past-the-end (most-significant) bit index needed for key comparison
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates a sort of 512 integer keys that are partitioned in a [<em>blocked arrangement</em>](../index.html#sec5sec3) across 128 threads where each thread owns 4 consecutive keys.
+
+`{ [0,511,1,510], [2,509,3,508], [4,507,5,506], ..., [254,257,255,256] }`. The corresponding output `thread_keys` in those threads will be `{ [511,510,509,508], [11,10,9,8], [7,6,5,4], ..., [3,2,1,0] }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_radix_sort.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize BlockRadixSort for a 1D block of 128 threads owning 4 integer keys each
+    using BlockRadixSort = cub::BlockRadixSort<int, 128, 4>;
+
+    // Allocate shared memory for BlockRadixSort
+    __shared__ typename BlockRadixSort::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_keys[4];
+    ...
+
+    // Collectively sort the keys
+    BlockRadixSort(temp_storage).Sort(thread_keys);
+```
+
+</Tab>
+<Tab title="Overload 2">
+
+Performs a descending block-wide radix sort over a blocked arrangement of keys.
+
+Let's consider a user-defined `custom_t` type below. To sort an array of `custom_t` objects, we have to tell CUB about relevant members of the `custom_t` type. We do this by providing a decomposer that returns a tuple of references to relevant members of the key.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin custom-type :end-before: example-end custom-type
+
+The code snippet below illustrates a sort of 2 keys that are partitioned in a blocked arrangement across 2 threads where each thread owns 1 key.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin keys-descending-bits :end-before: example-end keys-descending-bits
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+template <class DecomposerT>
+::cuda::std::enable_if_t<!::cuda::std::is_convertible_v<DecomposerT, int>> cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::SortDescending(
+    KeyT (&keys)[ItemsPerThread],
+    DecomposerT decomposer,
+    int begin_bit,
+    int end_bit
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* Performance is sensitive to the degree of data movement across the block. * The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="DecomposerT" type="class">
+**[inferred]** Type of a callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types: `::cuda::std::tuple<ArithmeticTs&...> operator()(KeyT &key)`. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="decomposer" type="DecomposerT">
+Callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+<ParamField path="begin_bit" type="int">
+The least-significant bit index (inclusive) needed for key comparison
+</ParamField>
+
+<ParamField path="end_bit" type="int">
+The most-significant bit index (exclusive) needed for key comparison (e.g., `(sizeof(float) + sizeof(long long int)) * 8`)
+</ParamField>
+
+</Tab>
+<Tab title="Overload 3">
+
+Performs a descending block-wide radix sort over a blocked arrangement of keys.
+
+Let's consider a user-defined `custom_t` type below. To sort an array of `custom_t` objects, we have to tell CUB about relevant members of the `custom_t` type. We do this by providing a decomposer that returns a tuple of references to relevant members of the key.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin custom-type :end-before: example-end custom-type
+
+The code snippet below illustrates a sort of 6 keys that are partitioned in a blocked arrangement across 2 threads where each thread owns 3 consecutive keys.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin keys-descending :end-before: example-end keys-descending
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+template <class DecomposerT>
+::cuda::std::enable_if_t<!::cuda::std::is_convertible_v<DecomposerT, int>> cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::SortDescending(
+    KeyT (&keys)[ItemsPerThread],
+    DecomposerT decomposer
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* Performance is sensitive to the degree of data movement across the block. * The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="DecomposerT" type="class">
+**[inferred]** Type of a callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types: `::cuda::std::tuple<ArithmeticTs&...> operator()(KeyT &key)`. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="decomposer" type="DecomposerT">
+Callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 4">
+
+Performs a descending block-wide radix sort across a blocked arrangement of keys and values.
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+void cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::SortDescending(
+    KeyT (&keys)[ItemsPerThread],
+    ValueT (&values)[ItemsPerThread],
+    int begin_bit = 0,
+    int end_bit = sizeof(KeyT) *8
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+BlockRadixSort can only accommodate one associated tile of values. To "truck along" more than one tile of values, simply perform a key-value sort of the keys paired with a temporary value array that enumerates the key indices. The reordered indices can then be used as a gather-vector for exchanging other associated tile data through shared memory.
+Performance is sensitive to the degree of data movement across the block.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="values" type="ValueT(&)[ItemsPerThread]">
+Values to sort
+</ParamField>
+
+<ParamField path="begin_bit" type="int" default="0">
+**[optional]** The beginning (least-significant) bit index needed for key comparison
+</ParamField>
+
+<ParamField path="end_bit" type="int" default="sizeof(KeyT) *8">
+**[optional]** The past-the-end (most-significant) bit index needed for key comparison
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates a sort of 512 integer keys and values that are partitioned in a blocked arrangement across 128 threads where each thread owns 4 consecutive pairs.
+
+`{ [0,511,1,510], [2,509,3,508], [4,507,5,506], ..., [254,257,255,256] }`. The corresponding output `thread_keys` in those threads will be `{ [511,510,509,508], [11,10,9,8], [7,6,5,4], ..., [3,2,1,0] }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_radix_sort.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize BlockRadixSort for a 1D block of 128 threads owning 4 integer keys and values each
+    using BlockRadixSort = cub::BlockRadixSort<int, 128, 4, int>;
+
+    // Allocate shared memory for BlockRadixSort
+    __shared__ typename BlockRadixSort::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_keys[4];
+    int thread_values[4];
+    ...
+
+    // Collectively sort the keys and values among block threads
+    BlockRadixSort(temp_storage).Sort(thread_keys, thread_values);
+```
+
+</Tab>
+<Tab title="Overload 5">
+
+Performs a descending block-wide radix sort over a blocked arrangement of keys and values.
+
+Let's consider a user-defined `custom_t` type below. To sort an array of `custom_t` objects, we have to tell CUB about relevant members of the `custom_t` type. We do this by providing a decomposer that returns a tuple of references to relevant members of the key.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin custom-type :end-before: example-end custom-type
+
+The code snippet below illustrates a sort of 2 pairs that are partitioned in a blocked arrangement across 2 threads where each thread owns 1 pair.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin pairs-descending-bits :end-before: example-end pairs-descending-bits
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+template <class DecomposerT>
+::cuda::std::enable_if_t<!::cuda::std::is_convertible_v<DecomposerT, int>> cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::SortDescending(
+    KeyT (&keys)[ItemsPerThread],
+    ValueT (&values)[ItemsPerThread],
+    DecomposerT decomposer,
+    int begin_bit,
+    int end_bit
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* BlockRadixSort can only accommodate one associated tile of values. To "truck along"   more than one tile of values, simply perform a key-value sort of the keys paired with a temporary value array that enumerates the key indices. The reordered indices can then be used as a gather-vector for exchanging other associated tile data through shared memory. * Performance is sensitive to the degree of data movement across the block. * The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="DecomposerT" type="class">
+**[inferred]** Type of a callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types: `::cuda::std::tuple<ArithmeticTs&...> operator()(KeyT &key)`. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="values" type="ValueT(&)[ItemsPerThread]">
+Values to sort
+</ParamField>
+
+<ParamField path="decomposer" type="DecomposerT">
+Callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+<ParamField path="begin_bit" type="int">
+The least-significant bit index (inclusive) needed for key comparison
+</ParamField>
+
+<ParamField path="end_bit" type="int">
+The most-significant bit index (exclusive) needed for key comparison (e.g., `(sizeof(float) + sizeof(long long int)) * 8`)
+</ParamField>
+
+</Tab>
+<Tab title="Overload 6">
+
+Performs a descending block-wide radix sort over a blocked arrangement of keys and values.
+
+Let's consider a user-defined `custom_t` type below. To sort an array of `custom_t` objects, we have to tell CUB about relevant members of the `custom_t` type. We do this by providing a decomposer that returns a tuple of references to relevant members of the key.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin custom-type :end-before: example-end custom-type
+
+The code snippet below illustrates a sort of 6 keys and values that are partitioned in a blocked arrangement across 2 threads where each thread owns 3 consecutive pairs.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin pairs-descending :end-before: example-end pairs-descending
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+template <class DecomposerT>
+::cuda::std::enable_if_t<!::cuda::std::is_convertible_v<DecomposerT, int>> cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::SortDescending(
+    KeyT (&keys)[ItemsPerThread],
+    ValueT (&values)[ItemsPerThread],
+    DecomposerT decomposer
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* BlockRadixSort can only accommodate one associated tile of values. To "truck along"   more than one tile of values, simply perform a key-value sort of the keys paired with a temporary value array that enumerates the key indices. The reordered indices can then be used as a gather-vector for exchanging other associated tile data through shared memory. * Performance is sensitive to the degree of data movement across the block. * The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="DecomposerT" type="class">
+**[inferred]** Type of a callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types: `::cuda::std::tuple<ArithmeticTs&...> operator()(KeyT &key)`. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="values" type="ValueT(&)[ItemsPerThread]">
+Values to sort
+</ParamField>
+
+<ParamField path="decomposer" type="DecomposerT">
+Callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Sorting (blocked arrangement -> striped arrangement)
+
+### SortBlockedToStriped <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Performs an ascending radix sort across a blocked arrangement of keys, leaving them in a striped arrangement.
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+void cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::SortBlockedToStriped(
+    KeyT (&keys)[ItemsPerThread],
+    int begin_bit = 0,
+    int end_bit = sizeof(KeyT) *8
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Performance is sensitive to the degree of data movement across the block.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="begin_bit" type="int" default="0">
+**[optional]** The beginning (least-significant) bit index needed for key comparison
+</ParamField>
+
+<ParamField path="end_bit" type="int" default="sizeof(KeyT) *8">
+**[optional]** The past-the-end (most-significant) bit index needed for key comparison
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates a sort of 512 integer keys that are initially partitioned in a blocked arrangement across 128 threads where each thread owns 4 consecutive keys. The final partitioning is striped.
+
+`{ [0,511,1,510], [2,509,3,508], [4,507,5,506], ..., [254,257,255,256] }`. The corresponding output `thread_keys` in those threads will be `{ [0,128,256,384], [1,129,257,385], [2,130,258,386], ..., [127,255,383,511] }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_radix_sort.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize BlockRadixSort for a 1D block of 128 threads owning 4 integer keys each
+    using BlockRadixSort = cub::BlockRadixSort<int, 128, 4>;
+
+    // Allocate shared memory for BlockRadixSort
+    __shared__ typename BlockRadixSort::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_keys[4];
+    ...
+
+    // Collectively sort the keys
+    BlockRadixSort(temp_storage).SortBlockedToStriped(thread_keys);
+```
+
+</Tab>
+<Tab title="Overload 2">
+
+Performs an ascending block-wide radix sort over a blocked arrangement of keys, leaving them in a striped arrangement.
+
+Let's consider a user-defined `custom_t` type below. To sort an array of `custom_t` objects, we have to tell CUB about relevant members of the `custom_t` type. We do this by providing a decomposer that returns a tuple of references to relevant members of the key.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin custom-type :end-before: example-end custom-type
+
+The code snippet below illustrates a sort of 4 keys that are partitioned in a blocked arrangement across 2 threads where each thread owns 2 consecutive keys. The final partitioning is striped.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin keys-striped-bits :end-before: example-end keys-striped-bits
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+template <class DecomposerT>
+::cuda::std::enable_if_t<!::cuda::std::is_convertible_v<DecomposerT, int>> cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::SortBlockedToStriped(
+    KeyT (&keys)[ItemsPerThread],
+    DecomposerT decomposer,
+    int begin_bit,
+    int end_bit
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* Performance is sensitive to the degree of data movement across the block. * The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="DecomposerT" type="class">
+**[inferred]** Type of a callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types: `::cuda::std::tuple<ArithmeticTs&...> operator()(KeyT &key)`. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="decomposer" type="DecomposerT">
+Callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+<ParamField path="begin_bit" type="int">
+The least-significant bit index (inclusive) needed for key comparison
+</ParamField>
+
+<ParamField path="end_bit" type="int">
+The most-significant bit index (exclusive) needed for key comparison (e.g., `(sizeof(float) + sizeof(long long int)) * 8`)
+</ParamField>
+
+</Tab>
+<Tab title="Overload 3">
+
+Performs an ascending block-wide radix sort over a blocked arrangement of keys, leaving them in a striped arrangement.
+
+Let's consider a user-defined `custom_t` type below. To sort an array of `custom_t` objects, we have to tell CUB about relevant members of the `custom_t` type. We do this by providing a decomposer that returns a tuple of references to relevant members of the key.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin custom-type :end-before: example-end custom-type
+
+The code snippet below illustrates a sort of 6 keys that are partitioned in a blocked arrangement across 2 threads where each thread owns 3 consecutive keys. The final partitioning is striped.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin keys-striped :end-before: example-end keys-striped
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+template <class DecomposerT>
+::cuda::std::enable_if_t<!::cuda::std::is_convertible_v<DecomposerT, int>> cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::SortBlockedToStriped(
+    KeyT (&keys)[ItemsPerThread],
+    DecomposerT decomposer
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* Performance is sensitive to the degree of data movement across the block. * The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="DecomposerT" type="class">
+**[inferred]** Type of a callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types: `::cuda::std::tuple<ArithmeticTs&...> operator()(KeyT &key)`. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="decomposer" type="DecomposerT">
+Callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 4">
+
+Performs an ascending radix sort across a blocked arrangement of keys and values, leaving them in a striped arrangement.
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+void cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::SortBlockedToStriped(
+    KeyT (&keys)[ItemsPerThread],
+    ValueT (&values)[ItemsPerThread],
+    int begin_bit = 0,
+    int end_bit = sizeof(KeyT) *8
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+BlockRadixSort can only accommodate one associated tile of values. To "truck along" more than one tile of values, simply perform a key-value sort of the keys paired with a temporary value array that enumerates the key indices. The reordered indices can then be used as a gather-vector for exchanging other associated tile data through shared memory.
+Performance is sensitive to the degree of data movement across the block.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="values" type="ValueT(&)[ItemsPerThread]">
+Values to sort
+</ParamField>
+
+<ParamField path="begin_bit" type="int" default="0">
+**[optional]** The beginning (least-significant) bit index needed for key comparison
+</ParamField>
+
+<ParamField path="end_bit" type="int" default="sizeof(KeyT) *8">
+**[optional]** The past-the-end (most-significant) bit index needed for key comparison
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates a sort of 512 integer keys and values that are initially partitioned in a [<em>blocked arrangement</em>](../index.html#sec5sec3) across 128 threads where each thread owns 4 consecutive pairs. The final partitioning is striped.
+
+`{ [0,511,1,510], [2,509,3,508], [4,507,5,506], ..., [254,257,255,256] }`. The corresponding output `thread_keys` in those threads will be `{ [0,128,256,384], [1,129,257,385], [2,130,258,386], ..., [127,255,383,511] }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_radix_sort.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize BlockRadixSort for a 1D block of 128 threads owning 4 integer keys and values each
+    using BlockRadixSort = cub::BlockRadixSort<int, 128, 4, int>;
+
+    // Allocate shared memory for BlockRadixSort
+    __shared__ typename BlockRadixSort::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_keys[4];
+    int thread_values[4];
+    ...
+
+    // Collectively sort the keys and values among block threads
+    BlockRadixSort(temp_storage).SortBlockedToStriped(thread_keys, thread_values);
+```
+
+</Tab>
+<Tab title="Overload 5">
+
+Performs an ascending block-wide radix sort over a blocked arrangement of keys and values, leaving them in a striped arrangement.
+
+Let's consider a user-defined `custom_t` type below. To sort an array of `custom_t` objects, we have to tell CUB about relevant members of the `custom_t` type. We do this by providing a decomposer that returns a tuple of references to relevant members of the key.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin custom-type :end-before: example-end custom-type
+
+The code snippet below illustrates a sort of 4 pairs that are partitioned in a blocked arrangement across 2 threads where each thread owns 2 consecutive pairs. The final partitioning is striped.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin pairs-striped-bits :end-before: example-end pairs-striped-bits
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+template <class DecomposerT>
+::cuda::std::enable_if_t<!::cuda::std::is_convertible_v<DecomposerT, int>> cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::SortBlockedToStriped(
+    KeyT (&keys)[ItemsPerThread],
+    ValueT (&values)[ItemsPerThread],
+    DecomposerT decomposer,
+    int begin_bit,
+    int end_bit
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* Performance is sensitive to the degree of data movement across the block. * The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="DecomposerT" type="class">
+**[inferred]** Type of a callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types: `::cuda::std::tuple<ArithmeticTs&...> operator()(KeyT &key)`. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="values" type="ValueT(&)[ItemsPerThread]">
+Values to sort
+</ParamField>
+
+<ParamField path="decomposer" type="DecomposerT">
+Callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+<ParamField path="begin_bit" type="int">
+The least-significant bit index (inclusive) needed for key comparison
+</ParamField>
+
+<ParamField path="end_bit" type="int">
+The most-significant bit index (exclusive) needed for key comparison (e.g., `(sizeof(float) + sizeof(long long int)) * 8`)
+</ParamField>
+
+</Tab>
+<Tab title="Overload 6">
+
+Performs an ascending block-wide radix sort over a blocked arrangement of keys and values, leaving them in a striped arrangement.
+
+Let's consider a user-defined `custom_t` type below. To sort an array of `custom_t` objects, we have to tell CUB about relevant members of the `custom_t` type. We do this by providing a decomposer that returns a tuple of references to relevant members of the key.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin custom-type :end-before: example-end custom-type
+
+The code snippet below illustrates a sort of 6 pairs that are partitioned in a blocked arrangement across 2 threads where each thread owns 3 consecutive pairs. The final partitioning is striped.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin pairs-striped :end-before: example-end pairs-striped
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+template <class DecomposerT>
+::cuda::std::enable_if_t<!::cuda::std::is_convertible_v<DecomposerT, int>> cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::SortBlockedToStriped(
+    KeyT (&keys)[ItemsPerThread],
+    ValueT (&values)[ItemsPerThread],
+    DecomposerT decomposer
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* Performance is sensitive to the degree of data movement across the block. * The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="DecomposerT" type="class">
+**[inferred]** Type of a callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types: `::cuda::std::tuple<ArithmeticTs&...> operator()(KeyT &key)`. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="values" type="ValueT(&)[ItemsPerThread]">
+Values to sort
+</ParamField>
+
+<ParamField path="decomposer" type="DecomposerT">
+Callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### SortDescendingBlockedToStriped <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Performs a descending radix sort across a blocked arrangement of keys, leaving them in a striped arrangement.
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+void cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::SortDescendingBlockedToStriped(
+    KeyT (&keys)[ItemsPerThread],
+    int begin_bit = 0,
+    int end_bit = sizeof(KeyT) *8
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Performance is sensitive to the degree of data movement across the block.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="begin_bit" type="int" default="0">
+**[optional]** The beginning (least-significant) bit index needed for key comparison
+</ParamField>
+
+<ParamField path="end_bit" type="int" default="sizeof(KeyT) *8">
+**[optional]** The past-the-end (most-significant) bit index needed for key comparison
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates a sort of 512 integer keys that are initially partitioned in a blocked arrangement across 128 threads where each thread owns 4 consecutive keys. The final partitioning is striped.
+
+`{ [0,511,1,510], [2,509,3,508], [4,507,5,506], ..., [254,257,255,256] }`. The corresponding output `thread_keys` in those threads will be `{ [511,383,255,127], [386,258,130,2], [385,257,128,1], ..., [384,256,128,0] }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_radix_sort.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize BlockRadixSort for a 1D block of 128 threads owning 4 integer keys each
+    using BlockRadixSort = cub::BlockRadixSort<int, 128, 4>;
+
+    // Allocate shared memory for BlockRadixSort
+    __shared__ typename BlockRadixSort::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_keys[4];
+    ...
+
+    // Collectively sort the keys
+    BlockRadixSort(temp_storage).SortBlockedToStriped(thread_keys);
+```
+
+</Tab>
+<Tab title="Overload 2">
+
+Performs a descending block-wide radix sort over a blocked arrangement of keys, leaving them in a striped arrangement.
+
+Let's consider a user-defined `custom_t` type below. To sort an array of `custom_t` objects, we have to tell CUB about relevant members of the `custom_t` type. We do this by providing a decomposer that returns a tuple of references to relevant members of the key.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin custom-type :end-before: example-end custom-type
+
+The code snippet below illustrates a sort of 4 keys that are partitioned in a blocked arrangement across 2 threads where each thread owns 2 consecutive keys. The final partitioning is striped.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin keys-striped-descending-bits :end-before: example-end keys-striped-descending-bits
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+template <class DecomposerT>
+::cuda::std::enable_if_t<!::cuda::std::is_convertible_v<DecomposerT, int>> cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::SortDescendingBlockedToStriped(
+    KeyT (&keys)[ItemsPerThread],
+    DecomposerT decomposer,
+    int begin_bit,
+    int end_bit
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* Performance is sensitive to the degree of data movement across the block. * The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="DecomposerT" type="class">
+**[inferred]** Type of a callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types: `::cuda::std::tuple<ArithmeticTs&...> operator()(KeyT &key)`. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="decomposer" type="DecomposerT">
+Callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+<ParamField path="begin_bit" type="int">
+The least-significant bit index (inclusive) needed for key comparison
+</ParamField>
+
+<ParamField path="end_bit" type="int">
+The most-significant bit index (exclusive) needed for key comparison (e.g., `(sizeof(float) + sizeof(long long int)) * 8`)
+</ParamField>
+
+</Tab>
+<Tab title="Overload 3">
+
+Performs a descending block-wide radix sort over a blocked arrangement of keys, leaving them in a striped arrangement.
+
+Let's consider a user-defined `custom_t` type below. To sort an array of `custom_t` objects, we have to tell CUB about relevant members of the `custom_t` type. We do this by providing a decomposer that returns a tuple of references to relevant members of the key.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin custom-type :end-before: example-end custom-type
+
+The code snippet below illustrates a sort of 6 keys that are partitioned in a blocked arrangement across 2 threads where each thread owns 3 consecutive keys. The final partitioning is striped.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin keys-striped-descending :end-before: example-end keys-striped-descending
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+template <class DecomposerT>
+::cuda::std::enable_if_t<!::cuda::std::is_convertible_v<DecomposerT, int>> cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::SortDescendingBlockedToStriped(
+    KeyT (&keys)[ItemsPerThread],
+    DecomposerT decomposer
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* Performance is sensitive to the degree of data movement across the block. * The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="DecomposerT" type="class">
+**[inferred]** Type of a callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types: `::cuda::std::tuple<ArithmeticTs&...> operator()(KeyT &key)`. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="decomposer" type="DecomposerT">
+Callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 4">
+
+Performs a descending radix sort across a blocked arrangement of keys and values, leaving them in a striped arrangement
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+void cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::SortDescendingBlockedToStriped(
+    KeyT (&keys)[ItemsPerThread],
+    ValueT (&values)[ItemsPerThread],
+    int begin_bit = 0,
+    int end_bit = sizeof(KeyT) *8
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+BlockRadixSort can only accommodate one associated tile of values. To "truck along" more than one tile of values, simply perform a key-value sort of the keys paired with a temporary value array that enumerates the key indices. The reordered indices can then be used as a gather-vector for exchanging other associated tile data through shared memory.
+Performance is sensitive to the degree of data movement across the block.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="values" type="ValueT(&)[ItemsPerThread]">
+Values to sort
+</ParamField>
+
+<ParamField path="begin_bit" type="int" default="0">
+**[optional]** The beginning (least-significant) bit index needed for key comparison
+</ParamField>
+
+<ParamField path="end_bit" type="int" default="sizeof(KeyT) *8">
+**[optional]** The past-the-end (most-significant) bit index needed for key comparison
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates a sort of 512 integer keys and values that are initially partitioned in a blocked arrangement across 128 threads where each thread owns 4 consecutive pairs. The final partitioning is striped.
+
+`{ [0,511,1,510], [2,509,3,508], [4,507,5,506], ..., [254,257,255,256] }`. The corresponding output `thread_keys` in those threads will be `{ [511,383,255,127], [386,258,130,2], [385,257,128,1], ..., [384,256,128,0] }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_radix_sort.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize BlockRadixSort for a 1D block of 128 threads owning 4 integer keys and values each
+    using BlockRadixSort = cub::BlockRadixSort<int, 128, 4, int>;
+
+    // Allocate shared memory for BlockRadixSort
+    __shared__ typename BlockRadixSort::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_keys[4];
+    int thread_values[4];
+    ...
+
+    // Collectively sort the keys and values among block threads
+    BlockRadixSort(temp_storage).SortBlockedToStriped(thread_keys, thread_values);
+```
+
+</Tab>
+<Tab title="Overload 5">
+
+Performs a descending block-wide radix sort over a blocked arrangement of keys and values, leaving them in a striped arrangement.
+
+Let's consider a user-defined `custom_t` type below. To sort an array of `custom_t` objects, we have to tell CUB about relevant members of the `custom_t` type. We do this by providing a decomposer that returns a tuple of references to relevant members of the key.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin custom-type :end-before: example-end custom-type
+
+The code snippet below illustrates a sort of 4 keys and values that are partitioned in a blocked arrangement across 2 threads where each thread owns 2 consecutive pairs. The final partitioning is striped.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin pairs-striped-descending-bits :end-before: example-end pairs-striped-descending-bits
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+template <class DecomposerT>
+::cuda::std::enable_if_t<!::cuda::std::is_convertible_v<DecomposerT, int>> cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::SortDescendingBlockedToStriped(
+    KeyT (&keys)[ItemsPerThread],
+    ValueT (&values)[ItemsPerThread],
+    DecomposerT decomposer,
+    int begin_bit,
+    int end_bit
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* Performance is sensitive to the degree of data movement across the block. * The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="DecomposerT" type="class">
+**[inferred]** Type of a callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types: `::cuda::std::tuple<ArithmeticTs&...> operator()(KeyT &key)`. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="values" type="ValueT(&)[ItemsPerThread]">
+Values to sort
+</ParamField>
+
+<ParamField path="decomposer" type="DecomposerT">
+Callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+<ParamField path="begin_bit" type="int">
+The least-significant bit index (inclusive) needed for key comparison
+</ParamField>
+
+<ParamField path="end_bit" type="int">
+The most-significant bit index (exclusive) needed for key comparison (e.g., `(sizeof(float) + sizeof(long long int)) * 8`)
+</ParamField>
+
+</Tab>
+<Tab title="Overload 6">
+
+Performs a descending block-wide radix sort over a blocked arrangement of keys and values, leaving them in a striped arrangement.
+
+Let's consider a user-defined `custom_t` type below. To sort an array of `custom_t` objects, we have to tell CUB about relevant members of the `custom_t` type. We do this by providing a decomposer that returns a tuple of references to relevant members of the key.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin custom-type :end-before: example-end custom-type
+
+The code snippet below illustrates a sort of 6 keys and values that are partitioned in a blocked arrangement across 2 threads where each thread owns 3 consecutive pairs. The final partitioning is striped.
+
+.. literalinclude:: ../../../cub/test/catch2_test_block_radix_sort_custom.cu :language: c++ :dedent: :start-after: example-begin pairs-striped-descending :end-before: example-end pairs-striped-descending
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+template <class DecomposerT>
+::cuda::std::enable_if_t<!::cuda::std::is_convertible_v<DecomposerT, int>> cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::SortDescendingBlockedToStriped(
+    KeyT (&keys)[ItemsPerThread],
+    ValueT (&values)[ItemsPerThread],
+    DecomposerT decomposer
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* Performance is sensitive to the degree of data movement across the block. * The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="DecomposerT" type="class">
+**[inferred]** Type of a callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types: `::cuda::std::tuple<ArithmeticTs&...> operator()(KeyT &key)`. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="values" type="ValueT(&)[ItemsPerThread]">
+Values to sort
+</ParamField>
+
+<ParamField path="decomposer" type="DecomposerT">
+Callable object responsible for decomposing a `KeyT` into a tuple of references to its constituent arithmetic types. The leftmost element of the tuple is considered the most significant. The call operator must not modify members of the key.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Utility methods
+
+### PrivateStorage <Badge intent="note" minimal>inline</Badge>
+
+Internal storage allocator.
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+_TempStorage & cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::PrivateStorage()
+```
+</CodeBlock>
+
+### RankKeys <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Rank keys (specialized for ascending sort)">
+
+Rank keys (specialized for ascending sort).
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+template <class DigitExtractorT>
+void cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::RankKeys(
+    bit_ordered_type (&unsigned_keys)[ItemsPerThread],
+    int (&ranks)[ItemsPerThread],
+    DigitExtractorT digit_extractor,
+    ::cuda::std::false_type
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Rank keys (specialized for descending sort)">
+
+Rank keys (specialized for descending sort).
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+template <class DigitExtractorT>
+void cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::RankKeys(
+    bit_ordered_type (&unsigned_keys)[ItemsPerThread],
+    int (&ranks)[ItemsPerThread],
+    DigitExtractorT digit_extractor,
+    ::cuda::std::true_type
+)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### ExchangeValues <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+ExchangeValues (specialized for key-value sort, to-blocked arrangement).
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+void cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::ExchangeValues(
+    ValueT (&values)[ItemsPerThread],
+    int (&ranks)[ItemsPerThread],
+    ::cuda::std::false_type,
+    ::cuda::std::true_type
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Overload 2">
+
+ExchangeValues (specialized for key-value sort, to-striped arrangement).
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+void cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::ExchangeValues(
+    ValueT (&values)[ItemsPerThread],
+    int (&ranks)[ItemsPerThread],
+    ::cuda::std::false_type,
+    ::cuda::std::false_type
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="ExchangeValues (specialized for keys-only sort)">
+
+ExchangeValues (specialized for keys-only sort).
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+template <bool IS_BLOCKED>
+void cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::ExchangeValues(
+    ValueT (&)[ItemsPerThread],
+    int (&)[ItemsPerThread],
+    ::cuda::std::true_type,
+    ::cuda::std::bool_constant<IS_BLOCKED>
+)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### SortBlocked <Badge intent="note" minimal>inline</Badge>
+
+Sort blocked arrangement.
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+template <bool DESCENDING, bool KEYS_ONLY, class DecomposerT>
+void cub::BlockRadixSort<KeyT, BlockDimX, ItemsPerThread, ValueT, RadixBits, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::SortBlocked(
+    KeyT (&keys)[ItemsPerThread],
+    ValueT (&values)[ItemsPerThread],
+    int begin_bit,
+    int end_bit,
+    ::cuda::std::bool_constant<DESCENDING> is_descending,
+    ::cuda::std::bool_constant<KEYS_ONLY> is_keys_only,
+    DecomposerT decomposer = {}
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="values" type="ValueT(&)[ItemsPerThread]">
+Values to sort
+</ParamField>
+
+<ParamField path="begin_bit" type="int">
+The beginning (least-significant) bit index needed for key comparison
+</ParamField>
+
+<ParamField path="end_bit" type="int">
+The past-the-end (most-significant) bit index needed for key comparison
+</ParamField>
+
+<ParamField path="is_descending" type="::cuda::std::bool_constant<DESCENDING>">
+Tag whether is a descending-order sort
+</ParamField>
+
+<ParamField path="is_keys_only" type="::cuda::std::bool_constant<KEYS_ONLY>">
+Tag whether is keys-only sort
+</ParamField>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `traits` | `detail::radix::traits_t< KeyT >` | |
+| `bit_ordered_type` | `typename traits::bit_ordered_type` | |
+| `bit_ordered_conversion` | `typename traits::bit_ordered_conversion_policy` | |
+| `AscendingBlockRadixRank` | `BlockRadixRank< BlockDimX, RadixBits, false, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ >` | Ascending [BlockRadixRank](/library/api/cub::_block_radix_rank) utility type. |
+| `DescendingBlockRadixRank` | `BlockRadixRank< BlockDimX, RadixBits, true, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ >` | Descending [BlockRadixRank](/library/api/cub::_block_radix_rank) utility type. |
+| `fundamental_digit_extractor_t` | `BFEDigitExtractor< KeyT >` | Digit extractor type. |
+| `BlockExchangeKeys` | `BlockExchange< KeyT, BlockDimX, ItemsPerThread, false, BlockDimY, BlockDimZ >` | [BlockExchange](/library/api/cub::_block_exchange) utility type for keys. |
+| `BlockExchangeValues` | `BlockExchange< ValueT, BlockDimX, ItemsPerThread, false, BlockDimY, BlockDimZ >` | [BlockExchange](/library/api/cub::_block_exchange) utility type for values. |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `BLOCK_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `KEYS_ONLY` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `bool` | |
+| `temp_storage` | `_TempStorage &` | Shared storage reference. |
+| `linear_tid` | `unsigned int` | Linear thread-id. |
+
+---
+
+## Inner classes
+
+### TempStorage
+
+<CodeBlock links={{"BlockRadixSort": "/library/api/cub::BlockRadixSort"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockRadixSort::TempStorage
+```
+</CodeBlock>
+
+The operations exposed by `BlockRadixSort` require a temporary memory allocation of this nested type for thread communication. This opaque storage can be allocated directly using the `__shared__` keyword. Alternatively, it can be aliased to externally allocated memory (shared or global) or `union`'d with other storage allocation types to facilitate memory reuse.
+
+**Inherits from:** `Uninitialized< _TempStorage >` (public)

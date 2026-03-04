@@ -1,0 +1,219 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/messages/block_translators/bedrock_converse
+title: langchain_core.messages.block_translators.bedrock_converse
+---
+
+Derivations of standard content blocks from Amazon (Bedrock Converse) content.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_bytes_to_b64_str`](#langchain_core-messages-block_translators-bedrock_converse-_bytes_to_b64_str) | - |
+| [`_convert_citation_to_v1`](#langchain_core-messages-block_translators-bedrock_converse-_convert_citation_to_v1) | - |
+| [`_convert_to_v1_from_converse`](#langchain_core-messages-block_translators-bedrock_converse-_convert_to_v1_from_converse) | Convert Bedrock Converse message content to v1 format. |
+| [`_convert_to_v1_from_converse_input`](#langchain_core-messages-block_translators-bedrock_converse-_convert_to_v1_from_converse_input) | Convert Bedrock Converse format blocks to v1 format. |
+| [`_populate_extras`](#langchain_core-messages-block_translators-bedrock_converse-_populate_extras) | Mutate a block, populating extras. |
+| [`_register_bedrock_converse_translator`](#langchain_core-messages-block_translators-bedrock_converse-_register_bedrock_converse_translator) | Register the Bedrock Converse translator with the central registry. |
+| [`translate_content`](#langchain_core-messages-block_translators-bedrock_converse-translate_content) | Derive standard content blocks from a message with Bedrock Converse content. |
+| [`translate_content_chunk`](#langchain_core-messages-block_translators-bedrock_converse-translate_content_chunk) | Derive standard content blocks from a chunk with Bedrock Converse content. |
+
+### API
+
+<Anchor id="langchain_core-messages-block_translators-bedrock_converse-_bytes_to_b64_str">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.bedrock_converse._bytes_to_b64_str(
+    bytes_: bytes
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-bedrock_converse-_convert_citation_to_v1">
+
+<CodeBlock links={{"langchain_core.messages.content.Annotation":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-Annotation"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.bedrock_converse._convert_citation_to_v1(
+    citation: dict[str, typing.Any]
+) -> langchain_core.messages.content.Annotation
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-bedrock_converse-_convert_to_v1_from_converse">
+
+<CodeBlock links={{"langchain_core.messages.AIMessage":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessage","langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.bedrock_converse._convert_to_v1_from_converse(
+    message: langchain_core.messages.AIMessage
+) -> list[langchain_core.messages.content.ContentBlock]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert Bedrock Converse message content to v1 format.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-bedrock_converse-_convert_to_v1_from_converse_input">
+
+<CodeBlock links={{"langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.bedrock_converse._convert_to_v1_from_converse_input(
+    content: list[langchain_core.messages.content.ContentBlock]
+) -> list[langchain_core.messages.content.ContentBlock]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert Bedrock Converse format blocks to v1 format.
+
+During the `content_blocks` parsing process, we wrap blocks not recognized as a v1
+block as a `'non_standard'` block with the original block stored in the `value`
+field. This function attempts to unpack those blocks and convert any blocks that
+might be Converse format to v1 ContentBlocks.
+
+If conversion fails, the block is left as a `'non_standard'` block.
+
+**Parameters:**
+
+<ParamField path="content" type="list[types.ContentBlock]">
+List of content blocks to process.
+</ParamField>
+
+**Returns:** `list[types.ContentBlock]`
+
+Updated list with Converse blocks converted to v1 format.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-bedrock_converse-_populate_extras">
+
+<CodeBlock links={{"langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.bedrock_converse._populate_extras(
+    standard_block: langchain_core.messages.content.ContentBlock,
+    block: dict[str, typing.Any],
+    known_fields: set[str]
+) -> langchain_core.messages.content.ContentBlock
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Mutate a block, populating extras.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-bedrock_converse-_register_bedrock_converse_translator">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.bedrock_converse._register_bedrock_converse_translator() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Register the Bedrock Converse translator with the central registry.
+
+Run automatically when the module is imported.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-bedrock_converse-translate_content">
+
+<CodeBlock links={{"langchain_core.messages.AIMessage":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessage","langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.bedrock_converse.translate_content(
+    message: langchain_core.messages.AIMessage
+) -> list[langchain_core.messages.content.ContentBlock]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Derive standard content blocks from a message with Bedrock Converse content.
+
+**Parameters:**
+
+<ParamField path="message" type="AIMessage">
+The message to translate.
+</ParamField>
+
+**Returns:** `list[types.ContentBlock]`
+
+The derived content blocks.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-bedrock_converse-translate_content_chunk">
+
+<CodeBlock links={{"langchain_core.messages.AIMessageChunk":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessageChunk","langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.bedrock_converse.translate_content_chunk(
+    message: langchain_core.messages.AIMessageChunk
+) -> list[langchain_core.messages.content.ContentBlock]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Derive standard content blocks from a chunk with Bedrock Converse content.
+
+**Parameters:**
+
+<ParamField path="message" type="AIMessageChunk">
+The message chunk to translate.
+</ParamField>
+
+**Returns:** `list[types.ContentBlock]`
+
+The derived content blocks.
+
+
+</Indent>

@@ -1,0 +1,259 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/callbacks/stdout
+title: langchain_core.callbacks.stdout
+---
+
+Callback handler that prints to std out.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`StdOutCallbackHandler`](#langchain_core-callbacks-stdout-StdOutCallbackHandler) | Callback handler that prints to std out. |
+
+### API
+
+<Anchor id="langchain_core-callbacks-stdout-StdOutCallbackHandler">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.stdout.StdOutCallbackHandler(
+    color: str | None = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseCallbackHandler](/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-BaseCallbackHandler)
+
+Callback handler that prints to std out.
+
+
+<Anchor id="langchain_core-callbacks-stdout-StdOutCallbackHandler-on_agent_action">
+
+<CodeBlock links={{"langchain_core.agents.AgentAction":"/langchain-core/langchain_core/agents#langchain_core-agents-AgentAction"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.stdout.StdOutCallbackHandler.on_agent_action(
+    action: langchain_core.agents.AgentAction,
+    color: str | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run on agent action.
+
+**Parameters:**
+
+<ParamField path="action" type="AgentAction">
+The agent action.
+</ParamField>
+
+<ParamField path="color" type="str | None" default="None">
+The color to use for the text.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-stdout-StdOutCallbackHandler-on_agent_finish">
+
+<CodeBlock links={{"langchain_core.agents.AgentFinish":"/langchain-core/langchain_core/agents#langchain_core-agents-AgentFinish"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.stdout.StdOutCallbackHandler.on_agent_finish(
+    finish: langchain_core.agents.AgentFinish,
+    color: str | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run on the agent end.
+
+**Parameters:**
+
+<ParamField path="finish" type="AgentFinish">
+The agent finish.
+</ParamField>
+
+<ParamField path="color" type="str | None" default="None">
+The color to use for the text.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-stdout-StdOutCallbackHandler-on_chain_end">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.stdout.StdOutCallbackHandler.on_chain_end(
+    outputs: dict[str, typing.Any],
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Print out that we finished a chain.
+
+**Parameters:**
+
+<ParamField path="outputs" type="dict[str, Any]">
+The outputs of the chain.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-stdout-StdOutCallbackHandler-on_chain_start">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.stdout.StdOutCallbackHandler.on_chain_start(
+    serialized: dict[str, typing.Any],
+    inputs: dict[str, typing.Any],
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Print out that we are entering a chain.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any]">
+The serialized chain.
+</ParamField>
+
+<ParamField path="inputs" type="dict[str, Any]">
+The inputs to the chain.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-stdout-StdOutCallbackHandler-on_text">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.stdout.StdOutCallbackHandler.on_text(
+    text: str,
+    color: str | None = None,
+    end: str = '',
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when the agent ends.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The text to print.
+</ParamField>
+
+<ParamField path="color" type="str | None" default="None">
+The color to use for the text.
+</ParamField>
+
+<ParamField path="end" type="str" default="''">
+The end character to use.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-stdout-StdOutCallbackHandler-on_tool_end">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.stdout.StdOutCallbackHandler.on_tool_end(
+    output: typing.Any,
+    color: str | None = None,
+    observation_prefix: str | None = None,
+    llm_prefix: str | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+If not the final action, print out observation.
+
+**Parameters:**
+
+<ParamField path="output" type="Any">
+The output to print.
+</ParamField>
+
+<ParamField path="color" type="str | None" default="None">
+The color to use for the text.
+</ParamField>
+
+<ParamField path="observation_prefix" type="str | None" default="None">
+The observation prefix.
+</ParamField>
+
+<ParamField path="llm_prefix" type="str | None" default="None">
+The LLM prefix.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>

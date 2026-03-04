@@ -1,0 +1,185 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/embeddings/embeddings
+title: langchain_core.embeddings.embeddings
+---
+
+**Embeddings** interface.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`Embeddings`](#langchain_core-embeddings-embeddings-Embeddings) | Interface for embedding models. |
+
+### API
+
+<Anchor id="langchain_core-embeddings-embeddings-Embeddings">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.embeddings.embeddings.Embeddings()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+Interface for embedding models.
+
+This is an interface meant for implementing text embedding models.
+
+Text embedding models are used to map text to a vector (a point in n-dimensional
+space).
+
+Texts that are similar will usually be mapped to points that are close to each
+other in this space. The exact details of what's considered "similar" and how
+"distance" is measured in this space are dependent on the specific embedding model.
+
+This abstraction contains a method for embedding a list of documents and a method
+for embedding a query text. The embedding of a query text is expected to be a single
+vector, while the embedding of a list of documents is expected to be a list of
+vectors.
+
+Usually the query embedding is identical to the document embedding, but the
+abstraction allows treating them independently.
+
+In addition to the synchronous methods, this interface also provides asynchronous
+versions of the methods.
+
+By default, the asynchronous methods are implemented using the synchronous methods;
+however, implementations may choose to override the asynchronous methods with
+an async native implementation for performance reasons.
+
+
+<Anchor id="langchain_core-embeddings-embeddings-Embeddings-aembed_documents">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.embeddings.embeddings.Embeddings.aembed_documents(
+    texts: list[str]
+) -> list[list[float]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Asynchronous Embed search docs.
+
+**Parameters:**
+
+<ParamField path="texts" type="list[str]">
+List of text to embed.
+</ParamField>
+
+**Returns:** `list[list[float]]`
+
+List of embeddings.
+
+
+</Indent>
+<Anchor id="langchain_core-embeddings-embeddings-Embeddings-aembed_query">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.embeddings.embeddings.Embeddings.aembed_query(
+    text: str
+) -> list[float]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Asynchronous Embed query text.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+Text to embed.
+</ParamField>
+
+**Returns:** `list[float]`
+
+Embedding.
+
+
+</Indent>
+<Anchor id="langchain_core-embeddings-embeddings-Embeddings-embed_documents">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.embeddings.embeddings.Embeddings.embed_documents(
+    texts: list[str]
+) -> list[list[float]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Embed search docs.
+
+**Parameters:**
+
+<ParamField path="texts" type="list[str]">
+List of text to embed.
+</ParamField>
+
+**Returns:** `list[list[float]]`
+
+List of embeddings.
+
+
+</Indent>
+<Anchor id="langchain_core-embeddings-embeddings-Embeddings-embed_query">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.embeddings.embeddings.Embeddings.embed_query(
+    text: str
+) -> list[float]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Embed query text.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+Text to embed.
+</ParamField>
+
+**Returns:** `list[float]`
+
+Embedding.
+
+
+</Indent>
+</Indent>

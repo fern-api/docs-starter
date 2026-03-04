@@ -1,0 +1,113 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/documents
+title: langchain_core.documents
+---
+
+Documents module for data retrieval and processing workflows.
+
+This module provides core abstractions for handling data in retrieval-augmented
+generation (RAG) pipelines, vector stores, and document processing workflows.
+
+!!! warning "Documents vs. message content"
+
+    This module is distinct from `langchain_core.messages.content`, which provides
+    multimodal content blocks for **LLM chat I/O** (text, images, audio, etc. within
+    messages).
+
+    **Key distinction:**
+
+    - **Documents** (this module): For **data retrieval and processing workflows**
+        - Vector stores, retrievers, RAG pipelines
+        - Text chunking, embedding, and semantic search
+        - Example: Chunks of a PDF stored in a vector database
+
+    - **Content Blocks** (`messages.content`): For **LLM conversational I/O**
+        - Multimodal message content sent to/from models
+        - Tool calls, reasoning, citations within chat
+        - Example: An image sent to a vision model in a chat message (via
+            [`ImageContentBlock`][langchain.messages.ImageContentBlock])
+
+    While both can represent similar data types (text, files), they serve different
+    architectural purposes in LangChain applications.
+
+## Submodules
+
+- **[`langchain_core.documents.base`](/langchain-core/langchain_core/documents/base)**
+- **[`langchain_core.documents.compressor`](/langchain-core/langchain_core/documents/compressor)**
+- **[`langchain_core.documents.transformers`](/langchain-core/langchain_core/documents/transformers)**
+
+## Package Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`__dir__`](#langchain_core-documents-__dir__) | - |
+| [`__getattr__`](#langchain_core-documents-__getattr__) | - |
+
+### Data
+
+[`__all__`](#langchain_core-documents-__all__)
+
+[`_dynamic_imports`](#langchain_core-documents-_dynamic_imports)
+
+### API
+
+<Anchor id="langchain_core-documents-__dir__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.documents.__dir__() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-documents-__getattr__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.documents.__getattr__(
+    attr_name: str
+) -> object
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-documents-__all__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.documents.__all__ = ('BaseDocumentCompressor', 'BaseDocumentTransformer', 'Document')
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-documents-_dynamic_imports">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.documents._dynamic_imports = {'Document': 'base', 'BaseDocumentCompressor': 'compressor', 'BaseDocumentTransf...
+```
+
+</CodeBlock>
+</Anchor>
+

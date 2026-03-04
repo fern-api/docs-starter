@@ -1,0 +1,110 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/tools/retriever
+title: langchain_core.tools.retriever
+---
+
+Retriever tool.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`RetrieverInput`](#langchain_core-tools-retriever-RetrieverInput) | Input to the retriever. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`create_retriever_tool`](#langchain_core-tools-retriever-create_retriever_tool) | Create a tool to do retrieval of documents. |
+
+### API
+
+<Anchor id="langchain_core-tools-retriever-RetrieverInput">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tools.retriever.RetrieverInput()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `BaseModel`
+
+Input to the retriever.
+
+
+<ParamField path="query" type="str = Field(description='query to look up in retriever')">
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-tools-retriever-create_retriever_tool">
+
+<CodeBlock links={{"langchain_core.retrievers.BaseRetriever":"/langchain-core/langchain_core/retrievers#langchain_core-retrievers-BaseRetriever","langchain_core.tools.structured.StructuredTool":"/langchain-core/langchain_core/tools/structured#langchain_core-tools-structured-StructuredTool"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.retriever.create_retriever_tool(
+    retriever: langchain_core.retrievers.BaseRetriever,
+    name: str,
+    description: str,
+    document_prompt: langchain_core.prompts.BasePromptTemplate | None = None,
+    document_separator: str = '\n\n',
+    response_format: typing.Literal['content', 'content_and_artifact'] = 'content'
+) -> langchain_core.tools.structured.StructuredTool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a tool to do retrieval of documents.
+
+**Parameters:**
+
+<ParamField path="retriever" type="BaseRetriever">
+The retriever to use for the retrieval
+</ParamField>
+
+<ParamField path="name" type="str">
+The name for the tool.
+
+This will be passed to the language model, so should be unique and somewhat
+descriptive.
+</ParamField>
+
+<ParamField path="description" type="str">
+The description for the tool.
+
+This will be passed to the language model, so should be descriptive.
+</ParamField>
+
+<ParamField path="document_prompt" type="BasePromptTemplate | None" default="None">
+The prompt to use for the document.
+</ParamField>
+
+<ParamField path="document_separator" type="str" default="'\n\n'">
+The separator to use between documents.
+</ParamField>
+
+<ParamField path="response_format" type="Literal['content', 'content_and_artifact']" default="'content'">
+The tool response format.
+
+If `'content'` then the output of the tool is interpreted as the contents of
+a `ToolMessage`. If `'content_and_artifact'` then the output is expected to
+be a two-tuple corresponding to the `(content, artifact)` of a `ToolMessage`
+(artifact being a list of documents in this case).
+</ParamField>
+
+**Returns:** `StructuredTool`
+
+Tool class to pass to an agent.
+
+
+</Indent>

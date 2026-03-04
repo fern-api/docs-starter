@@ -1,0 +1,139 @@
+---
+title: thrust::error_category
+description: "The class [`error_category`](/library/api/thrust::error_category) serves as a base class for types used to identify the source and encoding of a particular category of error code."
+---
+
+The class `error_category` serves as a base class for types used to identify the source and encoding of a particular category of error code.
+
+Classes may be derived from `error_category` to support categories of errors in addition to those defined in the C++ International Standard.
+
+```cpp showLineNumbers={false}
+#include <thrust/error_code.h>
+```
+
+---
+
+## Constructors
+
+### Destructor
+
+### ~error_category <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>virtual</Badge>
+
+Destructor does nothing.
+
+<CodeBlock links={{"error_category": "/library/api/thrust::error_category"}}>
+```cpp showLineNumbers={false}
+virtual thrust::system::error_category::~error_category()
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### name <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>virtual</Badge>
+
+<CodeBlock links={{"error_category": "/library/api/thrust::error_category"}}>
+```cpp showLineNumbers={false}
+virtual const char * thrust::system::error_category::name() const
+```
+</CodeBlock>
+
+**Returns:** A string naming the error category.
+
+### default_error_condition <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>virtual</Badge>
+
+<CodeBlock links={{"error_category": "/library/api/thrust::error_category", "error_condition": "/library/api/thrust::system::error_condition"}}>
+```cpp showLineNumbers={false}
+virtual error_condition thrust::system::error_category::default_error_condition(
+    int ev
+) const
+```
+</CodeBlock>
+
+**Returns:** `error_condition(ev, *this)`.
+
+### equivalent <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>virtual</Badge>
+
+<Tabs>
+<Tab title="Const">
+
+<CodeBlock links={{"error_category": "/library/api/thrust::error_category", "error_condition": "/library/api/thrust::system::error_condition"}}>
+```cpp showLineNumbers={false}
+virtual bool thrust::system::error_category::equivalent(
+    int code,
+    const error_condition &condition
+) const
+```
+</CodeBlock>
+
+**Returns:** `default_error_condition(code) == condition`
+
+</Tab>
+<Tab title="Const">
+
+<CodeBlock links={{"error_category": "/library/api/thrust::error_category", "error_code": "/library/api/thrust::system::error_code"}}>
+```cpp showLineNumbers={false}
+virtual bool thrust::system::error_category::equivalent(
+    const error_code &code,
+    int condition
+) const
+```
+</CodeBlock>
+
+**Returns:** `*this == code.category() && code.value() == condition`
+
+</Tab>
+</Tabs>
+
+### message <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>virtual</Badge>
+
+<CodeBlock links={{"error_category": "/library/api/thrust::error_category"}}>
+```cpp showLineNumbers={false}
+virtual std::string thrust::system::error_category::message(
+    int ev
+) const
+```
+</CodeBlock>
+
+**Returns:** A string that describes the error condition denoted by `ev`.
+
+### operator== <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"error_category": "/library/api/thrust::error_category"}}>
+```cpp showLineNumbers={false}
+bool thrust::system::error_category::operator==(
+    const error_category &rhs
+) const
+```
+</CodeBlock>
+
+**Returns:** `*this == &rhs`
+
+### operator!= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"error_category": "/library/api/thrust::error_category"}}>
+```cpp showLineNumbers={false}
+bool thrust::system::error_category::operator!=(
+    const error_category &rhs
+) const
+```
+</CodeBlock>
+
+**Returns:** `!(*this == rhs)`
+
+### operator&lt; <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"error_category": "/library/api/thrust::error_category"}}>
+```cpp showLineNumbers={false}
+bool thrust::system::error_category::operator<(
+    const error_category &rhs
+) const
+```
+</CodeBlock>
+
+<Note>
+`less` provides a total ordering for pointers.
+</Note>
+
+**Returns:** `less<const error_category*>()``(this, &rhs)`

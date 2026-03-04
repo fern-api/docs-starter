@@ -1,0 +1,47 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/outputs/run_info
+title: langchain_core.outputs.run_info
+---
+
+`RunInfo` class.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`RunInfo`](#langchain_core-outputs-run_info-RunInfo) | Class that contains metadata for a single execution of a chain or model. |
+
+### API
+
+<Anchor id="langchain_core-outputs-run_info-RunInfo">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.outputs.run_info.RunInfo()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `BaseModel`
+
+Class that contains metadata for a single execution of a chain or model.
+
+Defined for backwards compatibility with older versions of `langchain_core`.
+
+!!! warning "This model will likely be deprecated in the future."
+
+Users can acquire the `run_id` information from callbacks or via `run_id`
+information present in the `astream_event` API (depending on the use case).
+
+
+<ParamField path="run_id" type="UUID">
+A unique identifier for the model or chain run.
+</ParamField>
+</Indent>

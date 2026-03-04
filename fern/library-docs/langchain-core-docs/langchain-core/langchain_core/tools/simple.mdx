@@ -1,0 +1,270 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/tools/simple
+title: langchain_core.tools.simple
+---
+
+Tool that takes in function or coroutine directly.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`Tool`](#langchain_core-tools-simple-Tool) | Tool that takes in function or coroutine directly. |
+
+### API
+
+<Anchor id="langchain_core-tools-simple-Tool">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tools.simple.Tool(
+    name: str,
+    func: collections.abc.Callable | None,
+    description: str,
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseTool](/langchain-core/langchain_core/tools/base#langchain_core-tools-base-BaseTool)
+
+Tool that takes in function or coroutine directly.
+
+
+<ParamField path="args" type="dict">
+The tool's input arguments.
+</ParamField>
+
+<ParamField path="coroutine" type="Callable[..., Awaitable[str]] | None = None">
+The asynchronous version of the function.
+</ParamField>
+
+<ParamField path="description" type="str = ''">
+</ParamField>
+
+<ParamField path="func" type="Callable[..., str] | None">
+The function to run when the tool is called.
+</ParamField>
+<Anchor id="langchain_core-tools-simple-Tool-_arun">
+
+<CodeBlock links={{"langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.simple.Tool._arun(
+    args: typing.Any = (),
+    config: langchain_core.runnables.RunnableConfig,
+    run_manager: langchain_core.callbacks.AsyncCallbackManagerForToolRun | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Use the tool asynchronously.
+
+**Parameters:**
+
+<ParamField path="*args" type="Any" default="()">
+Positional arguments to pass to the tool
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig">
+Configuration for the run
+</ParamField>
+
+<ParamField path="run_manager" type="AsyncCallbackManagerForToolRun | None" default="None">
+Optional callback manager to use for the run
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to pass to the tool
+</ParamField>
+
+**Returns:** `Any`
+
+The result of the tool execution
+
+
+</Indent>
+<Anchor id="langchain_core-tools-simple-Tool-_run">
+
+<CodeBlock links={{"langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.simple.Tool._run(
+    args: typing.Any = (),
+    config: langchain_core.runnables.RunnableConfig,
+    run_manager: langchain_core.callbacks.CallbackManagerForToolRun | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Use the tool.
+
+**Parameters:**
+
+<ParamField path="*args" type="Any" default="()">
+Positional arguments to pass to the tool
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig">
+Configuration for the run
+</ParamField>
+
+<ParamField path="run_manager" type="CallbackManagerForToolRun | None" default="None">
+Optional callback manager to use for the run
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to pass to the tool
+</ParamField>
+
+**Returns:** `Any`
+
+The result of the tool execution
+
+
+</Indent>
+<Anchor id="langchain_core-tools-simple-Tool-_to_args_and_kwargs">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.simple.Tool._to_args_and_kwargs(
+    tool_input: str | dict,
+    tool_call_id: str | None
+) -> tuple[tuple, dict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert tool input to Pydantic model.
+
+**Parameters:**
+
+<ParamField path="tool_input" type="str | dict">
+The input to the tool.
+</ParamField>
+
+<ParamField path="tool_call_id" type="str | None">
+The ID of the tool call.
+</ParamField>
+
+**Returns:** `tuple[tuple, dict]`
+
+The Pydantic model args and kwargs.
+
+**Raises:**
+
+- `ToolException`: If the tool input is invalid.
+
+
+</Indent>
+<Anchor id="langchain_core-tools-simple-Tool-ainvoke">
+
+<CodeBlock links={{"langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.simple.Tool.ainvoke(
+    input: str | dict | langchain_core.messages.ToolCall,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-tools-simple-Tool-from_function">
+
+<CodeBlock links={{"langchain_core.tools.base.ArgsSchema":"/langchain-core/langchain_core/tools/base#langchain_core-tools-base-ArgsSchema","langchain_core.tools.simple.Tool":"#langchain_core-tools-simple-Tool"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.simple.Tool.from_function(
+    func: collections.abc.Callable | None,
+    name: str,
+    description: str,
+    return_direct: bool = False,
+    args_schema: langchain_core.tools.base.ArgsSchema | None = None,
+    coroutine: collections.abc.Callable[..., collections.abc.Awaitable[typing.Any]] | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.tools.simple.Tool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Initialize tool from a function.
+
+**Parameters:**
+
+<ParamField path="func" type="Callable | None">
+The function to create the tool from.
+</ParamField>
+
+<ParamField path="name" type="str">
+The name of the tool.
+</ParamField>
+
+<ParamField path="description" type="str">
+The description of the tool.
+</ParamField>
+
+<ParamField path="return_direct" type="bool" default="False">
+Whether to return the output directly.
+</ParamField>
+
+<ParamField path="args_schema" type="ArgsSchema | None" default="None">
+The schema of the tool's input arguments.
+</ParamField>
+
+<ParamField path="coroutine" type="Callable[..., Awaitable[Any]] | None" default="None">
+The asynchronous version of the function.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments to pass to the tool.
+</ParamField>
+
+**Returns:** `Tool`
+
+The tool.
+
+**Raises:**
+
+- `ValueError`: If the function is not provided.
+
+
+</Indent>
+</Indent>

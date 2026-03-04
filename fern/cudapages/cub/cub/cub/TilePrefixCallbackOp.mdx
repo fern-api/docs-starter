@@ -1,0 +1,192 @@
+---
+title: cub::TilePrefixCallbackOp
+description: "Tile status interface for reduction by key, specialized for scan status and value types that can be combined into one machine word that can be read/written coherently in a single access."
+---
+
+Tile status interface for reduction by key, specialized for scan status and value types that can be combined into one machine word that can be read/written coherently in a single access.
+
+Stateful block-scan prefix functor. Provides the running prefix for the current tile by using the callback warp to wait for aggregates/prefixes from predecessor tiles to become available.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="T" type="typename">
+</ParamField>
+
+<ParamField path="ScanOpT" type="typename">
+</ParamField>
+
+<ParamField path="ScanTileStateT" type="typename">
+</ParamField>
+
+<ParamField path="DelayConstructorT" type="typename" default="detail::default_delay_constructor_t<T>">
+Implementation detail, do not specify directly, requirements on the content of this type are subject to breaking change.
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### TilePrefixCallbackOp <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="With TempStorage">
+
+<CodeBlock links={{"TilePrefixCallbackOp": "/library/api/cub::TilePrefixCallbackOp", "TempStorage": "/library/api/cub::TilePrefixCallbackOp::TempStorage"}}>
+```cpp showLineNumbers={false}
+cub::TilePrefixCallbackOp<T, ScanOpT, ScanTileStateT, DelayConstructorT>::TilePrefixCallbackOp(
+    ScanTileStateT &tile_status,
+    TempStorage &temp_storage,
+    ScanOpT scan_op,
+    int tile_idx
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="With TempStorage">
+
+<CodeBlock links={{"TilePrefixCallbackOp": "/library/api/cub::TilePrefixCallbackOp", "TempStorage": "/library/api/cub::TilePrefixCallbackOp::TempStorage"}}>
+```cpp showLineNumbers={false}
+cub::TilePrefixCallbackOp<T, ScanOpT, ScanTileStateT, DelayConstructorT>::TilePrefixCallbackOp(
+    ScanTileStateT &tile_status,
+    TempStorage &temp_storage,
+    ScanOpT scan_op
+)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### ProcessWindow <Badge intent="note" minimal>inline</Badge>
+
+Block until all predecessors within the warp-wide window have non-invalid status.
+
+<CodeBlock links={{"TilePrefixCallbackOp": "/library/api/cub::TilePrefixCallbackOp"}}>
+```cpp showLineNumbers={false}
+template <class DelayT>
+void cub::TilePrefixCallbackOp<T, ScanOpT, ScanTileStateT, DelayConstructorT>::ProcessWindow(
+    int predecessor_idx,
+    StatusWord &predecessor_status,
+    T &window_aggregate,
+    DelayT delay = {}
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="predecessor_idx" type="int">
+Preceding tile index to inspect
+</ParamField>
+
+<ParamField path="predecessor_status" type="StatusWord &">
+Preceding tile status
+</ParamField>
+
+<ParamField path="window_aggregate" type="T &">
+Relevant partial reduction from this window of preceding tiles
+</ParamField>
+
+### operator() <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"TilePrefixCallbackOp": "/library/api/cub::TilePrefixCallbackOp"}}>
+```cpp showLineNumbers={false}
+T cub::TilePrefixCallbackOp<T, ScanOpT, ScanTileStateT, DelayConstructorT>::operator()(
+    T block_aggregate
+)
+```
+</CodeBlock>
+
+### GetExclusivePrefix <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"TilePrefixCallbackOp": "/library/api/cub::TilePrefixCallbackOp"}}>
+```cpp showLineNumbers={false}
+T cub::TilePrefixCallbackOp<T, ScanOpT, ScanTileStateT, DelayConstructorT>::GetExclusivePrefix()
+```
+</CodeBlock>
+
+### GetInclusivePrefix <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"TilePrefixCallbackOp": "/library/api/cub::TilePrefixCallbackOp"}}>
+```cpp showLineNumbers={false}
+T cub::TilePrefixCallbackOp<T, ScanOpT, ScanTileStateT, DelayConstructorT>::GetInclusivePrefix()
+```
+</CodeBlock>
+
+### GetBlockAggregate <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"TilePrefixCallbackOp": "/library/api/cub::TilePrefixCallbackOp"}}>
+```cpp showLineNumbers={false}
+T cub::TilePrefixCallbackOp<T, ScanOpT, ScanTileStateT, DelayConstructorT>::GetBlockAggregate()
+```
+</CodeBlock>
+
+### GetTileIdx <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"TilePrefixCallbackOp": "/library/api/cub::TilePrefixCallbackOp"}}>
+```cpp showLineNumbers={false}
+int cub::TilePrefixCallbackOp<T, ScanOpT, ScanTileStateT, DelayConstructorT>::GetTileIdx() const
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `WarpReduceT` | `WarpReduce< T,(1<<(5))>` |
+| `StatusWord` | `typename ScanTileStateT::StatusWord` |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `temp_storage` | `_TempStorage &` | Reference to a warp-reduction instance. |
+| `tile_status` | `ScanTileStateT &` | Interface to tile status. |
+| `scan_op` | `ScanOpT` | Binary scan operator. |
+| `tile_idx` | `int` | The current tile index. |
+| `exclusive_prefix` | `T` | Exclusive prefix for the tile. |
+| `inclusive_prefix` | `T` | Inclusive prefix for the tile. |
+
+---
+
+## Inner classes
+
+### _TempStorage
+
+<CodeBlock links={{"TilePrefixCallbackOp": "/library/api/cub::TilePrefixCallbackOp"}}>
+```cpp showLineNumbers={false}
+struct cub::TilePrefixCallbackOp::_TempStorage
+```
+</CodeBlock>
+
+| Name | Type | Description |
+|---|---|---|
+| `warp_reduce` | `WarpReduceT::TempStorage` | |
+| `exclusive_prefix` | `T` | |
+| `inclusive_prefix` | `T` | |
+| `block_aggregate` | `T` | |
+
+### TempStorage
+
+<CodeBlock links={{"TilePrefixCallbackOp": "/library/api/cub::TilePrefixCallbackOp"}}>
+```cpp showLineNumbers={false}
+struct cub::TilePrefixCallbackOp::TempStorage
+```
+</CodeBlock>
+
+**Inherits from:** `Uninitialized< _TempStorage >` (public)

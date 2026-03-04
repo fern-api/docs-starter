@@ -1,0 +1,1150 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/runnables/graph
+title: langchain_core.runnables.graph
+---
+
+Graph used in `Runnable` objects.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`Branch`](#langchain_core-runnables-graph-Branch) | Branch in a graph. |
+| [`CurveStyle`](#langchain_core-runnables-graph-CurveStyle) | Enum for different curve styles supported by Mermaid. |
+| [`Edge`](#langchain_core-runnables-graph-Edge) | Edge in a graph. |
+| [`Graph`](#langchain_core-runnables-graph-Graph) | Graph of nodes and edges. |
+| [`LabelsDict`](#langchain_core-runnables-graph-LabelsDict) | Dictionary of labels for nodes and edges in a graph. |
+| [`MermaidDrawMethod`](#langchain_core-runnables-graph-MermaidDrawMethod) | Enum for different draw methods supported by Mermaid. |
+| [`Node`](#langchain_core-runnables-graph-Node) | Node in a graph. |
+| [`NodeStyles`](#langchain_core-runnables-graph-NodeStyles) | Schema for Hexadecimal color codes for different node types. |
+| [`Stringifiable`](#langchain_core-runnables-graph-Stringifiable) | Protocol for objects that can be converted to a string. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_first_node`](#langchain_core-runnables-graph-_first_node) | Find the single node that is not a target of any edge. |
+| [`_last_node`](#langchain_core-runnables-graph-_last_node) | Find the single node that is not a source of any edge. |
+| [`is_uuid`](#langchain_core-runnables-graph-is_uuid) | Check if a string is a valid UUID. |
+| [`node_data_json`](#langchain_core-runnables-graph-node_data_json) | Convert the data of a node to a JSON-serializable format. |
+| [`node_data_str`](#langchain_core-runnables-graph-node_data_str) | Convert the data of a node to a string. |
+
+### API
+
+<Anchor id="langchain_core-runnables-graph-Branch">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.graph.Branch()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `NamedTuple`
+
+Branch in a graph.
+
+
+<ParamField path="condition" type="Callable[..., str]">
+A callable that returns a string representation of the condition.
+</ParamField>
+
+<ParamField path="ends" type="dict[str, str] | None">
+Optional dictionary of end node IDs for the branches.
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-runnables-graph-CurveStyle">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.graph.CurveStyle
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `enum.Enum`
+
+Enum for different curve styles supported by Mermaid.
+
+<ParamField path="BASIS" type="= 'basis'">
+</ParamField>
+
+<ParamField path="BUMP_X" type="= 'bumpX'">
+</ParamField>
+
+<ParamField path="BUMP_Y" type="= 'bumpY'">
+</ParamField>
+
+<ParamField path="CARDINAL" type="= 'cardinal'">
+</ParamField>
+
+<ParamField path="CATMULL_ROM" type="= 'catmullRom'">
+</ParamField>
+
+<ParamField path="LINEAR" type="= 'linear'">
+</ParamField>
+
+<ParamField path="MONOTONE_X" type="= 'monotoneX'">
+</ParamField>
+
+<ParamField path="MONOTONE_Y" type="= 'monotoneY'">
+</ParamField>
+
+<ParamField path="NATURAL" type="= 'natural'">
+</ParamField>
+
+<ParamField path="STEP" type="= 'step'">
+</ParamField>
+
+<ParamField path="STEP_AFTER" type="= 'stepAfter'">
+</ParamField>
+
+<ParamField path="STEP_BEFORE" type="= 'stepBefore'">
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-graph-Edge">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.graph.Edge()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `NamedTuple`
+
+Edge in a graph.
+
+
+<ParamField path="conditional" type="bool = False">
+Whether the edge is conditional.
+</ParamField>
+
+<ParamField path="data" type="Stringifiable | None = None">
+Optional data associated with the edge.
+</ParamField>
+
+<ParamField path="source" type="str">
+The source node id.
+</ParamField>
+
+<ParamField path="target" type="str">
+The target node id.
+</ParamField>
+<Anchor id="langchain_core-runnables-graph-Edge-copy">
+
+<CodeBlock links={{"langchain_core.runnables.graph.Edge":"#langchain_core-runnables-graph-Edge"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.Edge.copy(
+    source: str | None = None,
+    target: str | None = None
+) -> langchain_core.runnables.graph.Edge
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return a copy of the edge with optional new source and target nodes.
+
+**Parameters:**
+
+<ParamField path="source" type="str | None" default="None">
+The new source node id.
+</ParamField>
+
+<ParamField path="target" type="str | None" default="None">
+The new target node id.
+</ParamField>
+
+**Returns:** `Edge`
+
+A copy of the edge with the new source and target nodes.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-graph-Graph">
+
+<CodeBlock links={{"langchain_core.runnables.graph.Node":"#langchain_core-runnables-graph-Node","langchain_core.runnables.graph.Edge":"#langchain_core-runnables-graph-Edge"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.graph.Graph(
+    nodes: dict[str, langchain_core.runnables.graph.Node] = dict(),
+    edges: list[langchain_core.runnables.graph.Edge] = list()
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Dataclass</Badge>
+
+Graph of nodes and edges.
+
+**Parameters:**
+
+<ParamField path="nodes" type="dict[str, Node]" default="dict()">
+Dictionary of nodes in the graph. Defaults to an empty dictionary.
+</ParamField>
+
+<ParamField path="edges" type="list[Edge]" default="list()">
+List of edges in the graph. Defaults to an empty list.
+</ParamField>
+
+
+<ParamField path="edges" type="list[Edge] = field(default_factory=list)">
+</ParamField>
+
+<ParamField path="nodes" type="dict[str, Node] = field(default_factory=dict)">
+</ParamField>
+<Anchor id="langchain_core-runnables-graph-Graph-__bool__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.Graph.__bool__() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return whether the graph has any nodes.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph-Graph-add_edge">
+
+<CodeBlock links={{"langchain_core.runnables.graph.Node":"#langchain_core-runnables-graph-Node","langchain_core.runnables.graph.Stringifiable":"#langchain_core-runnables-graph-Stringifiable","langchain_core.runnables.graph.Edge":"#langchain_core-runnables-graph-Edge"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.Graph.add_edge(
+    source: langchain_core.runnables.graph.Node,
+    target: langchain_core.runnables.graph.Node,
+    data: langchain_core.runnables.graph.Stringifiable | None = None,
+    conditional: bool = False
+) -> langchain_core.runnables.graph.Edge
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add an edge to the graph and return it.
+
+**Parameters:**
+
+<ParamField path="source" type="Node">
+The source node of the edge.
+</ParamField>
+
+<ParamField path="target" type="Node">
+The target node of the edge.
+</ParamField>
+
+<ParamField path="data" type="Stringifiable | None" default="None">
+Optional data associated with the edge.
+</ParamField>
+
+<ParamField path="conditional" type="bool" default="False">
+Whether the edge is conditional.
+</ParamField>
+
+**Returns:** `Edge`
+
+The edge that was added to the graph.
+
+**Raises:**
+
+- `ValueError`: If the source or target node is not in the graph.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph-Graph-add_node">
+
+<CodeBlock links={{"langchain_core.runnables.base.Runnable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-Runnable","langchain_core.runnables.graph.Node":"#langchain_core-runnables-graph-Node"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.Graph.add_node(
+    data: type[pydantic.BaseModel] | langchain_core.runnables.base.Runnable | None,
+    id: str | None = None,
+    metadata: dict[str, typing.Any] | None = None
+) -> langchain_core.runnables.graph.Node
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add a node to the graph and return it.
+
+**Parameters:**
+
+<ParamField path="data" type="type[BaseModel] | RunnableType | None">
+The data of the node.
+</ParamField>
+
+<ParamField path="id" type="str | None" default="None">
+The id of the node.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+Optional metadata for the node.
+</ParamField>
+
+**Returns:** `Node`
+
+The node that was added to the graph.
+
+**Raises:**
+
+- `ValueError`: If a node with the same id already exists.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph-Graph-draw_ascii">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.Graph.draw_ascii() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Draw the graph as an ASCII art string.
+
+**Returns:** `str`
+
+The ASCII art string.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph-Graph-draw_mermaid">
+
+<CodeBlock links={{"langchain_core.runnables.graph.CurveStyle":"#langchain_core-runnables-graph-CurveStyle","langchain_core.runnables.graph.NodeStyles":"#langchain_core-runnables-graph-NodeStyles"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.Graph.draw_mermaid(
+    with_styles: bool = True,
+    curve_style: langchain_core.runnables.graph.CurveStyle = CurveStyle.LINEAR,
+    node_colors: langchain_core.runnables.graph.NodeStyles | None = None,
+    wrap_label_n_words: int = 9,
+    frontmatter_config: dict[str, typing.Any] | None = None
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Draw the graph as a Mermaid syntax string.
+
+Returns:
+    The Mermaid syntax string.
+
+**Parameters:**
+
+<ParamField path="with_styles" type="bool" default="True">
+Whether to include styles in the syntax.
+</ParamField>
+
+<ParamField path="curve_style" type="CurveStyle" default="CurveStyle.LINEAR">
+The style of the edges.
+</ParamField>
+
+<ParamField path="node_colors" type="NodeStyles | None" default="None">
+The colors of the nodes.
+</ParamField>
+
+<ParamField path="wrap_label_n_words" type="int" default="9">
+The number of words to wrap the node labels at.
+</ParamField>
+
+<ParamField path="frontmatter_config" type="dict[str, Any] | None" default="None">
+Mermaid frontmatter config.
+Can be used to customize theme and styles. Will be converted to YAML and
+added to the beginning of the mermaid graph.
+
+See more here: https://mermaid.js.org/config/configuration.html.
+
+Example config:
+
+\`\`\`python
+&#123;
+    "config": &#123;
+        "theme": "neutral",
+        "look": "handDrawn",
+        "themeVariables": &#123;"primaryColor": "#e2e2e2"&#125;,
+    &#125;
+&#125;
+\`\`\`
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph-Graph-draw_mermaid_png">
+
+<CodeBlock links={{"langchain_core.runnables.graph.CurveStyle":"#langchain_core-runnables-graph-CurveStyle","langchain_core.runnables.graph.NodeStyles":"#langchain_core-runnables-graph-NodeStyles","langchain_core.runnables.graph.MermaidDrawMethod":"#langchain_core-runnables-graph-MermaidDrawMethod"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.Graph.draw_mermaid_png(
+    curve_style: langchain_core.runnables.graph.CurveStyle = CurveStyle.LINEAR,
+    node_colors: langchain_core.runnables.graph.NodeStyles | None = None,
+    wrap_label_n_words: int = 9,
+    output_file_path: str | None = None,
+    draw_method: langchain_core.runnables.graph.MermaidDrawMethod = MermaidDrawMethod.API,
+    background_color: str = 'white',
+    padding: int = 10,
+    max_retries: int = 1,
+    retry_delay: float = 1.0,
+    frontmatter_config: dict[str, typing.Any] | None = None,
+    base_url: str | None = None,
+    proxies: dict[str, str] | None = None
+) -> bytes
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Draw the graph as a PNG image using Mermaid.
+
+**Parameters:**
+
+<ParamField path="curve_style" type="CurveStyle" default="CurveStyle.LINEAR">
+The style of the edges.
+</ParamField>
+
+<ParamField path="node_colors" type="NodeStyles | None" default="None">
+The colors of the nodes.
+</ParamField>
+
+<ParamField path="wrap_label_n_words" type="int" default="9">
+The number of words to wrap the node labels at.
+</ParamField>
+
+<ParamField path="output_file_path" type="str | None" default="None">
+The path to save the image to. If `None`, the image
+is not saved.
+</ParamField>
+
+<ParamField path="draw_method" type="MermaidDrawMethod" default="MermaidDrawMethod.API">
+The method to use to draw the graph.
+</ParamField>
+
+<ParamField path="background_color" type="str" default="'white'">
+The color of the background.
+</ParamField>
+
+<ParamField path="padding" type="int" default="10">
+The padding around the graph.
+</ParamField>
+
+<ParamField path="max_retries" type="int" default="1">
+The maximum number of retries (`MermaidDrawMethod.API`).
+</ParamField>
+
+<ParamField path="retry_delay" type="float" default="1.0">
+The delay between retries (`MermaidDrawMethod.API`).
+</ParamField>
+
+<ParamField path="frontmatter_config" type="dict[str, Any] | None" default="None">
+Mermaid frontmatter config.
+Can be used to customize theme and styles. Will be converted to YAML and
+added to the beginning of the mermaid graph.
+
+See more here: https://mermaid.js.org/config/configuration.html.
+
+Example config:
+
+\`\`\`python
+&#123;
+    "config": &#123;
+        "theme": "neutral",
+        "look": "handDrawn",
+        "themeVariables": &#123;"primaryColor": "#e2e2e2"&#125;,
+    &#125;
+&#125;
+\`\`\`
+</ParamField>
+
+<ParamField path="base_url" type="str | None" default="None">
+The base URL of the Mermaid server for rendering via API.
+</ParamField>
+
+<ParamField path="proxies" type="dict[str, str] | None" default="None">
+HTTP/HTTPS proxies for requests (e.g. `&#123;"http": "http://127.0.0.1:7890"&#125;`).
+</ParamField>
+
+**Returns:** `bytes`
+
+The PNG image as bytes.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph-Graph-draw_png">
+
+<CodeBlock links={{"langchain_core.runnables.graph.LabelsDict":"#langchain_core-runnables-graph-LabelsDict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.Graph.draw_png(
+    output_file_path: str | None = None,
+    fontname: str | None = None,
+    labels: langchain_core.runnables.graph.LabelsDict | None = None
+) -> bytes | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Draw the graph as a PNG image.
+
+**Parameters:**
+
+<ParamField path="output_file_path" type="str | None" default="None">
+The path to save the image to. If `None`, the image
+is not saved.
+</ParamField>
+
+<ParamField path="fontname" type="str | None" default="None">
+The name of the font to use.
+</ParamField>
+
+<ParamField path="labels" type="LabelsDict | None" default="None">
+Optional labels for nodes and edges in the graph. Defaults to
+`None`.
+</ParamField>
+
+**Returns:** `bytes | None`
+
+The PNG image as bytes if output_file_path is None, None otherwise.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph-Graph-extend">
+
+<CodeBlock links={{"langchain_core.runnables.graph.Graph":"#langchain_core-runnables-graph-Graph","langchain_core.runnables.graph.Node":"#langchain_core-runnables-graph-Node"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.Graph.extend(
+    graph: langchain_core.runnables.graph.Graph,
+    prefix: str = ''
+) -> tuple[langchain_core.runnables.graph.Node | None, langchain_core.runnables.graph.Node | None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add all nodes and edges from another graph.
+
+Note this doesn't check for duplicates, nor does it connect the graphs.
+
+**Parameters:**
+
+<ParamField path="graph" type="Graph">
+The graph to add.
+</ParamField>
+
+<ParamField path="prefix" type="str" default="''">
+The prefix to add to the node ids.
+</ParamField>
+
+**Returns:** `tuple[Node | None, Node | None]`
+
+A tuple of the first and last nodes of the subgraph.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph-Graph-first_node">
+
+<CodeBlock links={{"langchain_core.runnables.graph.Node":"#langchain_core-runnables-graph-Node"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.Graph.first_node() -> langchain_core.runnables.graph.Node | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Find the single node that is not a target of any edge.
+
+If there is no such node, or there are multiple, return `None`.
+When drawing the graph, this node would be the origin.
+
+**Returns:** `Node | None`
+
+The first node, or None if there is no such node or multiple
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph-Graph-last_node">
+
+<CodeBlock links={{"langchain_core.runnables.graph.Node":"#langchain_core-runnables-graph-Node"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.Graph.last_node() -> langchain_core.runnables.graph.Node | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Find the single node that is not a source of any edge.
+
+If there is no such node, or there are multiple, return `None`.
+When drawing the graph, this node would be the destination.
+
+**Returns:** `Node | None`
+
+The last node, or None if there is no such node or multiple
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph-Graph-next_id">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.Graph.next_id() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return a new unique node identifier.
+
+It that can be used to add a node to the graph.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph-Graph-print_ascii">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.Graph.print_ascii() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Print the graph as an ASCII art string.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph-Graph-reid">
+
+<CodeBlock links={{"langchain_core.runnables.graph.Graph":"#langchain_core-runnables-graph-Graph"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.Graph.reid() -> langchain_core.runnables.graph.Graph
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return a new graph with all nodes re-identified.
+
+Uses their unique, readable names where possible.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph-Graph-remove_node">
+
+<CodeBlock links={{"langchain_core.runnables.graph.Node":"#langchain_core-runnables-graph-Node"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.Graph.remove_node(
+    node: langchain_core.runnables.graph.Node
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Remove a node from the graph and all edges connected to it.
+
+**Parameters:**
+
+<ParamField path="node" type="Node">
+The node to remove.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph-Graph-to_json">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.Graph.to_json(
+    with_schemas: bool = False
+) -> dict[str, list[dict[str, typing.Any]]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert the graph to a JSON-serializable format.
+
+**Parameters:**
+
+<ParamField path="with_schemas" type="bool" default="False">
+Whether to include the schemas of the nodes if they are
+Pydantic models.
+</ParamField>
+
+**Returns:** `dict[str, list[dict[str, Any]]]`
+
+A dictionary with the nodes and edges of the graph.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph-Graph-trim_first_node">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.Graph.trim_first_node() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Remove the first node if it exists and has a single outgoing edge.
+
+i.e., if removing it would not leave the graph without a "first" node.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph-Graph-trim_last_node">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.Graph.trim_last_node() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Remove the last node if it exists and has a single incoming edge.
+
+i.e., if removing it would not leave the graph without a "last" node.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-graph-LabelsDict">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.graph.LabelsDict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Dictionary of labels for nodes and edges in a graph.
+
+<ParamField path="edges" type="dict[str, str]">
+Labels for edges.
+</ParamField>
+
+<ParamField path="nodes" type="dict[str, str]">
+Labels for nodes.
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-graph-MermaidDrawMethod">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.graph.MermaidDrawMethod
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `enum.Enum`
+
+Enum for different draw methods supported by Mermaid.
+
+<ParamField path="API" type="= 'api'">
+</ParamField>
+
+<ParamField path="PYPPETEER" type="= 'pyppeteer'">
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-graph-Node">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.graph.Node()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `NamedTuple`
+
+Node in a graph.
+
+
+<ParamField path="data" type="type[BaseModel] | RunnableType | None">
+The data of the node.
+</ParamField>
+
+<ParamField path="id" type="str">
+The unique identifier of the node.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None">
+Optional metadata for the node.
+</ParamField>
+
+<ParamField path="name" type="str">
+The name of the node.
+</ParamField>
+<Anchor id="langchain_core-runnables-graph-Node-copy">
+
+<CodeBlock links={{"langchain_core.runnables.graph.Node":"#langchain_core-runnables-graph-Node"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.Node.copy(
+    id: str | None = None,
+    name: str | None = None
+) -> langchain_core.runnables.graph.Node
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return a copy of the node with optional new id and name.
+
+**Parameters:**
+
+<ParamField path="id" type="str | None" default="None">
+The new node id.
+</ParamField>
+
+<ParamField path="name" type="str | None" default="None">
+The new node name.
+</ParamField>
+
+**Returns:** `Node`
+
+A copy of the node with the new id and name.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-graph-NodeStyles">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.graph.NodeStyles(
+    default: str = 'fill:#f2f0ff,line-height:1.2',
+    first: str = 'fill-opacity:0',
+    last: str = 'fill:#bfb6fc'
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Dataclass</Badge>
+
+Schema for Hexadecimal color codes for different node types.
+
+**Parameters:**
+
+<ParamField path="default" type="str" default="'fill:#f2f0ff,line-height:1.2'">
+The default color code.
+</ParamField>
+
+<ParamField path="first" type="str" default="'fill-opacity:0'">
+The color code for the first node.
+</ParamField>
+
+<ParamField path="last" type="str" default="'fill:#bfb6fc'">
+The color code for the last node.
+</ParamField>
+
+
+<ParamField path="default" type="str = 'fill:#f2f0ff,line-height:1.2'">
+</ParamField>
+
+<ParamField path="first" type="str = 'fill-opacity:0'">
+</ParamField>
+
+<ParamField path="last" type="str = 'fill:#bfb6fc'">
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-runnables-graph-Stringifiable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.graph.Stringifiable()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Protocol</Badge>
+
+Protocol for objects that can be converted to a string.
+
+
+<Anchor id="langchain_core-runnables-graph-Stringifiable-__str__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.Stringifiable.__str__() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert the object to a string.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-graph-_first_node">
+
+<CodeBlock links={{"langchain_core.runnables.graph.Graph":"#langchain_core-runnables-graph-Graph","langchain_core.runnables.graph.Node":"#langchain_core-runnables-graph-Node"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph._first_node(
+    graph: langchain_core.runnables.graph.Graph,
+    exclude: collections.abc.Sequence[str] = ()
+) -> langchain_core.runnables.graph.Node | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Find the single node that is not a target of any edge.
+
+Exclude nodes/sources with IDs in the exclude list.
+
+If there is no such node, or there are multiple, return `None`.
+
+When drawing the graph, this node would be the origin.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-graph-_last_node">
+
+<CodeBlock links={{"langchain_core.runnables.graph.Graph":"#langchain_core-runnables-graph-Graph","langchain_core.runnables.graph.Node":"#langchain_core-runnables-graph-Node"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph._last_node(
+    graph: langchain_core.runnables.graph.Graph,
+    exclude: collections.abc.Sequence[str] = ()
+) -> langchain_core.runnables.graph.Node | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Find the single node that is not a source of any edge.
+
+Exclude nodes/targets with IDs in the exclude list.
+
+If there is no such node, or there are multiple, return `None`.
+
+When drawing the graph, this node would be the destination.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-graph-is_uuid">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.is_uuid(
+    value: str
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if a string is a valid UUID.
+
+**Parameters:**
+
+<ParamField path="value" type="str">
+The string to check.
+</ParamField>
+
+**Returns:** `bool`
+
+`True` if the string is a valid UUID, `False` otherwise.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-graph-node_data_json">
+
+<CodeBlock links={{"langchain_core.runnables.graph.Node":"#langchain_core-runnables-graph-Node"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.node_data_json(
+    node: langchain_core.runnables.graph.Node,
+    with_schemas: bool = False
+) -> dict[str, str | dict[str, typing.Any]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert the data of a node to a JSON-serializable format.
+
+**Parameters:**
+
+<ParamField path="node" type="Node">
+The `Node` to convert.
+</ParamField>
+
+<ParamField path="with_schemas" type="bool" default="False">
+Whether to include the schema of the data if it is a Pydantic
+model.
+</ParamField>
+
+**Returns:** `dict[str, str | dict[str, Any]]`
+
+A dictionary with the type of the data and the data itself.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-graph-node_data_str">
+
+<CodeBlock links={{"langchain_core.runnables.base.Runnable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-Runnable"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph.node_data_str(
+    id: str,
+    data: type[pydantic.BaseModel] | langchain_core.runnables.base.Runnable | None
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert the data of a node to a string.
+
+**Parameters:**
+
+<ParamField path="id" type="str">
+The node id.
+</ParamField>
+
+<ParamField path="data" type="type[BaseModel] | RunnableType | None">
+The node data.
+</ParamField>
+
+**Returns:** `str`
+
+A string representation of the data.
+
+
+</Indent>

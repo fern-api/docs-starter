@@ -1,0 +1,79 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/messages/block_translators/langchain_v0
+title: langchain_core.messages.block_translators.langchain_v0
+---
+
+Derivations of standard content blocks from LangChain v0 multimodal content.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_convert_legacy_v0_content_block_to_v1`](#langchain_core-messages-block_translators-langchain_v0-_convert_legacy_v0_content_block_to_v1) | Convert a LangChain v0 content block to v1 format. |
+| [`_convert_v0_multimodal_input_to_v1`](#langchain_core-messages-block_translators-langchain_v0-_convert_v0_multimodal_input_to_v1) | Convert v0 multimodal blocks to v1 format. |
+
+### API
+
+<Anchor id="langchain_core-messages-block_translators-langchain_v0-_convert_legacy_v0_content_block_to_v1">
+
+<CodeBlock links={{"langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.langchain_v0._convert_legacy_v0_content_block_to_v1(
+    block: dict
+) -> langchain_core.messages.content.ContentBlock | dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert a LangChain v0 content block to v1 format.
+
+Preserves unknown keys as extras to avoid data loss.
+
+Returns the original block unchanged if it's not in v0 format.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-langchain_v0-_convert_v0_multimodal_input_to_v1">
+
+<CodeBlock links={{"langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.langchain_v0._convert_v0_multimodal_input_to_v1(
+    content: list[langchain_core.messages.content.ContentBlock]
+) -> list[langchain_core.messages.content.ContentBlock]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert v0 multimodal blocks to v1 format.
+
+During the `content_blocks` parsing process, we wrap blocks not recognized as a v1
+block as a `'non_standard'` block with the original block stored in the `value`
+field. This function attempts to unpack those blocks and convert any v0 format
+blocks to v1 format.
+
+If conversion fails, the block is left as a `'non_standard'` block.
+
+**Parameters:**
+
+<ParamField path="content" type="list[types.ContentBlock]">
+List of content blocks to process.
+</ParamField>
+
+**Returns:** `list[types.ContentBlock]`
+
+v1 content blocks.
+
+
+</Indent>

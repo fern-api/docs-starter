@@ -1,0 +1,103 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/utils/uuid
+title: langchain_core.utils.uuid
+---
+
+UUID utility functions.
+
+This module exports a uuid7 function to generate monotonic, time-ordered UUIDs
+for tracing and similar operations.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_to_timestamp_and_nanos`](#langchain_core-utils-uuid-_to_timestamp_and_nanos) | Split a nanosecond timestamp into seconds and remaining nanoseconds. |
+| [`uuid7`](#langchain_core-utils-uuid-uuid7) | Generate a UUID from a Unix timestamp in nanoseconds and random bits. |
+
+### Data
+
+[`_NANOS_PER_SECOND`](#langchain_core-utils-uuid-_NANOS_PER_SECOND)
+
+[`__all__`](#langchain_core-utils-uuid-__all__)
+
+### API
+
+<Anchor id="langchain_core-utils-uuid-_to_timestamp_and_nanos">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.uuid._to_timestamp_and_nanos(
+    nanoseconds: int
+) -> tuple[int, int]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Split a nanosecond timestamp into seconds and remaining nanoseconds.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-uuid-uuid7">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.uuid.uuid7(
+    nanoseconds: int | None = None
+) -> uuid.UUID
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Generate a UUID from a Unix timestamp in nanoseconds and random bits.
+
+UUIDv7 objects feature monotonicity within a millisecond.
+
+**Parameters:**
+
+<ParamField path="nanoseconds" type="int | None" default="None">
+Optional ns timestamp. If not provided, uses current time.
+</ParamField>
+
+**Returns:** `UUID`
+
+A UUIDv7 object.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-uuid-_NANOS_PER_SECOND">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.uuid._NANOS_PER_SECOND: Final = 1000000000
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-uuid-__all__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.uuid.__all__ = ['uuid7']
+```
+
+</CodeBlock>
+</Anchor>
+

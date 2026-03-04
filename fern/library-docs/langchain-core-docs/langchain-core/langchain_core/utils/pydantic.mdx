@@ -1,0 +1,679 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/utils/pydantic
+title: langchain_core.utils.pydantic
+---
+
+Utilities for pydantic.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`_IgnoreUnserializable`](#langchain_core-utils-pydantic-_IgnoreUnserializable) | A JSON schema generator that ignores unknown types. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_create_model_cached`](#langchain_core-utils-pydantic-_create_model_cached) | - |
+| [`_create_root_model`](#langchain_core-utils-pydantic-_create_root_model) | Create a base class. |
+| [`_create_root_model_cached`](#langchain_core-utils-pydantic-_create_root_model_cached) | - |
+| [`_create_subset_model`](#langchain_core-utils-pydantic-_create_subset_model) | Create subset model using the same pydantic version as the input model. |
+| [`_create_subset_model_v1`](#langchain_core-utils-pydantic-_create_subset_model_v1) | Create a Pydantic model with only a subset of model's fields. |
+| [`_create_subset_model_v2`](#langchain_core-utils-pydantic-_create_subset_model_v2) | Create a Pydantic model with a subset of the model fields. |
+| [`_remap_field_definitions`](#langchain_core-utils-pydantic-_remap_field_definitions) | This remaps fields to avoid colliding with internal pydantic fields. |
+| [`create_model`](#langchain_core-utils-pydantic-create_model) | Create a Pydantic model with the given field definitions. |
+| [`create_model_v2`](#langchain_core-utils-pydantic-create_model_v2) | Create a Pydantic model with the given field definitions. |
+| [`get_fields`](#langchain_core-utils-pydantic-get_fields) | Return the field names of a Pydantic model. |
+| [`get_pydantic_major_version`](#langchain_core-utils-pydantic-get_pydantic_major_version) | DEPRECATED - Get the major version of Pydantic. |
+| [`is_basemodel_instance`](#langchain_core-utils-pydantic-is_basemodel_instance) | Check if the given class is an instance of Pydantic `BaseModel`. |
+| [`is_basemodel_subclass`](#langchain_core-utils-pydantic-is_basemodel_subclass) | Check if the given class is a subclass of Pydantic `BaseModel`. |
+| [`is_pydantic_v1_subclass`](#langchain_core-utils-pydantic-is_pydantic_v1_subclass) | Check if the given class is Pydantic v1-like. |
+| [`is_pydantic_v2_subclass`](#langchain_core-utils-pydantic-is_pydantic_v2_subclass) | Check if the given class is Pydantic v2-like. |
+| [`pre_init`](#langchain_core-utils-pydantic-pre_init) | Decorator to run a function before model initialization. |
+
+### Data
+
+[`IS_PYDANTIC_V1`](#langchain_core-utils-pydantic-IS_PYDANTIC_V1)
+
+[`IS_PYDANTIC_V2`](#langchain_core-utils-pydantic-IS_PYDANTIC_V2)
+
+[`NO_DEFAULT`](#langchain_core-utils-pydantic-NO_DEFAULT)
+
+[`PYDANTIC_MAJOR_VERSION`](#langchain_core-utils-pydantic-PYDANTIC_MAJOR_VERSION)
+
+[`PYDANTIC_MINOR_VERSION`](#langchain_core-utils-pydantic-PYDANTIC_MINOR_VERSION)
+
+[`PYDANTIC_VERSION`](#langchain_core-utils-pydantic-PYDANTIC_VERSION)
+
+[`PydanticBaseModel`](#langchain_core-utils-pydantic-PydanticBaseModel)
+
+[`TBaseModel`](#langchain_core-utils-pydantic-TBaseModel)
+
+[`TypeBaseModel`](#langchain_core-utils-pydantic-TypeBaseModel)
+
+[`_RESERVED_NAMES`](#langchain_core-utils-pydantic-_RESERVED_NAMES)
+
+[`_SchemaConfig`](#langchain_core-utils-pydantic-_SchemaConfig)
+
+### API
+
+<Anchor id="langchain_core-utils-pydantic-_IgnoreUnserializable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.utils.pydantic._IgnoreUnserializable()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `GenerateJsonSchema`
+
+A JSON schema generator that ignores unknown types.
+
+https://docs.pydantic.dev/latest/concepts/json_schema/#customizing-the-json-schema-generation-process
+
+
+<Anchor id="langchain_core-utils-pydantic-_IgnoreUnserializable-handle_invalid_for_json_schema">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic._IgnoreUnserializable.handle_invalid_for_json_schema(
+    schema: pydantic_core.core_schema.CoreSchema,
+    error_info: str
+) -> pydantic.json_schema.JsonSchemaValue
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-utils-pydantic-_create_model_cached">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic._create_model_cached(
+    model_name: str,
+    field_definitions: typing.Any = {}
+) -> type[pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-pydantic-_create_root_model">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic._create_root_model(
+    name: str,
+    type_: typing.Any,
+    module_name: str | None = None,
+    default_: object = NO_DEFAULT
+) -> type[pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a base class.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-pydantic-_create_root_model_cached">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic._create_root_model_cached(
+    model_name: str,
+    type_: typing.Any,
+    module_name: str | None = None,
+    default_: object = NO_DEFAULT
+) -> type[pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-pydantic-_create_subset_model">
+
+<CodeBlock links={{"langchain_core.utils.pydantic.TypeBaseModel":"#langchain_core-utils-pydantic-TypeBaseModel"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic._create_subset_model(
+    name: str,
+    model: langchain_core.utils.pydantic.TypeBaseModel,
+    field_names: list[str],
+    descriptions: dict | None = None,
+    fn_description: str | None = None
+) -> type[pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create subset model using the same pydantic version as the input model.
+
+**Returns:** `type[BaseModel]`
+
+The created subset model.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-pydantic-_create_subset_model_v1">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic._create_subset_model_v1(
+    name: str,
+    model: type[pydantic.v1.BaseModel],
+    field_names: list,
+    descriptions: dict | None = None,
+    fn_description: str | None = None
+) -> type[pydantic.v1.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a Pydantic model with only a subset of model's fields.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-pydantic-_create_subset_model_v2">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic._create_subset_model_v2(
+    name: str,
+    model: type[pydantic.BaseModel],
+    field_names: list[str],
+    descriptions: dict | None = None,
+    fn_description: str | None = None
+) -> type[pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a Pydantic model with a subset of the model fields.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-pydantic-_remap_field_definitions">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic._remap_field_definitions(
+    field_definitions: dict[str, typing.Any]
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+This remaps fields to avoid colliding with internal pydantic fields.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-pydantic-create_model">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic.create_model(
+    model_name: str,
+    module_name: str | None = None,
+    field_definitions: typing.Any = {}
+) -> type[pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a Pydantic model with the given field definitions.
+
+Please use `create_model_v2` instead of this function.
+
+**Parameters:**
+
+<ParamField path="model_name" type="str">
+The name of the model.
+</ParamField>
+
+<ParamField path="module_name" type="str | None" default="None">
+The name of the module where the model is defined.
+
+This is used by Pydantic to resolve any forward references.
+</ParamField>
+
+<ParamField path="**field_definitions" type="Any" default="&#123;&#125;">
+The field definitions for the model.
+</ParamField>
+
+**Returns:** `type[BaseModel]`
+
+The created model.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-pydantic-create_model_v2">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic.create_model_v2(
+    model_name: str,
+    module_name: str | None = None,
+    field_definitions: dict[str, typing.Any] | None = None,
+    root: typing.Any | None = None
+) -> type[pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a Pydantic model with the given field definitions.
+
+!!! warning
+
+    Do not use outside of langchain packages. This API is subject to change at any
+    time.
+
+**Parameters:**
+
+<ParamField path="model_name" type="str">
+The name of the model.
+</ParamField>
+
+<ParamField path="module_name" type="str | None" default="None">
+The name of the module where the model is defined.
+
+This is used by Pydantic to resolve any forward references.
+</ParamField>
+
+<ParamField path="field_definitions" type="dict[str, Any] | None" default="None">
+The field definitions for the model.
+</ParamField>
+
+<ParamField path="root" type="Any | None" default="None">
+Type for a root model (`RootModel`)
+</ParamField>
+
+**Returns:** `type[BaseModel]`
+
+The created model.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-pydantic-get_fields">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic.get_fields(
+    model: type[pydantic.BaseModel | pydantic.v1.BaseModel] | pydantic.BaseModel | pydantic.v1.BaseModel
+) -> dict[str, pydantic.fields.FieldInfo] | dict[str, pydantic.v1.fields.ModelField]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return the field names of a Pydantic model.
+
+**Parameters:**
+
+<ParamField path="model" type="type[BaseModel | BaseModelV1] | BaseModel | BaseModelV1">
+The Pydantic model or instance.
+</ParamField>
+
+**Raises:**
+
+- `TypeError`: If the model is not a Pydantic model.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-pydantic-get_pydantic_major_version">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic.get_pydantic_major_version() -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+DEPRECATED - Get the major version of Pydantic.
+
+Use `PYDANTIC_VERSION.major` instead.
+
+**Returns:** `int`
+
+The major version of Pydantic.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-pydantic-is_basemodel_instance">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic.is_basemodel_instance(
+    obj: typing.Any
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if the given class is an instance of Pydantic `BaseModel`.
+
+Check if the given class is an instance of any of the following:
+
+* `pydantic.BaseModel` in Pydantic 2.x
+* `pydantic.v1.BaseModel` in Pydantic 2.x
+
+**Returns:** `bool`
+
+`True` if the given class is an instance of Pydantic `BaseModel`.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-pydantic-is_basemodel_subclass">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic.is_basemodel_subclass(
+    cls: type
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if the given class is a subclass of Pydantic `BaseModel`.
+
+Check if the given class is a subclass of any of the following:
+
+* `pydantic.BaseModel` in Pydantic 2.x
+* `pydantic.v1.BaseModel` in Pydantic 2.x
+
+**Returns:** `bool`
+
+`True` if the given class is a subclass of Pydantic `BaseModel`.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-pydantic-is_pydantic_v1_subclass">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic.is_pydantic_v1_subclass(
+    cls: type
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if the given class is Pydantic v1-like.
+
+**Returns:** `bool`
+
+`True` if the given class is a subclass of Pydantic `BaseModel` 1.x.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-pydantic-is_pydantic_v2_subclass">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic.is_pydantic_v2_subclass(
+    cls: type
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if the given class is Pydantic v2-like.
+
+**Returns:** `bool`
+
+`True` if the given class is a subclass of Pydantic `BaseModel` 2.x.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-pydantic-pre_init">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic.pre_init(
+    func: collections.abc.Callable
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Decorator to run a function before model initialization.
+
+**Parameters:**
+
+<ParamField path="func" type="Callable">
+The function to run before model initialization.
+</ParamField>
+
+**Returns:** `Any`
+
+The decorated function.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-pydantic-IS_PYDANTIC_V1">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic.IS_PYDANTIC_V1 = False
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-pydantic-IS_PYDANTIC_V2">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic.IS_PYDANTIC_V2 = True
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-pydantic-NO_DEFAULT">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic.NO_DEFAULT = object()
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-pydantic-PYDANTIC_MAJOR_VERSION">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic.PYDANTIC_MAJOR_VERSION = PYDANTIC_VERSION.major
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-pydantic-PYDANTIC_MINOR_VERSION">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic.PYDANTIC_MINOR_VERSION = PYDANTIC_VERSION.minor
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-pydantic-PYDANTIC_VERSION">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic.PYDANTIC_VERSION = version.parse(pydantic.__version__)
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-pydantic-PydanticBaseModel">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic.PydanticBaseModel = BaseModel
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-pydantic-TBaseModel">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic.TBaseModel = TypeVar('TBaseModel', bound=PydanticBaseModel)
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-pydantic-TypeBaseModel">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic.TypeBaseModel = type[BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-pydantic-_RESERVED_NAMES">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic._RESERVED_NAMES = {key for key in (dir(BaseModel)) if not key.startswith('_')}
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-pydantic-_SchemaConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.pydantic._SchemaConfig = ConfigDict(arbitrary_types_allowed=True, frozen=True, protected_namespaces=())
+```
+
+</CodeBlock>
+</Anchor>
+

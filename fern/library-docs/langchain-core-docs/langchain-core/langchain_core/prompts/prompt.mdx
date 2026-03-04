@@ -1,0 +1,374 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/prompts/prompt
+title: langchain_core.prompts.prompt
+---
+
+Prompt schema definition.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`PromptTemplate`](#langchain_core-prompts-prompt-PromptTemplate) | Prompt template for a language model. |
+
+### API
+
+<Anchor id="langchain_core-prompts-prompt-PromptTemplate">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.prompts.prompt.PromptTemplate()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [StringPromptTemplate](/langchain-core/langchain_core/prompts/string#langchain_core-prompts-string-StringPromptTemplate)
+
+Prompt template for a language model.
+
+A prompt template consists of a string template. It accepts a set of parameters
+from the user that can be used to generate a prompt for a language model.
+
+The template can be formatted using either f-strings (default), jinja2, or mustache
+syntax.
+
+!!! warning "Security"
+
+    Prefer using `template_format='f-string'` instead of `template_format='jinja2'`,
+    or make sure to NEVER accept jinja2 templates from untrusted sources as they may
+    lead to arbitrary Python code execution.
+
+    As of LangChain 0.0.329, Jinja2 templates will be rendered using Jinja2's
+    SandboxedEnvironment by default. This sand-boxing should be treated as a
+    best-effort approach rather than a guarantee of security, as it is an opt-out
+    rather than opt-in approach.
+
+    Despite the sandboxing, we recommend to never use jinja2 templates from
+    untrusted sources.
+
+
+<ParamField path="_prompt_type" type="str">
+Return the prompt type key.
+</ParamField>
+
+<ParamField path="lc_attributes" type="dict[str, Any]">
+</ParamField>
+
+<ParamField path="template" type="str">
+The prompt template.
+</ParamField>
+
+<ParamField path="template_format" type="PromptTemplateFormat = 'f-string'">
+The format of the prompt template.
+
+Options are: `'f-string'`, `'mustache'`, `'jinja2'`.
+</ParamField>
+
+<ParamField path="validate_template" type="bool = False">
+Whether or not to try validating the template.
+</ParamField>
+<Anchor id="langchain_core-prompts-prompt-PromptTemplate-__add__">
+
+<CodeBlock links={{"langchain_core.prompts.prompt.PromptTemplate":"#langchain_core-prompts-prompt-PromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.prompt.PromptTemplate.__add__(
+    other: typing.Any
+) -> langchain_core.prompts.prompt.PromptTemplate
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Override the `+` operator to allow for combining prompt templates.
+
+**Returns:** `PromptTemplate`
+
+A new `PromptTemplate` that is the combination of the two.
+
+**Raises:**
+
+- `ValueError`: If the template formats are not f-string or if there are
+conflicting partial variables.
+- `NotImplementedError`: If the other object is not a `PromptTemplate` or str.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-prompt-PromptTemplate-format">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.prompt.PromptTemplate.format(
+    kwargs: typing.Any = {}
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format the prompt with the inputs.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Any arguments to be passed to the prompt template.
+</ParamField>
+
+**Returns:** `str`
+
+A formatted string.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-prompt-PromptTemplate-from_examples">
+
+<CodeBlock links={{"langchain_core.prompts.prompt.PromptTemplate":"#langchain_core-prompts-prompt-PromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.prompt.PromptTemplate.from_examples(
+    examples: list[str],
+    suffix: str,
+    input_variables: list[str],
+    example_separator: str = '\n\n',
+    prefix: str = '',
+    kwargs: typing.Any = {}
+) -> langchain_core.prompts.prompt.PromptTemplate
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Take examples in list format with prefix and suffix to create a prompt.
+
+Intended to be used as a way to dynamically create a prompt from examples.
+
+**Parameters:**
+
+<ParamField path="examples" type="list[str]">
+List of examples to use in the prompt.
+</ParamField>
+
+<ParamField path="suffix" type="str">
+String to go after the list of examples.
+
+Should generally set up the user's input.
+</ParamField>
+
+<ParamField path="input_variables" type="list[str]">
+A list of variable names the final prompt template will
+expect.
+</ParamField>
+
+<ParamField path="example_separator" type="str" default="'\n\n'">
+The separator to use in between examples.
+</ParamField>
+
+<ParamField path="prefix" type="str" default="''">
+String that should go before any examples.
+
+Generally includes examples.
+</ParamField>
+
+**Returns:** `PromptTemplate`
+
+The final prompt generated.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-prompt-PromptTemplate-from_file">
+
+<CodeBlock links={{"langchain_core.prompts.prompt.PromptTemplate":"#langchain_core-prompts-prompt-PromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.prompt.PromptTemplate.from_file(
+    template_file: str | pathlib.Path,
+    encoding: str | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.prompts.prompt.PromptTemplate
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Load a prompt from a file.
+
+**Parameters:**
+
+<ParamField path="template_file" type="str | Path">
+The path to the file containing the prompt template.
+</ParamField>
+
+<ParamField path="encoding" type="str | None" default="None">
+The encoding system for opening the template file.
+
+If not provided, will use the OS default.
+</ParamField>
+
+**Returns:** `PromptTemplate`
+
+The prompt loaded from the file.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-prompt-PromptTemplate-from_template">
+
+<CodeBlock links={{"langchain_core.prompts.string.PromptTemplateFormat":"/langchain-core/langchain_core/prompts/string#langchain_core-prompts-string-PromptTemplateFormat","langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict","langchain_core.prompts.prompt.PromptTemplate":"#langchain_core-prompts-prompt-PromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.prompt.PromptTemplate.from_template(
+    template: str,
+    template_format: langchain_core.prompts.string.PromptTemplateFormat = 'f-string',
+    partial_variables: langchain_core.prompts.dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.prompts.prompt.PromptTemplate
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Load a prompt template from a template.
+
+!!! warning "Security"
+
+    Prefer using `template_format='f-string'` instead of
+    `template_format='jinja2'`, or make sure to NEVER accept jinja2 templates
+    from untrusted sources as they may lead to arbitrary Python code execution.
+
+    As of LangChain 0.0.329, Jinja2 templates will be rendered using Jinja2's
+    SandboxedEnvironment by default. This sand-boxing should be treated as a
+    best-effort approach rather than a guarantee of security, as it is an
+    opt-out rather than opt-in approach.
+
+    Despite the sandboxing, we recommend to never use jinja2 templates from
+    untrusted sources.
+
+**Parameters:**
+
+<ParamField path="template" type="str">
+The template to load.
+</ParamField>
+
+<ParamField path="template_format" type="PromptTemplateFormat" default="'f-string'">
+The format of the template.
+
+Use `jinja2` for jinja2, `mustache` for mustache, and `f-string` for
+f-strings.
+</ParamField>
+
+<ParamField path="partial_variables" type="dict[str, Any] | None" default="None">
+A dictionary of variables that can be used to partially
+fill in the template.
+
+For example, if the template is `'&#123;variable1&#125; &#123;variable2&#125;'`, and
+`partial_variables` is `&#123;"variable1": "foo"&#125;`, then the final prompt
+will be `'foo &#123;variable2&#125;'`.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Any other arguments to pass to the prompt template.
+</ParamField>
+
+**Returns:** `PromptTemplate`
+
+The prompt template loaded from the template.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-prompt-PromptTemplate-get_input_schema">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.prompt.PromptTemplate.get_input_schema(
+    config: langchain_core.runnables.config.RunnableConfig | None = None
+) -> type[pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the input schema for the prompt.
+
+**Parameters:**
+
+<ParamField path="config" type="RunnableConfig | None" default="None">
+The runnable configuration.
+</ParamField>
+
+**Returns:** `type[BaseModel]`
+
+The input schema for the prompt.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-prompt-PromptTemplate-get_lc_namespace">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.prompt.PromptTemplate.get_lc_namespace() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Get the namespace of the LangChain object.
+
+**Returns:** `list[str]`
+
+`["langchain", "prompts", "prompt"]`
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-prompt-PromptTemplate-pre_init_validation">
+
+<CodeBlock links={{"langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.prompt.PromptTemplate.pre_init_validation(
+    values: langchain_core.prompts.dict
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Check that template and input variables are consistent.
+
+
+</Indent>
+</Indent>

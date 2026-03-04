@@ -1,0 +1,224 @@
+---
+title: cub::BlockMergeSort
+description: "The [BlockMergeSort](/library/api/cub::_block_merge_sort) class provides methods for sorting items partitioned across a CUDA thread block using a merge sorting method."
+---
+
+The `BlockMergeSort` class provides methods for sorting items partitioned across a CUDA thread block using a merge sorting method.
+
+**Overview**
+
+`BlockMergeSort` arranges items into ascending order using a comparison functor with less-than semantics. Merge sort can handle arbitrary types and comparison functors, but is slower than [BlockRadixSort](/library/api/cub::_block_radix_sort) when sorting arithmetic types into ascending/descending order.
+
+**A Simple Example**
+
+Every thread in the block uses the `BlockMergeSort` class by first specializing the `BlockMergeSort` type, then instantiating an instance with parameters for communication, and finally invoking one or more collective member functions.
+
+The code snippet below illustrates a sort of 512 integer keys that are partitioned across 128 threads * where each thread owns 4 consecutive items.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>  // or equivalently <cub/block/block_merge_sort.cuh>
+
+struct CustomLess
+{
+  template <typename DataType>
+  __device__ bool operator()(const DataType &lhs, const DataType &rhs)
+  {
+    return lhs < rhs;
+  }
+};
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize BlockMergeSort for a 1D block of 128 threads owning 4 integer items each
+    using BlockMergeSort = cub::BlockMergeSort<int, 128, 4>;
+
+    // Allocate shared memory for BlockMergeSort
+    __shared__ typename BlockMergeSort::TempStorage temp_storage_shuffle;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_keys[4];
+    ...
+
+    BlockMergeSort(temp_storage_shuffle).Sort(thread_keys, CustomLess());
+    ...
+}
+```
+
+Suppose the set of input `thread_keys` across the block of threads is `{ [0,511,1,510], [2,509,3,508], [4,507,5,506], ..., [254,257,255,256] }`. The corresponding output `thread_keys` in those threads will be `{ [0,1,2,3], [4,5,6,7], [8,9,10,11], ..., [508,509,510,511] }`.
+
+**Re-using dynamically allocating shared memory**
+
+The `block/example_block_reduce_dyn_smem.cu` example illustrates usage of dynamically shared memory with [BlockReduce](/library/api/cub::_block_reduce) and how to re-purpose the same memory region.
+
+This example can be easily adapted to the storage required by `BlockMergeSort`.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="KeyT" type="typename">
+KeyT type
+</ParamField>
+
+<ParamField path="BlockDimX" type="int">
+</ParamField>
+
+<ParamField path="ItemsPerThread" type="int">
+The number of items per thread
+</ParamField>
+
+<ParamField path="ValueT" type="typename" default="NullType">
+**[optional]** ValueT type (default: `cub::NullType`, which indicates a keys-only sort)
+</ParamField>
+
+<ParamField path="BlockDimY" type="int" default="1">
+</ParamField>
+
+<ParamField path="BlockDimZ" type="int" default="1">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `cub::BlockMergeSortStrategy< KeyT, NullType, BlockDimX *1 *1, ItemsPerThread, BlockMergeSort< KeyT, BlockDimX, ItemsPerThread, NullType, 1, 1 > >` (public)
+
+---
+
+## Constructors
+
+### BlockMergeSort <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+<CodeBlock links={{"BlockMergeSort": "/library/api/cub::BlockMergeSort"}}>
+```cpp showLineNumbers={false}
+cub::BlockMergeSort<KeyT, BlockDimX, ItemsPerThread, ValueT, BlockDimY, BlockDimZ>::BlockMergeSort()
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="With TempStorage">
+
+<Badge intent="note" minimal>explicit</Badge>
+
+<CodeBlock links={{"BlockMergeSort": "/library/api/cub::BlockMergeSort"}}>
+```cpp showLineNumbers={false}
+cub::BlockMergeSort<KeyT, BlockDimX, ItemsPerThread, ValueT, BlockDimY, BlockDimZ>::BlockMergeSort(
+    typename BlockMergeSortStrategyT::TempStorage &temp_storage
+)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### get_linear_tid <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"BlockMergeSort": "/library/api/cub::BlockMergeSort", "BlockMergeSortStrategy": "/library/api/cub::BlockMergeSortStrategy"}}>
+```cpp showLineNumbers={false}
+unsigned int cub::BlockMergeSortStrategy<KeyT, NullType, NumThreads, ItemsPerThread, BlockMergeSort<KeyT, BlockDimX, ItemsPerThread, NullType, 1, 1>>::get_linear_tid() const
+```
+</CodeBlock>
+
+### Sort <Badge intent="note" minimal>inline</Badge>
+
+Sorts items partitioned across a CUDA thread block using a merge sorting method.
+
+<CodeBlock links={{"BlockMergeSort": "/library/api/cub::BlockMergeSort", "BlockMergeSortStrategy": "/library/api/cub::BlockMergeSortStrategy"}}>
+```cpp showLineNumbers={false}
+void cub::BlockMergeSortStrategy<KeyT, NullType, NumThreads, ItemsPerThread, BlockMergeSort<KeyT, BlockDimX, ItemsPerThread, NullType, 1, 1>>::Sort(
+    KeyT (&keys)[ItemsPerThread],
+    CompareOp compare_op
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="compare_op" type="CompareOp">
+Comparison function object which returns true if the first argument is ordered before the second
+</ParamField>
+
+### StableSort <Badge intent="note" minimal>inline</Badge>
+
+Sorts items partitioned across a CUDA thread block using a merge sorting method.
+
+<CodeBlock links={{"BlockMergeSort": "/library/api/cub::BlockMergeSort", "BlockMergeSortStrategy": "/library/api/cub::BlockMergeSortStrategy"}}>
+```cpp showLineNumbers={false}
+void cub::BlockMergeSortStrategy<KeyT, NullType, NumThreads, ItemsPerThread, BlockMergeSort<KeyT, BlockDimX, ItemsPerThread, NullType, 1, 1>>::StableSort(
+    KeyT (&keys)[ItemsPerThread],
+    CompareOp compare_op
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Parameters**
+
+<ParamField path="keys" type="KeyT(&)[ItemsPerThread]">
+Keys to sort
+</ParamField>
+
+<ParamField path="compare_op" type="CompareOp">
+Comparison function object which returns true if the first argument is ordered before the second
+</ParamField>
+
+### SyncImplementation <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"BlockMergeSort": "/library/api/cub::BlockMergeSort"}}>
+```cpp showLineNumbers={false}
+void cub::BlockMergeSort<KeyT, BlockDimX, ItemsPerThread, ValueT, BlockDimY, BlockDimZ>::SyncImplementation() const
+```
+</CodeBlock>
+
+### PrivateStorage <Badge intent="note" minimal>inline</Badge>
+
+Internal storage allocator.
+
+<CodeBlock links={{"BlockMergeSort": "/library/api/cub::BlockMergeSort", "BlockMergeSortStrategy": "/library/api/cub::BlockMergeSortStrategy"}}>
+```cpp showLineNumbers={false}
+_TempStorage & cub::BlockMergeSortStrategy<KeyT, NullType, NumThreads, ItemsPerThread, BlockMergeSort<KeyT, BlockDimX, ItemsPerThread, NullType, 1, 1>>::PrivateStorage()
+```
+</CodeBlock>
+
+### Sync <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"BlockMergeSort": "/library/api/cub::BlockMergeSort", "BlockMergeSortStrategy": "/library/api/cub::BlockMergeSortStrategy"}}>
+```cpp showLineNumbers={false}
+void cub::BlockMergeSortStrategy<KeyT, NullType, NumThreads, ItemsPerThread, BlockMergeSort<KeyT, BlockDimX, ItemsPerThread, NullType, 1, 1>>::Sync() const
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `BlockMergeSortStrategyT` | `BlockMergeSortStrategy< KeyT, ValueT, BLOCK_THREADS, ItemsPerThread, BlockMergeSort >` |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `BLOCK_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `ITEMS_PER_TILE` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `KEYS_ONLY` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `bool` | |
+| `BlockMergeSortStrategyT` | `friend` | |
+| `temp_storage` | `_TempStorage &` | Shared storage reference. |
+| `linear_tid` | `const unsigned int` | |

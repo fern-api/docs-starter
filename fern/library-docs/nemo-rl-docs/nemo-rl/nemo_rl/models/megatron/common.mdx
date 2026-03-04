@@ -1,0 +1,133 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/megatron/common
+title: nemo_rl.models.megatron.common
+---
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_round_up_to_multiple`](#nemo_rl-models-megatron-common-_round_up_to_multiple) | - |
+| [`broadcast_tensor`](#nemo_rl-models-megatron-common-broadcast_tensor) | Broadcasts a tensor from src_rank to all ranks in the group using broadcast_object_list for metadata. |
+| [`get_moe_metrics`](#nemo_rl-models-megatron-common-get_moe_metrics) | Returns Mixture of Experts (MoE) auxiliary-loss metrics. |
+
+### API
+
+<Anchor id="nemo_rl-models-megatron-common-_round_up_to_multiple">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.common._round_up_to_multiple(
+    value: int,
+    multiple: int
+) -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-common-broadcast_tensor">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.common.broadcast_tensor(
+    tensor: torch.Tensor | None,
+    src_rank: int,
+    group: torch.distributed.ProcessGroup
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Broadcasts a tensor from src_rank to all ranks in the group using broadcast_object_list for metadata.
+
+Handles the case where the input tensor might be None on non-source ranks.
+If the input tensor is provided on non-source ranks, it must have the
+correct shape and dtype matching the tensor on the source rank.
+
+**Parameters:**
+
+<ParamField path="tensor" type="torch.Tensor | None">
+The tensor to broadcast on the source rank. Can be None on
+    non-source ranks (will be created with correct shape/dtype).
+    If not None on non-source ranks, it's used as the buffer
+    for the broadcast and must match the source tensor's metadata.
+</ParamField>
+
+<ParamField path="src_rank" type="int">
+The global rank of the source process.
+</ParamField>
+
+<ParamField path="group" type="dist.ProcessGroup">
+The process group for communication.
+</ParamField>
+
+**Returns:** `torch.Tensor`
+
+torch.Tensor: The broadcasted tensor. On non-source ranks, this will
+          be the tensor received from the source.
+
+**Raises:**
+
+- `ValueError`: If the tensor is None on the source rank, or if a tensor
+        provided on a non-source rank has mismatched shape/dtype/device.
+- `TypeError`: If broadcasting metadata fails (e.g., due to pickling issues).
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-common-get_moe_metrics">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.common.get_moe_metrics(
+    loss_scale: float,
+    total_loss_dict: typing.Optional[dict] = None,
+    per_layer_logging: bool = False
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Returns Mixture of Experts (MoE) auxiliary-loss metrics.
+
+This function reduces MoE auxiliary losses across ranks, aggregates them, and
+returns a dictionary of metrics.
+
+**Parameters:**
+
+<ParamField path="loss_scale" type="float">
+Scale factor to apply to each auxiliary loss (e.g., 1/num_microbatches).
+</ParamField>
+
+<ParamField path="total_loss_dict" type="Optional[dict]" default="None">
+If provided, accumulate means into this dict (by name).
+</ParamField>
+
+<ParamField path="per_layer_logging" type="bool" default="False">
+If True, include per-layer values in the returned dict.
+</ParamField>
+
+**Returns:** `dict[str, Any]`
+
+dict[str, Any]: A flat dict of aggregated metrics. For each aux loss name,
+
+
+</Indent>

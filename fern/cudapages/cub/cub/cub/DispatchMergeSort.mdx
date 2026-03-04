@@ -1,0 +1,132 @@
+---
+title: cub::DispatchMergeSort
+description: ""
+---
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="KeyInputIteratorT" type="typename">
+</ParamField>
+
+<ParamField path="ValueInputIteratorT" type="typename">
+</ParamField>
+
+<ParamField path="KeyIteratorT" type="typename">
+</ParamField>
+
+<ParamField path="ValueIteratorT" type="typename">
+</ParamField>
+
+<ParamField path="OffsetT" type="typename">
+</ParamField>
+
+<ParamField path="CompareOpT" type="typename">
+</ParamField>
+
+<ParamField path="PolicyHub" type="typename" default="detail::merge_sort::policy_hub<KeyIteratorT>">
+</ParamField>
+
+<ParamField path="KernelSource" type="typename" default="detail::merge_sort::DeviceMergeSortKernelSource<            typename PolicyHub::MaxPolicy,            KeyInputIteratorT,            ValueInputIteratorT,            KeyIteratorT,            ValueIteratorT,            OffsetT,            CompareOpT>">
+</ParamField>
+
+<ParamField path="KernelLauncherFactory" type="typename" default="CUB_DETAIL_DEFAULT_KERNEL_LAUNCHER_FACTORY">
+</ParamField>
+
+<ParamField path="VSMemHelperT" type="typename" default="detail::merge_sort::VSMemHelper">
+</ParamField>
+
+<ParamField path="KeyT" type="typename" default="cub::detail::it_value_t<KeyIteratorT>">
+</ParamField>
+
+<ParamField path="ValueT" type="typename" default="cub::detail::it_value_t<ValueIteratorT>">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### DispatchMergeSort <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"DispatchMergeSort": "/library/api/cub::DispatchMergeSort"}}>
+```cpp showLineNumbers={false}
+cub::DispatchMergeSort<KeyInputIteratorT, ValueInputIteratorT, KeyIteratorT, ValueIteratorT, OffsetT, CompareOpT, PolicyHub, KernelSource, KernelLauncherFactory, VSMemHelperT, KeyT, ValueT>::DispatchMergeSort(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyInputIteratorT d_input_keys,
+    ValueInputIteratorT d_input_items,
+    KeyIteratorT d_output_keys,
+    ValueIteratorT d_output_items,
+    OffsetT num_items,
+    CompareOpT compare_op,
+    cudaStream_t stream,
+    int ptx_version,
+    KernelSource kernel_source = {},
+    KernelLauncherFactory launcher_factory = {}
+)
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### Invoke <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"DispatchMergeSort": "/library/api/cub::DispatchMergeSort"}}>
+```cpp showLineNumbers={false}
+template <typename ActivePolicyT>
+cudaError_t cub::DispatchMergeSort<KeyInputIteratorT, ValueInputIteratorT, KeyIteratorT, ValueIteratorT, OffsetT, CompareOpT, PolicyHub, KernelSource, KernelLauncherFactory, VSMemHelperT, KeyT, ValueT>::Invoke(
+    ActivePolicyT policy = {}
+)
+```
+</CodeBlock>
+
+---
+
+## Static methods
+
+### Dispatch <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"DispatchMergeSort": "/library/api/cub::DispatchMergeSort"}}>
+```cpp showLineNumbers={false}
+template <typename MaxPolicyT>
+static cudaError_t cub::DispatchMergeSort<KeyInputIteratorT, ValueInputIteratorT, KeyIteratorT, ValueIteratorT, OffsetT, CompareOpT, PolicyHub, KernelSource, KernelLauncherFactory, VSMemHelperT, KeyT, ValueT>::Dispatch(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyInputIteratorT d_input_keys,
+    ValueInputIteratorT d_input_items,
+    KeyIteratorT d_output_keys,
+    ValueIteratorT d_output_items,
+    OffsetT num_items,
+    CompareOpT compare_op,
+    cudaStream_t stream,
+    KernelSource kernel_source = {},
+    KernelLauncherFactory launcher_factory = {},
+    MaxPolicyT max_policy = {}
+)
+```
+</CodeBlock>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `KEYS_ONLY` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `bool` | Whether or not there are values to be trucked along with keys. |
+| `d_temp_storage` | `void *` | Device-accessible allocation of temporary storage. |
+| `temp_storage_bytes` | `size_t &` | Reference to size in bytes of `d_temp_storage` allocation. |
+| `d_input_keys` | `KeyInputIteratorT` | Pointer to the input sequence of unsorted input keys. |
+| `d_input_items` | `ValueInputIteratorT` | Pointer to the input sequence of unsorted input values. |
+| `d_output_keys` | `KeyIteratorT` | Pointer to the output sequence of sorted input keys. |
+| `d_output_items` | `ValueIteratorT` | Pointer to the output sequence of sorted input values. |
+| `num_items` | `OffsetT` | Number of items to sort. |
+| `compare_op` | `CompareOpT` | Comparison function object which returns true if the first argument is ordered before the second. |
+| `stream` | `cudaStream_t` | CUDA stream to launch kernels within. Default is stream<sub>0</sub>. |
+| `ptx_version` | `int` | |
+| `kernel_source` | `KernelSource` | |
+| `launcher_factory` | `KernelLauncherFactory` | |

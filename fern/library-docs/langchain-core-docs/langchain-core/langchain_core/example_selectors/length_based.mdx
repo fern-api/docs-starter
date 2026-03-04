@@ -1,0 +1,213 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/example_selectors/length_based
+title: langchain_core.example_selectors.length_based
+---
+
+Select examples based on length.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`LengthBasedExampleSelector`](#langchain_core-example_selectors-length_based-LengthBasedExampleSelector) | Select examples based on length. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_get_length_based`](#langchain_core-example_selectors-length_based-_get_length_based) | - |
+
+### API
+
+<Anchor id="langchain_core-example_selectors-length_based-LengthBasedExampleSelector">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.example_selectors.length_based.LengthBasedExampleSelector()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseExampleSelector](/langchain-core/langchain_core/example_selectors/base#langchain_core-example_selectors-base-BaseExampleSelector), `BaseModel`
+
+Select examples based on length.
+
+
+<ParamField path="example_prompt" type="PromptTemplate">
+Prompt template used to format the examples.
+</ParamField>
+
+<ParamField path="example_text_lengths" type="list[int] = Field(default_factory=list)">
+Length of each example.
+</ParamField>
+
+<ParamField path="examples" type="list[dict]">
+A list of the examples that the prompt template expects.
+</ParamField>
+
+<ParamField path="get_text_length" type="Callable[[str], int] = _get_length_based">
+Function to measure prompt length. Defaults to word count.
+</ParamField>
+
+<ParamField path="max_length" type="int = 2048">
+Max length for the prompt, beyond which examples are cut.
+</ParamField>
+<Anchor id="langchain_core-example_selectors-length_based-LengthBasedExampleSelector-aadd_example">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.length_based.LengthBasedExampleSelector.aadd_example(
+    example: dict[str, str]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async add new example to list.
+
+**Parameters:**
+
+<ParamField path="example" type="dict[str, str]">
+A dictionary with keys as input variables
+and values as their values.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-example_selectors-length_based-LengthBasedExampleSelector-add_example">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.length_based.LengthBasedExampleSelector.add_example(
+    example: dict[str, str]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add new example to list.
+
+**Parameters:**
+
+<ParamField path="example" type="dict[str, str]">
+A dictionary with keys as input variables
+and values as their values.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-example_selectors-length_based-LengthBasedExampleSelector-aselect_examples">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.length_based.LengthBasedExampleSelector.aselect_examples(
+    input_variables: dict[str, str]
+) -> list[dict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async select which examples to use based on the input lengths.
+
+**Parameters:**
+
+<ParamField path="input_variables" type="dict[str, str]">
+A dictionary with keys as input variables
+and values as their values.
+</ParamField>
+
+**Returns:** `list[dict]`
+
+A list of examples to include in the prompt.
+
+
+</Indent>
+<Anchor id="langchain_core-example_selectors-length_based-LengthBasedExampleSelector-post_init">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.length_based.LengthBasedExampleSelector.post_init() -> typing_extensions.Self
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Validate that the examples are formatted correctly.
+
+
+</Indent>
+<Anchor id="langchain_core-example_selectors-length_based-LengthBasedExampleSelector-select_examples">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.length_based.LengthBasedExampleSelector.select_examples(
+    input_variables: dict[str, str]
+) -> list[dict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Select which examples to use based on the input lengths.
+
+**Parameters:**
+
+<ParamField path="input_variables" type="dict[str, str]">
+A dictionary with keys as input variables
+and values as their values.
+</ParamField>
+
+**Returns:** `list[dict]`
+
+A list of examples to include in the prompt.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-example_selectors-length_based-_get_length_based">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.length_based._get_length_based(
+    text: str
+) -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>

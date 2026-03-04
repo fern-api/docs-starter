@@ -1,0 +1,113 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/vectorstores
+title: langchain_core.vectorstores
+---
+
+Vector stores.
+
+## Submodules
+
+- **[`langchain_core.vectorstores.base`](/langchain-core/langchain_core/vectorstores/base)**
+- **[`langchain_core.vectorstores.in_memory`](/langchain-core/langchain_core/vectorstores/in_memory)**
+- **[`langchain_core.vectorstores.utils`](/langchain-core/langchain_core/vectorstores/utils)**
+
+## Package Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`__dir__`](#langchain_core-vectorstores-__dir__) | Return a list of available attributes for this module. |
+| [`__getattr__`](#langchain_core-vectorstores-__getattr__) | Dynamically import and return an attribute from a submodule. |
+
+### Data
+
+[`__all__`](#langchain_core-vectorstores-__all__)
+
+[`_dynamic_imports`](#langchain_core-vectorstores-_dynamic_imports)
+
+### API
+
+<Anchor id="langchain_core-vectorstores-__dir__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.__dir__() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return a list of available attributes for this module.
+
+**Returns:** `list[str]`
+
+List of attribute names that can be imported from this module.
+
+
+</Indent>
+
+<Anchor id="langchain_core-vectorstores-__getattr__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.__getattr__(
+    attr_name: str
+) -> object
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Dynamically import and return an attribute from a submodule.
+
+This function enables lazy loading of vectorstore classes from submodules, reducing
+initial import time and circular dependency issues.
+
+**Parameters:**
+
+<ParamField path="attr_name" type="str">
+Name of the attribute to import.
+</ParamField>
+
+**Returns:** `object`
+
+The imported attribute object.
+
+**Raises:**
+
+- `AttributeError`: If the attribute is not found in `_dynamic_imports`.
+
+
+</Indent>
+
+<Anchor id="langchain_core-vectorstores-__all__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores.__all__ = ('VST', 'InMemoryVectorStore', 'VectorStore', 'VectorStoreRetriever')
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-vectorstores-_dynamic_imports">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.vectorstores._dynamic_imports = {'VectorStore': 'base', 'VST': 'base', 'VectorStoreRetriever': 'base', 'InMemory...
+```
+
+</CodeBlock>
+</Anchor>
+

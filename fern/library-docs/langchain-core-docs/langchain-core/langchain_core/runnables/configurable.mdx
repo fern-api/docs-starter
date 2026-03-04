@@ -1,0 +1,796 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/runnables/configurable
+title: langchain_core.runnables.configurable
+---
+
+`Runnable` objects that can be dynamically configured.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`DynamicRunnable`](#langchain_core-runnables-configurable-DynamicRunnable) | Serializable `Runnable` that can be dynamically configured. |
+| [`RunnableConfigurableAlternatives`](#langchain_core-runnables-configurable-RunnableConfigurableAlternatives) | `Runnable` that can be dynamically configured. |
+| [`RunnableConfigurableFields`](#langchain_core-runnables-configurable-RunnableConfigurableFields) | `Runnable` that can be dynamically configured. |
+| [`StrEnum`](#langchain_core-runnables-configurable-StrEnum) | String enum. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_strremoveprefix`](#langchain_core-runnables-configurable-_strremoveprefix) | `str.removeprefix()` is only available in Python 3.9+. |
+| [`make_options_spec`](#langchain_core-runnables-configurable-make_options_spec) | Make options spec. |
+| [`prefix_config_spec`](#langchain_core-runnables-configurable-prefix_config_spec) | Prefix the id of a `ConfigurableFieldSpec`. |
+
+### Data
+
+[`_enums_for_spec`](#langchain_core-runnables-configurable-_enums_for_spec)
+
+[`_enums_for_spec_lock`](#langchain_core-runnables-configurable-_enums_for_spec_lock)
+
+### API
+
+<Anchor id="langchain_core-runnables-configurable-DynamicRunnable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.configurable.DynamicRunnable()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RunnableSerializable[Input, Output]](/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-RunnableSerializable)
+
+Serializable `Runnable` that can be dynamically configured.
+
+A `DynamicRunnable` should be initiated using the `configurable_fields` or
+`configurable_alternatives` method of a `Runnable`.
+
+
+<ParamField path="InputType" type="type[Input]">
+</ParamField>
+
+<ParamField path="OutputType" type="type[Output]">
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig | None = None">
+The configuration to use.
+</ParamField>
+
+<ParamField path="default" type="RunnableSerializable[Input, Output]">
+The default `Runnable` to use.
+</ParamField>
+
+<ParamField path="model_config" type="= ConfigDict(arbitrary_types_allowed=True)">
+</ParamField>
+<Anchor id="langchain_core-runnables-configurable-DynamicRunnable-__getattr__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.DynamicRunnable.__getattr__(
+    name: str
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-configurable-DynamicRunnable-_prepare">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.base.Runnable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-Runnable","langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.DynamicRunnable._prepare(
+    config: langchain_core.runnables.config.RunnableConfig | None = None
+) -> tuple[langchain_core.runnables.base.Runnable[langchain_core.runnables.utils.Input, langchain_core.runnables.utils.Output], langchain_core.runnables.config.RunnableConfig]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-configurable-DynamicRunnable-abatch">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.DynamicRunnable.abatch(
+    inputs: list[langchain_core.runnables.utils.Input],
+    config: langchain_core.runnables.config.RunnableConfig | list[langchain_core.runnables.config.RunnableConfig] | None = None,
+    return_exceptions: bool = False,
+    kwargs: typing.Any | None = {}
+) -> list[langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-configurable-DynamicRunnable-ainvoke">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.DynamicRunnable.ainvoke(
+    input: langchain_core.runnables.utils.Input,
+    config: langchain_core.runnables.config.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.runnables.utils.Output
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-configurable-DynamicRunnable-astream">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.DynamicRunnable.astream(
+    input: langchain_core.runnables.utils.Input,
+    config: langchain_core.runnables.config.RunnableConfig | None = None,
+    kwargs: typing.Any | None = {}
+) -> collections.abc.AsyncIterator[langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-configurable-DynamicRunnable-atransform">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.DynamicRunnable.atransform(
+    input: collections.abc.AsyncIterator[langchain_core.runnables.utils.Input],
+    config: langchain_core.runnables.config.RunnableConfig | None = None,
+    kwargs: typing.Any | None = {}
+) -> collections.abc.AsyncIterator[langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-configurable-DynamicRunnable-batch">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.DynamicRunnable.batch(
+    inputs: list[langchain_core.runnables.utils.Input],
+    config: langchain_core.runnables.config.RunnableConfig | list[langchain_core.runnables.config.RunnableConfig] | None = None,
+    return_exceptions: bool = False,
+    kwargs: typing.Any | None = {}
+) -> list[langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-configurable-DynamicRunnable-get_graph">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.graph.Graph":"/langchain-core/langchain_core/runnables/graph#langchain_core-runnables-graph-Graph"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.DynamicRunnable.get_graph(
+    config: langchain_core.runnables.config.RunnableConfig | None = None
+) -> langchain_core.runnables.graph.Graph
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-configurable-DynamicRunnable-get_input_schema">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.DynamicRunnable.get_input_schema(
+    config: langchain_core.runnables.config.RunnableConfig | None = None
+) -> type[pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-configurable-DynamicRunnable-get_lc_namespace">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.DynamicRunnable.get_lc_namespace() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Get the namespace of the LangChain object.
+
+**Returns:** `list[str]`
+
+`["langchain", "schema", "runnable"]`
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-configurable-DynamicRunnable-get_output_schema">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.DynamicRunnable.get_output_schema(
+    config: langchain_core.runnables.config.RunnableConfig | None = None
+) -> type[pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-configurable-DynamicRunnable-invoke">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.DynamicRunnable.invoke(
+    input: langchain_core.runnables.utils.Input,
+    config: langchain_core.runnables.config.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.runnables.utils.Output
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-configurable-DynamicRunnable-is_lc_serializable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.DynamicRunnable.is_lc_serializable() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Return `True` as this class is serializable.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-configurable-DynamicRunnable-prepare">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.base.Runnable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-Runnable","langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.DynamicRunnable.prepare(
+    config: langchain_core.runnables.config.RunnableConfig | None = None
+) -> tuple[langchain_core.runnables.base.Runnable[langchain_core.runnables.utils.Input, langchain_core.runnables.utils.Output], langchain_core.runnables.config.RunnableConfig]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Prepare the `Runnable` for invocation.
+
+**Parameters:**
+
+<ParamField path="config" type="RunnableConfig | None" default="None">
+The configuration to use.
+</ParamField>
+
+**Returns:** `tuple[Runnable[Input, Output], RunnableConfig]`
+
+The prepared `Runnable` and configuration.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-configurable-DynamicRunnable-stream">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.DynamicRunnable.stream(
+    input: langchain_core.runnables.utils.Input,
+    config: langchain_core.runnables.config.RunnableConfig | None = None,
+    kwargs: typing.Any | None = {}
+) -> collections.abc.Iterator[langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-configurable-DynamicRunnable-transform">
+
+<CodeBlock links={{"langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.DynamicRunnable.transform(
+    input: collections.abc.Iterator[langchain_core.runnables.utils.Input],
+    config: langchain_core.runnables.config.RunnableConfig | None = None,
+    kwargs: typing.Any | None = {}
+) -> collections.abc.Iterator[langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-configurable-DynamicRunnable-with_config">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.base.Runnable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-Runnable","langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.DynamicRunnable.with_config(
+    config: langchain_core.runnables.config.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.runnables.base.Runnable[langchain_core.runnables.utils.Input, langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-configurable-RunnableConfigurableAlternatives">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.configurable.RunnableConfigurableAlternatives()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [DynamicRunnable[Input, Output]](#langchain_core-runnables-configurable-DynamicRunnable)
+
+`Runnable` that can be dynamically configured.
+
+A `RunnableConfigurableAlternatives` should be initiated using the
+`configurable_alternatives` method of a `Runnable` or can be
+initiated directly as well.
+
+Here is an example of using a `RunnableConfigurableAlternatives` that uses
+alternative prompts to illustrate its functionality:
+
+    ```python
+    from langchain_core.runnables import ConfigurableField
+    from langchain_openai import ChatOpenAI
+
+    # This creates a RunnableConfigurableAlternatives for Prompt Runnable
+    # with two alternatives.
+    prompt = PromptTemplate.from_template(
+        "Tell me a joke about {topic}"
+    ).configurable_alternatives(
+        ConfigurableField(id="prompt"),
+        default_key="joke",
+        poem=PromptTemplate.from_template("Write a short poem about {topic}"),
+    )
+
+    # When invoking the created RunnableSequence, you can pass in the
+    # value for your ConfigurableField's id which in this case will either be
+    # `joke` or `poem`.
+    chain = prompt | ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0)
+
+    # The `with_config` method brings in the desired Prompt Runnable in your
+    # Runnable Sequence.
+    chain.with_config(configurable={"prompt": "poem"}).invoke({"topic": "bears"})
+    ```
+
+Equivalently, you can initialize `RunnableConfigurableAlternatives` directly
+and use in LCEL in the same way:
+
+    ```python
+    from langchain_core.runnables import ConfigurableField
+    from langchain_core.runnables.configurable import (
+        RunnableConfigurableAlternatives,
+    )
+    from langchain_openai import ChatOpenAI
+
+    prompt = RunnableConfigurableAlternatives(
+        which=ConfigurableField(id="prompt"),
+        default=PromptTemplate.from_template("Tell me a joke about {topic}"),
+        default_key="joke",
+        prefix_keys=False,
+        alternatives={
+            "poem": PromptTemplate.from_template("Write a short poem about {topic}")
+        },
+    )
+    chain = prompt | ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0)
+    chain.with_config(configurable={"prompt": "poem"}).invoke({"topic": "bears"})
+    ```
+
+
+<ParamField path="alternatives" type="dict[str, Runnable[Input, Output] | Callable[[], Runnable[Input, Output]]]">
+The alternatives to choose from.
+</ParamField>
+
+<ParamField path="config_specs" type="list[ConfigurableFieldSpec]">
+</ParamField>
+
+<ParamField path="default_key" type="str = 'default'">
+The enum value to use for the default option.
+</ParamField>
+
+<ParamField path="prefix_keys" type="bool">
+Whether to prefix configurable fields of each alternative with a namespace
+of the form &lt;which.id&gt;==&lt;alternative_key&gt;, e.g. a key named "temperature" used by
+the alternative named "gpt3" becomes "model==gpt3/temperature".
+</ParamField>
+
+<ParamField path="which" type="ConfigurableField">
+The `ConfigurableField` to use to choose between alternatives.
+</ParamField>
+<Anchor id="langchain_core-runnables-configurable-RunnableConfigurableAlternatives-_prepare">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.base.Runnable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-Runnable","langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.RunnableConfigurableAlternatives._prepare(
+    config: langchain_core.runnables.config.RunnableConfig | None = None
+) -> tuple[langchain_core.runnables.base.Runnable[langchain_core.runnables.utils.Input, langchain_core.runnables.utils.Output], langchain_core.runnables.config.RunnableConfig]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-configurable-RunnableConfigurableAlternatives-configurable_fields">
+
+<CodeBlock links={{"langchain_core.runnables.utils.AnyConfigurableField":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-AnyConfigurableField","langchain_core.runnables.base.RunnableSerializable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-RunnableSerializable","langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.RunnableConfigurableAlternatives.configurable_fields(
+    kwargs: langchain_core.runnables.utils.AnyConfigurableField = {}
+) -> langchain_core.runnables.base.RunnableSerializable[langchain_core.runnables.utils.Input, langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-configurable-RunnableConfigurableFields">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.configurable.RunnableConfigurableFields()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [DynamicRunnable[Input, Output]](#langchain_core-runnables-configurable-DynamicRunnable)
+
+`Runnable` that can be dynamically configured.
+
+A `RunnableConfigurableFields` should be initiated using the
+`configurable_fields` method of a `Runnable`.
+
+Here is an example of using a `RunnableConfigurableFields` with LLMs:
+
+    ```python
+    from langchain_core.prompts import PromptTemplate
+    from langchain_core.runnables import ConfigurableField
+    from langchain_openai import ChatOpenAI
+
+    model = ChatOpenAI(temperature=0).configurable_fields(
+        temperature=ConfigurableField(
+            id="temperature",
+            name="LLM Temperature",
+            description="The temperature of the LLM",
+        )
+    )
+    # This creates a RunnableConfigurableFields for a chat model.
+
+    # When invoking the created RunnableSequence, you can pass in the
+    # value for your ConfigurableField's id which in this case
+    # will be change in temperature
+
+    prompt = PromptTemplate.from_template("Pick a random number above {x}")
+    chain = prompt | model
+
+    chain.invoke({"x": 0})
+    chain.invoke({"x": 0}, config={"configurable": {"temperature": 0.9}})
+    ```
+
+Here is an example of using a `RunnableConfigurableFields` with `HubRunnables`:
+
+    ```python
+    from langchain_core.prompts import PromptTemplate
+    from langchain_core.runnables import ConfigurableField
+    from langchain_openai import ChatOpenAI
+    from langchain.runnables.hub import HubRunnable
+
+    prompt = HubRunnable("rlm/rag-prompt").configurable_fields(
+        owner_repo_commit=ConfigurableField(
+            id="hub_commit",
+            name="Hub Commit",
+            description="The Hub commit to pull from",
+        )
+    )
+
+    prompt.invoke({"question": "foo", "context": "bar"})
+
+    # Invoking prompt with `with_config` method
+
+    prompt.invoke(
+        {"question": "foo", "context": "bar"},
+        config={"configurable": {"hub_commit": "rlm/rag-prompt-llama"}},
+    )
+    ```
+
+
+<ParamField path="config_specs" type="list[ConfigurableFieldSpec]">
+Get the configuration specs for the `RunnableConfigurableFields`.
+</ParamField>
+
+<ParamField path="fields" type="dict[str, AnyConfigurableField]">
+The configurable fields to use.
+</ParamField>
+<Anchor id="langchain_core-runnables-configurable-RunnableConfigurableFields-_prepare">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.runnables.base.Runnable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-Runnable","langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.RunnableConfigurableFields._prepare(
+    config: langchain_core.runnables.config.RunnableConfig | None = None
+) -> tuple[langchain_core.runnables.base.Runnable[langchain_core.runnables.utils.Input, langchain_core.runnables.utils.Output], langchain_core.runnables.config.RunnableConfig]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-configurable-RunnableConfigurableFields-configurable_fields">
+
+<CodeBlock links={{"langchain_core.runnables.utils.AnyConfigurableField":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-AnyConfigurableField","langchain_core.runnables.base.RunnableSerializable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-RunnableSerializable","langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.RunnableConfigurableFields.configurable_fields(
+    kwargs: langchain_core.runnables.utils.AnyConfigurableField = {}
+) -> langchain_core.runnables.base.RunnableSerializable[langchain_core.runnables.utils.Input, langchain_core.runnables.utils.Output]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-configurable-StrEnum">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.configurable.StrEnum
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `enum.Enum`
+
+String enum.
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-configurable-_strremoveprefix">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable._strremoveprefix(
+    s: str,
+    prefix: str
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+`str.removeprefix()` is only available in Python 3.9+.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-configurable-make_options_spec">
+
+<CodeBlock links={{"langchain_core.runnables.utils.ConfigurableFieldSingleOption":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-ConfigurableFieldSingleOption","langchain_core.runnables.utils.ConfigurableFieldMultiOption":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-ConfigurableFieldMultiOption","langchain_core.runnables.utils.ConfigurableFieldSpec":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-ConfigurableFieldSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.make_options_spec(
+    spec: langchain_core.runnables.utils.ConfigurableFieldSingleOption | langchain_core.runnables.utils.ConfigurableFieldMultiOption,
+    description: str | None
+) -> langchain_core.runnables.utils.ConfigurableFieldSpec
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Make options spec.
+
+Make a `ConfigurableFieldSpec` for a `ConfigurableFieldSingleOption` or
+`ConfigurableFieldMultiOption`.
+
+**Parameters:**
+
+<ParamField path="spec" type="ConfigurableFieldSingleOption | ConfigurableFieldMultiOption">
+The `ConfigurableFieldSingleOption` or `ConfigurableFieldMultiOption`.
+</ParamField>
+
+<ParamField path="description" type="str | None">
+The description to use if the spec does not have one.
+</ParamField>
+
+**Returns:** `ConfigurableFieldSpec`
+
+The `ConfigurableFieldSpec`.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-configurable-prefix_config_spec">
+
+<CodeBlock links={{"langchain_core.runnables.utils.ConfigurableFieldSpec":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-ConfigurableFieldSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable.prefix_config_spec(
+    spec: langchain_core.runnables.utils.ConfigurableFieldSpec,
+    prefix: str
+) -> langchain_core.runnables.utils.ConfigurableFieldSpec
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Prefix the id of a `ConfigurableFieldSpec`.
+
+This is useful when a `RunnableConfigurableAlternatives` is used as a
+`ConfigurableField` of another `RunnableConfigurableAlternatives`.
+
+**Parameters:**
+
+<ParamField path="spec" type="ConfigurableFieldSpec">
+The `ConfigurableFieldSpec` to prefix.
+</ParamField>
+
+<ParamField path="prefix" type="str">
+The prefix to add.
+</ParamField>
+
+**Returns:** `ConfigurableFieldSpec`
+
+The prefixed `ConfigurableFieldSpec`.
+
+
+</Indent>
+
+<Anchor id="langchain_core-runnables-configurable-_enums_for_spec">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable._enums_for_spec: WeakValueDictionary[ConfigurableFieldSingleOption | ConfigurableFieldMultiOption | ConfigurableField, type[StrEnum]] = WeakValueDictionary()
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-runnables-configurable-_enums_for_spec_lock">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.configurable._enums_for_spec_lock = threading.Lock()
+```
+
+</CodeBlock>
+</Anchor>
+

@@ -1,0 +1,46 @@
+---
+title: thrust::tagged_deleter
+description: ""
+---
+
+```cpp showLineNumbers={false}
+#include <thrust/allocate_unique.h>
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="Pointer" type="typename">
+</ParamField>
+
+<ParamField path="Lambda" type="typename">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `Lambda` (public)
+
+---
+
+## Constructors
+
+### tagged_deleter <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"tagged_deleter": "/library/api/thrust::tagged_deleter"}}>
+```cpp showLineNumbers={false}
+thrust::tagged_deleter<Pointer, Lambda>::tagged_deleter(
+    Lambda &&l
+)
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `pointer` | `Pointer` |

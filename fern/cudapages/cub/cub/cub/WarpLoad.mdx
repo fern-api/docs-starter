@@ -1,0 +1,421 @@
+---
+title: cub::WarpLoad
+description: ""
+---
+
+The WarpLoad class provides collective data movement methods for loading a linear segment of items from memory into a blocked arrangement across a CUDA thread warp.
+
+## Example
+
+The code snippet below illustrates the loading of a linear segment of 64 integers into a "blocked" arrangement across 16 threads where each thread owns 4 consecutive items. The load is specialized for `WARP_LOAD_TRANSPOSE`, meaning memory references are efficiently coalesced using a warp-striped access pattern (after which items are locally reordered among threads).
+
+The set of `thread_data` across the first logical warp of threads in those threads will be: `{ [0,1,2,3], [4,5,6,7], ..., [60,61,62,63] }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/warp/warp_load.cuh>
+
+__global__ void ExampleKernel(int *d_data, ...)
+{
+    constexpr int warp_threads = 16;
+    constexpr int block_threads = 256;
+    constexpr int items_per_thread = 4;
+
+    // Specialize WarpLoad for a warp of 16 threads owning 4 integer items each
+    using WarpLoadT = WarpLoad<int,
+                               items_per_thread,
+                               cub::WARP_LOAD_TRANSPOSE,
+                               warp_threads>;
+
+    constexpr int warps_in_block = block_threads / warp_threads;
+    constexpr int tile_size = items_per_thread * warp_threads;
+    const int warp_id = static_cast<int>(threadIdx.x) / warp_threads;
+
+    // Allocate shared memory for WarpLoad
+    __shared__ typename WarpLoadT::TempStorage temp_storage[warps_in_block];
+
+    // Load a segment of consecutive items that are blocked across threads
+    int thread_data[items_per_thread];
+    WarpLoadT(temp_storage[warp_id]).Load(d_data + warp_id * tile_size, thread_data);
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="InputT" type="typename">
+The data type to read into (which must be convertible from the input iterator's value type).
+</ParamField>
+
+<ParamField path="ITEMS_PER_THREAD" type="int">
+The number of consecutive items partitioned onto each thread.
+</ParamField>
+
+<ParamField path="ALGORITHM" type="WarpLoadAlgorithm" default="WARP_LOAD_DIRECT">
+**[optional]** [cub::WarpLoadAlgorithm](/library/api/cub::WarpLoadAlgorithm) tuning policy. default: [cub::WARP_LOAD_DIRECT](/library/api/cub::WARP_LOAD_DIRECT).
+</ParamField>
+
+<ParamField path="LOGICAL_WARP_THREADS" type="int" default="detail::warp_threads">
+**[optional]** The number of threads per "logical" warp (may be less than the number of hardware warp threads). Default is the warp size of the targeted CUDA compute-capability (e.g., 32 threads for SM86). Must be a power of two.
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Collective constructors
+
+### WarpLoad <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+Collective constructor using a private static allocation of shared memory as temporary storage.
+
+<CodeBlock links={{"WarpLoad": "/library/api/cub::WarpLoad"}}>
+```cpp showLineNumbers={false}
+cub::WarpLoad<InputT, ITEMS_PER_THREAD, ALGORITHM, LOGICAL_WARP_THREADS>::WarpLoad()
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="With TempStorage">
+
+Collective constructor using the specified memory allocation as temporary storage.
+
+<CodeBlock links={{"WarpLoad": "/library/api/cub::WarpLoad", "TempStorage": "/library/api/cub::WarpLoad::TempStorage"}}>
+```cpp showLineNumbers={false}
+cub::WarpLoad<InputT, ITEMS_PER_THREAD, ALGORITHM, LOGICAL_WARP_THREADS>::WarpLoad(
+    TempStorage &temp_storage
+)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Data movement
+
+### Load <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Multiple items per thread">
+
+Load a linear segment of items from memory.
+
+<CodeBlock links={{"WarpLoad": "/library/api/cub::WarpLoad"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT>
+void cub::WarpLoad<InputT, ITEMS_PER_THREAD, ALGORITHM, LOGICAL_WARP_THREADS>::Load(
+    InputIteratorT block_itr,
+    InputT (&items)[ITEMS_PER_THREAD]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="block_itr" type="InputIteratorT">
+The thread block's base input iterator for loading from
+</ParamField>
+
+<ParamField path="items" type="InputT(&)[ITEMS_PER_THREAD]">
+Data to load
+</ParamField>
+
+**Example**
+
+The set of `thread_data` across the first logical warp of threads in those threads will be: `{ [0,1,2,3], [4,5,6,7], ..., [60,61,62,63] }`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/warp/warp_load.cuh>
+
+__global__ void ExampleKernel(int *d_data, ...)
+{
+    constexpr int warp_threads = 16;
+    constexpr int block_threads = 256;
+    constexpr int items_per_thread = 4;
+
+    // Specialize WarpLoad for a warp of 16 threads owning 4 integer items each
+    using WarpLoadT = WarpLoad<int,
+                               items_per_thread,
+                               cub::WARP_LOAD_TRANSPOSE,
+                               warp_threads>;
+
+    constexpr int warps_in_block = block_threads / warp_threads;
+    constexpr int tile_size = items_per_thread * warp_threads;
+    const int warp_id = static_cast<int>(threadIdx.x) / warp_threads;
+
+    // Allocate shared memory for WarpLoad
+    __shared__ typename WarpLoadT::TempStorage temp_storage[warps_in_block];
+
+    // Load a segment of consecutive items that are blocked across threads
+    int thread_data[items_per_thread];
+    WarpLoadT(temp_storage[warp_id]).Load(d_data + warp_id * tile_size, thread_data);
+}
+```
+
+</Tab>
+<Tab title="Multiple items per thread">
+
+Load a linear segment of items from memory, guarded by range.
+
+<CodeBlock links={{"WarpLoad": "/library/api/cub::WarpLoad"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT>
+void cub::WarpLoad<InputT, ITEMS_PER_THREAD, ALGORITHM, LOGICAL_WARP_THREADS>::Load(
+    InputIteratorT block_itr,
+    InputT (&items)[ITEMS_PER_THREAD],
+    int valid_items
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="block_itr" type="InputIteratorT">
+The thread block's base input iterator for loading from
+</ParamField>
+
+<ParamField path="items" type="InputT(&)[ITEMS_PER_THREAD]">
+Data to load
+</ParamField>
+
+<ParamField path="valid_items" type="int">
+Number of valid items to load
+</ParamField>
+
+**Example**
+
+The set of `thread_data` across the first logical warp of threads in those threads will be: `{ [0,1,2,3], [4,?,?,?], ..., [?,?,?,?] }` with only the first two threads being unmasked to load portions of valid data (and other items remaining unassigned).
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/warp/warp_load.cuh>
+
+__global__ void ExampleKernel(int *d_data, int valid_items, ...)
+{
+    constexpr int warp_threads = 16;
+    constexpr int block_threads = 256;
+    constexpr int items_per_thread = 4;
+
+    // Specialize WarpLoad for a warp of 16 threads owning 4 integer items each
+    using WarpLoadT = WarpLoad<int,
+                               items_per_thread,
+                               cub::WARP_LOAD_TRANSPOSE,
+                               warp_threads>;
+
+    constexpr int warps_in_block = block_threads / warp_threads;
+    constexpr int tile_size = items_per_thread * warp_threads;
+    const int warp_id = static_cast<int>(threadIdx.x) / warp_threads;
+
+    // Allocate shared memory for WarpLoad
+    __shared__ typename WarpLoadT::TempStorage temp_storage[warps_in_block];
+
+    // Load a segment of consecutive items that are blocked across threads
+    int thread_data[items_per_thread];
+    WarpLoadT(temp_storage[warp_id]).Load(d_data + warp_id * tile_size, thread_data,
+                                          valid_items);
+}
+```
+
+</Tab>
+<Tab title="Multiple items per thread">
+
+Load a linear segment of items from memory, guarded by range.
+
+<CodeBlock links={{"WarpLoad": "/library/api/cub::WarpLoad"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT, typename DefaultT>
+void cub::WarpLoad<InputT, ITEMS_PER_THREAD, ALGORITHM, LOGICAL_WARP_THREADS>::Load(
+    InputIteratorT block_itr,
+    InputT (&items)[ITEMS_PER_THREAD],
+    int valid_items,
+    DefaultT oob_default
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="block_itr" type="InputIteratorT">
+The thread block's base input iterator for loading from
+</ParamField>
+
+<ParamField path="items" type="InputT(&)[ITEMS_PER_THREAD]">
+Data to load
+</ParamField>
+
+<ParamField path="valid_items" type="int">
+Number of valid items to load
+</ParamField>
+
+<ParamField path="oob_default" type="DefaultT">
+Default value to assign out-of-bound items
+</ParamField>
+
+**Example**
+
+out-of-bounds default is `-1`. The set of `thread_data` across the first logical warp of threads in those threads will be: `{ [0,1,2,3], [4,-1,-1,-1], ..., [-1,-1,-1,-1] }` with only the first two threads being unmasked to load portions of valid data (and other items are assigned `-1`).
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/warp/warp_load.cuh>
+
+__global__ void ExampleKernel(int *d_data, int valid_items, ...)
+{
+    constexpr int warp_threads = 16;
+    constexpr int block_threads = 256;
+    constexpr int items_per_thread = 4;
+
+    // Specialize WarpLoad for a warp of 16 threads owning 4 integer items each
+    using WarpLoadT = WarpLoad<int,
+                               items_per_thread,
+                               cub::WARP_LOAD_TRANSPOSE,
+                               warp_threads>;
+
+    constexpr int warps_in_block = block_threads / warp_threads;
+    constexpr int tile_size = items_per_thread * warp_threads;
+    const int warp_id = static_cast<int>(threadIdx.x) / warp_threads;
+
+    // Allocate shared memory for WarpLoad
+    __shared__ typename WarpLoadT::TempStorage temp_storage[warps_in_block];
+
+    // Load a segment of consecutive items that are blocked across threads
+    int thread_data[items_per_thread];
+    WarpLoadT(temp_storage[warp_id]).Load(d_data + warp_id * tile_size,
+                                          thread_data,
+                                          valid_items,
+                                          -1);
+```
+
+</Tab>
+</Tabs>
+
+---
+
+## Utility methods
+
+### PrivateStorage <Badge intent="note" minimal>inline</Badge>
+
+Internal storage allocator.
+
+<CodeBlock links={{"WarpLoad": "/library/api/cub::WarpLoad"}}>
+```cpp showLineNumbers={false}
+_TempStorage & cub::WarpLoad<InputT, ITEMS_PER_THREAD, ALGORITHM, LOGICAL_WARP_THREADS>::PrivateStorage()
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `InternalLoad` | `LoadInternal< ALGORITHM, 0 >` | Internal load implementation to use. |
+| `_TempStorage` | `typename InternalLoad::TempStorage` | Shared memory storage layout type. |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `IS_ARCH_WARP` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `bool` | |
+| `temp_storage` | `_TempStorage &` | Thread reference to shared storage. |
+| `linear_tid` | `int` | Linear thread-id. |
+
+---
+
+## Inner classes
+
+### LoadInternal
+
+<CodeBlock links={{"WarpLoad": "/library/api/cub::WarpLoad"}}>
+```cpp showLineNumbers={false}
+struct cub::WarpLoad::LoadInternal
+```
+</CodeBlock>
+
+Load helper.
+
+### LoadInternal< WARP_LOAD_DIRECT, DUMMY >
+
+<CodeBlock links={{"WarpLoad": "/library/api/cub::WarpLoad"}}>
+```cpp showLineNumbers={false}
+struct cub::WarpLoad::LoadInternal< WARP_LOAD_DIRECT, DUMMY >
+```
+</CodeBlock>
+
+| Name | Type | Description |
+|---|---|---|
+| `linear_tid` | `int` | |
+
+### LoadInternal< WARP_LOAD_STRIPED, DUMMY >
+
+<CodeBlock links={{"WarpLoad": "/library/api/cub::WarpLoad"}}>
+```cpp showLineNumbers={false}
+struct cub::WarpLoad::LoadInternal< WARP_LOAD_STRIPED, DUMMY >
+```
+</CodeBlock>
+
+| Name | Type | Description |
+|---|---|---|
+| `linear_tid` | `int` | |
+
+### LoadInternal< WARP_LOAD_VECTORIZE, DUMMY >
+
+<CodeBlock links={{"WarpLoad": "/library/api/cub::WarpLoad"}}>
+```cpp showLineNumbers={false}
+struct cub::WarpLoad::LoadInternal< WARP_LOAD_VECTORIZE, DUMMY >
+```
+</CodeBlock>
+
+| Name | Type | Description |
+|---|---|---|
+| `linear_tid` | `int` | |
+
+### LoadInternal< WARP_LOAD_TRANSPOSE, DUMMY >
+
+<CodeBlock links={{"WarpLoad": "/library/api/cub::WarpLoad"}}>
+```cpp showLineNumbers={false}
+struct cub::WarpLoad::LoadInternal< WARP_LOAD_TRANSPOSE, DUMMY >
+```
+</CodeBlock>
+
+| Name | Type | Description |
+|---|---|---|
+| `temp_storage` | `_TempStorage &` | |
+| `linear_tid` | `int` | |
+
+### TempStorage
+
+<CodeBlock links={{"WarpLoad": "/library/api/cub::WarpLoad"}}>
+```cpp showLineNumbers={false}
+struct cub::WarpLoad::TempStorage
+```
+</CodeBlock>
+
+The operations exposed by `WarpLoad` require a temporary memory allocation of this nested type for thread communication. This opaque storage can be allocated directly using the `__shared__` keyword. Alternatively, it can be aliased to externally allocated memory (shared or global) or `union`'d with other storage allocation types to facilitate memory reuse.
+
+**Inherits from:** `Uninitialized< _TempStorage >` (public)

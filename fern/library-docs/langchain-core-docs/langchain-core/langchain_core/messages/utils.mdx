@@ -1,0 +1,1401 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/messages/utils
+title: langchain_core.messages.utils
+---
+
+Module contains utility functions for working with messages.
+
+Some examples of what you can do with these functions include:
+
+* Convert messages to strings (serialization)
+* Convert messages from dicts to Message objects (deserialization)
+* Filter messages from a list of messages based on name, type or id etc.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`_RunnableSupportCallable`](#langchain_core-messages-utils-_RunnableSupportCallable) | - |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_approximate_token_counter`](#langchain_core-messages-utils-_approximate_token_counter) | Wrapper for `count_tokens_approximately` that matches expected signature. |
+| [`_bytes_to_b64_str`](#langchain_core-messages-utils-_bytes_to_b64_str) | - |
+| [`_chunk_to_msg`](#langchain_core-messages-utils-_chunk_to_msg) | - |
+| [`_convert_to_message`](#langchain_core-messages-utils-_convert_to_message) | Instantiate a `Message` from a variety of message formats. |
+| [`_convert_to_openai_tool_calls`](#langchain_core-messages-utils-_convert_to_openai_tool_calls) | - |
+| [`_create_message_from_message_type`](#langchain_core-messages-utils-_create_message_from_message_type) | Create a message from a `Message` type and content string. |
+| [`_default_text_splitter`](#langchain_core-messages-utils-_default_text_splitter) | - |
+| [`_first_max_tokens`](#langchain_core-messages-utils-_first_max_tokens) | - |
+| [`_format_content_block_xml`](#langchain_core-messages-utils-_format_content_block_xml) | Format a content block as XML. |
+| [`_get_message_openai_role`](#langchain_core-messages-utils-_get_message_openai_role) | - |
+| [`_get_message_type_str`](#langchain_core-messages-utils-_get_message_type_str) | Get the type string for XML message element. |
+| [`_get_type`](#langchain_core-messages-utils-_get_type) | Get the type associated with the object for serialization purposes. |
+| [`_has_base64_data`](#langchain_core-messages-utils-_has_base64_data) | Check if a content block contains base64 encoded data. |
+| [`_is_message_type`](#langchain_core-messages-utils-_is_message_type) | - |
+| [`_last_max_tokens`](#langchain_core-messages-utils-_last_max_tokens) | - |
+| [`_message_from_dict`](#langchain_core-messages-utils-_message_from_dict) | - |
+| [`_msg_to_chunk`](#langchain_core-messages-utils-_msg_to_chunk) | - |
+| [`_runnable_support`](#langchain_core-messages-utils-_runnable_support) | - |
+| [`_truncate`](#langchain_core-messages-utils-_truncate) | Truncate text to `max_len` characters, adding ellipsis if truncated. |
+| [`convert_to_messages`](#langchain_core-messages-utils-convert_to_messages) | Convert a sequence of messages to a list of messages. |
+| [`convert_to_openai_messages`](#langchain_core-messages-utils-convert_to_openai_messages) | Convert LangChain messages into OpenAI message dicts. |
+| [`count_tokens_approximately`](#langchain_core-messages-utils-count_tokens_approximately) | Approximate the total number of tokens in messages. |
+| [`filter_messages`](#langchain_core-messages-utils-filter_messages) | Filter messages based on `name`, `type` or `id`. |
+| [`get_buffer_string`](#langchain_core-messages-utils-get_buffer_string) | Convert a sequence of messages to strings and concatenate them into one string. |
+| [`merge_message_runs`](#langchain_core-messages-utils-merge_message_runs) | Merge consecutive Messages of the same type. |
+| [`message_chunk_to_message`](#langchain_core-messages-utils-message_chunk_to_message) | Convert a message chunk to a `Message`. |
+| [`messages_from_dict`](#langchain_core-messages-utils-messages_from_dict) | Convert a sequence of messages from dicts to `Message` objects. |
+| [`trim_messages`](#langchain_core-messages-utils-trim_messages) | Trim messages to be below a token count. |
+
+### Data
+
+[`AnyMessage`](#langchain_core-messages-utils-AnyMessage)
+
+[`MessageLikeRepresentation`](#langchain_core-messages-utils-MessageLikeRepresentation)
+
+[`_CHUNK_MSG_MAP`](#langchain_core-messages-utils-_CHUNK_MSG_MAP)
+
+[`_HAS_LANGCHAIN_TEXT_SPLITTERS`](#langchain_core-messages-utils-_HAS_LANGCHAIN_TEXT_SPLITTERS)
+
+[`_MSG_CHUNK_MAP`](#langchain_core-messages-utils-_MSG_CHUNK_MAP)
+
+[`_MultipleMessages`](#langchain_core-messages-utils-_MultipleMessages)
+
+[`_P`](#langchain_core-messages-utils-_P)
+
+[`_R_co`](#langchain_core-messages-utils-_R_co)
+
+[`_SingleMessage`](#langchain_core-messages-utils-_SingleMessage)
+
+[`_T`](#langchain_core-messages-utils-_T)
+
+[`_TOKEN_COUNTER_SHORTCUTS`](#langchain_core-messages-utils-_TOKEN_COUNTER_SHORTCUTS)
+
+[`_XML_CONTENT_BLOCK_MAX_LEN`](#langchain_core-messages-utils-_XML_CONTENT_BLOCK_MAX_LEN)
+
+[`logger`](#langchain_core-messages-utils-logger)
+
+### API
+
+<Anchor id="langchain_core-messages-utils-_RunnableSupportCallable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.messages.utils._RunnableSupportCallable()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Protocol</Badge>
+
+**Bases:** `Protocol[_P, _R_co]`
+
+<Anchor id="langchain_core-messages-utils-_RunnableSupportCallable-__call__">
+
+<CodeBlock links={{"langchain_core.messages.utils.MessageLikeRepresentation":"#langchain_core-messages-utils-MessageLikeRepresentation","langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue","langchain_core.messages.utils._R_co":"#langchain_core-messages-utils-_R_co","langchain_core.runnables.base.Runnable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-Runnable"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._RunnableSupportCallable.__call__(
+    messages: collections.abc.Sequence[langchain_core.messages.utils.MessageLikeRepresentation] | langchain_core.prompt_values.PromptValue | None = None,
+    args: langchain_core.messages.utils._P.args = (),
+    kwargs: langchain_core.messages.utils._P.kwargs = {}
+) -> langchain_core.messages.utils._R_co | langchain_core.runnables.base.Runnable[collections.abc.Sequence[langchain_core.messages.utils.MessageLikeRepresentation], langchain_core.messages.utils._R_co]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-_approximate_token_counter">
+
+<CodeBlock links={{"langchain_core.messages.base.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._approximate_token_counter(
+    messages: collections.abc.Sequence[langchain_core.messages.base.BaseMessage]
+) -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Wrapper for `count_tokens_approximately` that matches expected signature.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-_bytes_to_b64_str">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._bytes_to_b64_str(
+    bytes_: bytes
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-_chunk_to_msg">
+
+<CodeBlock links={{"langchain_core.messages.base.BaseMessageChunk":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessageChunk","langchain_core.messages.base.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._chunk_to_msg(
+    chunk: langchain_core.messages.base.BaseMessageChunk
+) -> langchain_core.messages.base.BaseMessage
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-_convert_to_message">
+
+<CodeBlock links={{"langchain_core.messages.utils.MessageLikeRepresentation":"#langchain_core-messages-utils-MessageLikeRepresentation","langchain_core.messages.base.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._convert_to_message(
+    message: langchain_core.messages.utils.MessageLikeRepresentation
+) -> langchain_core.messages.base.BaseMessage
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Instantiate a `Message` from a variety of message formats.
+
+The message format can be one of the following:
+
+- `BaseMessagePromptTemplate`
+- `BaseMessage`
+- 2-tuple of (role string, template); e.g., (`'human'`, `'&#123;user_input&#125;'`)
+- dict: a message dict with role and content keys
+- string: shorthand for (`'human'`, template); e.g., `'&#123;user_input&#125;'`
+
+**Parameters:**
+
+<ParamField path="message" type="MessageLikeRepresentation">
+a representation of a message in one of the supported formats.
+</ParamField>
+
+**Returns:** `BaseMessage`
+
+An instance of a message or a message template.
+
+**Raises:**
+
+- `NotImplementedError`: if the message type is not supported.
+- `ValueError`: if the message dict does not contain the required keys.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-_convert_to_openai_tool_calls">
+
+<CodeBlock links={{"langchain_core.messages.tool.ToolCall":"/langchain-core/langchain_core/messages/tool#langchain_core-messages-tool-ToolCall"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._convert_to_openai_tool_calls(
+    tool_calls: list[langchain_core.messages.tool.ToolCall]
+) -> list[dict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-_create_message_from_message_type">
+
+<CodeBlock links={{"langchain_core.messages.base.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._create_message_from_message_type(
+    message_type: str,
+    content: str,
+    name: str | None = None,
+    tool_call_id: str | None = None,
+    tool_calls: list[dict[str, typing.Any]] | None = None,
+    id: str | None = None,
+    additional_kwargs: typing.Any = {}
+) -> langchain_core.messages.base.BaseMessage
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a message from a `Message` type and content string.
+
+**Parameters:**
+
+<ParamField path="message_type" type="str">
+the type of the message (e.g., `'human'`, `'ai'`, etc.).
+</ParamField>
+
+<ParamField path="content" type="str">
+the content string.
+</ParamField>
+
+<ParamField path="name" type="str | None" default="None">
+the name of the message.
+</ParamField>
+
+<ParamField path="tool_call_id" type="str | None" default="None">
+the tool call id.
+</ParamField>
+
+<ParamField path="tool_calls" type="list[dict[str, Any]] | None" default="None">
+the tool calls.
+</ParamField>
+
+<ParamField path="id" type="str | None" default="None">
+the id of the message.
+</ParamField>
+
+<ParamField path="additional_kwargs" type="Any" default="&#123;&#125;">
+additional keyword arguments.
+</ParamField>
+
+**Returns:** `BaseMessage`
+
+a message of the appropriate type.
+
+**Raises:**
+
+- `ValueError`: if the message type is not one of `'human'`, `'user'`, `'ai'`,
+`'assistant'`, `'function'`, `'tool'`, `'system'`, or
+`'developer'`.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-_default_text_splitter">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._default_text_splitter(
+    text: str
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-_first_max_tokens">
+
+<CodeBlock links={{"langchain_core.messages.base.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._first_max_tokens(
+    messages: collections.abc.Sequence[langchain_core.messages.base.BaseMessage],
+    max_tokens: int,
+    token_counter: collections.abc.Callable[[list[BaseMessage]], int],
+    text_splitter: collections.abc.Callable[[str], list[str]],
+    partial_strategy: typing.Literal['first', 'last'] | None = None,
+    end_on: str | type[langchain_core.messages.base.BaseMessage] | collections.abc.Sequence[str | type[langchain_core.messages.base.BaseMessage]] | None = None
+) -> list[langchain_core.messages.base.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-_format_content_block_xml">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._format_content_block_xml(
+    block: dict
+) -> str | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format a content block as XML.
+
+**Parameters:**
+
+<ParamField path="block" type="dict">
+A LangChain content block.
+</ParamField>
+
+**Returns:** `str | None`
+
+XML string representation of the block, or `None` if the block should be
+skipped.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-_get_message_openai_role">
+
+<CodeBlock links={{"langchain_core.messages.base.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._get_message_openai_role(
+    message: langchain_core.messages.base.BaseMessage
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-_get_message_type_str">
+
+<CodeBlock links={{"langchain_core.messages.base.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._get_message_type_str(
+    m: langchain_core.messages.base.BaseMessage,
+    human_prefix: str,
+    ai_prefix: str,
+    system_prefix: str,
+    function_prefix: str,
+    tool_prefix: str
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the type string for XML message element.
+
+**Parameters:**
+
+<ParamField path="m" type="BaseMessage">
+The message to get the type string for.
+</ParamField>
+
+<ParamField path="human_prefix" type="str">
+The prefix to use for `HumanMessage`.
+</ParamField>
+
+<ParamField path="ai_prefix" type="str">
+The prefix to use for `AIMessage`.
+</ParamField>
+
+<ParamField path="system_prefix" type="str">
+The prefix to use for `SystemMessage`.
+</ParamField>
+
+<ParamField path="function_prefix" type="str">
+The prefix to use for `FunctionMessage`.
+</ParamField>
+
+<ParamField path="tool_prefix" type="str">
+The prefix to use for `ToolMessage`.
+</ParamField>
+
+**Returns:** `str`
+
+The type string for the message element.
+
+**Raises:**
+
+- `ValueError`: If an unsupported message type is encountered.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-_get_type">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._get_type(
+    v: typing.Any
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the type associated with the object for serialization purposes.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-_has_base64_data">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._has_base64_data(
+    block: dict
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if a content block contains base64 encoded data.
+
+**Parameters:**
+
+<ParamField path="block" type="dict">
+A content block dictionary.
+</ParamField>
+
+**Returns:** `bool`
+
+Whether the block contains base64 data.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-_is_message_type">
+
+<CodeBlock links={{"langchain_core.messages.base.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._is_message_type(
+    message: langchain_core.messages.base.BaseMessage,
+    type_: str | type[langchain_core.messages.base.BaseMessage] | collections.abc.Sequence[str | type[langchain_core.messages.base.BaseMessage]]
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-_last_max_tokens">
+
+<CodeBlock links={{"langchain_core.messages.base.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._last_max_tokens(
+    messages: collections.abc.Sequence[langchain_core.messages.base.BaseMessage],
+    max_tokens: int,
+    token_counter: collections.abc.Callable[[list[BaseMessage]], int],
+    text_splitter: collections.abc.Callable[[str], list[str]],
+    allow_partial: bool = False,
+    include_system: bool = False,
+    start_on: str | type[langchain_core.messages.base.BaseMessage] | collections.abc.Sequence[str | type[langchain_core.messages.base.BaseMessage]] | None = None,
+    end_on: str | type[langchain_core.messages.base.BaseMessage] | collections.abc.Sequence[str | type[langchain_core.messages.base.BaseMessage]] | None = None
+) -> list[langchain_core.messages.base.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-_message_from_dict">
+
+<CodeBlock links={{"langchain_core.messages.base.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._message_from_dict(
+    message: dict
+) -> langchain_core.messages.base.BaseMessage
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-_msg_to_chunk">
+
+<CodeBlock links={{"langchain_core.messages.base.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.messages.base.BaseMessageChunk":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessageChunk"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._msg_to_chunk(
+    message: langchain_core.messages.base.BaseMessage
+) -> langchain_core.messages.base.BaseMessageChunk
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-_runnable_support">
+
+<CodeBlock links={{"langchain_core.messages.utils.MessageLikeRepresentation":"#langchain_core-messages-utils-MessageLikeRepresentation","langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue","langchain_core.messages.utils._P":"#langchain_core-messages-utils-_P","langchain_core.messages.utils._R_co":"#langchain_core-messages-utils-_R_co","langchain_core.messages.utils._RunnableSupportCallable":"#langchain_core-messages-utils-_RunnableSupportCallable"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._runnable_support(
+    func: collections.abc.Callable[typing.Concatenate[collections.abc.Sequence[langchain_core.messages.utils.MessageLikeRepresentation] | langchain_core.prompt_values.PromptValue, langchain_core.messages.utils._P], langchain_core.messages.utils._R_co]
+) -> langchain_core.messages.utils._RunnableSupportCallable[langchain_core.messages.utils._P, langchain_core.messages.utils._R_co]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-_truncate">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._truncate(
+    text: str,
+    max_len: int = _XML_CONTENT_BLOCK_MAX_LEN
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Truncate text to `max_len` characters, adding ellipsis if truncated.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-convert_to_messages">
+
+<CodeBlock links={{"langchain_core.messages.utils.MessageLikeRepresentation":"#langchain_core-messages-utils-MessageLikeRepresentation","langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue","langchain_core.messages.base.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils.convert_to_messages(
+    messages: collections.abc.Iterable[langchain_core.messages.utils.MessageLikeRepresentation] | langchain_core.prompt_values.PromptValue
+) -> list[langchain_core.messages.base.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert a sequence of messages to a list of messages.
+
+**Parameters:**
+
+<ParamField path="messages" type="Iterable[MessageLikeRepresentation] | PromptValue">
+Sequence of messages to convert.
+</ParamField>
+
+**Returns:** `list[BaseMessage]`
+
+list of messages (BaseMessages).
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-convert_to_openai_messages">
+
+<CodeBlock links={{"langchain_core.messages.utils.MessageLikeRepresentation":"#langchain_core-messages-utils-MessageLikeRepresentation"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils.convert_to_openai_messages(
+    messages: langchain_core.messages.utils.MessageLikeRepresentation | collections.abc.Sequence[langchain_core.messages.utils.MessageLikeRepresentation],
+    text_format: typing.Literal['string', 'block'] = 'string',
+    include_id: bool = False,
+    pass_through_unknown_blocks: bool = True
+) -> dict | list[dict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert LangChain messages into OpenAI message dicts.
+
+!!! version-added "Added in `langchain-core` 0.3.11"
+
+**Parameters:**
+
+<ParamField path="messages" type="MessageLikeRepresentation | Sequence[MessageLikeRepresentation]">
+Message-like object or iterable of objects whose contents are
+in OpenAI, Anthropic, Bedrock Converse, or VertexAI formats.
+</ParamField>
+
+<ParamField path="text_format" type="Literal['string', 'block']" default="'string'">
+How to format string or text block contents:
+- `'string'`:
+    If a message has a string content, this is left as a string. If
+    a message has content blocks that are all of type `'text'`, these
+    are joined with a newline to make a single string. If a message has
+    content blocks and at least one isn't of type `'text'`, then
+    all blocks are left as dicts.
+- `'block'`:
+    If a message has a string content, this is turned into a list
+    with a single content block of type `'text'`. If a message has
+    content blocks these are left as is.
+</ParamField>
+
+<ParamField path="include_id" type="bool" default="False">
+Whether to include message IDs in the openai messages, if they
+are present in the source messages.
+</ParamField>
+
+<ParamField path="pass_through_unknown_blocks" type="bool" default="True">
+Whether to include content blocks with unknown
+formats in the output. If `False`, an error is raised if an unknown
+content block is encountered.
+</ParamField>
+
+**Returns:** `dict | list[dict]`
+
+The return type depends on the input type:
+
+**Raises:**
+
+- `ValueError`: if an unrecognized `text_format` is specified, or if a message
+content block is missing expected keys.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-count_tokens_approximately">
+
+<CodeBlock links={{"langchain_core.messages.utils.MessageLikeRepresentation":"#langchain_core-messages-utils-MessageLikeRepresentation","langchain_core.tools.BaseTool":"/langchain-core/langchain_core/tools/base#langchain_core-tools-base-BaseTool"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils.count_tokens_approximately(
+    messages: collections.abc.Iterable[langchain_core.messages.utils.MessageLikeRepresentation],
+    chars_per_token: float = 4.0,
+    extra_tokens_per_message: float = 3.0,
+    count_name: bool = True,
+    tokens_per_image: int = 85,
+    use_usage_metadata_scaling: bool = False,
+    tools: list[langchain_core.tools.BaseTool | dict[str, typing.Any]] | None = None
+) -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Approximate the total number of tokens in messages.
+
+The token count includes stringified message content, role, and (optionally) name.
+
+- For AI messages, the token count also includes stringified tool calls.
+- For tool messages, the token count also includes the tool call ID.
+- For multimodal messages with images, applies a fixed token penalty per image
+  instead of counting base64-encoded characters.
+- If tools are provided, the token count also includes stringified tool schemas.
+
+!!! version-added "Added in `langchain-core` 0.3.46"
+
+**Parameters:**
+
+<ParamField path="messages" type="Iterable[MessageLikeRepresentation]">
+List of messages to count tokens for.
+</ParamField>
+
+<ParamField path="chars_per_token" type="float" default="4.0">
+Number of characters per token to use for the approximation.
+One token corresponds to ~4 chars for common English text.
+You can also specify `float` values for more fine-grained control.
+[See more here](https://platform.openai.com/tokenizer).
+</ParamField>
+
+<ParamField path="extra_tokens_per_message" type="float" default="3.0">
+Number of extra tokens to add per message, e.g.
+special tokens, including beginning/end of message.
+You can also specify `float` values for more fine-grained control.
+[See more here](https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb).
+</ParamField>
+
+<ParamField path="count_name" type="bool" default="True">
+Whether to include message names in the count.
+</ParamField>
+
+<ParamField path="tokens_per_image" type="int" default="85">
+Fixed token cost per image (default: 85, aligned with
+OpenAI's low-resolution image token cost).
+</ParamField>
+
+<ParamField path="use_usage_metadata_scaling" type="bool" default="False">
+If True, and all AI messages have consistent
+`response_metadata['model_provider']`, scale the approximate token count
+using the **most recent** AI message that has
+`usage_metadata['total_tokens']`. The scaling factor is:
+`AI_total_tokens / approx_tokens_up_to_that_AI_message`
+</ParamField>
+
+<ParamField path="tools" type="list[BaseTool | dict[str, Any]] | None" default="None">
+List of tools to include in the token count. Each tool can be either
+a `BaseTool` instance or a dict representing a tool schema. `BaseTool`
+instances are converted to OpenAI tool format before counting.
+</ParamField>
+
+**Returns:** `int`
+
+Approximate number of tokens in the messages (and tools, if provided).
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-filter_messages">
+
+<CodeBlock links={{"langchain_core.messages.utils.MessageLikeRepresentation":"#langchain_core-messages-utils-MessageLikeRepresentation","langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue","langchain_core.messages.base.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils.filter_messages(
+    messages: collections.abc.Iterable[langchain_core.messages.utils.MessageLikeRepresentation] | langchain_core.prompt_values.PromptValue,
+    include_names: collections.abc.Sequence[str] | None = None,
+    exclude_names: collections.abc.Sequence[str] | None = None,
+    include_types: collections.abc.Sequence[str | type[langchain_core.messages.base.BaseMessage]] | None = None,
+    exclude_types: collections.abc.Sequence[str | type[langchain_core.messages.base.BaseMessage]] | None = None,
+    include_ids: collections.abc.Sequence[str] | None = None,
+    exclude_ids: collections.abc.Sequence[str] | None = None,
+    exclude_tool_calls: collections.abc.Sequence[str] | bool | None = None
+) -> list[langchain_core.messages.base.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Filter messages based on `name`, `type` or `id`.
+
+**Parameters:**
+
+<ParamField path="messages" type="Iterable[MessageLikeRepresentation] | PromptValue">
+Sequence Message-like objects to filter.
+</ParamField>
+
+<ParamField path="include_names" type="Sequence[str] | None" default="None">
+Message names to include.
+</ParamField>
+
+<ParamField path="exclude_names" type="Sequence[str] | None" default="None">
+Messages names to exclude.
+</ParamField>
+
+<ParamField path="include_types" type="Sequence[str | type[BaseMessage]] | None" default="None">
+Message types to include. Can be specified as string names
+(e.g. `'system'`, `'human'`, `'ai'`, ...) or as `BaseMessage`
+classes (e.g. `SystemMessage`, `HumanMessage`, `AIMessage`, ...).
+</ParamField>
+
+<ParamField path="exclude_types" type="Sequence[str | type[BaseMessage]] | None" default="None">
+Message types to exclude. Can be specified as string names
+(e.g. `'system'`, `'human'`, `'ai'`, ...) or as `BaseMessage`
+classes (e.g. `SystemMessage`, `HumanMessage`, `AIMessage`, ...).
+</ParamField>
+
+<ParamField path="include_ids" type="Sequence[str] | None" default="None">
+Message IDs to include.
+</ParamField>
+
+<ParamField path="exclude_ids" type="Sequence[str] | None" default="None">
+Message IDs to exclude.
+</ParamField>
+
+<ParamField path="exclude_tool_calls" type="Sequence[str] | bool | None" default="None">
+Tool call IDs to exclude.
+Can be one of the following:
+- `True`: All `AIMessage` objects with tool calls and all `ToolMessage`
+    objects will be excluded.
+- a sequence of tool call IDs to exclude:
+    - `ToolMessage` objects with the corresponding tool call ID will be
+        excluded.
+    - The `tool_calls` in the AIMessage will be updated to exclude
+        matching tool calls. If all `tool_calls` are filtered from an
+        AIMessage, the whole message is excluded.
+</ParamField>
+
+**Returns:** `list[BaseMessage]`
+
+A list of Messages that meets at least one of the `incl_*` conditions and none
+
+**Raises:**
+
+- `ValueError`: If two incompatible arguments are provided.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-get_buffer_string">
+
+<CodeBlock links={{"langchain_core.messages.base.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils.get_buffer_string(
+    messages: collections.abc.Sequence[langchain_core.messages.base.BaseMessage],
+    human_prefix: str = 'Human',
+    ai_prefix: str = 'AI',
+    system_prefix: str = 'System',
+    function_prefix: str = 'Function',
+    tool_prefix: str = 'Tool',
+    message_separator: str = '\n',
+    format: typing.Literal['prefix', 'xml'] = 'prefix'
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert a sequence of messages to strings and concatenate them into one string.
+
+!!! warning
+
+    If a message is an `AIMessage` and contains both tool calls under `tool_calls`
+    and a function call under `additional_kwargs["function_call"]`, only the tool
+    calls will be appended to the string representation.
+
+!!! note "XML format"
+
+    When using `format='xml'`:
+
+    - All messages use uniform `&lt;message type="role"&gt;content&lt;/message&gt;` format.
+    - The `type` attribute uses `human_prefix` (lowercased) for `HumanMessage`,
+        `ai_prefix` (lowercased) for `AIMessage`, `system_prefix` (lowercased)
+        for `SystemMessage`, `function_prefix` (lowercased) for `FunctionMessage`,
+        `tool_prefix` (lowercased) for `ToolMessage`, and the original role
+        (unchanged) for `ChatMessage`.
+    - Message content is escaped using `xml.sax.saxutils.escape()`.
+    - Attribute values are escaped using `xml.sax.saxutils.quoteattr()`.
+    - AI messages with tool calls use nested structure with `&lt;content&gt;` and
+        `&lt;tool_call&gt;` elements.
+    - For multi-modal content (list of content blocks), supported block types
+        are: `text`, `reasoning`, `image` (URL/file_id only), `image_url`
+        (OpenAI-style, URL only), `audio` (URL/file_id only), `video` (URL/file_id
+        only), `text-plain`, `server_tool_call`, and `server_tool_result`.
+    - Content blocks with base64-encoded data are skipped (including blocks
+        with `base64` field or `data:` URLs).
+    - Unknown block types are skipped.
+    - Plain text document content (`text-plain`), server tool call arguments,
+        and server tool result outputs are truncated to 500 characters.
+
+**Parameters:**
+
+<ParamField path="messages" type="Sequence[BaseMessage]">
+Messages to be converted to strings.
+</ParamField>
+
+<ParamField path="human_prefix" type="str" default="'Human'">
+The prefix to prepend to contents of `HumanMessage`s.
+</ParamField>
+
+<ParamField path="ai_prefix" type="str" default="'AI'">
+The prefix to prepend to contents of `AIMessage`.
+</ParamField>
+
+<ParamField path="system_prefix" type="str" default="'System'">
+The prefix to prepend to contents of `SystemMessage`s.
+</ParamField>
+
+<ParamField path="function_prefix" type="str" default="'Function'">
+The prefix to prepend to contents of `FunctionMessage`s.
+</ParamField>
+
+<ParamField path="tool_prefix" type="str" default="'Tool'">
+The prefix to prepend to contents of `ToolMessage`s.
+</ParamField>
+
+<ParamField path="message_separator" type="str" default="'\n'">
+The separator to use between messages.
+</ParamField>
+
+<ParamField path="format" type="Literal['prefix', 'xml']" default="'prefix'">
+The output format. `'prefix'` uses `Role: content` format (default).
+
+`'xml'` uses XML-style `&lt;message type='role'&gt;` format with proper character
+escaping, which is useful when message content may contain role-like
+prefixes that could cause ambiguity.
+</ParamField>
+
+**Returns:** `str`
+
+A single string concatenation of all input messages.
+
+**Raises:**
+
+- `ValueError`: If an unsupported message type is encountered.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-merge_message_runs">
+
+<CodeBlock links={{"langchain_core.messages.utils.MessageLikeRepresentation":"#langchain_core-messages-utils-MessageLikeRepresentation","langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue","langchain_core.messages.base.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils.merge_message_runs(
+    messages: collections.abc.Iterable[langchain_core.messages.utils.MessageLikeRepresentation] | langchain_core.prompt_values.PromptValue,
+    chunk_separator: str = '\n'
+) -> list[langchain_core.messages.base.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Merge consecutive Messages of the same type.
+
+!!! note
+    `ToolMessage` objects are not merged, as each has a distinct tool call id that
+    can't be merged.
+
+**Parameters:**
+
+<ParamField path="messages" type="Iterable[MessageLikeRepresentation] | PromptValue">
+Sequence Message-like objects to merge.
+</ParamField>
+
+<ParamField path="chunk_separator" type="str" default="'\n'">
+Specify the string to be inserted between message chunks.
+</ParamField>
+
+**Returns:** `list[BaseMessage]`
+
+list of BaseMessages with consecutive runs of message types merged into single
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-message_chunk_to_message">
+
+<CodeBlock links={{"langchain_core.messages.base.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils.message_chunk_to_message(
+    chunk: langchain_core.messages.base.BaseMessage
+) -> langchain_core.messages.base.BaseMessage
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert a message chunk to a `Message`.
+
+**Parameters:**
+
+<ParamField path="chunk" type="BaseMessage">
+Message chunk to convert.
+</ParamField>
+
+**Returns:** `BaseMessage`
+
+Message.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-messages_from_dict">
+
+<CodeBlock links={{"langchain_core.messages.base.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils.messages_from_dict(
+    messages: collections.abc.Sequence[dict]
+) -> list[langchain_core.messages.base.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert a sequence of messages from dicts to `Message` objects.
+
+**Parameters:**
+
+<ParamField path="messages" type="Sequence[dict]">
+Sequence of messages (as dicts) to convert.
+</ParamField>
+
+**Returns:** `list[BaseMessage]`
+
+list of messages (BaseMessages).
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-trim_messages">
+
+<CodeBlock links={{"langchain_core.messages.utils.MessageLikeRepresentation":"#langchain_core-messages-utils-MessageLikeRepresentation","langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue","langchain_core.messages.base.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils.trim_messages(
+    messages: collections.abc.Iterable[langchain_core.messages.utils.MessageLikeRepresentation] | langchain_core.prompt_values.PromptValue,
+    max_tokens: int,
+    token_counter: collections.abc.Callable[[list[BaseMessage]], int] | collections.abc.Callable[[BaseMessage], int] | langchain_core.language_models.BaseLanguageModel | typing.Literal['approximate'],
+    strategy: typing.Literal['first', 'last'] = 'last',
+    allow_partial: bool = False,
+    end_on: str | type[langchain_core.messages.base.BaseMessage] | collections.abc.Sequence[str | type[langchain_core.messages.base.BaseMessage]] | None = None,
+    start_on: str | type[langchain_core.messages.base.BaseMessage] | collections.abc.Sequence[str | type[langchain_core.messages.base.BaseMessage]] | None = None,
+    include_system: bool = False,
+    text_splitter: collections.abc.Callable[[str], list[str]] | langchain_text_splitters.TextSplitter | None = None
+) -> list[langchain_core.messages.base.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Trim messages to be below a token count.
+
+`trim_messages` can be used to reduce the size of a chat history to a specified
+token or message count.
+
+In either case, if passing the trimmed chat history back into a chat model
+directly, the resulting chat history should usually satisfy the following
+properties:
+
+1. The resulting chat history should be valid. Most chat models expect that chat
+    history starts with either (1) a `HumanMessage` or (2) a `SystemMessage`
+    followed by a `HumanMessage`. To achieve this, set `start_on='human'`.
+    In addition, generally a `ToolMessage` can only appear after an `AIMessage`
+    that involved a tool call.
+2. It includes recent messages and drops old messages in the chat history.
+    To achieve this set the `strategy='last'`.
+3. Usually, the new chat history should include the `SystemMessage` if it
+    was present in the original chat history since the `SystemMessage` includes
+    special instructions to the chat model. The `SystemMessage` is almost always
+    the first message in the history if present. To achieve this set the
+    `include_system=True`.
+
+!!! note
+    The examples below show how to configure `trim_messages` to achieve a behavior
+    consistent with the above properties.
+
+**Parameters:**
+
+<ParamField path="messages" type="Iterable[MessageLikeRepresentation] | PromptValue">
+Sequence of Message-like objects to trim.
+</ParamField>
+
+<ParamField path="max_tokens" type="int">
+Max token count of trimmed messages.
+</ParamField>
+
+<ParamField path="token_counter" type="Callable[[list[BaseMessage]], int] | Callable[[BaseMessage], int] | BaseLanguageModel | Literal['approximate']">
+Function or llm for counting tokens in a `BaseMessage` or a
+list of `BaseMessage`.
+
+If a `BaseLanguageModel` is passed in then
+`BaseLanguageModel.get_num_tokens_from_messages()` will be used. Set to
+`len` to count the number of **messages** in the chat history.
+
+You can also use string shortcuts for convenience:
+
+- `'approximate'`: Uses `count_tokens_approximately` for fast, approximate
+    token counts.
+
+!!! note
+
+    `count_tokens_approximately` (or the shortcut `'approximate'`) is
+    recommended for using `trim_messages` on the hot path, where exact token
+    counting is not necessary.
+</ParamField>
+
+<ParamField path="strategy" type="Literal['first', 'last']" default="'last'">
+Strategy for trimming.
+
+- `'first'`: Keep the first `&lt;= n_count` tokens of the messages.
+- `'last'`: Keep the last `&lt;= n_count` tokens of the messages.
+</ParamField>
+
+<ParamField path="allow_partial" type="bool" default="False">
+Whether to split a message if only part of the message can be
+included.
+
+If `strategy='last'` then the last partial contents of a message are
+included. If `strategy='first'` then the first partial contents of a
+message are included.
+</ParamField>
+
+<ParamField path="end_on" type="str | type[BaseMessage] | Sequence[str | type[BaseMessage]] | None" default="None">
+The message type to end on.
+
+If specified then every message after the last occurrence of this type is
+ignored. If `strategy='last'` then this is done before we attempt to get the
+last `max_tokens`. If `strategy='first'` then this is done after we get the
+first `max_tokens`. Can be specified as string names (e.g. `'system'`,
+`'human'`, `'ai'`, ...) or as `BaseMessage` classes (e.g. `SystemMessage`,
+`HumanMessage`, `AIMessage`, ...). Can be a single type or a list of types.
+</ParamField>
+
+<ParamField path="start_on" type="str | type[BaseMessage] | Sequence[str | type[BaseMessage]] | None" default="None">
+The message type to start on.
+
+Should only be specified if `strategy='last'`. If specified then every
+message before the first occurrence of this type is ignored. This is done
+after we trim the initial messages to the last `max_tokens`. Does not apply
+to a `SystemMessage` at index 0 if `include_system=True`. Can be specified
+as string names (e.g. `'system'`, `'human'`, `'ai'`, ...) or as
+`BaseMessage` classes (e.g. `SystemMessage`, `HumanMessage`, `AIMessage`,
+...). Can be a single type or a list of types.
+</ParamField>
+
+<ParamField path="include_system" type="bool" default="False">
+Whether to keep the `SystemMessage` if there is one at index
+`0`.
+
+Should only be specified if `strategy="last"`.
+</ParamField>
+
+<ParamField path="text_splitter" type="Callable[[str], list[str]] | TextSplitter | None" default="None">
+Function or `langchain_text_splitters.TextSplitter` for
+splitting the string contents of a message.
+
+Only used if `allow_partial=True`. If `strategy='last'` then the last split
+tokens from a partial message will be included. if `strategy='first'` then
+the first split tokens from a partial message will be included. Token
+splitter assumes that separators are kept, so that split contents can be
+directly concatenated to recreate the original text. Defaults to splitting
+on newlines.
+</ParamField>
+
+**Returns:** `list[BaseMessage]`
+
+List of trimmed `BaseMessage`.
+
+**Raises:**
+
+- `ValueError`: if two incompatible arguments are specified or an unrecognized
+`strategy` is specified.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-AnyMessage">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils.AnyMessage = Annotated[Annotated[AIMessage, Tag(tag='ai')] | Annotated[HumanMessage, Tag(tag=...
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+A type representing any defined `Message` or `MessageChunk` type.
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-MessageLikeRepresentation">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils.MessageLikeRepresentation = BaseMessage | list[str] | tuple[str, str] | str | dict[str, Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+A type representing the various ways a message can be represented.
+
+</Indent>
+
+<Anchor id="langchain_core-messages-utils-_CHUNK_MSG_MAP">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._CHUNK_MSG_MAP = {v: k for k, v in (_MSG_CHUNK_MAP.items())}
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-messages-utils-_HAS_LANGCHAIN_TEXT_SPLITTERS">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._HAS_LANGCHAIN_TEXT_SPLITTERS = True
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-messages-utils-_MSG_CHUNK_MAP">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._MSG_CHUNK_MAP: dict[type[BaseMessage], type[BaseMessageChunk]] = {HumanMessage: HumanMessageChunk, AIMessage: AIMessageChunk, SystemMessage: Syst...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-messages-utils-_MultipleMessages">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._MultipleMessages = Sequence[_T]
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-messages-utils-_P">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._P = ParamSpec('_P')
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-messages-utils-_R_co">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._R_co = TypeVar('_R_co', covariant=True)
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-messages-utils-_SingleMessage">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._SingleMessage = BaseMessage | str | dict[str, Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-messages-utils-_T">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._T = TypeVar('_T', bound=_SingleMessage)
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-messages-utils-_TOKEN_COUNTER_SHORTCUTS">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._TOKEN_COUNTER_SHORTCUTS = {'approximate': _approximate_token_counter}
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-messages-utils-_XML_CONTENT_BLOCK_MAX_LEN">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils._XML_CONTENT_BLOCK_MAX_LEN = 500
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-messages-utils-logger">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.utils.logger = logging.getLogger(__name__)
+```
+
+</CodeBlock>
+</Anchor>
+

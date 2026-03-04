@@ -1,0 +1,1326 @@
+---
+title: cub::DeviceSelect
+description: ""
+---
+
+DeviceSelect provides device-wide, parallel operations for compacting selected items from sequences of data items residing within device-accessible memory. It is similar to DevicePartition, except that non-selected items are discarded, whereas DevicePartition retains them.
+
+## Performance considerations
+
+@linear_performance&#123;select-flagged, select-if, and select-unique&#125;
+
+---
+
+## Methods
+
+### select_impl <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"DeviceSelect": "/library/api/cub::DeviceSelect"}}>
+```cpp showLineNumbers={false}
+template <typename TuningEnvT,
+          SelectImpl SelectionMode,
+          typename InputIteratorT,
+          typename FlagIteratorT,
+          typename OutputIteratorT,
+          typename NumSelectedIteratorT,
+          typename SelectOpT,
+          typename EqualityOpT,
+          typename OffsetT>
+static cudaError_t cub::DeviceSelect::select_impl(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    FlagIteratorT d_flags,
+    OutputIteratorT d_out,
+    NumSelectedIteratorT d_num_selected_out,
+    OffsetT num_items,
+    SelectOpT select_op,
+    EqualityOpT equality_op,
+    cudaStream_t stream
+)
+```
+</CodeBlock>
+
+---
+
+## Static methods
+
+### Flagged <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<Tabs>
+<Tab title="Partial tile">
+
+Uses the `d_flags` sequence to selectively copy the corresponding items from `d_in` into `d_out`. The total number of items selected is written to `d_num_selected_out`.
+
+<CodeBlock links={{"DeviceSelect": "/library/api/cub::DeviceSelect"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT,
+          typename FlagIterator,
+          typename OutputIteratorT,
+          typename NumSelectedIteratorT>
+static cudaError_t cub::DeviceSelect::Flagged(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    FlagIterator d_flags,
+    OutputIteratorT d_out,
+    NumSelectedIteratorT d_num_selected_out,
+    ::cuda::std::int64_t num_items,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+The value type of `d_flags` must be castable to `bool` (e.g., `bool`, `char`, `int`, etc.).
+Copies of the selected items are compacted into `d_out` and maintain their original relative ordering.
+| The range `[d_out, d_out + *d_num_selected_out)` shall not overlap `[d_in, d_in + num_items)`, | `[d_flags, d_flags + num_items)` nor `d_num_selected_out` in any way.
+@devicestorage
+</Note>
+
+**Template parameters**
+
+<ParamField path="InputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="FlagIterator" type="typename">
+**[inferred]** Random-access input iterator type for reading selection flags (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+**[inferred]** Random-access output iterator type for writing selected items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="NumSelectedIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the number of items selected (may be a simple pointer type)
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_in" type="InputIteratorT">
+Pointer to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_flags" type="FlagIterator">
+Pointer to the input sequence of selection flags
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Pointer to the output sequence of selected data items
+</ParamField>
+
+<ParamField path="d_num_selected_out" type="NumSelectedIteratorT">
+Pointer to the output total number of items selected (i.e., length of `d_out`)
+</ParamField>
+
+<ParamField path="num_items" type="::cuda::std::int64_t">
+Total number of input items (i.e., length of `d_in`)
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the compaction of items selected from an `int` device vector.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>  // or equivalently <cub/device/device_select.cuh>
+
+// Declare, allocate, and initialize device-accessible pointers for input,
+// flags, and output
+int  num_items;              // e.g., 8
+int  *d_in;                  // e.g., [1, 2, 3, 4, 5, 6, 7, 8]
+char *d_flags;               // e.g., [1, 0, 0, 1, 0, 1, 1, 0]
+int  *d_out;                 // e.g., [ ,  ,  ,  ,  ,  ,  ,  ]
+int  *d_num_selected_out;    // e.g., [ ]
+...
+
+// Determine temporary device storage requirements
+void     *d_temp_storage = nullptr;
+size_t   temp_storage_bytes = 0;
+cub::DeviceSelect::Flagged(
+  d_temp_storage, temp_storage_bytes,
+  d_in, d_flags, d_out, d_num_selected_out, num_items);
+
+// Allocate temporary storage
+cudaMalloc(&d_temp_storage, temp_storage_bytes);
+
+// Run selection
+cub::DeviceSelect::Flagged(
+  d_temp_storage, temp_storage_bytes,
+  d_in, d_flags, d_out, d_num_selected_out, num_items);
+
+// d_out                 <-- [1, 4, 6, 7]
+// d_num_selected_out    <-- [4]
+```
+
+</Tab>
+<Tab title="Partial tile">
+
+<Badge intent="note" minimal>nodiscard</Badge>
+
+Uses the `d_flags` sequence to selectively copy the corresponding items from `d_in` into `d_out`. The total number of items selected is written to `d_num_selected_out`.
+
+This is an environment-based API that allows customization of:
+
+<CodeBlock links={{"DeviceSelect": "/library/api/cub::DeviceSelect"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT,
+          typename FlagIterator,
+          typename OutputIteratorT,
+          typename NumSelectedIteratorT,
+          typename NumItemsT,
+          typename EnvT>
+static cudaError_t cub::DeviceSelect::Flagged(
+    InputIteratorT d_in,
+    FlagIterator d_flags,
+    OutputIteratorT d_out,
+    NumSelectedIteratorT d_num_selected_out,
+    NumItemsT num_items,
+    EnvT env = {}
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Stream: Query via `cuda::get_stream`
+Memory resource: Query via `cuda::mr::get_memory_resource`
+The value type of `d_flags` must be castable to `bool` (e.g., `bool`, `char`, `int`, etc.).
+Copies of the selected items are compacted into `d_out` and maintain their original relative ordering.
+| The range `[d_out, d_out + *d_num_selected_out)` shall not overlap `[d_in, d_in + num_items)`, | `[d_flags, d_flags + num_items)` nor `d_num_selected_out` in any way.
+</Note>
+
+**Template parameters**
+
+<ParamField path="InputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="FlagIterator" type="typename">
+**[inferred]** Random-access input iterator type for reading selection flags (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+**[inferred]** Random-access output iterator type for writing selected items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="NumSelectedIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the number of items selected (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="NumItemsT" type="typename">
+**[inferred]** Type of num_items
+</ParamField>
+
+<ParamField path="EnvT" type="typename">
+**[inferred]** Environment type (e.g., `cuda::std::execution::env<...>`)
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_in" type="InputIteratorT">
+Pointer to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_flags" type="FlagIterator">
+Pointer to the input sequence of selection flags
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Pointer to the output sequence of selected data items
+</ParamField>
+
+<ParamField path="d_num_selected_out" type="NumSelectedIteratorT">
+Pointer to the output total number of items selected (i.e., length of `d_out`)
+</ParamField>
+
+<ParamField path="num_items" type="NumItemsT">
+Total number of input items (i.e., length of `d_in`)
+</ParamField>
+
+<ParamField path="env" type="EnvT" default="{}">
+**[optional]** Execution environment. Default is `cuda::std::execution::env{}`.
+</ParamField>
+
+</Tab>
+<Tab title="Partial tile">
+
+Uses the `d_flags` sequence to selectively compact the items in `d_data``. The total number of items selected is written to `d_num_selected_out`.
+
+<CodeBlock links={{"DeviceSelect": "/library/api/cub::DeviceSelect"}}>
+```cpp showLineNumbers={false}
+template <typename IteratorT, typename FlagIterator, typename NumSelectedIteratorT>
+static cudaError_t cub::DeviceSelect::Flagged(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    IteratorT d_data,
+    FlagIterator d_flags,
+    NumSelectedIteratorT d_num_selected_out,
+    ::cuda::std::int64_t num_items,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+The value type of `d_flags` must be castable to `bool` (e.g., `bool`, `char`, `int`, etc.).
+Copies of the selected items are compacted in-place and maintain their original relative ordering.
+| The `d_data` may equal `d_flags`. The range `[d_data, d_data + num_items)` shall not overlap | `[d_flags, d_flags + num_items)` in any other way.
+@devicestorage
+</Note>
+
+**Template parameters**
+
+<ParamField path="IteratorT" type="typename">
+**[inferred]** Random-access iterator type for reading and writing selected items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="FlagIterator" type="typename">
+**[inferred]** Random-access input iterator type for reading selection flags (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="NumSelectedIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the number of items selected (may be a simple pointer type)
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_data" type="IteratorT">
+Pointer to the sequence of data items
+</ParamField>
+
+<ParamField path="d_flags" type="FlagIterator">
+Pointer to the input sequence of selection flags
+</ParamField>
+
+<ParamField path="d_num_selected_out" type="NumSelectedIteratorT">
+Pointer to the output total number of items selected
+</ParamField>
+
+<ParamField path="num_items" type="::cuda::std::int64_t">
+Total number of input items (i.e., length of `d_data`)
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the compaction of items selected from an `int` device vector.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>  // or equivalently <cub/device/device_select.cuh>
+
+// Declare, allocate, and initialize device-accessible pointers for input,
+// flags, and output
+int  num_items;              // e.g., 8
+int  *d_data;                // e.g., [1, 2, 3, 4, 5, 6, 7, 8]
+char *d_flags;               // e.g., [1, 0, 0, 1, 0, 1, 1, 0]
+int  *d_num_selected_out;    // e.g., [ ]
+...
+
+// Determine temporary device storage requirements
+void     *d_temp_storage = nullptr;
+size_t   temp_storage_bytes = 0;
+cub::DeviceSelect::Flagged(
+  d_temp_storage, temp_storage_bytes,
+  d_in, d_flags, d_num_selected_out, num_items);
+
+// Allocate temporary storage
+cudaMalloc(&d_temp_storage, temp_storage_bytes);
+
+// Run selection
+cub::DeviceSelect::Flagged(
+  d_temp_storage, temp_storage_bytes,
+  d_in, d_flags, d_num_selected_out, num_items);
+
+// d_data                <-- [1, 4, 6, 7]
+// d_num_selected_out    <-- [4]
+```
+
+</Tab>
+</Tabs>
+
+### If <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<Tabs>
+<Tab title="Partial tile">
+
+<Badge intent="note" minimal>nodiscard</Badge>
+
+Uses the `select_op` functor to selectively copy items from `d_in` into `d_out`. The total number of items selected is written to `d_num_selected_out`.
+
+This is an environment-based API that allows customization of:
+
+<CodeBlock links={{"DeviceSelect": "/library/api/cub::DeviceSelect"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT,
+          typename OutputIteratorT,
+          typename NumSelectedIteratorT,
+          typename SelectOp,
+          typename NumItemsT,
+          typename EnvT>
+static cudaError_t cub::DeviceSelect::If(
+    InputIteratorT d_in,
+    OutputIteratorT d_out,
+    NumSelectedIteratorT d_num_selected_out,
+    NumItemsT num_items,
+    SelectOp select_op,
+    EnvT env = {}
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Stream: Query via `cuda::get_stream`
+Memory resource: Query via `cuda::mr::get_memory_resource`
+Copies of the selected items are compacted into `d_out` and maintain their original relative ordering.
+| The range `[d_out, d_out + *d_num_selected_out)` shall not overlap | `[d_in, d_in + num_items)` nor `d_num_selected_out` in any way.
+</Note>
+
+**Template parameters**
+
+<ParamField path="InputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+**[inferred]** Random-access output iterator type for writing selected items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="NumSelectedIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the number of items selected (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="SelectOp" type="typename">
+**[inferred]** Selection operator type having member `bool operator()(const T &a)`
+</ParamField>
+
+<ParamField path="NumItemsT" type="typename">
+**[inferred]** Type of num_items
+</ParamField>
+
+<ParamField path="EnvT" type="typename">
+**[inferred]** Environment type (e.g., `cuda::std::execution::env<...>`)
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_in" type="InputIteratorT">
+Pointer to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Pointer to the output sequence of selected data items
+</ParamField>
+
+<ParamField path="d_num_selected_out" type="NumSelectedIteratorT">
+Pointer to the output total number of items selected (i.e., length of `d_out`)
+</ParamField>
+
+<ParamField path="num_items" type="NumItemsT">
+Total number of input items (i.e., length of `d_in`)
+</ParamField>
+
+<ParamField path="select_op" type="SelectOp">
+Unary selection operator
+</ParamField>
+
+<ParamField path="env" type="EnvT" default="{}">
+**[optional]** Execution environment. Default is `cuda::std::execution::env{}`.
+</ParamField>
+
+</Tab>
+<Tab title="Partial tile">
+
+Uses the `select_op` functor to selectively copy items from `d_in` into `d_out`. The total number of items selected is written to `d_num_selected_out`.
+
+<CodeBlock links={{"DeviceSelect": "/library/api/cub::DeviceSelect"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT,
+          typename OutputIteratorT,
+          typename NumSelectedIteratorT,
+          typename SelectOp>
+static cudaError_t cub::DeviceSelect::If(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    OutputIteratorT d_out,
+    NumSelectedIteratorT d_num_selected_out,
+    ::cuda::std::int64_t num_items,
+    SelectOp select_op,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Copies of the selected items are compacted into `d_out` and maintain their original relative ordering.
+| The range `[d_out, d_out + *d_num_selected_out)` shall not overlap | `[d_in, d_in + num_items)` nor `d_num_selected_out` in any way.
+@devicestorage
+</Note>
+
+**Template parameters**
+
+<ParamField path="InputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+**[inferred]** Random-access output iterator type for writing selected items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="NumSelectedIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the number of items selected (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="SelectOp" type="typename">
+**[inferred]** Selection operator type having member `bool operator()(const T &a)`
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_in" type="InputIteratorT">
+Pointer to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Pointer to the output sequence of selected data items
+</ParamField>
+
+<ParamField path="d_num_selected_out" type="NumSelectedIteratorT">
+Pointer to the output total number of items selected (i.e., length of `d_out`)
+</ParamField>
+
+<ParamField path="num_items" type="::cuda::std::int64_t">
+Total number of input items (i.e., length of `d_in`)
+</ParamField>
+
+<ParamField path="select_op" type="SelectOp">
+Unary selection operator
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the compaction of items selected from an `int` device vector.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/device/device_select.cuh>
+
+// Functor type for selecting values less than some criteria
+struct LessThan
+{
+    int compare;
+
+    __host__ __device__ __forceinline__
+    LessThan(int compare) : compare(compare) {}
+
+    __host__ __device__ __forceinline__
+    bool operator()(const int &a) const {
+        return (a < compare);
+    }
+};
+
+// Declare, allocate, and initialize device-accessible pointers
+// for input and output
+int      num_items;              // e.g., 8
+int      *d_in;                  // e.g., [0, 2, 3, 9, 5, 2, 81, 8]
+int      *d_out;                 // e.g., [ ,  ,  ,  ,  ,  ,  ,  ]
+int      *d_num_selected_out;    // e.g., [ ]
+LessThan select_op(7);
+...
+
+// Determine temporary device storage requirements
+void     *d_temp_storage = nullptr;
+size_t   temp_storage_bytes = 0;
+cub::DeviceSelect::If(
+  d_temp_storage, temp_storage_bytes,
+  d_in, d_out, d_num_selected_out, num_items, select_op);
+
+// Allocate temporary storage
+cudaMalloc(&d_temp_storage, temp_storage_bytes);
+
+// Run selection
+cub::DeviceSelect::If(
+  d_temp_storage, temp_storage_bytes,
+  d_in, d_out, d_num_selected_out, num_items, select_op);
+
+// d_out                 <-- [0, 2, 3, 5, 2]
+// d_num_selected_out    <-- [5]
+```
+
+</Tab>
+<Tab title="Partial tile">
+
+Uses the `select_op` functor to selectively compact items in `d_data`. The total number of items selected is written to `d_num_selected_out`.
+
+<CodeBlock links={{"DeviceSelect": "/library/api/cub::DeviceSelect"}}>
+```cpp showLineNumbers={false}
+template <typename IteratorT, typename NumSelectedIteratorT, typename SelectOp>
+static cudaError_t cub::DeviceSelect::If(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    IteratorT d_data,
+    NumSelectedIteratorT d_num_selected_out,
+    ::cuda::std::int64_t num_items,
+    SelectOp select_op,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+| Copies of the selected items are compacted in `d_data` and maintain | their original relative ordering.
+@devicestorage
+</Note>
+
+**Template parameters**
+
+<ParamField path="IteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading and writing items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="NumSelectedIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the number of items selected (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="SelectOp" type="typename">
+**[inferred]** Selection operator type having member `bool operator()(const T &a)`
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_data" type="IteratorT">
+Pointer to the sequence of data items
+</ParamField>
+
+<ParamField path="d_num_selected_out" type="NumSelectedIteratorT">
+Pointer to the output total number of items selected
+</ParamField>
+
+<ParamField path="num_items" type="::cuda::std::int64_t">
+Total number of input items (i.e., length of `d_data`)
+</ParamField>
+
+<ParamField path="select_op" type="SelectOp">
+Unary selection operator
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the compaction of items selected from an `int` device vector.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/device/device_select.cuh>
+
+// Functor type for selecting values less than some criteria
+struct LessThan
+{
+    int compare;
+
+    __host__ __device__ __forceinline__
+    LessThan(int compare) : compare(compare) {}
+
+    __host__ __device__ __forceinline__
+    bool operator()(const int &a) const {
+        return (a < compare);
+    }
+};
+
+// Declare, allocate, and initialize device-accessible pointers
+// for input and output
+int      num_items;              // e.g., 8
+int      *d_data;                // e.g., [0, 2, 3, 9, 5, 2, 81, 8]
+int      *d_num_selected_out;    // e.g., [ ]
+LessThan select_op(7);
+...
+
+// Determine temporary device storage requirements
+void     *d_temp_storage = nullptr;
+size_t   temp_storage_bytes = 0;
+cub::DeviceSelect::If(
+  d_temp_storage, temp_storage_bytes,
+  d_data, d_num_selected_out, num_items, select_op);
+
+// Allocate temporary storage
+cudaMalloc(&d_temp_storage, temp_storage_bytes);
+
+// Run selection
+cub::DeviceSelect::If(
+  d_temp_storage, temp_storage_bytes,
+  d_data, d_num_selected_out, num_items, select_op);
+
+// d_data                <-- [0, 2, 3, 5, 2]
+// d_num_selected_out    <-- [5]
+```
+
+</Tab>
+</Tabs>
+
+### FlaggedIf <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<Tabs>
+<Tab title="Partial tile">
+
+Uses the `select_op` functor applied to `d_flags` to selectively copy the corresponding items from `d_in` into `d_out`. The total number of items selected is written to `d_num_selected_out`.
+
+<CodeBlock links={{"DeviceSelect": "/library/api/cub::DeviceSelect"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT,
+          typename FlagIterator,
+          typename OutputIteratorT,
+          typename NumSelectedIteratorT,
+          typename SelectOp>
+static cudaError_t cub::DeviceSelect::FlaggedIf(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    FlagIterator d_flags,
+    OutputIteratorT d_out,
+    NumSelectedIteratorT d_num_selected_out,
+    ::cuda::std::int64_t num_items,
+    SelectOp select_op,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+The expression `select_op(flag)` must be convertible to `bool`, where the type of `flag` corresponds to the value type of `FlagIterator`.
+Copies of the selected items are compacted into `d_out` and maintain their original relative ordering.
+| The range `[d_out, d_out + *d_num_selected_out)` shall not overlap | `[d_in, d_in + num_items)` nor `d_num_selected_out` in any way.
+@devicestorage
+</Note>
+
+**Template parameters**
+
+<ParamField path="InputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="FlagIterator" type="typename">
+**[inferred]** Random-access input iterator type for reading selection flags (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+**[inferred]** Random-access output iterator type for writing selected items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="NumSelectedIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the number of items selected (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="SelectOp" type="typename">
+**[inferred]** Selection operator type having member `bool operator()(const T &a)`
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_in" type="InputIteratorT">
+Pointer to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_flags" type="FlagIterator">
+Pointer to the input sequence of selection flags
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Pointer to the output sequence of selected data items
+</ParamField>
+
+<ParamField path="d_num_selected_out" type="NumSelectedIteratorT">
+Pointer to the output total number of items selected (i.e., length of `d_out`)
+</ParamField>
+
+<ParamField path="num_items" type="::cuda::std::int64_t">
+Total number of input items (i.e., length of `d_in`)
+</ParamField>
+
+<ParamField path="select_op" type="SelectOp">
+Unary selection operator
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+</Tab>
+<Tab title="Partial tile">
+
+Uses the `select_op` functor applied to `d_flags` to selectively compact the corresponding items in `d_data`. The total number of items selected is written to `d_num_selected_out`.
+
+<CodeBlock links={{"DeviceSelect": "/library/api/cub::DeviceSelect"}}>
+```cpp showLineNumbers={false}
+template <typename IteratorT,
+          typename FlagIterator,
+          typename NumSelectedIteratorT,
+          typename SelectOp>
+static cudaError_t cub::DeviceSelect::FlaggedIf(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    IteratorT d_data,
+    FlagIterator d_flags,
+    NumSelectedIteratorT d_num_selected_out,
+    ::cuda::std::int64_t num_items,
+    SelectOp select_op,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+The expression `select_op(flag)` must be convertible to `bool`, where the type of `flag` corresponds to the value type of `FlagIterator`.
+Copies of the selected items are compacted in-place and maintain their original relative ordering.
+| The `d_data` may equal `d_flags`. The range `[d_data, d_data + num_items)` shall not overlap | `[d_flags, d_flags + num_items)` in any other way.
+@devicestorage
+</Note>
+
+**Template parameters**
+
+<ParamField path="IteratorT" type="typename">
+**[inferred]** Random-access iterator type for reading and writing selected items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="FlagIterator" type="typename">
+**[inferred]** Random-access input iterator type for reading selection flags (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="NumSelectedIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the number of items selected (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="SelectOp" type="typename">
+**[inferred]** Selection operator type having member `bool operator()(const T &a)`
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_data" type="IteratorT">
+Pointer to the sequence of data items
+</ParamField>
+
+<ParamField path="d_flags" type="FlagIterator">
+Pointer to the input sequence of selection flags
+</ParamField>
+
+<ParamField path="d_num_selected_out" type="NumSelectedIteratorT">
+Pointer to the output total number of items selected
+</ParamField>
+
+<ParamField path="num_items" type="::cuda::std::int64_t">
+Total number of input items (i.e., length of `d_data`)
+</ParamField>
+
+<ParamField path="select_op" type="SelectOp">
+Unary selection operator
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### Unique <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Given an input sequence `d_in` having runs of consecutive equal-valued keys, only the first key from each run is selectively copied to `d_out`. The total number of items selected is written to `d_num_selected_out`.
+
+<CodeBlock links={{"DeviceSelect": "/library/api/cub::DeviceSelect"}}>
+```cpp showLineNumbers={false}
+template <typename InputIteratorT, typename OutputIteratorT, typename NumSelectedIteratorT>
+static cudaError_t cub::DeviceSelect::Unique(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    InputIteratorT d_in,
+    OutputIteratorT d_out,
+    NumSelectedIteratorT d_num_selected_out,
+    ::cuda::std::int64_t num_items,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+The `==` equality operator is used to determine whether keys are equivalent
+Copies of the selected items are compacted into `d_out` and maintain their original relative ordering.
+| The range `[d_out, d_out + *d_num_selected_out)` shall not overlap | `[d_in, d_in + num_items)` nor `d_num_selected_out` in any way.
+@devicestorage
+</Note>
+
+**Template parameters**
+
+<ParamField path="InputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="OutputIteratorT" type="typename">
+**[inferred]** Random-access output iterator type for writing selected items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="NumSelectedIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the number of items selected (may be a simple pointer type)
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_in" type="InputIteratorT">
+Pointer to the input sequence of data items
+</ParamField>
+
+<ParamField path="d_out" type="OutputIteratorT">
+Pointer to the output sequence of selected data items
+</ParamField>
+
+<ParamField path="d_num_selected_out" type="NumSelectedIteratorT">
+Pointer to the output total number of items selected (i.e., length of `d_out`)
+</ParamField>
+
+<ParamField path="num_items" type="::cuda::std::int64_t">
+Total number of input items (i.e., length of `d_in`)
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the compaction of items selected from an `int` device vector.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/device/device_select.cuh>
+
+// Declare, allocate, and initialize device-accessible pointers
+// for input and output
+int  num_items;              // e.g., 8
+int  *d_in;                  // e.g., [0, 2, 2, 9, 5, 5, 5, 8]
+int  *d_out;                 // e.g., [ ,  ,  ,  ,  ,  ,  ,  ]
+int  *d_num_selected_out;    // e.g., [ ]
+...
+
+// Determine temporary device storage requirements
+void     *d_temp_storage = nullptr;
+size_t   temp_storage_bytes = 0;
+cub::DeviceSelect::Unique(
+  d_temp_storage, temp_storage_bytes,
+  d_in, d_out, d_num_selected_out, num_items);
+
+// Allocate temporary storage
+cudaMalloc(&d_temp_storage, temp_storage_bytes);
+
+// Run selection
+cub::DeviceSelect::Unique(
+  d_temp_storage, temp_storage_bytes,
+  d_in, d_out, d_num_selected_out, num_items);
+
+// d_out                 <-- [0, 2, 9, 5, 8]
+// d_num_selected_out    <-- [5]
+```
+
+### UniqueByKey <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<Tabs>
+<Tab title="Partial tile">
+
+Given an input sequence `d_keys_in` and `d_values_in` with runs of key-value pairs with consecutive equal-valued keys, only the first key and its value from each run is selectively copied to `d_keys_out` and `d_values_out`. The total number of items selected is written to `d_num_selected_out`.
+
+<CodeBlock links={{"DeviceSelect": "/library/api/cub::DeviceSelect"}}>
+```cpp showLineNumbers={false}
+template <typename KeyInputIteratorT,
+          typename ValueInputIteratorT,
+          typename KeyOutputIteratorT,
+          typename ValueOutputIteratorT,
+          typename NumSelectedIteratorT,
+          typename NumItemsT,
+          typename EqualityOpT>
+static ::cuda::std::enable_if_t<!::cuda::std::is_convertible_v<EqualityOpT, cudaStream_t>, cudaError_t> cub::DeviceSelect::UniqueByKey(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyInputIteratorT d_keys_in,
+    ValueInputIteratorT d_values_in,
+    KeyOutputIteratorT d_keys_out,
+    ValueOutputIteratorT d_values_out,
+    NumSelectedIteratorT d_num_selected_out,
+    NumItemsT num_items,
+    EqualityOpT equality_op,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+The user-provided equality operator, `equality_op`, is used to determine whether keys are equivalent
+Copies of the selected items are compacted into `d_out` and maintain their original relative ordering.
+In-place operations are not supported. There must be no overlap between any of the provided ranges:
+`[d_keys_in, d_keys_in + num_items)`
+`[d_keys_out, d_keys_out + *d_num_selected_out)`
+`[d_values_in, d_values_in + num_items)`
+`[d_values_out, d_values_out + *d_num_selected_out)`
+`[d_num_selected_out, d_num_selected_out + 1)`
+@devicestorage
+</Note>
+
+**Template parameters**
+
+<ParamField path="KeyInputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input keys (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="ValueInputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input values (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="KeyOutputIteratorT" type="typename">
+**[inferred]** Random-access output iterator type for writing selected keys (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="ValueOutputIteratorT" type="typename">
+**[inferred]** Random-access output iterator type for writing selected values (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="NumSelectedIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the number of items selected (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="NumItemsT" type="typename">
+**[inferred]** Type of num_items
+</ParamField>
+
+<ParamField path="EqualityOpT" type="typename">
+**[inferred]** Type of equality_op
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_keys_in" type="KeyInputIteratorT">
+Pointer to the input sequence of keys
+</ParamField>
+
+<ParamField path="d_values_in" type="ValueInputIteratorT">
+Pointer to the input sequence of values
+</ParamField>
+
+<ParamField path="d_keys_out" type="KeyOutputIteratorT">
+Pointer to the output sequence of selected keys
+</ParamField>
+
+<ParamField path="d_values_out" type="ValueOutputIteratorT">
+Pointer to the output sequence of selected values
+</ParamField>
+
+<ParamField path="d_num_selected_out" type="NumSelectedIteratorT">
+Pointer to the total number of items selected (i.e., length of `d_keys_out` or `d_values_out`)
+</ParamField>
+
+<ParamField path="num_items" type="NumItemsT">
+Total number of input items (i.e., length of `d_keys_in` or `d_values_in`)
+</ParamField>
+
+<ParamField path="equality_op" type="EqualityOpT">
+Binary predicate to determine equality
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the compaction of items selected from an `int` device vector.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/device/device_select.cuh>
+
+// Declare, allocate, and initialize device-accessible pointers
+// for input and output
+int  num_items;              // e.g., 8
+int  *d_keys_in;             // e.g., [0, 2, 2, 9, 5, 5, 5, 8]
+int  *d_values_in;           // e.g., [1, 2, 3, 4, 5, 6, 7, 8]
+int  *d_keys_out;            // e.g., [ ,  ,  ,  ,  ,  ,  ,  ]
+int  *d_values_out;          // e.g., [ ,  ,  ,  ,  ,  ,  ,  ]
+int  *d_num_selected_out;    // e.g., [ ]
+...
+
+// Determine temporary device storage requirements
+void     *d_temp_storage = nullptr;
+size_t   temp_storage_bytes = 0;
+cub::DeviceSelect::UniqueByKey(
+  d_temp_storage, temp_storage_bytes,
+  d_keys_in, d_values_in,
+  d_keys_out, d_values_out, d_num_selected_out, num_items);
+
+// Allocate temporary storage
+cudaMalloc(&d_temp_storage, temp_storage_bytes);
+
+// Run selection
+cub::DeviceSelect::UniqueByKey(
+  d_temp_storage, temp_storage_bytes,
+  d_keys_in, d_values_in,
+  d_keys_out, d_values_out, d_num_selected_out, num_items);
+
+// d_keys_out            <-- [0, 2, 9, 5, 8]
+// d_values_out          <-- [1, 2, 4, 5, 8]
+// d_num_selected_out    <-- [5]
+```
+
+</Tab>
+<Tab title="Partial tile">
+
+Given an input sequence `d_keys_in` and `d_values_in` with runs of key-value pairs with consecutive equal-valued keys, only the first key and its value from each run is selectively copied to `d_keys_out` and `d_values_out`. The total number of items selected is written to `d_num_selected_out`.
+
+<CodeBlock links={{"DeviceSelect": "/library/api/cub::DeviceSelect"}}>
+```cpp showLineNumbers={false}
+template <typename KeyInputIteratorT,
+          typename ValueInputIteratorT,
+          typename KeyOutputIteratorT,
+          typename ValueOutputIteratorT,
+          typename NumSelectedIteratorT,
+          typename NumItemsT>
+static cudaError_t cub::DeviceSelect::UniqueByKey(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyInputIteratorT d_keys_in,
+    ValueInputIteratorT d_values_in,
+    KeyOutputIteratorT d_keys_out,
+    ValueOutputIteratorT d_values_out,
+    NumSelectedIteratorT d_num_selected_out,
+    NumItemsT num_items,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+The `==` equality operator is used to determine whether keys are equivalent
+Copies of the selected items are compacted into `d_out` and maintain their original relative ordering.
+In-place operations are not supported. There must be no overlap between any of the provided ranges:
+`[d_keys_in, d_keys_in + num_items)`
+`[d_keys_out, d_keys_out + *d_num_selected_out)`
+`[d_values_in, d_values_in + num_items)`
+`[d_values_out, d_values_out + *d_num_selected_out)`
+`[d_num_selected_out, d_num_selected_out + 1)`
+@devicestorage
+</Note>
+
+**Template parameters**
+
+<ParamField path="KeyInputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input keys (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="ValueInputIteratorT" type="typename">
+**[inferred]** Random-access input iterator type for reading input values (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="KeyOutputIteratorT" type="typename">
+**[inferred]** Random-access output iterator type for writing selected keys (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="ValueOutputIteratorT" type="typename">
+**[inferred]** Random-access output iterator type for writing selected values (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="NumSelectedIteratorT" type="typename">
+**[inferred]** Output iterator type for recording the number of items selected (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="NumItemsT" type="typename">
+**[inferred]** Type of num_items
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_keys_in" type="KeyInputIteratorT">
+Pointer to the input sequence of keys
+</ParamField>
+
+<ParamField path="d_values_in" type="ValueInputIteratorT">
+Pointer to the input sequence of values
+</ParamField>
+
+<ParamField path="d_keys_out" type="KeyOutputIteratorT">
+Pointer to the output sequence of selected keys
+</ParamField>
+
+<ParamField path="d_values_out" type="ValueOutputIteratorT">
+Pointer to the output sequence of selected values
+</ParamField>
+
+<ParamField path="d_num_selected_out" type="NumSelectedIteratorT">
+Pointer to the total number of items selected (i.e., length of `d_keys_out` or `d_values_out`)
+</ParamField>
+
+<ParamField path="num_items" type="NumItemsT">
+Total number of input items (i.e., length of `d_keys_in` or `d_values_in`)
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+Embed:rst:leading-asterisk 
+//!   **[optional]** CUDA stream to launch kernels within. Default is stream\ :sub:`0`.
+//!
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the compaction of items selected from an `int` device vector.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/device/device_select.cuh>
+
+// Declare, allocate, and initialize device-accessible pointers
+// for input and output
+int  num_items;              // e.g., 8
+int  *d_keys_in;             // e.g., [0, 2, 2, 9, 5, 5, 5, 8]
+int  *d_values_in;           // e.g., [1, 2, 3, 4, 5, 6, 7, 8]
+int  *d_keys_out;            // e.g., [ ,  ,  ,  ,  ,  ,  ,  ]
+int  *d_values_out;          // e.g., [ ,  ,  ,  ,  ,  ,  ,  ]
+int  *d_num_selected_out;    // e.g., [ ]
+...
+
+// Determine temporary device storage requirements
+void     *d_temp_storage = nullptr;
+size_t   temp_storage_bytes = 0;
+cub::DeviceSelect::UniqueByKey(
+  d_temp_storage, temp_storage_bytes,
+  d_keys_in, d_values_in,
+  d_keys_out, d_values_out, d_num_selected_out, num_items);
+
+// Allocate temporary storage
+cudaMalloc(&d_temp_storage, temp_storage_bytes);
+
+// Run selection
+cub::DeviceSelect::UniqueByKey(
+  d_temp_storage, temp_storage_bytes,
+  d_keys_in, d_values_in,
+  d_keys_out, d_values_out, d_num_selected_out, num_items);
+
+// d_keys_out            <-- [0, 2, 9, 5, 8]
+// d_values_out          <-- [1, 2, 4, 5, 8]
+// d_num_selected_out    <-- [5]
+```
+
+</Tab>
+</Tabs>

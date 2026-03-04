@@ -1,0 +1,284 @@
+---
+title: cub::BlockRadixRank
+description: ""
+---
+
+BlockRadixRank provides operations for ranking unsigned integer types within a CUDA thread block.
+
+## Performance considerations
+
+- Performance is sensitive to the degree of data movement across the block.
+
+Suppose the set of input `keys` across the block of threads is `{ [16,10], [9,11] }`. The extractor will rank only the lowest 5 bits: `{ [16,10], [9,11] }` (bits 0-4). The corresponding output `ranks` in those threads will be `{ [3,1], [0,2] }`.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="BlockDimX" type="int">
+The thread block length in threads along the X dimension
+</ParamField>
+
+<ParamField path="RadixBits" type="int">
+The number of radix bits per digit place
+</ParamField>
+
+<ParamField path="IsDescending" type="bool">
+Whether or not the sorted-order is high-to-low
+</ParamField>
+
+<ParamField path="MemoizeOuterScan" type="bool" default="true">
+**[optional]** Whether or not to buffer outer raking scan partials to incur fewer shared memory reads at the expense of higher register pressure (default: true for architectures SM35 and newer, false otherwise). See [`BlockScanAlgorithm::BLOCK_SCAN_RAKING_MEMOIZE`](/library/api/cub::BLOCK_SCAN_RAKING_MEMOIZE) for more details.
+</ParamField>
+
+<ParamField path="InnerScanAlgorithm" type="BlockScanAlgorithm" default="BLOCK_SCAN_WARP_SCANS">
+**[optional]** The [cub::BlockScanAlgorithm](/library/api/cub::BlockScanAlgorithm) algorithm to use (default: [cub::BLOCK_SCAN_WARP_SCANS](/library/api/cub::BLOCK_SCAN_WARP_SCANS))
+</ParamField>
+
+<ParamField path="SMemConfig" type="cudaSharedMemConfig" default="cudaSharedMemBankSizeFourByte">
+**[optional]** Shared memory bank mode (default: `cudaSharedMemBankSizeFourByte`)
+</ParamField>
+
+<ParamField path="BlockDimY" type="int" default="1">
+**[optional]** The thread block length in threads along the Y dimension (default: 1)
+</ParamField>
+
+<ParamField path="BlockDimZ" type="int" default="1">
+**[optional]** The thread block length in threads along the Z dimension (default: 1)
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Collective constructors
+
+### BlockRadixRank <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+Collective constructor using a private static allocation of shared memory as temporary storage.
+
+<CodeBlock links={{"BlockRadixRank": "/library/api/cub::BlockRadixRank"}}>
+```cpp showLineNumbers={false}
+cub::BlockRadixRank<BlockDimX, RadixBits, IsDescending, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::BlockRadixRank()
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="With TempStorage">
+
+Collective constructor using the specified memory allocation as temporary storage.
+
+<CodeBlock links={{"BlockRadixRank": "/library/api/cub::BlockRadixRank", "TempStorage": "/library/api/cub::BlockRadixRank::TempStorage"}}>
+```cpp showLineNumbers={false}
+cub::BlockRadixRank<BlockDimX, RadixBits, IsDescending, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::BlockRadixRank(
+    TempStorage &temp_storage
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="temp_storage" type="TempStorage &">
+Reference to memory allocation having layout type [TempStorage](/library/api/cub::BlockRadixRank::TempStorage)
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Raking
+
+### RankKeys <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Rank keys">
+
+Rank keys.
+
+<CodeBlock links={{"BlockRadixRank": "/library/api/cub::BlockRadixRank"}}>
+```cpp showLineNumbers={false}
+template <typename UnsignedBits, int KEYS_PER_THREAD, typename DigitExtractorT>
+void cub::BlockRadixRank<BlockDimX, RadixBits, IsDescending, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::RankKeys(
+    UnsignedBits (&keys)[KEYS_PER_THREAD],
+    int (&ranks)[KEYS_PER_THREAD],
+    DigitExtractorT digit_extractor
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="keys" type="UnsignedBits(&)[KEYS_PER_THREAD]">
+Keys for this tile
+</ParamField>
+
+<ParamField path="ranks" type="int(&)[KEYS_PER_THREAD]">
+For each key, the local rank within the tile
+</ParamField>
+
+<ParamField path="digit_extractor" type="DigitExtractorT">
+The digit extractor
+</ParamField>
+
+</Tab>
+<Tab title="Rank keys">
+
+Rank keys.
+
+For the lower `RADIX_DIGITS` threads, digit counts for each digit are provided for the corresponding thread.
+
+<CodeBlock links={{"BlockRadixRank": "/library/api/cub::BlockRadixRank"}}>
+```cpp showLineNumbers={false}
+template <typename UnsignedBits, int KEYS_PER_THREAD, typename DigitExtractorT>
+void cub::BlockRadixRank<BlockDimX, RadixBits, IsDescending, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::RankKeys(
+    UnsignedBits (&keys)[KEYS_PER_THREAD],
+    int (&ranks)[KEYS_PER_THREAD],
+    DigitExtractorT digit_extractor,
+    int (&exclusive_digit_prefix)[BINS_TRACKED_PER_THREAD]
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="keys" type="UnsignedBits(&)[KEYS_PER_THREAD]">
+Keys for this tile
+</ParamField>
+
+<ParamField path="ranks" type="int(&)[KEYS_PER_THREAD]">
+For each key, the local rank within the tile (out parameter)
+</ParamField>
+
+<ParamField path="digit_extractor" type="DigitExtractorT">
+The digit extractor
+</ParamField>
+
+<ParamField path="exclusive_digit_prefix" type="int(&)[BINS_TRACKED_PER_THREAD]">
+The exclusive prefix sum for the digits [(threadIdx.x * BINS_TRACKED_PER_THREAD) ... (threadIdx.x * BINS_TRACKED_PER_THREAD) + BINS_TRACKED_PER_THREAD - 1]
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Utility methods
+
+### PrivateStorage <Badge intent="note" minimal>inline</Badge>
+
+Internal storage allocator.
+
+<CodeBlock links={{"BlockRadixRank": "/library/api/cub::BlockRadixRank"}}>
+```cpp showLineNumbers={false}
+_TempStorage & cub::BlockRadixRank<BlockDimX, RadixBits, IsDescending, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::PrivateStorage()
+```
+</CodeBlock>
+
+### Upsweep <Badge intent="note" minimal>inline</Badge>
+
+Performs upsweep raking reduction, returning the aggregate.
+
+<CodeBlock links={{"BlockRadixRank": "/library/api/cub::BlockRadixRank"}}>
+```cpp showLineNumbers={false}
+PackedCounter cub::BlockRadixRank<BlockDimX, RadixBits, IsDescending, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::Upsweep()
+```
+</CodeBlock>
+
+### ExclusiveDownsweep <Badge intent="note" minimal>inline</Badge>
+
+Performs exclusive downsweep raking scan.
+
+<CodeBlock links={{"BlockRadixRank": "/library/api/cub::BlockRadixRank"}}>
+```cpp showLineNumbers={false}
+void cub::BlockRadixRank<BlockDimX, RadixBits, IsDescending, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::ExclusiveDownsweep(
+    PackedCounter raking_partial
+)
+```
+</CodeBlock>
+
+### ResetCounters <Badge intent="note" minimal>inline</Badge>
+
+Reset shared memory digit counters.
+
+<CodeBlock links={{"BlockRadixRank": "/library/api/cub::BlockRadixRank"}}>
+```cpp showLineNumbers={false}
+void cub::BlockRadixRank<BlockDimX, RadixBits, IsDescending, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::ResetCounters()
+```
+</CodeBlock>
+
+### ScanCounters <Badge intent="note" minimal>inline</Badge>
+
+Scan shared memory digit counters.
+
+<CodeBlock links={{"BlockRadixRank": "/library/api/cub::BlockRadixRank"}}>
+```cpp showLineNumbers={false}
+void cub::BlockRadixRank<BlockDimX, RadixBits, IsDescending, MemoizeOuterScan, InnerScanAlgorithm, SMemConfig, BlockDimY, BlockDimZ>::ScanCounters()
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `DigitCounter` | `unsigned short` | |
+| `PackedCounter` | `::cuda::std::_If< SMemConfig==cudaSharedMemBankSizeEightByte, unsigned long long, unsigned int >` | |
+| `BlockScan` | `BlockScan< PackedCounter, BlockDimX, InnerScanAlgorithm, BlockDimY, BlockDimZ >` | [BlockScan](/library/api/cub::BlockRadixRank::BlockScan) type. |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `max_tile_size` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `DigitCounter` | |
+| `BLOCK_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `RADIX_DIGITS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `LOG_WARP_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `WARP_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `WARPS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `BYTES_PER_COUNTER` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `LOG_BYTES_PER_COUNTER` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `PACKING_RATIO` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `LOG_PACKING_RATIO` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `LOG_COUNTER_LANES` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `COUNTER_LANES` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `PADDED_COUNTER_LANES` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `RAKING_SEGMENT` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `BINS_TRACKED_PER_THREAD` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | Number of bin-starting offsets tracked per thread. |
+| `temp_storage` | `_TempStorage &` | Shared storage reference. |
+| `linear_tid` | `unsigned int` | Linear thread-id. |
+| `cached_segment` | `PackedCounter` | Copy of raking segment, promoted to registers. |
+
+---
+
+## Inner classes
+
+### PrefixCallBack
+
+<CodeBlock links={{"BlockRadixRank": "/library/api/cub::BlockRadixRank"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockRadixRank::PrefixCallBack
+```
+</CodeBlock>
+
+Block-scan prefix callback.
+
+### TempStorage
+
+<CodeBlock links={{"BlockRadixRank": "/library/api/cub::BlockRadixRank"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockRadixRank::TempStorage
+```
+</CodeBlock>
+
+The operations exposed by [BlockScan](/library/api/cub::BlockRadixRank::BlockScan) require a temporary memory allocation of this nested type for thread communication. This opaque storage can be allocated directly using the `__shared__` keyword. Alternatively, it can be aliased to externally allocated memory (shared or global) or `union`'d with other storage allocation types to facilitate memory reuse.
+
+**Inherits from:** `Uninitialized< _TempStorage >` (public)

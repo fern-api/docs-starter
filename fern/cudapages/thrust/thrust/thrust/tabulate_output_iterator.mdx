@@ -1,0 +1,149 @@
+---
+title: thrust::tabulate_output_iterator
+description: "[`tabulate_output_iterator`](/library/api/thrust::tabulate_output_iterator) is a special kind of output iterator which, whenever a value is assigned to a dereferenced iterator, calls the given callable with the index that corresponds to the offset of the dereferenced iterator and the assigned value."
+---
+
+`tabulate_output_iterator` is a special kind of output iterator which, whenever a value is assigned to a dereferenced iterator, calls the given callable with the index that corresponds to the offset of the dereferenced iterator and the assigned value.
+
+The following code snippet demonstrated how to create a `tabulate_output_iterator` which prints the index and the assigned value.
+
+```cpp showLineNumbers={false}
+#include <thrust/tabulate_output_iterator.h>
+```
+
+**See also:**
+make_tabulate_output_iterator
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <thrust/iterator/tabulate_output_iterator.h>
+
+// note: functor inherits form binary function
+struct print_op
+{
+  __host__ __device__
+  void operator()(int index, float value) const
+  {
+    printf("%d: %f\n", index, value);
+  }
+};
+
+int main()
+{
+  auto tabulate_it = thrust::make_tabulate_output_iterator(print_op{});
+
+  tabulate_it[0] =  1.0f;    // prints: 0: 1.0
+  tabulate_it[1] =  3.0f;    // prints: 1: 3.0
+  tabulate_it[9] =  5.0f;    // prints: 9: 5.0
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="BinaryFunction" type="typename">
+</ParamField>
+
+<ParamField path="System" type="typename" default="use_default">
+</ParamField>
+
+<ParamField path="DifferenceT" type="typename" default="ptrdiff_t">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `thrust::iterator_adaptor< tabulate_output_iterator< BinaryFunction, System, DifferenceT >, counting_iterator< DifferenceT >, void, System, use_default, tabulate_output_iterator_proxy< BinaryFunction, DifferenceT > >` (public)
+
+---
+
+## Constructors
+
+### tabulate_output_iterator
+
+<Tabs>
+<Tab title="Default">
+
+<CodeBlock links={{"tabulate_output_iterator": "/library/api/thrust::tabulate_output_iterator"}}>
+```cpp showLineNumbers={false}
+thrust::tabulate_output_iterator<BinaryFunction, System, DifferenceT>::tabulate_output_iterator() = default
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Overload 2">
+
+<Badge intent="note" minimal>inline</Badge>
+
+This constructor takes as argument a `BinaryFunction` and copies it to a new `tabulate_output_iterator`.
+
+<CodeBlock links={{"tabulate_output_iterator": "/library/api/thrust::tabulate_output_iterator"}}>
+```cpp showLineNumbers={false}
+thrust::tabulate_output_iterator<BinaryFunction, System, DifferenceT>::tabulate_output_iterator(
+    BinaryFunction fun
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="fun" type="BinaryFunction">
+A `BinaryFunction` called whenever a value is assigned to this `tabulate_output_iterator`.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### base <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"tabulate_output_iterator": "/library/api/thrust::tabulate_output_iterator", "counting_iterator": "/library/api/thrust::counting_iterator", "iterator_adaptor": "/library/api/thrust::iterator_adaptor"}}>
+```cpp showLineNumbers={false}
+counting_iterator<DifferenceT> const & thrust::iterator_adaptor<tabulate_output_iterator<BinaryFunction, System, DifferenceT>, counting_iterator<DifferenceT>, void, System, use_default, tabulate_output_iterator_proxy<BinaryFunction, DifferenceT>, use_default>::base() const
+```
+</CodeBlock>
+
+**Returns:** A `const` reference to the `Base` iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) adapts.
+
+### base_reference <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+<CodeBlock links={{"tabulate_output_iterator": "/library/api/thrust::tabulate_output_iterator", "counting_iterator": "/library/api/thrust::counting_iterator", "iterator_adaptor": "/library/api/thrust::iterator_adaptor"}}>
+```cpp showLineNumbers={false}
+counting_iterator<DifferenceT> & thrust::iterator_adaptor<tabulate_output_iterator<BinaryFunction, System, DifferenceT>, counting_iterator<DifferenceT>, void, System, use_default, tabulate_output_iterator_proxy<BinaryFunction, DifferenceT>, use_default>::base_reference()
+```
+</CodeBlock>
+
+**Returns:** A mutable reference to the `Base` iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) adapts.
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"tabulate_output_iterator": "/library/api/thrust::tabulate_output_iterator", "counting_iterator": "/library/api/thrust::counting_iterator", "iterator_adaptor": "/library/api/thrust::iterator_adaptor"}}>
+```cpp showLineNumbers={false}
+counting_iterator<DifferenceT> const & thrust::iterator_adaptor<tabulate_output_iterator<BinaryFunction, System, DifferenceT>, counting_iterator<DifferenceT>, void, System, use_default, tabulate_output_iterator_proxy<BinaryFunction, DifferenceT>, use_default>::base_reference() const
+```
+</CodeBlock>
+
+**Returns:** A `const` reference to the `Base` iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) adapts.
+
+</Tab>
+</Tabs>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `base_type` | `counting_iterator< DifferenceT >` | The type of iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor)`'s` `adapts`. |

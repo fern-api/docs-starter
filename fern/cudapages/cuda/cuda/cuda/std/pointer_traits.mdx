@@ -1,0 +1,56 @@
+---
+title: "cuda::std::pointer_traits<::cuda::heterogeneous_iterator< _Tp, _Properties... > >"
+description: ""
+---
+
+```cpp showLineNumbers={false}
+#include <cuda/std/heterogeneous_iterator.h>
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="_Tp" type="class">
+</ParamField>
+
+<ParamField path="_Properties..." type="class...">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Static methods
+
+### to_address <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Retrieve the address of the element pointed at by an [heterogeneous_iterator](/libcudacxx/api/cuda::heterogeneous_iterator).
+
+<CodeBlock links={{"heterogeneous_iterator< _Tp, _Properties... > >": "/libcudacxx/api/cuda::std::pointer_traits%3C::cuda::heterogeneous_iterator%3C _Tp, _Properties... %3E %3E"}}>
+```cpp showLineNumbers={false}
+static constexpr element_type * cuda::std::pointer_traits<::cuda::heterogeneous_iterator<_Tp, _Properties...>>::to_address(
+    const pointer __iter
+) noexcept
+```
+</CodeBlock>
+
+**Returns:** A pointer to the element pointed to by the [heterogeneous_iterator](/libcudacxx/api/cuda::heterogeneous_iterator)
+
+**Parameters**
+
+<ParamField path="__iter" type="const pointer">
+A [heterogeneous_iterator](/libcudacxx/api/cuda::heterogeneous_iterator).
+</ParamField>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `pointer` | `::cuda::heterogeneous_iterator< _Tp, _Properties... >` |
+| `element_type` | `_Tp` |
+| `difference_type` | `::cuda::std::ptrdiff_t` |

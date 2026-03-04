@@ -1,0 +1,38 @@
+---
+title: cub::AgentAdjacentDifferencePolicy
+description: ""
+---
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="BlockThreads" type="int">
+</ParamField>
+
+<ParamField path="ItemsPerThread" type="int" default="1">
+</ParamField>
+
+<ParamField path="LoadAlgorithm" type="cub::BlockLoadAlgorithm" default="cub::BLOCK_LOAD_DIRECT">
+</ParamField>
+
+<ParamField path="LoadModifier" type="cub::CacheLoadModifier" default="cub::LOAD_LDG">
+</ParamField>
+
+<ParamField path="StoreAlgorithm" type="cub::BlockStoreAlgorithm" default="cub::BLOCK_STORE_DIRECT">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `BLOCK_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `ITEMS_PER_THREAD` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `ITEMS_PER_TILE` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `LOAD_ALGORITHM` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `cub::BlockLoadAlgorithm` | |
+| `LOAD_MODIFIER` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `cub::CacheLoadModifier` | |
+| `STORE_ALGORITHM` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `cub::BlockStoreAlgorithm` | |

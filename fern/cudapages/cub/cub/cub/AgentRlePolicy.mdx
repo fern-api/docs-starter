@@ -1,0 +1,53 @@
+---
+title: cub::AgentRlePolicy
+description: "Parameterizable tuning policy type for AgentRle."
+---
+
+Parameterizable tuning policy type for AgentRle.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="BlockThreads" type="int">
+Threads per thread block
+</ParamField>
+
+<ParamField path="ItemsPerThread" type="int">
+Items per thread (per tile of input)
+</ParamField>
+
+<ParamField path="LoadAlgorithm" type="BlockLoadAlgorithm">
+The [BlockLoad](/library/api/cub::_block_load) algorithm to use
+</ParamField>
+
+<ParamField path="LoadModifier" type="CacheLoadModifier">
+Cache load modifier for reading input elements
+</ParamField>
+
+<ParamField path="StoreWarpTimeSlicing" type="bool">
+Whether or not only one warp's worth of shared memory should be allocated and time-sliced among block-warps during any store-related data transpositions (versus each warp having its own storage)
+</ParamField>
+
+<ParamField path="ScanAlgorithm" type="BlockScanAlgorithm">
+The [BlockScan](/library/api/cub::_block_scan) algorithm to use
+</ParamField>
+
+<ParamField path="DelayConstructorT" type="typename" default="detail::fixed_delay_constructor_t<350, 450>">
+Implementation detail, do not specify directly, requirements on the content of this type are subject to breaking change.
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `BLOCK_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | Threads per thread block. |
+| `ITEMS_PER_THREAD` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | Items per thread (per tile of input). |
+| `STORE_WARP_TIME_SLICING` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `bool` | Whether or not only one warp's worth of shared memory should be allocated and time-sliced among block-warps during any store-related data transpositions (versus each warp having its own storage). |
+| `LOAD_ALGORITHM` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `BlockLoadAlgorithm` | The [BlockLoad](/library/api/cub::_block_load) algorithm to use. |
+| `LOAD_MODIFIER` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `CacheLoadModifier` | Cache load modifier for reading input elements. |
+| `SCAN_ALGORITHM` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `BlockScanAlgorithm` | The [BlockScan](/library/api/cub::_block_scan) algorithm to use. |

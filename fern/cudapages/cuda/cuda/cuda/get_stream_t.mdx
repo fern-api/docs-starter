@@ -1,0 +1,92 @@
+---
+title: "cuda::get_stream_t"
+description: "[`get_stream`](/libcudacxx/api/cuda::get_stream) is a customization point object that queries a type `T` for an associated stream"
+---
+
+[`get_stream`](/libcudacxx/api/cuda::get_stream) is a customization point object that queries a type `T` for an associated stream
+
+```cpp showLineNumbers={false}
+#include <cuda/get_stream.h>
+```
+
+---
+
+## Methods
+
+### operator() <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<Tabs>
+<Tab title="Const">
+
+<CodeBlock links={{"get_stream_t": "/libcudacxx/api/cuda::get_stream_t", "stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+::cuda::stream_ref cuda::get_stream_t::operator()(
+    ::cudaStream_t __stream
+) const noexcept
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Const">
+
+<CodeBlock links={{"get_stream_t": "/libcudacxx/api/cuda::get_stream_t", "stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+template <class _Tp>
+::cuda::stream_ref cuda::get_stream_t::operator()(
+    const _Tp &__t
+) const noexcept(static_cast<::cuda::stream_ref >(__t))
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Const">
+
+<CodeBlock links={{"get_stream_t": "/libcudacxx/api/cuda::get_stream_t", "stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+template <class _Tp>
+::cuda::stream_ref cuda::get_stream_t::operator()(
+    const _Tp &__t
+) const noexcept(__t.stream())
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Const">
+
+<CodeBlock links={{"get_stream_t": "/libcudacxx/api/cuda::get_stream_t", "stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+template <class _Tp>
+::cuda::stream_ref cuda::get_stream_t::operator()(
+    const _Tp &__t
+) const noexcept(__t.get_stream())
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Const">
+
+<CodeBlock links={{"get_stream_t": "/libcudacxx/api/cuda::get_stream_t", "stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+template <class _Env>
+::cuda::stream_ref cuda::get_stream_t::operator()(
+    const _Env &__env
+) const noexcept
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Static methods
+
+### query <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<CodeBlock links={{"get_stream_t": "/libcudacxx/api/cuda::get_stream_t"}}>
+```cpp showLineNumbers={false}
+static constexpr bool cuda::get_stream_t::query(
+    ::cuda::std::execution::forwarding_query_t
+) noexcept
+```
+</CodeBlock>

@@ -1,0 +1,260 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/utils/json
+title: langchain_core.utils.json
+---
+
+Utilities for JSON.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_custom_parser`](#langchain_core-utils-json-_custom_parser) | Custom parser for multiline strings. |
+| [`_parse_json`](#langchain_core-utils-json-_parse_json) | Parse a JSON string, handling special characters and whitespace. |
+| [`_replace_new_line`](#langchain_core-utils-json-_replace_new_line) | Replace newline characters in a regex match with escaped sequences. |
+| [`parse_and_check_json_markdown`](#langchain_core-utils-json-parse_and_check_json_markdown) | Parse and check a JSON string from a Markdown string. |
+| [`parse_json_markdown`](#langchain_core-utils-json-parse_json_markdown) | Parse a JSON string from a Markdown string. |
+| [`parse_partial_json`](#langchain_core-utils-json-parse_partial_json) | Parse a JSON string that may be missing closing braces. |
+
+### Data
+
+[`_json_markdown_re`](#langchain_core-utils-json-_json_markdown_re)
+
+[`_json_strip_chars`](#langchain_core-utils-json-_json_strip_chars)
+
+### API
+
+<Anchor id="langchain_core-utils-json-_custom_parser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.json._custom_parser(
+    multiline_string: str | bytes | bytearray
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Custom parser for multiline strings.
+
+The LLM response for `action_input` may be a multiline string containing unescaped
+newlines, tabs or quotes. This function replaces those characters with their escaped
+counterparts. (newlines in JSON must be double-escaped: `\\n`).
+
+**Returns:** `str`
+
+The modified string with escaped newlines, tabs and quotes.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-json-_parse_json">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.json._parse_json(
+    json_str: str,
+    parser: collections.abc.Callable[[str], typing.Any] = parse_partial_json
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse a JSON string, handling special characters and whitespace.
+
+Strips whitespace, newlines, and backticks from the start and end of the string,
+then processes special characters before parsing.
+
+**Parameters:**
+
+<ParamField path="json_str" type="str">
+The JSON string to parse.
+</ParamField>
+
+<ParamField path="parser" type="Callable[[str], Any]" default="parse_partial_json">
+Optional custom parser function.
+</ParamField>
+
+**Returns:** `Any`
+
+Parsed JSON object.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-json-_replace_new_line">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.json._replace_new_line(
+    match: re.Match[str]
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Replace newline characters in a regex match with escaped sequences.
+
+**Parameters:**
+
+<ParamField path="match" type="re.Match[str]">
+Regex match object containing the string to process.
+</ParamField>
+
+**Returns:** `str`
+
+String with newlines, carriage returns, tabs, and quotes properly escaped.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-json-parse_and_check_json_markdown">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.json.parse_and_check_json_markdown(
+    text: str,
+    expected_keys: list[str]
+) -> dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse and check a JSON string from a Markdown string.
+
+Checks that it contains the expected keys.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The Markdown string.
+</ParamField>
+
+<ParamField path="expected_keys" type="list[str]">
+The expected keys in the JSON string.
+</ParamField>
+
+**Returns:** `dict`
+
+The parsed JSON object as a Python dictionary.
+
+**Raises:**
+
+- `OutputParserException`: If the JSON string is invalid or does not contain
+the expected keys.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-json-parse_json_markdown">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.json.parse_json_markdown(
+    json_string: str,
+    parser: collections.abc.Callable[[str], typing.Any] = parse_partial_json
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse a JSON string from a Markdown string.
+
+**Parameters:**
+
+<ParamField path="json_string" type="str">
+The Markdown string.
+</ParamField>
+
+<ParamField path="parser" type="Callable[[str], Any]" default="parse_partial_json">
+The parser to use.
+</ParamField>
+
+**Returns:** `Any`
+
+The parsed JSON object as a Python dictionary.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-json-parse_partial_json">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.json.parse_partial_json(
+    s: str,
+    strict: bool = False
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse a JSON string that may be missing closing braces.
+
+**Parameters:**
+
+<ParamField path="s" type="str">
+The JSON string to parse.
+</ParamField>
+
+<ParamField path="strict" type="bool" default="False">
+Whether to use strict parsing.
+</ParamField>
+
+**Returns:** `Any`
+
+The parsed JSON object as a Python dictionary.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-json-_json_markdown_re">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.json._json_markdown_re = re.compile('```(json)?(.*)', re.DOTALL)
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-json-_json_strip_chars">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.json._json_strip_chars = ' \n\r\t`'
+```
+
+</CodeBlock>
+</Anchor>
+

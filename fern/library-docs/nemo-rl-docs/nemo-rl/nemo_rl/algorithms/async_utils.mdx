@@ -1,0 +1,572 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/algorithms/async_utils
+title: nemo_rl.algorithms.async_utils
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`AsyncTrajectoryCollector`](#nemo_rl-algorithms-async_utils-AsyncTrajectoryCollector) | Collects trajectories asynchronously and adds them to replay buffer. |
+| [`ReplayBuffer`](#nemo_rl-algorithms-async_utils-ReplayBuffer) | Replay buffer storing per-prompt groups. |
+
+### Data
+
+[`TokenizerType`](#nemo_rl-algorithms-async_utils-TokenizerType)
+
+### API
+
+<Anchor id="nemo_rl-algorithms-async_utils-AsyncTrajectoryCollector">
+
+<CodeBlock links={{"nemo_rl.models.generation.interfaces.GenerationInterface":"/nemo-rl/nemo_rl/models/generation/interfaces#nemo_rl-models-generation-interfaces-GenerationInterface","nemo_rl.algorithms.async_utils.TokenizerType":"#nemo_rl-algorithms-async_utils-TokenizerType","nemo_rl.environments.interfaces.EnvironmentInterface":"/nemo-rl/nemo_rl/environments/interfaces#nemo_rl-environments-interfaces-EnvironmentInterface","nemo_rl.algorithms.grpo.MasterConfig":"/nemo-rl/nemo_rl/algorithms/grpo#nemo_rl-algorithms-grpo-MasterConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.algorithms.async_utils.AsyncTrajectoryCollector(
+    policy_generation: nemo_rl.models.generation.interfaces.GenerationInterface,
+    tokenizer: nemo_rl.algorithms.async_utils.TokenizerType,
+    task_to_env: dict[str, nemo_rl.environments.interfaces.EnvironmentInterface],
+    master_config: nemo_rl.algorithms.grpo.MasterConfig,
+    replay_buffer: typing.Any,
+    start_step: int = 0
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Collects trajectories asynchronously and adds them to replay buffer.
+
+
+<ParamField path="_generating_targets" type="set[int] = set()">
+</ParamField>
+
+<ParamField path="_generation_check_lock" type="Lock = _threading.Lock()">
+</ParamField>
+
+<ParamField path="_generation_limit_cleared" type="= _threading.Event()">
+</ParamField>
+
+<ParamField path="_inflight_sema" type="= _threading.Semaphore(max_inflight)">
+</ParamField>
+
+<ParamField path="_inflight_threads" type="set[Thread] = set()">
+</ParamField>
+
+<ParamField path="_manual_pause_cleared" type="= _threading.Event()">
+</ParamField>
+
+<ParamField path="_pg_lock" type="Lock = _threading.Lock()">
+</ParamField>
+
+<ParamField path="_refit_pause_cleared" type="= _threading.Event()">
+</ParamField>
+
+<ParamField path="_threads_lock" type="Lock = _threading.Lock()">
+</ParamField>
+
+<ParamField path="current_weight_version" type="int = start_step">
+</ParamField>
+
+<ParamField path="initial_weight_version" type="int = start_step">
+</ParamField>
+<Anchor id="nemo_rl-algorithms-async_utils-AsyncTrajectoryCollector-_calculate_target_weights">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.AsyncTrajectoryCollector._calculate_target_weights(
+    generation_weight_version: int
+) -> list[int]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Calculate target weight versions for given generation weight version.
+
+The list of versions returned enumerate the possible version a generation
+server can target. These versions are looped over to see what training
+step they can target. If all target versions are exhausted, this generation
+server will remain idle until the next weight update.
+
+Example:
+generation_weight_version = 10
+max_trajectory_age_steps = 4
+
+**Returns:** `list[int]`
+
+[11, 12, 13, 14]  # Meaning this generation server can create trajectories for training step 11, 12, 13, 14
+
+
+</Indent>
+<Anchor id="nemo_rl-algorithms-async_utils-AsyncTrajectoryCollector-_cleanup_finished_threads">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.AsyncTrajectoryCollector._cleanup_finished_threads() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-algorithms-async_utils-AsyncTrajectoryCollector-_collection_loop">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.AsyncTrajectoryCollector._collection_loop()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run the collection loop in background thread.
+
+
+</Indent>
+<Anchor id="nemo_rl-algorithms-async_utils-AsyncTrajectoryCollector-_get_next_target_for_generation">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.AsyncTrajectoryCollector._get_next_target_for_generation(
+    generation_weight_version: int
+) -> typing.Optional[int]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the next target weight that needs generation (if any).
+
+
+</Indent>
+<Anchor id="nemo_rl-algorithms-async_utils-AsyncTrajectoryCollector-_process_batch">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.data.interfaces.DatumSpec":"/nemo-rl/nemo_rl/data/interfaces#nemo_rl-data-interfaces-DatumSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.AsyncTrajectoryCollector._process_batch(
+    batch: nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.data.interfaces.DatumSpec]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Process a single batch and generate for one target weight.
+
+
+</Indent>
+<Anchor id="nemo_rl-algorithms-async_utils-AsyncTrajectoryCollector-_run_prompt_group_worker">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.data.interfaces.DatumSpec":"/nemo-rl/nemo_rl/data/interfaces#nemo_rl-data-interfaces-DatumSpec"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.AsyncTrajectoryCollector._run_prompt_group_worker(
+    repeated_batch: nemo_rl.distributed.batched_data_dict.BatchedDataDict[nemo_rl.data.interfaces.DatumSpec],
+    generation_weight_version: int,
+    target_weight_version: int,
+    prompt_idx: int
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-algorithms-async_utils-AsyncTrajectoryCollector-_should_pause_for_generation_limits">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.AsyncTrajectoryCollector._should_pause_for_generation_limits() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if collection should be paused due to generation limits.
+
+
+</Indent>
+<Anchor id="nemo_rl-algorithms-async_utils-AsyncTrajectoryCollector-get_dataloader_state">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.AsyncTrajectoryCollector.get_dataloader_state() -> dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the current dataloader state for checkpointing.
+
+
+</Indent>
+<Anchor id="nemo_rl-algorithms-async_utils-AsyncTrajectoryCollector-get_weight_version">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.AsyncTrajectoryCollector.get_weight_version() -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-algorithms-async_utils-AsyncTrajectoryCollector-pause">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.AsyncTrajectoryCollector.pause() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Pause trajectory collection.
+
+
+</Indent>
+<Anchor id="nemo_rl-algorithms-async_utils-AsyncTrajectoryCollector-prepare_for_refit">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.AsyncTrajectoryCollector.prepare_for_refit() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Pause new generation starts and optionally wait for pending generations.
+
+For vLLM V1 async engine, leverages in-flight weight updates via collective_rpc,
+allowing ongoing generations to continue with their current KV caches while
+weights are updated. This significantly improves async performance.
+
+For non-async engines, waits for all pending generations to complete before refit.
+
+
+</Indent>
+<Anchor id="nemo_rl-algorithms-async_utils-AsyncTrajectoryCollector-resume">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.AsyncTrajectoryCollector.resume() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Resume trajectory collection.
+
+
+</Indent>
+<Anchor id="nemo_rl-algorithms-async_utils-AsyncTrajectoryCollector-resume_after_refit">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.AsyncTrajectoryCollector.resume_after_refit() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Resume new generation starts after refit is complete.
+
+
+</Indent>
+<Anchor id="nemo_rl-algorithms-async_utils-AsyncTrajectoryCollector-set_weight_version">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.AsyncTrajectoryCollector.set_weight_version(
+    version: int
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-algorithms-async_utils-AsyncTrajectoryCollector-start_collection">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.AsyncTrajectoryCollector.start_collection(
+    dataloader: torchdata.stateful_dataloader.StatefulDataLoader
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Start collecting trajectories from dataloader.
+
+
+</Indent>
+<Anchor id="nemo_rl-algorithms-async_utils-AsyncTrajectoryCollector-wait_for_pending_generations">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.AsyncTrajectoryCollector.wait_for_pending_generations() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Wait for all in-flight generation threads to complete.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-async_utils-ReplayBuffer">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.algorithms.async_utils.ReplayBuffer(
+    max_size: int
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Replay buffer storing per-prompt groups.
+
+A single entry corresponds to 1 prompt repeated by
+grpo.num_generations_per_prompt (required to compute per-prompt advantages).
+
+
+<ParamField path="_lock" type="= _threading.Lock()">
+</ParamField>
+
+<ParamField path="last_target_weight_already_generated" type="= -1">
+</ParamField>
+
+<ParamField path="target_weight_versions" type="= []">
+</ParamField>
+
+<ParamField path="trajectories" type="= []">
+</ParamField>
+
+<ParamField path="trajectory_versions" type="= []">
+</ParamField>
+<Anchor id="nemo_rl-algorithms-async_utils-ReplayBuffer-clear">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.ReplayBuffer.clear() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Clear the buffer.
+
+
+</Indent>
+<Anchor id="nemo_rl-algorithms-async_utils-ReplayBuffer-get_debug_info">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.ReplayBuffer.get_debug_info() -> dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get debug information about buffer state.
+
+
+</Indent>
+<Anchor id="nemo_rl-algorithms-async_utils-ReplayBuffer-get_existing_target_weights">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.ReplayBuffer.get_existing_target_weights() -> set[int]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get set of target weight versions that already have trajectories.
+
+
+</Indent>
+<Anchor id="nemo_rl-algorithms-async_utils-ReplayBuffer-get_last_target_weight_already_generated">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.ReplayBuffer.get_last_target_weight_already_generated() -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="nemo_rl-algorithms-async_utils-ReplayBuffer-push_with_wait_signal">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.ReplayBuffer.push_with_wait_signal(
+    trajectory: dict[str, typing.Any],
+    weight_version: int,
+    target_weight_version: int
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add a per-prompt trajectory group with metadata.
+
+**Parameters:**
+
+<ParamField path="trajectory" type="dict[str, Any]">
+data dict
+</ParamField>
+
+<ParamField path="weight_version" type="int">
+version of the model weights used for generation
+</ParamField>
+
+<ParamField path="target_weight_version" type="int">
+version of the model weights this trajectory is intended for training
+</ParamField>
+
+
+</Indent>
+<Anchor id="nemo_rl-algorithms-async_utils-ReplayBuffer-sample">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.ReplayBuffer.sample(
+    num_prompt_groups: int,
+    current_weight_version: int,
+    max_age_steps: int
+) -> typing.Optional[dict[str, typing.Any]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Sample per-prompt trajectory groups intended for the current training step.
+
+Only returns trajectories with target_weight_version == current_weight_version.
+If insufficient trajectories are available, returns None to stall training
+until the remaining trajectories are generated. This ensures no trajectory
+loses its last chance to be used for its intended training step.
+
+**Returns:** `Optional[dict[str, Any]]`
+
+Dictionary with 'trajectories' and 'avg_trajectory_age' keys, or None if insufficient data
+
+
+</Indent>
+<Anchor id="nemo_rl-algorithms-async_utils-ReplayBuffer-size">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.ReplayBuffer.size() -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return current buffer size.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-algorithms-async_utils-TokenizerType">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.algorithms.async_utils.TokenizerType = PreTrainedTokenizerBase
+```
+
+</CodeBlock>
+</Anchor>
+

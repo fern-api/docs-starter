@@ -1,0 +1,91 @@
+---
+title: cub::BlockScanRunningPrefixOp
+description: "Stateful callback operator type for supplying [BlockScan](/library/api/cub::_block_scan) prefixes."
+---
+
+Stateful callback operator type for supplying [BlockScan](/library/api/cub::_block_scan) prefixes.
+
+Maintains a running prefix that can be applied to consecutive [BlockScan](/library/api/cub::_block_scan) operations.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="T" type="typename">
+[BlockScan](/library/api/cub::_block_scan) value type
+</ParamField>
+
+<ParamField path="ScanOpT" type="typename">
+Wrapped scan operator type
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### BlockScanRunningPrefixOp <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Constructor">
+
+Constructor.
+
+<CodeBlock links={{"BlockScanRunningPrefixOp": "/library/api/cub::BlockScanRunningPrefixOp"}}>
+```cpp showLineNumbers={false}
+cub::BlockScanRunningPrefixOp<T, ScanOpT>::BlockScanRunningPrefixOp(
+    ScanOpT op
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Constructor">
+
+Constructor.
+
+<CodeBlock links={{"BlockScanRunningPrefixOp": "/library/api/cub::BlockScanRunningPrefixOp"}}>
+```cpp showLineNumbers={false}
+cub::BlockScanRunningPrefixOp<T, ScanOpT>::BlockScanRunningPrefixOp(
+    T starting_prefix,
+    ScanOpT op
+)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### operator() <Badge intent="note" minimal>inline</Badge>
+
+Prefix callback operator.
+
+Returns the block-wide running_total in thread-0.
+
+<CodeBlock links={{"BlockScanRunningPrefixOp": "/library/api/cub::BlockScanRunningPrefixOp"}}>
+```cpp showLineNumbers={false}
+T cub::BlockScanRunningPrefixOp<T, ScanOpT>::operator()(
+    const T &block_aggregate
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="block_aggregate" type="const T &">
+The aggregate sum of the [BlockScan](/library/api/cub::_block_scan) inputs
+</ParamField>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `op` | `ScanOpT` | Wrapped scan operator. |
+| `running_total` | `T` | Running block-wide prefix. |

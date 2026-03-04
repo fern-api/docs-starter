@@ -1,0 +1,633 @@
+---
+title: cub::DeviceMergeSort
+description: "[DeviceMergeSort](/library/api/cub::_device_merge_sort) provides device-wide, parallel operations for computing a merge sort across a sequence of data items residing within device-accessible memory."
+---
+
+`DeviceMergeSort` provides device-wide, parallel operations for computing a merge sort across a sequence of data items residing within device-accessible memory.
+
+**Overview**
+
+- `DeviceMergeSort` arranges items into ascending order using a comparison functor with less-than semantics. Merge sort can handle arbitrary types (as long as a value of these types is a model of [LessThan Comparable](https://en.cppreference.com/w/cpp/named_req/LessThanComparable)) and comparison functors, but is slower than [DeviceRadixSort](/library/api/cub::_device_radix_sort) when sorting arithmetic types into ascending/descending order.
+- Another difference from RadixSort is the fact that `DeviceMergeSort` can handle arbitrary random-access iterators, as shown below.
+
+**A Simple Example**
+
+
+The code snippet below illustrates a thrust reverse iterator usage.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>  // or equivalently <cub/device/device_merge_sort.cuh>
+
+struct CustomLess
+{
+  template <typename DataType>
+  __device__ bool operator()(const DataType &lhs, const DataType &rhs)
+  {
+    return lhs < rhs;
+  }
+};
+
+// Declare, allocate, and initialize device-accessible pointers
+// for sorting data
+thrust::device_vector<KeyType> d_keys(num_items);
+thrust::device_vector<DataType> d_values(num_items);
+// ...
+
+// Initialize iterator
+using KeyIterator = typename thrust::device_vector<KeyType>::iterator;
+cuda::std::reverse_iterator<KeyIterator> reverse_iter(d_keys.end());
+
+// Determine temporary device storage requirements
+size_t temp_storage_bytes = 0;
+cub::DeviceMergeSort::SortPairs(
+  nullptr,
+  temp_storage_bytes,
+  reverse_iter,
+  thrust::raw_pointer_cast(d_values.data()),
+  num_items,
+  CustomLess());
+
+// Allocate temporary storage
+cudaMalloc(&d_temp_storage, temp_storage_bytes);
+
+// Run sorting operation
+cub::DeviceMergeSort::SortPairs(
+  d_temp_storage,
+  temp_storage_bytes,
+  reverse_iter,
+  thrust::raw_pointer_cast(d_values.data()),
+  num_items,
+  CustomLess());
+```
+
+---
+
+## Methods
+
+### GetName <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge>
+
+<CodeBlock links={{"DeviceMergeSort": "/library/api/cub::DeviceMergeSort"}}>
+```cpp showLineNumbers={false}
+static constexpr const char * cub::DeviceMergeSort::GetName()
+```
+</CodeBlock>
+
+### SortPairsNoNVTX <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"DeviceMergeSort": "/library/api/cub::DeviceMergeSort"}}>
+```cpp showLineNumbers={false}
+template <typename KeyIteratorT,
+          typename ValueIteratorT,
+          typename OffsetT,
+          typename CompareOpT>
+static cudaError_t cub::DeviceMergeSort::SortPairsNoNVTX(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyIteratorT d_keys,
+    ValueIteratorT d_items,
+    OffsetT num_items,
+    CompareOpT compare_op,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+### SortKeysNoNVTX <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"DeviceMergeSort": "/library/api/cub::DeviceMergeSort"}}>
+```cpp showLineNumbers={false}
+template <typename KeyIteratorT, typename OffsetT, typename CompareOpT>
+static cudaError_t cub::DeviceMergeSort::SortKeysNoNVTX(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyIteratorT d_keys,
+    OffsetT num_items,
+    CompareOpT compare_op,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+### SortKeysCopyNoNVTX <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"DeviceMergeSort": "/library/api/cub::DeviceMergeSort"}}>
+```cpp showLineNumbers={false}
+template <typename KeyInputIteratorT,
+          typename KeyIteratorT,
+          typename OffsetT,
+          typename CompareOpT>
+static cudaError_t cub::DeviceMergeSort::SortKeysCopyNoNVTX(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyInputIteratorT d_input_keys,
+    KeyIteratorT d_output_keys,
+    OffsetT num_items,
+    CompareOpT compare_op,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+---
+
+## Static methods
+
+### SortPairs <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Sorts items using a merge sorting method.
+
+<CodeBlock links={{"DeviceMergeSort": "/library/api/cub::DeviceMergeSort"}}>
+```cpp showLineNumbers={false}
+template <typename KeyIteratorT,
+          typename ValueIteratorT,
+          typename OffsetT,
+          typename CompareOpT>
+static cudaError_t cub::DeviceMergeSort::SortPairs(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyIteratorT d_keys,
+    ValueIteratorT d_items,
+    OffsetT num_items,
+    CompareOpT compare_op,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="KeyIteratorT" type="typename">
+Is a model of [Random Access Iterator](https://en.cppreference.com/w/cpp/iterator/random_access_iterator). `KeyIteratorT` is mutable, and its `value_type` is a model of [LessThan Comparable](https://en.cppreference.com/w/cpp/named_req/LessThanComparable). This `value_type`'s ordering relation is a *strict weak ordering* as defined in the [LessThan Comparable](https://en.cppreference.com/w/cpp/named_req/LessThanComparable) requirements.
+</ParamField>
+
+<ParamField path="ValueIteratorT" type="typename">
+Is a model of [Random Access Iterator](https://en.cppreference.com/w/cpp/iterator/random_access_iterator), and `ValueIteratorT` is mutable.
+</ParamField>
+
+<ParamField path="OffsetT" type="typename">
+Is an integer type for global offsets.
+</ParamField>
+
+<ParamField path="CompareOpT" type="typename">
+Is a type of callable object with the signature `bool operator()(KeyT lhs, KeyT rhs)` that models the [Strict Weak Ordering](https://en.cppreference.com/w/cpp/concepts/strict_weak_order) concept.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_keys" type="KeyIteratorT">
+Pointer to the input sequence of unsorted input keys
+</ParamField>
+
+<ParamField path="d_items" type="ValueIteratorT">
+Pointer to the input sequence of unsorted input values
+</ParamField>
+
+<ParamField path="num_items" type="OffsetT">
+Number of items to sort
+</ParamField>
+
+<ParamField path="compare_op" type="CompareOpT">
+Comparison function object which returns true if the first argument is ordered before the second
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+**[optional]** CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+### SortPairsCopy <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Sorts items using a merge sorting method.
+
+<CodeBlock links={{"DeviceMergeSort": "/library/api/cub::DeviceMergeSort"}}>
+```cpp showLineNumbers={false}
+template <typename KeyInputIteratorT,
+          typename ValueInputIteratorT,
+          typename KeyIteratorT,
+          typename ValueIteratorT,
+          typename OffsetT,
+          typename CompareOpT>
+static cudaError_t cub::DeviceMergeSort::SortPairsCopy(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyInputIteratorT d_input_keys,
+    ValueInputIteratorT d_input_items,
+    KeyIteratorT d_output_keys,
+    ValueIteratorT d_output_items,
+    OffsetT num_items,
+    CompareOpT compare_op,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="KeyInputIteratorT" type="typename">
+Is a model of [Random Access Iterator](https://en.cppreference.com/w/cpp/iterator/random_access_iterator). Its `value_type` is a model of [LessThan Comparable](https://en.cppreference.com/w/cpp/named_req/LessThanComparable). This `value_type`'s ordering relation is a *strict weak ordering* as defined in the [LessThan Comparable](https://en.cppreference.com/w/cpp/named_req/LessThanComparable) requirements.
+</ParamField>
+
+<ParamField path="ValueInputIteratorT" type="typename">
+Is a model of [Random Access Iterator](https://en.cppreference.com/w/cpp/iterator/random_access_iterator).
+</ParamField>
+
+<ParamField path="KeyIteratorT" type="typename">
+Is a model of [Random Access Iterator](https://en.cppreference.com/w/cpp/iterator/random_access_iterator). `KeyIteratorT` is mutable, and its `value_type` is a model of [LessThan Comparable](https://en.cppreference.com/w/cpp/named_req/LessThanComparable). This `value_type`'s ordering relation is a *strict weak ordering* as defined in the [LessThan Comparable](https://en.cppreference.com/w/cpp/named_req/LessThanComparable) requirements.
+</ParamField>
+
+<ParamField path="ValueIteratorT" type="typename">
+Is a model of [Random Access Iterator](https://en.cppreference.com/w/cpp/iterator/random_access_iterator), and `ValueIteratorT` is mutable.
+</ParamField>
+
+<ParamField path="OffsetT" type="typename">
+Is an integer type for global offsets.
+</ParamField>
+
+<ParamField path="CompareOpT" type="typename">
+Is a type of callable object with the signature `bool operator()(KeyT lhs, KeyT rhs)` that models the [Strict Weak Ordering](https://en.cppreference.com/w/cpp/concepts/strict_weak_order) concept.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_input_keys" type="KeyInputIteratorT">
+Pointer to the input sequence of unsorted input keys
+</ParamField>
+
+<ParamField path="d_input_items" type="ValueInputIteratorT">
+Pointer to the input sequence of unsorted input values
+</ParamField>
+
+<ParamField path="d_output_keys" type="KeyIteratorT">
+Pointer to the output sequence of sorted input keys
+</ParamField>
+
+<ParamField path="d_output_items" type="ValueIteratorT">
+Pointer to the output sequence of sorted input values
+</ParamField>
+
+<ParamField path="num_items" type="OffsetT">
+Number of items to sort
+</ParamField>
+
+<ParamField path="compare_op" type="CompareOpT">
+Comparison function object which returns `true` if the first argument is ordered before the second
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+**[optional]** CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+### SortKeys <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Sorts items using a merge sorting method.
+
+<CodeBlock links={{"DeviceMergeSort": "/library/api/cub::DeviceMergeSort"}}>
+```cpp showLineNumbers={false}
+template <typename KeyIteratorT, typename OffsetT, typename CompareOpT>
+static cudaError_t cub::DeviceMergeSort::SortKeys(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyIteratorT d_keys,
+    OffsetT num_items,
+    CompareOpT compare_op,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="KeyIteratorT" type="typename">
+Is a model of [Random Access Iterator](https://en.cppreference.com/w/cpp/iterator/random_access_iterator). `KeyIteratorT` is mutable, and its `value_type` is a model of [LessThan Comparable](https://en.cppreference.com/w/cpp/named_req/LessThanComparable). This `value_type`'s ordering relation is a *strict weak ordering* as defined in the [LessThan Comparable](https://en.cppreference.com/w/cpp/named_req/LessThanComparable) requirements.
+</ParamField>
+
+<ParamField path="OffsetT" type="typename">
+Is an integer type for global offsets.
+</ParamField>
+
+<ParamField path="CompareOpT" type="typename">
+Is a type of callable object with the signature `bool operator()(KeyT lhs, KeyT rhs)` that models the [Strict Weak Ordering](https://en.cppreference.com/w/cpp/concepts/strict_weak_order) concept.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_keys" type="KeyIteratorT">
+Pointer to the input sequence of unsorted input keys
+</ParamField>
+
+<ParamField path="num_items" type="OffsetT">
+Number of items to sort
+</ParamField>
+
+<ParamField path="compare_op" type="CompareOpT">
+Comparison function object which returns true if the first argument is ordered before the second
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+**[optional]** CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+### SortKeysCopy <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Sorts items using a merge sorting method.
+
+<CodeBlock links={{"DeviceMergeSort": "/library/api/cub::DeviceMergeSort"}}>
+```cpp showLineNumbers={false}
+template <typename KeyInputIteratorT,
+          typename KeyIteratorT,
+          typename OffsetT,
+          typename CompareOpT>
+static cudaError_t cub::DeviceMergeSort::SortKeysCopy(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyInputIteratorT d_input_keys,
+    KeyIteratorT d_output_keys,
+    OffsetT num_items,
+    CompareOpT compare_op,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="KeyInputIteratorT" type="typename">
+Is a model of [Random Access Iterator](https://en.cppreference.com/w/cpp/iterator/random_access_iterator). Its `value_type` is a model of [LessThan Comparable](https://en.cppreference.com/w/cpp/named_req/LessThanComparable). This `value_type`'s ordering relation is a *strict weak ordering* as defined in the [LessThan Comparable](https://en.cppreference.com/w/cpp/named_req/LessThanComparable) requirements.
+</ParamField>
+
+<ParamField path="KeyIteratorT" type="typename">
+Is a model of [Random Access Iterator](https://en.cppreference.com/w/cpp/iterator/random_access_iterator). `KeyIteratorT` is mutable, and its `value_type` is a model of [LessThan Comparable](https://en.cppreference.com/w/cpp/named_req/LessThanComparable). This `value_type`'s ordering relation is a *strict weak ordering* as defined in the [LessThan Comparable](https://en.cppreference.com/w/cpp/named_req/LessThanComparable) requirements.
+</ParamField>
+
+<ParamField path="OffsetT" type="typename">
+Is an integer type for global offsets.
+</ParamField>
+
+<ParamField path="CompareOpT" type="typename">
+Is a type of callable object with the signature `bool operator()(KeyT lhs, KeyT rhs)` that models the [Strict Weak Ordering](https://en.cppreference.com/w/cpp/concepts/strict_weak_order) concept.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_input_keys" type="KeyInputIteratorT">
+Pointer to the input sequence of unsorted input keys
+</ParamField>
+
+<ParamField path="d_output_keys" type="KeyIteratorT">
+Pointer to the output sequence of sorted input keys
+</ParamField>
+
+<ParamField path="num_items" type="OffsetT">
+Number of items to sort
+</ParamField>
+
+<ParamField path="compare_op" type="CompareOpT">
+Comparison function object which returns true if the first argument is ordered before the second
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+**[optional]** CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+### StableSortPairs <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Sorts items using a merge sorting method.
+
+<CodeBlock links={{"DeviceMergeSort": "/library/api/cub::DeviceMergeSort"}}>
+```cpp showLineNumbers={false}
+template <typename KeyIteratorT,
+          typename ValueIteratorT,
+          typename OffsetT,
+          typename CompareOpT>
+static cudaError_t cub::DeviceMergeSort::StableSortPairs(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyIteratorT d_keys,
+    ValueIteratorT d_items,
+    OffsetT num_items,
+    CompareOpT compare_op,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="KeyIteratorT" type="typename">
+Is a model of [Random Access Iterator](https://en.cppreference.com/w/cpp/iterator/random_access_iterator). `KeyIteratorT` is mutable, and its `value_type` is a model of [LessThan Comparable](https://en.cppreference.com/w/cpp/named_req/LessThanComparable). This `value_type`'s ordering relation is a *strict weak ordering* as defined in the [LessThan Comparable](https://en.cppreference.com/w/cpp/named_req/LessThanComparable) requirements.
+</ParamField>
+
+<ParamField path="ValueIteratorT" type="typename">
+Is a model of [Random Access Iterator](https://en.cppreference.com/w/cpp/iterator/random_access_iterator), and `ValueIteratorT` is mutable.
+</ParamField>
+
+<ParamField path="OffsetT" type="typename">
+Is an integer type for global offsets.
+</ParamField>
+
+<ParamField path="CompareOpT" type="typename">
+Is a type of callable object with the signature `bool operator()(KeyT lhs, KeyT rhs)` that models the [Strict Weak Ordering](https://en.cppreference.com/w/cpp/concepts/strict_weak_order) concept.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_keys" type="KeyIteratorT">
+Pointer to the input sequence of unsorted input keys
+</ParamField>
+
+<ParamField path="d_items" type="ValueIteratorT">
+Pointer to the input sequence of unsorted input values
+</ParamField>
+
+<ParamField path="num_items" type="OffsetT">
+Number of items to sort
+</ParamField>
+
+<ParamField path="compare_op" type="CompareOpT">
+Comparison function object which returns true if the first argument is ordered before the second
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+**[optional]** CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+### StableSortKeys <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Sorts items using a merge sorting method.
+
+<CodeBlock links={{"DeviceMergeSort": "/library/api/cub::DeviceMergeSort"}}>
+```cpp showLineNumbers={false}
+template <typename KeyIteratorT, typename OffsetT, typename CompareOpT>
+static cudaError_t cub::DeviceMergeSort::StableSortKeys(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyIteratorT d_keys,
+    OffsetT num_items,
+    CompareOpT compare_op,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="KeyIteratorT" type="typename">
+Is a model of [Random Access Iterator](https://en.cppreference.com/w/cpp/iterator/random_access_iterator). `KeyIteratorT` is mutable, and its `value_type` is a model of [LessThan Comparable](https://en.cppreference.com/w/cpp/named_req/LessThanComparable). This `value_type`'s ordering relation is a *strict weak ordering* as defined in the [LessThan Comparable](https://en.cppreference.com/w/cpp/named_req/LessThanComparable) requirements.
+</ParamField>
+
+<ParamField path="OffsetT" type="typename">
+Is an integer type for global offsets.
+</ParamField>
+
+<ParamField path="CompareOpT" type="typename">
+Is a type of callable object with the signature `bool operator()(KeyT lhs, KeyT rhs)` that models the [Strict Weak Ordering](https://en.cppreference.com/w/cpp/concepts/strict_weak_order) concept.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_keys" type="KeyIteratorT">
+Pointer to the input sequence of unsorted input keys
+</ParamField>
+
+<ParamField path="num_items" type="OffsetT">
+Number of items to sort
+</ParamField>
+
+<ParamField path="compare_op" type="CompareOpT">
+Comparison function object which returns true if the first argument is ordered before the second
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+**[optional]** CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+### StableSortKeysCopy <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Sorts items using a merge sorting method.
+
+<CodeBlock links={{"DeviceMergeSort": "/library/api/cub::DeviceMergeSort"}}>
+```cpp showLineNumbers={false}
+template <typename KeyInputIteratorT,
+          typename KeyIteratorT,
+          typename OffsetT,
+          typename CompareOpT>
+static cudaError_t cub::DeviceMergeSort::StableSortKeysCopy(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    KeyInputIteratorT d_input_keys,
+    KeyIteratorT d_output_keys,
+    OffsetT num_items,
+    CompareOpT compare_op,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="KeyInputIteratorT" type="typename">
+Is a model of [Random Access Iterator](https://en.cppreference.com/w/cpp/iterator/random_access_iterator). Its `value_type` is a model of [LessThan Comparable](https://en.cppreference.com/w/cpp/named_req/LessThanComparable). This `value_type`'s ordering relation is a *strict weak ordering* as defined in the [LessThan Comparable](https://en.cppreference.com/w/cpp/named_req/LessThanComparable) requirements.
+</ParamField>
+
+<ParamField path="KeyIteratorT" type="typename">
+Is a model of [Random Access Iterator](https://en.cppreference.com/w/cpp/iterator/random_access_iterator). `KeyIteratorT` is mutable, and its `value_type` is a model of [LessThan Comparable](https://en.cppreference.com/w/cpp/named_req/LessThanComparable). This `value_type`'s ordering relation is a *strict weak ordering* as defined in the [LessThan Comparable](https://en.cppreference.com/w/cpp/named_req/LessThanComparable) requirements.
+</ParamField>
+
+<ParamField path="OffsetT" type="typename">
+Is an integer type for global offsets.
+</ParamField>
+
+<ParamField path="CompareOpT" type="typename">
+Is a type of callable object with the signature `bool operator()(KeyT lhs, KeyT rhs)` that models the [Strict Weak Ordering](https://en.cppreference.com/w/cpp/concepts/strict_weak_order) concept.
+</ParamField>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When `nullptr`, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_input_keys" type="KeyInputIteratorT">
+Pointer to the input sequence of unsorted input keys
+</ParamField>
+
+<ParamField path="d_output_keys" type="KeyIteratorT">
+Pointer to the output sequence of sorted input keys
+</ParamField>
+
+<ParamField path="num_items" type="OffsetT">
+Number of elements in d_input_keys to sort
+</ParamField>
+
+<ParamField path="compare_op" type="CompareOpT">
+Comparison function object which returns true if the first argument is ordered before the second
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t" default="0">
+**[optional]** CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>

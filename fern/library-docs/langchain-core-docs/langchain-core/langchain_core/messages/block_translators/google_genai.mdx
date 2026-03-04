@@ -1,0 +1,244 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/messages/block_translators/google_genai
+title: langchain_core.messages.block_translators.google_genai
+---
+
+Derivations of standard content blocks from Google (GenAI) content.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_bytes_to_b64_str`](#langchain_core-messages-block_translators-google_genai-_bytes_to_b64_str) | Convert bytes to base64 encoded string. |
+| [`_convert_to_v1_from_genai`](#langchain_core-messages-block_translators-google_genai-_convert_to_v1_from_genai) | Convert Google GenAI message content to v1 format. |
+| [`_convert_to_v1_from_genai_input`](#langchain_core-messages-block_translators-google_genai-_convert_to_v1_from_genai_input) | Convert Google GenAI format blocks to v1 format. |
+| [`_register_google_genai_translator`](#langchain_core-messages-block_translators-google_genai-_register_google_genai_translator) | Register the Google (GenAI) translator with the central registry. |
+| [`translate_content`](#langchain_core-messages-block_translators-google_genai-translate_content) | Derive standard content blocks from a message with Google (GenAI) content. |
+| [`translate_content_chunk`](#langchain_core-messages-block_translators-google_genai-translate_content_chunk) | Derive standard content blocks from a chunk with Google (GenAI) content. |
+| [`translate_grounding_metadata_to_citations`](#langchain_core-messages-block_translators-google_genai-translate_grounding_metadata_to_citations) | Translate Google AI grounding metadata to LangChain Citations. |
+
+### Data
+
+[`_HAS_FILETYPE`](#langchain_core-messages-block_translators-google_genai-_HAS_FILETYPE)
+
+### API
+
+<Anchor id="langchain_core-messages-block_translators-google_genai-_bytes_to_b64_str">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.google_genai._bytes_to_b64_str(
+    bytes_: bytes
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert bytes to base64 encoded string.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-google_genai-_convert_to_v1_from_genai">
+
+<CodeBlock links={{"langchain_core.messages.AIMessage":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessage","langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.google_genai._convert_to_v1_from_genai(
+    message: langchain_core.messages.AIMessage
+) -> list[langchain_core.messages.content.ContentBlock]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert Google GenAI message content to v1 format.
+
+Calling `.content_blocks` on an `AIMessage` where `response_metadata.model_provider`
+is set to `'google_genai'` will invoke this function to parse the content into
+standard content blocks for returning.
+
+**Parameters:**
+
+<ParamField path="message" type="AIMessage">
+The `AIMessage` or `AIMessageChunk` to convert.
+</ParamField>
+
+**Returns:** `list[types.ContentBlock]`
+
+List of standard content blocks derived from the message content.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-google_genai-_convert_to_v1_from_genai_input">
+
+<CodeBlock links={{"langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.google_genai._convert_to_v1_from_genai_input(
+    content: list[langchain_core.messages.content.ContentBlock]
+) -> list[langchain_core.messages.content.ContentBlock]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert Google GenAI format blocks to v1 format.
+
+Called when message isn't an `AIMessage` or `model_provider` isn't set on
+`response_metadata`.
+
+During the `content_blocks` parsing process, we wrap blocks not recognized as a v1
+block as a `'non_standard'` block with the original block stored in the `value`
+field. This function attempts to unpack those blocks and convert any blocks that
+might be GenAI format to v1 ContentBlocks.
+
+If conversion fails, the block is left as a `'non_standard'` block.
+
+**Parameters:**
+
+<ParamField path="content" type="list[types.ContentBlock]">
+List of content blocks to process.
+</ParamField>
+
+**Returns:** `list[types.ContentBlock]`
+
+Updated list with GenAI blocks converted to v1 format.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-google_genai-_register_google_genai_translator">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.google_genai._register_google_genai_translator() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Register the Google (GenAI) translator with the central registry.
+
+Run automatically when the module is imported.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-google_genai-translate_content">
+
+<CodeBlock links={{"langchain_core.messages.AIMessage":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessage","langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.google_genai.translate_content(
+    message: langchain_core.messages.AIMessage
+) -> list[langchain_core.messages.content.ContentBlock]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Derive standard content blocks from a message with Google (GenAI) content.
+
+**Parameters:**
+
+<ParamField path="message" type="AIMessage">
+The message to translate.
+</ParamField>
+
+**Returns:** `list[types.ContentBlock]`
+
+The derived content blocks.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-google_genai-translate_content_chunk">
+
+<CodeBlock links={{"langchain_core.messages.AIMessageChunk":"/langchain-core/langchain_core/messages/ai#langchain_core-messages-ai-AIMessageChunk","langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.google_genai.translate_content_chunk(
+    message: langchain_core.messages.AIMessageChunk
+) -> list[langchain_core.messages.content.ContentBlock]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Derive standard content blocks from a chunk with Google (GenAI) content.
+
+**Parameters:**
+
+<ParamField path="message" type="AIMessageChunk">
+The message chunk to translate.
+</ParamField>
+
+**Returns:** `list[types.ContentBlock]`
+
+The derived content blocks.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-google_genai-translate_grounding_metadata_to_citations">
+
+<CodeBlock links={{"langchain_core.messages.content.Citation":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-Citation"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.google_genai.translate_grounding_metadata_to_citations(
+    grounding_metadata: dict[str, typing.Any]
+) -> list[langchain_core.messages.content.Citation]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Translate Google AI grounding metadata to LangChain Citations.
+
+**Parameters:**
+
+<ParamField path="grounding_metadata" type="dict[str, Any]">
+Google AI grounding metadata containing web search
+queries, grounding chunks, and grounding supports.
+</ParamField>
+
+**Returns:** `list[Citation]`
+
+List of Citation content blocks derived from the grounding metadata.
+
+
+</Indent>
+
+<Anchor id="langchain_core-messages-block_translators-google_genai-_HAS_FILETYPE">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.block_translators.google_genai._HAS_FILETYPE = True
+```
+
+</CodeBlock>
+</Anchor>
+

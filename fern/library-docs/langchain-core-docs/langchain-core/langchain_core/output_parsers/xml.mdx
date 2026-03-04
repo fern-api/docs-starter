@@ -1,0 +1,356 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/output_parsers/xml
+title: langchain_core.output_parsers.xml
+---
+
+Output parser for XML format.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`XMLOutputParser`](#langchain_core-output_parsers-xml-XMLOutputParser) | Parse an output using xml format. |
+| [`_StreamingParser`](#langchain_core-output_parsers-xml-_StreamingParser) | Streaming parser for XML. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`nested_element`](#langchain_core-output_parsers-xml-nested_element) | Get nested element from path. |
+
+### Data
+
+[`XML_FORMAT_INSTRUCTIONS`](#langchain_core-output_parsers-xml-XML_FORMAT_INSTRUCTIONS)
+
+[`_HAS_DEFUSEDXML`](#langchain_core-output_parsers-xml-_HAS_DEFUSEDXML)
+
+### API
+
+<Anchor id="langchain_core-output_parsers-xml-XMLOutputParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.output_parsers.xml.XMLOutputParser()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseTransformOutputParser](/langchain-core/langchain_core/output_parsers/transform#langchain_core-output_parsers-transform-BaseTransformOutputParser)
+
+Parse an output using xml format.
+
+Returns a dictionary of tags.
+
+
+<ParamField path="_type" type="str">
+</ParamField>
+
+<ParamField path="encoding_matcher" type="Pattern">
+</ParamField>
+
+<ParamField path="parser" type="Literal['defusedxml', 'xml'] = 'defusedxml'">
+Parser to use for XML parsing.
+
+Can be either `'defusedxml'` or `'xml'`.
+
+- `'defusedxml'` is the default parser and is used to prevent XML vulnerabilities
+    present in some distributions of Python's standard library xml. `defusedxml` is
+    a wrapper around the standard library parser that sets up the parser with secure
+    defaults.
+- `'xml'` is the standard library parser.
+
+!!! warning
+
+    Use `xml` only if you are sure that your distribution of the standard library is
+    not vulnerable to XML vulnerabilities.
+
+Review the following resources for more information:
+
+* https://docs.python.org/3/library/xml.html#xml-vulnerabilities
+* https://github.com/tiran/defusedxml
+
+The standard library relies on [`libexpat`](https://github.com/libexpat/libexpat)
+for parsing XML.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None = None">
+Tags to tell the LLM to expect in the XML output.
+
+    Note this may not be perfect depending on the LLM implementation.
+
+    For example, with `tags=["foo", "bar", "baz"]`:
+
+    1. A well-formatted XML instance:
+        `'&lt;foo&gt;
+   &lt;bar&gt;
+      &lt;baz&gt;&lt;/baz&gt;
+   &lt;/bar&gt;
+&lt;/foo&gt;'`
+
+    2. A badly-formatted XML instance (missing closing tag for 'bar'):
+        `'&lt;foo&gt;
+   &lt;bar&gt;
+   &lt;/foo&gt;'`
+
+    3. A badly-formatted XML instance (unexpected 'tag' element):
+        `'&lt;foo&gt;
+   &lt;tag&gt;
+   &lt;/tag&gt;
+&lt;/foo&gt;'`
+</ParamField>
+<Anchor id="langchain_core-output_parsers-xml-XMLOutputParser-_atransform">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.runnables.utils.AddableDict":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-AddableDict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.xml.XMLOutputParser._atransform(
+    input: collections.abc.AsyncIterator[str | langchain_core.messages.BaseMessage]
+) -> collections.abc.AsyncIterator[langchain_core.runnables.utils.AddableDict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-xml-XMLOutputParser-_root_to_dict">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.xml.XMLOutputParser._root_to_dict(
+    root: xml.etree.ElementTree.Element
+) -> dict[str, str | langchain_core.output_parsers.list[typing.Any]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Converts xml tree to python dictionary.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-xml-XMLOutputParser-_transform">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.runnables.utils.AddableDict":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-AddableDict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.xml.XMLOutputParser._transform(
+    input: collections.abc.Iterator[str | langchain_core.messages.BaseMessage]
+) -> collections.abc.Iterator[langchain_core.runnables.utils.AddableDict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-xml-XMLOutputParser-get_format_instructions">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.xml.XMLOutputParser.get_format_instructions() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return the format instructions for the XML output.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-xml-XMLOutputParser-parse">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.xml.XMLOutputParser.parse(
+    text: str
+) -> dict[str, str | langchain_core.output_parsers.list[typing.Any]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse the output of an LLM call.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The output of an LLM call.
+</ParamField>
+
+**Returns:** `dict[str, str | list[Any]]`
+
+A `dict` representing the parsed XML.
+
+**Raises:**
+
+- `OutputParserException`: If the XML is not well-formed.
+- `ImportError`: If defus`edxml is not installed and the `defusedxml` parser is
+requested.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-xml-_StreamingParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.output_parsers.xml._StreamingParser(
+    parser: typing.Literal['defusedxml', 'xml']
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Streaming parser for XML.
+
+This implementation is pulled into a class to avoid implementation drift between
+`transform` and `atransform` of the `XMLOutputParser`.
+
+
+<ParamField path="buffer" type="= ''">
+</ParamField>
+
+<ParamField path="current_path" type="list[str] = []">
+</ParamField>
+
+<ParamField path="pull_parser">
+</ParamField>
+
+<ParamField path="xml_start_re" type="= re.compile('&lt;[a-zA-Z:_]')">
+</ParamField>
+<Anchor id="langchain_core-output_parsers-xml-_StreamingParser-close">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.xml._StreamingParser.close() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Close the parser.
+
+This should be called after all chunks have been parsed.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-xml-_StreamingParser-parse">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.runnables.utils.AddableDict":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-AddableDict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.xml._StreamingParser.parse(
+    chunk: str | langchain_core.messages.BaseMessage
+) -> collections.abc.Iterator[langchain_core.runnables.utils.AddableDict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse a chunk of text.
+
+**Parameters:**
+
+<ParamField path="chunk" type="str | BaseMessage">
+A chunk of text to parse. This can be a `str` or a `BaseMessage`.
+</ParamField>
+
+**Raises:**
+
+- `xml.etree.ElementTree.ParseError`: If the XML is not well-formed.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-xml-nested_element">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.xml.nested_element(
+    path: langchain_core.output_parsers.list[str],
+    elem: xml.etree.ElementTree.Element
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get nested element from path.
+
+**Parameters:**
+
+<ParamField path="path" type="list[str]">
+The path to the element.
+</ParamField>
+
+<ParamField path="elem" type="ET.Element">
+The element to extract.
+</ParamField>
+
+**Returns:** `Any`
+
+The nested element.
+
+
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-xml-XML_FORMAT_INSTRUCTIONS">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.xml.XML_FORMAT_INSTRUCTIONS = 'The output should be formatted as a XML file.\n1. Output should conform to the ...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-output_parsers-xml-_HAS_DEFUSEDXML">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.xml._HAS_DEFUSEDXML = True
+```
+
+</CodeBlock>
+</Anchor>
+

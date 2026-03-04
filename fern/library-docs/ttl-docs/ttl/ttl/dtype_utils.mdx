@@ -1,0 +1,212 @@
+---
+layout: overview
+slug: ttl/ttl/dtype_utils
+title: ttl.dtype_utils
+---
+
+Data type conversion utilities between PyTorch, TTNN, and MLIR types.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`is_ttnn_tensor`](#ttl-dtype_utils-is_ttnn_tensor) | Check if tensor is a ttnn.Tensor. |
+| [`tensor_dtype_to_ttcore_datatype`](#ttl-dtype_utils-tensor_dtype_to_ttcore_datatype) | Convert tensor dtype to ttcore.DataType, supporting both torch and ttnn dtypes. |
+| [`tile_bytes_from_dtype`](#ttl-dtype_utils-tile_bytes_from_dtype) | Calculate tile size in bytes from ttnn dtype. |
+| [`torch_dtype_to_ttcore_datatype`](#ttl-dtype_utils-torch_dtype_to_ttcore_datatype) | Convert PyTorch dtype to ttcore.DataType enum. |
+| [`torch_dtype_to_ttnn_datatype`](#ttl-dtype_utils-torch_dtype_to_ttnn_datatype) | Convert PyTorch dtype to ttnn.DataType enum. |
+| [`ttnn_dtype_to_ttcore_datatype`](#ttl-dtype_utils-ttnn_dtype_to_ttcore_datatype) | Convert ttnn.DataType to ttcore.DataType enum. |
+
+### API
+
+<Anchor id="ttl-dtype_utils-is_ttnn_tensor">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.dtype_utils.is_ttnn_tensor(
+    tensor
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if tensor is a ttnn.Tensor.
+
+
+</Indent>
+
+<Anchor id="ttl-dtype_utils-tensor_dtype_to_ttcore_datatype">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.dtype_utils.tensor_dtype_to_ttcore_datatype(
+    dtype
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert tensor dtype to ttcore.DataType, supporting both torch and ttnn dtypes.
+
+**Parameters:**
+
+<ParamField path="dtype">
+Either torch dtype or ttnn.DataType
+</ParamField>
+
+**Returns:**
+
+ttcore.DataType enum value
+
+
+</Indent>
+
+<Anchor id="ttl-dtype_utils-tile_bytes_from_dtype">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.dtype_utils.tile_bytes_from_dtype(
+    dtype
+) -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Calculate tile size in bytes from ttnn dtype.
+
+For tiled tensors, each tile is 32x32 elements. The byte size depends on
+the data type's element size plus any format-specific overhead.
+
+**Parameters:**
+
+<ParamField path="dtype">
+ttnn.DataType enum value
+</ParamField>
+
+**Returns:** `int`
+
+Tile size in bytes
+
+**Raises:**
+
+- `ValueError`: If dtype is not supported
+
+
+</Indent>
+
+<Anchor id="ttl-dtype_utils-torch_dtype_to_ttcore_datatype">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.dtype_utils.torch_dtype_to_ttcore_datatype(
+    torch_dtype
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert PyTorch dtype to ttcore.DataType enum.
+
+**Parameters:**
+
+<ParamField path="torch_dtype">
+PyTorch dtype (torch.float32, torch.int32, etc.)
+</ParamField>
+
+**Returns:**
+
+ttcore.DataType enum value
+
+**Raises:**
+
+- `ValueError`: If dtype is not supported
+
+
+</Indent>
+
+<Anchor id="ttl-dtype_utils-torch_dtype_to_ttnn_datatype">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.dtype_utils.torch_dtype_to_ttnn_datatype(
+    torch_dtype
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert PyTorch dtype to ttnn.DataType enum.
+
+**Parameters:**
+
+<ParamField path="torch_dtype">
+PyTorch dtype (torch.float32, torch.bfloat16, etc.)
+</ParamField>
+
+**Returns:**
+
+ttnn.DataType enum value
+
+**Raises:**
+
+- `ImportError`: If ttnn is not available
+- `ValueError`: If dtype is not supported
+
+
+</Indent>
+
+<Anchor id="ttl-dtype_utils-ttnn_dtype_to_ttcore_datatype">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+ttl.dtype_utils.ttnn_dtype_to_ttcore_datatype(
+    ttnn_dtype
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert ttnn.DataType to ttcore.DataType enum.
+
+**Parameters:**
+
+<ParamField path="ttnn_dtype">
+ttnn.DataType enum value
+</ParamField>
+
+**Returns:**
+
+ttcore.DataType enum value
+
+**Raises:**
+
+- `ValueError`: If dtype is not supported
+
+
+</Indent>

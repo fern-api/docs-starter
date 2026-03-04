@@ -1,0 +1,92 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/messages/function
+title: langchain_core.messages.function
+---
+
+Function Message.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`FunctionMessage`](#langchain_core-messages-function-FunctionMessage) | Message for passing the result of executing a tool back to a model. |
+| [`FunctionMessageChunk`](#langchain_core-messages-function-FunctionMessageChunk) | Function Message chunk. |
+
+### API
+
+<Anchor id="langchain_core-messages-function-FunctionMessage">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.messages.function.FunctionMessage()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseMessage](/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage)
+
+Message for passing the result of executing a tool back to a model.
+
+`FunctionMessage` are an older version of the `ToolMessage` schema, and
+do not contain the `tool_call_id` field.
+
+The `tool_call_id` field is used to associate the tool call request with the
+tool call response. Useful in situations where a chat model is able
+to request multiple tool calls in parallel.
+
+
+<ParamField path="name" type="str">
+The name of the function that was executed.
+</ParamField>
+
+<ParamField path="type" type="Literal['function'] = 'function'">
+The type of the message (used for serialization).
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-messages-function-FunctionMessageChunk">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.messages.function.FunctionMessageChunk()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [FunctionMessage](#langchain_core-messages-function-FunctionMessage), [BaseMessageChunk](/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessageChunk)
+
+Function Message chunk.
+
+
+<ParamField path="type" type="Literal['FunctionMessageChunk'] = 'FunctionMessageChunk'">
+The type of the message (used for serialization).
+</ParamField>
+<Anchor id="langchain_core-messages-function-FunctionMessageChunk-__add__">
+
+<CodeBlock links={{"langchain_core.messages.base.BaseMessageChunk":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessageChunk"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.messages.function.FunctionMessageChunk.__add__(
+    other: typing.Any
+) -> langchain_core.messages.base.BaseMessageChunk
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>

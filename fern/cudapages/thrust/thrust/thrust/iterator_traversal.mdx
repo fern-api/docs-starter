@@ -1,0 +1,21 @@
+---
+title: thrust::iterator_traversal
+description: "Trait obtaining the iterator traversal category of an iterator type."
+---
+
+Trait obtaining the iterator traversal category of an iterator type.
+
+```cpp showLineNumbers={false}
+#include <thrust/iterator_traits.h>
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="Iterator" type="typename">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `detail::iterator_category_to_traversal< iterator_traits< Iterator >::iterator_category >` (public)

@@ -1,0 +1,361 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/runnables/graph_png
+title: langchain_core.runnables.graph_png
+---
+
+Helper class to draw a state graph into a PNG file.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`PngDrawer`](#langchain_core-runnables-graph_png-PngDrawer) | Helper class to draw a state graph into a PNG file. |
+
+### Data
+
+[`_HAS_PYGRAPHVIZ`](#langchain_core-runnables-graph_png-_HAS_PYGRAPHVIZ)
+
+### API
+
+<Anchor id="langchain_core-runnables-graph_png-PngDrawer">
+
+<CodeBlock links={{"langchain_core.runnables.graph.LabelsDict":"/langchain-core/langchain_core/runnables/graph#langchain_core-runnables-graph-LabelsDict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.runnables.graph_png.PngDrawer(
+    fontname: str | None = None,
+    labels: langchain_core.runnables.graph.LabelsDict | None = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Helper class to draw a state graph into a PNG file.
+
+It requires `graphviz` and `pygraphviz` to be installed.
+
+
+<ParamField path="fontname" type="= fontname or 'arial'">
+</ParamField>
+
+<ParamField path="labels" type="= labels or LabelsDict(nodes=&#123;&#125;, edges=&#123;&#125;)">
+</ParamField>
+<Anchor id="langchain_core-runnables-graph_png-PngDrawer-add_edge">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph_png.PngDrawer.add_edge(
+    viz: typing.Any,
+    source: str,
+    target: str,
+    label: str | None = None,
+    conditional: bool = False
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Adds an edge to the graph.
+
+**Parameters:**
+
+<ParamField path="viz" type="Any">
+The graphviz object.
+</ParamField>
+
+<ParamField path="source" type="str">
+The source node.
+</ParamField>
+
+<ParamField path="target" type="str">
+The target node.
+</ParamField>
+
+<ParamField path="label" type="str | None" default="None">
+The label for the edge.
+</ParamField>
+
+<ParamField path="conditional" type="bool" default="False">
+Whether the edge is conditional.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph_png-PngDrawer-add_edges">
+
+<CodeBlock links={{"langchain_core.runnables.graph.Graph":"/langchain-core/langchain_core/runnables/graph#langchain_core-runnables-graph-Graph"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph_png.PngDrawer.add_edges(
+    viz: typing.Any,
+    graph: langchain_core.runnables.graph.Graph
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add edges to the graph.
+
+**Parameters:**
+
+<ParamField path="viz" type="Any">
+The graphviz object.
+</ParamField>
+
+<ParamField path="graph" type="Graph">
+The graph to draw.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph_png-PngDrawer-add_node">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph_png.PngDrawer.add_node(
+    viz: typing.Any,
+    node: str
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Adds a node to the graph.
+
+**Parameters:**
+
+<ParamField path="viz" type="Any">
+The graphviz object.
+</ParamField>
+
+<ParamField path="node" type="str">
+The node to add.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph_png-PngDrawer-add_nodes">
+
+<CodeBlock links={{"langchain_core.runnables.graph.Graph":"/langchain-core/langchain_core/runnables/graph#langchain_core-runnables-graph-Graph"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph_png.PngDrawer.add_nodes(
+    viz: typing.Any,
+    graph: langchain_core.runnables.graph.Graph
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add nodes to the graph.
+
+**Parameters:**
+
+<ParamField path="viz" type="Any">
+The graphviz object.
+</ParamField>
+
+<ParamField path="graph" type="Graph">
+The graph to draw.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph_png-PngDrawer-add_subgraph">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph_png.PngDrawer.add_subgraph(
+    viz: typing.Any,
+    nodes: list[list[str]],
+    parent_prefix: list[str] | None = None
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Add subgraphs to the graph.
+
+**Parameters:**
+
+<ParamField path="viz" type="Any">
+The graphviz object.
+</ParamField>
+
+<ParamField path="nodes" type="list[list[str]]">
+The nodes to add.
+</ParamField>
+
+<ParamField path="parent_prefix" type="list[str] | None" default="None">
+The prefix of the parent subgraph.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph_png-PngDrawer-draw">
+
+<CodeBlock links={{"langchain_core.runnables.graph.Graph":"/langchain-core/langchain_core/runnables/graph#langchain_core-runnables-graph-Graph"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph_png.PngDrawer.draw(
+    graph: langchain_core.runnables.graph.Graph,
+    output_path: str | None = None
+) -> bytes | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Draw the given state graph into a PNG file.
+
+Requires `graphviz` and `pygraphviz` to be installed.
+
+**Parameters:**
+
+<ParamField path="graph" type="Graph">
+The graph to draw
+</ParamField>
+
+<ParamField path="output_path" type="str | None" default="None">
+The path to save the PNG. If `None`, PNG bytes are returned.
+</ParamField>
+
+**Returns:** `bytes | None`
+
+The PNG bytes if `output_path` is None, else None.
+
+**Raises:**
+
+- `ImportError`: If `pygraphviz` is not installed.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph_png-PngDrawer-get_edge_label">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph_png.PngDrawer.get_edge_label(
+    label: str
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Returns the label to use for an edge.
+
+**Parameters:**
+
+<ParamField path="label" type="str">
+The original label.
+</ParamField>
+
+**Returns:** `str`
+
+The new label.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph_png-PngDrawer-get_node_label">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph_png.PngDrawer.get_node_label(
+    label: str
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Returns the label to use for a node.
+
+**Parameters:**
+
+<ParamField path="label" type="str">
+The original label.
+</ParamField>
+
+**Returns:** `str`
+
+The new label.
+
+
+</Indent>
+<Anchor id="langchain_core-runnables-graph_png-PngDrawer-update_styles">
+
+<CodeBlock links={{"langchain_core.runnables.graph.Graph":"/langchain-core/langchain_core/runnables/graph#langchain_core-runnables-graph-Graph"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph_png.PngDrawer.update_styles(
+    viz: typing.Any,
+    graph: langchain_core.runnables.graph.Graph
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+Update the styles of the entrypoint and END nodes.
+
+**Parameters:**
+
+<ParamField path="viz" type="Any">
+The graphviz object.
+</ParamField>
+
+<ParamField path="graph" type="Graph">
+The graph to draw.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-runnables-graph_png-_HAS_PYGRAPHVIZ">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.runnables.graph_png._HAS_PYGRAPHVIZ = True
+```
+
+</CodeBlock>
+</Anchor>
+

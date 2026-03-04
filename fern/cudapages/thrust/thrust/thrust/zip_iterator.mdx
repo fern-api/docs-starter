@@ -1,0 +1,200 @@
+---
+title: thrust::zip_iterator
+description: "[`zip_iterator`](/library/api/thrust::zip_iterator) is an iterator which represents a pointer into a range of `tuples` whose elements are themselves taken from a `tuple` of input iterators."
+---
+
+`zip_iterator` is an iterator which represents a pointer into a range of `tuples` whose elements are themselves taken from a `tuple` of input iterators.
+
+This iterator is useful for creating a virtual array of structures while achieving the same performance and bandwidth as the structure of arrays idiom. `zip_iterator` also facilitates kernel fusion by providing a convenient means of amortizing the execution of the same operation over multiple ranges.
+
+The following code snippet demonstrates how to create a `zip_iterator` which represents the result of "zipping" multiple ranges together.
+
+Defining the type of a `zip_iterator` can be complex. The next code example demonstrates how to use the `make_zip_iterator` function with the `make_tuple` function to avoid explicitly specifying the type of the `zip_iterator`. This example shows how to use `zip_iterator` to copy multiple ranges with a single call to `thrust::copy`.
+
+```cpp showLineNumbers={false}
+#include <thrust/zip_iterator.h>
+```
+
+**See also:**
+make_zip_iterator,
+make_tuple,
+tuple,
+get
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <thrust/iterator/zip_iterator.h>
+#include <thrust/device_vector.h>
+#include <cuda/std/tuple>
+...
+thrust::device_vector<int> int_v{0, 1, 2};
+thrust::device_vector<float> float_v{0.0f, 1.0f, 2.0f};
+thrust::device_vector<char> char_v{'a', 'b', 'c'};
+
+// aliases for iterators
+using IntIterator = thrust::device_vector<int>::iterator;
+using FloatIterator = thrust::device_vector<float>::iterator;
+using CharIterator = thrust::device_vector<char>::iterator;
+
+// alias for a tuple of these iterators
+using IteratorTuple = cuda::std::tuple<IntIterator, FloatIterator, CharIterator>;
+
+// alias the zip_iterator of this tuple
+using ZipIterator = thrust::zip_iterator<IteratorTuple>;
+
+// finally, create the zip_iterator
+ZipIterator iter(cuda::std::make_tuple(int_v.begin(), float_v.begin(), char_v.begin()));
+
+*iter;   // returns (0, 0.0f, 'a')
+iter[0]; // returns (0, 0.0f, 'a')
+iter[1]; // returns (1, 1.0f, 'b')
+iter[2]; // returns (2, 2.0f, 'c')
+
+cuda::std::get<0>(iter[2]); // returns 2
+cuda::std::get<1>(iter[0]); // returns 0.0f
+cuda::std::get<2>(iter[1]); // returns 'b'
+
+// iter[3] is an out-of-bounds error
+```
+
+```cpp showLineNumbers={false}
+#include <thrust/zip_iterator.h>
+#include <cuda/std/tuple>
+#include <thrust/device_vector.h>
+
+int main()
+{
+  thrust::device_vector<int> int_in{0, 1, 2}, int_out(3);
+  thrust::device_vector<float> float_in{0.0f, 10.0f, 20.0f}, float_out(3);
+
+  thrust::copy(thrust::make_zip_iterator(int_in.begin(), float_in.begin()),
+               thrust::make_zip_iterator(int_in.end(),   float_in.end()),
+               thrust::make_zip_iterator(int_out.begin(),float_out.begin()));
+
+  // int_out is now [0, 1, 2]
+  // float_out is now [0.0f, 10.0f, 20.0f]
+
+  return 0;
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="IteratorTuple" type="typename">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `detail::make_zip_iterator_base::type` (public)
+
+---
+
+## Constructors
+
+### zip_iterator
+
+<Tabs>
+<Tab title="Default">
+
+<CodeBlock links={{"zip_iterator": "/library/api/thrust::zip_iterator"}}>
+```cpp showLineNumbers={false}
+thrust::zip_iterator<IteratorTuple>::zip_iterator() = default
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Overload 2">
+
+<Badge intent="note" minimal>inline</Badge>
+
+This constructor creates a new `zip_iterator` from a `tuple` of iterators.
+
+<CodeBlock links={{"zip_iterator": "/library/api/thrust::zip_iterator"}}>
+```cpp showLineNumbers={false}
+thrust::zip_iterator<IteratorTuple>::zip_iterator(
+    IteratorTuple iterator_tuple
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="iterator_tuple" type="IteratorTuple">
+The `tuple` of iterators to copy from.
+</ParamField>
+
+</Tab>
+<Tab title="Move">
+
+<Badge intent="note" minimal>inline</Badge>
+
+This constructor creates a new `zip_iterator` from multiple iterators.
+
+<CodeBlock links={{"zip_iterator": "/library/api/thrust::zip_iterator"}}>
+```cpp showLineNumbers={false}
+template <class... Iterators>
+thrust::zip_iterator<IteratorTuple>::zip_iterator(
+    Iterators &&... iterators
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="iterators" type="Iterators &&...">
+The iterators to zip.
+</ParamField>
+
+</Tab>
+<Tab title="From other zip_iterator type">
+
+<Badge intent="note" minimal>inline</Badge>
+
+This copy constructor creates a new `zip_iterator` from another `zip_iterator`.
+
+<CodeBlock links={{"zip_iterator": "/library/api/thrust::zip_iterator"}}>
+```cpp showLineNumbers={false}
+template <typename OtherIteratorTuple>
+thrust::zip_iterator<IteratorTuple>::zip_iterator(
+    const zip_iterator<OtherIteratorTuple> &other
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="other" type="const zip_iterator<OtherIteratorTuple> &">
+The `zip_iterator` to copy.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### get_iterator_tuple <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+This method returns a `const` reference to this `zip_iterator``'s` `tuple` of iterators.
+
+<CodeBlock links={{"zip_iterator": "/library/api/thrust::zip_iterator"}}>
+```cpp showLineNumbers={false}
+const IteratorTuple & thrust::zip_iterator<IteratorTuple>::get_iterator_tuple() const
+```
+</CodeBlock>
+
+**Returns:** A `const` reference to this `zip_iterator``'s` `tuple` of iterators.
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `iterator_tuple` | `IteratorTuple` | The underlying iterator tuple type. Alias to `zip_iterator`'s first template argument. |

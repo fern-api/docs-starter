@@ -1,0 +1,20 @@
+---
+title: "cuda::copy_configuration"
+description: "Configuration for copy_bytes."
+---
+
+Configuration for copy_bytes.
+
+```cpp showLineNumbers={false}
+#include <cuda/copy.h>
+```
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `src_location_hint` | `memory_location` | Source memory location hint for copy_bytes, used only for managed memory. |
+| `dst_location_hint` | `memory_location` | Destination memory location hint for copy_bytes, used only for managed memory. |
+| `src_access_order` | `source_access_order` | Source access order for copy_bytes. |

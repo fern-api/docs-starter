@@ -1,0 +1,341 @@
+---
+title: "cuda::strided_iterator"
+description: "A [`strided_iterator`](/libcudacxx/api/cuda::strided_iterator) wraps another iterator and advances it by a specified stride each time it is incremented or decremented."
+---
+
+A `strided_iterator` wraps another iterator and advances it by a specified stride each time it is incremented or decremented.
+
+```cpp showLineNumbers={false}
+#include <cuda/strided_iterator.h>
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="_Iter" type="class">
+A random access iterator
+</ParamField>
+
+<ParamField path="_Stride" type="class" default="::cuda::std::iter_difference_t<_Iter>">
+Either an [integer-like](https://eel.is/c++draft/iterator.concept.winc#4) or an [integral-constant-like](https://eel.is/c++draft/views.contiguous#concept:integral-constant-like) specifying the stride
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### strided_iterator <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+value-initializes both the base iterator and stride
+
+<CodeBlock links={{"strided_iterator": "/libcudacxx/api/cuda::strided_iterator"}}>
+```cpp showLineNumbers={false}
+template <class _Iter2, class _Stride2>
+cuda::strided_iterator<_Iter, _Stride>::strided_iterator() noexcept(::cuda::std::is_nothrow_default_constructible_v< _Iter2 > &&::cuda::std::is_nothrow_default_constructible_v< _Stride2 >)
+```
+</CodeBlock>
+
+<Note>
+_Iter must be default initializable because it is a random_access_iterator and thereby semiregular _Stride must be integer-like or integral_constant_like which requires default constructability
+</Note>
+
+</Tab>
+<Tab title="Overload 2">
+
+<Badge intent="note" minimal>explicit</Badge>
+
+Constructs a `strided_iterator` from a base iterator.
+
+<CodeBlock links={{"strided_iterator": "/libcudacxx/api/cuda::strided_iterator"}}>
+```cpp showLineNumbers={false}
+template <class _Stride2>
+cuda::strided_iterator<_Iter, _Stride>::strided_iterator(
+    _Iter __iter
+) noexcept(::cuda::std::is_nothrow_move_constructible_v< _Iter > &&::cuda::std::is_nothrow_default_constructible_v< _Stride2 >)
+```
+</CodeBlock>
+
+<Note>
+We cannot construct a `strided_iterator` with an [integer-like](https://eel.is/c++draft/iterator.concept.winc#4) stride, because that would value construct to 0 and incrementing the iterator would do nothing.
+</Note>
+
+**Parameters**
+
+<ParamField path="__iter" type="_Iter">
+The base iterator
+</ParamField>
+
+</Tab>
+<Tab title="From iterator range">
+
+<Badge intent="note" minimal>explicit</Badge>
+
+Constructs a `strided_iterator` from a base iterator and a stride.
+
+<CodeBlock links={{"strided_iterator": "/libcudacxx/api/cuda::strided_iterator"}}>
+```cpp showLineNumbers={false}
+cuda::strided_iterator<_Iter, _Stride>::strided_iterator(
+    _Iter __iter,
+    _Stride __stride
+) noexcept(::cuda::std::is_nothrow_move_constructible_v< _Iter > &&::cuda::std::is_nothrow_move_constructible_v< _Stride >)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__iter" type="_Iter">
+The base iterator
+</ParamField>
+
+<ParamField path="__stride" type="_Stride">
+The new stride
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### base <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+Extracts the stored iterator.
+
+<CodeBlock links={{"strided_iterator": "/libcudacxx/api/cuda::strided_iterator"}}>
+```cpp showLineNumbers={false}
+_Iter cuda::strided_iterator<_Iter, _Stride>::base() && noexcept(::cuda::std::is_nothrow_move_constructible_v< _Iter >)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+Returns a const reference to the stored iterator.
+
+<CodeBlock links={{"strided_iterator": "/libcudacxx/api/cuda::strided_iterator"}}>
+```cpp showLineNumbers={false}
+const _Iter & cuda::strided_iterator<_Iter, _Stride>::base() const & noexcept
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### stride <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Returns the current stride as an integral value.
+
+<CodeBlock links={{"strided_iterator": "/libcudacxx/api/cuda::strided_iterator"}}>
+```cpp showLineNumbers={false}
+difference_type cuda::strided_iterator<_Iter, _Stride>::stride() const noexcept(__noexcept_stride)
+```
+</CodeBlock>
+
+### operator* <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+Dereferences the stored base iterator.
+
+<CodeBlock links={{"strided_iterator": "/libcudacxx/api/cuda::strided_iterator"}}>
+```cpp showLineNumbers={false}
+decltype(
+    auto
+) noexcept(*::cuda::std::declval< _Iter & >())
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+Dereferences the stored base iterator.
+
+<CodeBlock links={{"strided_iterator": "/libcudacxx/api/cuda::strided_iterator"}}>
+```cpp showLineNumbers={false}
+template <class _Iter2>
+decltype(
+    auto
+) const noexcept(*::cuda::std::declval< const _Iter2 & >())
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### operator[] <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+Subscripts the stored base iterator with a given offset times the stride.
+
+<CodeBlock links={{"strided_iterator": "/libcudacxx/api/cuda::strided_iterator"}}>
+```cpp showLineNumbers={false}
+decltype(
+    auto
+) noexcept(__noexcept_stride &&noexcept(::cuda::std::declval< _Iter & >()[__n]))
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The offset
+</ParamField>
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+Subscripts the stored base iterator with a given offset times the stride.
+
+<CodeBlock links={{"strided_iterator": "/libcudacxx/api/cuda::strided_iterator"}}>
+```cpp showLineNumbers={false}
+template <class _Iter2>
+decltype(
+    auto
+) const noexcept(__noexcept_stride &&noexcept(::cuda::std::declval< const _Iter2 & >()[__n]))
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The offset
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### operator++ <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Pre-increment">
+
+Increments the stored base iterator by the stride.
+
+<CodeBlock links={{"strided_iterator": "/libcudacxx/api/cuda::strided_iterator"}}>
+```cpp showLineNumbers={false}
+strided_iterator & cuda::strided_iterator<_Iter, _Stride>::operator++() noexcept(__noexcept_stride &&noexcept(::cuda::std::declval< _Iter & >()+=1))
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Post-increment">
+
+Increments the stored base iterator by the stride.
+
+<CodeBlock links={{"strided_iterator": "/libcudacxx/api/cuda::strided_iterator"}}>
+```cpp showLineNumbers={false}
+auto cuda::strided_iterator<_Iter, _Stride>::operator++(
+    int
+) noexcept(noexcept(__noexcept_stride &&noexcept(::cuda::std::declval< _Iter & >()+=1)) &&::cuda::std::is_nothrow_copy_constructible_v< _Iter > &&::cuda::std::is_nothrow_copy_constructible_v< _Stride >)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### operator-- <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Pre-decrement">
+
+Decrements the stored base iterator by the stride.
+
+<CodeBlock links={{"strided_iterator": "/libcudacxx/api/cuda::strided_iterator"}}>
+```cpp showLineNumbers={false}
+strided_iterator & cuda::strided_iterator<_Iter, _Stride>::operator--() noexcept(__noexcept_stride &&noexcept(::cuda::std::declval< _Iter & >() -=1))
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Post-decrement">
+
+Decrements the stored base iterator by the stride.
+
+<CodeBlock links={{"strided_iterator": "/libcudacxx/api/cuda::strided_iterator"}}>
+```cpp showLineNumbers={false}
+strided_iterator cuda::strided_iterator<_Iter, _Stride>::operator--(
+    int
+) noexcept(noexcept(__noexcept_stride &&noexcept(::cuda::std::declval< _Iter & >() -=1)) &&::cuda::std::is_nothrow_copy_constructible_v< _Iter > &&::cuda::std::is_nothrow_copy_constructible_v< _Stride >)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### operator+= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Advances a `strided_iterator` by a given number of steps.
+
+<CodeBlock links={{"strided_iterator": "/libcudacxx/api/cuda::strided_iterator"}}>
+```cpp showLineNumbers={false}
+strided_iterator & cuda::strided_iterator<_Iter, _Stride>::operator+=(
+    difference_type __n
+) noexcept(__noexcept_stride &&noexcept(::cuda::std::declval< _Iter & >()+=1))
+```
+</CodeBlock>
+
+<Note>
+Increments the base iterator by `__n` times the stride
+</Note>
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The number of steps to increment
+</ParamField>
+
+### operator-= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Decrements a `strided_iterator` by a given number of steps.
+
+<CodeBlock links={{"strided_iterator": "/libcudacxx/api/cuda::strided_iterator"}}>
+```cpp showLineNumbers={false}
+strided_iterator & cuda::strided_iterator<_Iter, _Stride>::operator-=(
+    difference_type __n
+) noexcept(__noexcept_stride &&noexcept(::cuda::std::declval< _Iter & >() -=1))
+```
+</CodeBlock>
+
+<Note>
+Decrements the base iterator by `__n` times the stride
+</Note>
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The number of steps to decrement
+</ParamField>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `iterator_concept` | `::cuda::std::random_access_iterator_tag` |
+| `iterator_category` | `::cuda::std::random_access_iterator_tag` |
+| `value_type` | `::cuda::std::iter_value_t< _Iter >` |
+| `difference_type` | `::cuda::std::iter_difference_t< _Iter >` |
+| `reference` | `::cuda::std::iter_reference_t< _Iter >` |
+| `pointer` | `void` |

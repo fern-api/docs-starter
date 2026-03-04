@@ -1,0 +1,265 @@
+---
+title: cub::CacheModifiedInputIterator
+description: "A random-access input wrapper for dereferencing array values using a PTX cache load modifier."
+---
+
+A random-access input wrapper for dereferencing array values using a PTX cache load modifier.
+
+**Overview**
+
+- `CacheModifiedInputIterator` is a random-access input iterator that wraps a native device pointer of type `ValueType*`. `ValueType` references are made by reading `ValueType` values through loads modified by `MODIFIER`.
+- Can be used to load any data type from memory using PTX cache load modifiers (e.g., "LOAD_LDG", "LOAD_CG", "LOAD_CA", "LOAD_CS", "LOAD_CV", etc.).
+- Can be constructed, manipulated, and exchanged within and between host and device functions, but can only be dereferenced within device functions.
+- Compatible with Thrust API v1.7 or newer.
+
+**Snippet**
+
+The code snippet below illustrates the use of `CacheModifiedInputIterator` to dereference a device array of double using the "ldg" PTX load modifier (i.e., load values through texture cache).
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/iterator/cache_modified_input_iterator.cuh>
+
+// Declare, allocate, and initialize a device array
+double *d_in;            // e.g., [8.0, 6.0, 7.0, 5.0, 3.0, 0.0, 9.0]
+
+// Create an iterator wrapper
+cub::CacheModifiedInputIterator<cub::LOAD_LDG, double> itr(d_in);
+
+// Within device code:
+printf("%f\n", itr[0]);  // 8.0
+printf("%f\n", itr[1]);  // 6.0
+printf("%f\n", itr[6]);  // 9.0
+```
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="MODIFIER" type="CacheLoadModifier">
+</ParamField>
+
+<ParamField path="ValueType" type="typename">
+The value type of this iterator
+</ParamField>
+
+<ParamField path="OffsetT" type="typename" default="ptrdiff_t">
+The difference type of this iterator (Default: `ptrdiff_t`)
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### CacheModifiedInputIterator <Badge intent="note" minimal>inline</Badge>
+
+Constructor.
+
+<CodeBlock links={{"CacheModifiedInputIterator": "/library/api/cub::CacheModifiedInputIterator"}}>
+```cpp showLineNumbers={false}
+template <typename QualifiedValueType>
+cub::CacheModifiedInputIterator<MODIFIER, ValueType, OffsetT>::CacheModifiedInputIterator(
+    QualifiedValueType *ptr
+)
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### operator++ <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Post-increment">
+
+Postfix increment.
+
+<CodeBlock links={{"CacheModifiedInputIterator": "/library/api/cub::CacheModifiedInputIterator"}}>
+```cpp showLineNumbers={false}
+self_type cub::CacheModifiedInputIterator<MODIFIER, ValueType, OffsetT>::operator++(
+    int
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Pre-increment">
+
+Prefix increment.
+
+<CodeBlock links={{"CacheModifiedInputIterator": "/library/api/cub::CacheModifiedInputIterator"}}>
+```cpp showLineNumbers={false}
+self_type cub::CacheModifiedInputIterator<MODIFIER, ValueType, OffsetT>::operator++()
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### operator* <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Indirection.
+
+<CodeBlock links={{"CacheModifiedInputIterator": "/library/api/cub::CacheModifiedInputIterator"}}>
+```cpp showLineNumbers={false}
+reference cub::CacheModifiedInputIterator<MODIFIER, ValueType, OffsetT>::operator*() const
+```
+</CodeBlock>
+
+### operator+ <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Addition.
+
+<CodeBlock links={{"CacheModifiedInputIterator": "/library/api/cub::CacheModifiedInputIterator"}}>
+```cpp showLineNumbers={false}
+template <typename Distance>
+self_type cub::CacheModifiedInputIterator<MODIFIER, ValueType, OffsetT>::operator+(
+    Distance n
+) const
+```
+</CodeBlock>
+
+### operator+= <Badge intent="note" minimal>inline</Badge>
+
+Addition assignment.
+
+<CodeBlock links={{"CacheModifiedInputIterator": "/library/api/cub::CacheModifiedInputIterator"}}>
+```cpp showLineNumbers={false}
+template <typename Distance>
+self_type & cub::CacheModifiedInputIterator<MODIFIER, ValueType, OffsetT>::operator+=(
+    Distance n
+)
+```
+</CodeBlock>
+
+### operator- <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<Tabs>
+<Tab title="Const">
+
+Subtraction.
+
+<CodeBlock links={{"CacheModifiedInputIterator": "/library/api/cub::CacheModifiedInputIterator"}}>
+```cpp showLineNumbers={false}
+template <typename Distance>
+self_type cub::CacheModifiedInputIterator<MODIFIER, ValueType, OffsetT>::operator-(
+    Distance n
+) const
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Const">
+
+Distance.
+
+<CodeBlock links={{"CacheModifiedInputIterator": "/library/api/cub::CacheModifiedInputIterator"}}>
+```cpp showLineNumbers={false}
+difference_type cub::CacheModifiedInputIterator<MODIFIER, ValueType, OffsetT>::operator-(
+    self_type other
+) const
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### operator-= <Badge intent="note" minimal>inline</Badge>
+
+Subtraction assignment.
+
+<CodeBlock links={{"CacheModifiedInputIterator": "/library/api/cub::CacheModifiedInputIterator"}}>
+```cpp showLineNumbers={false}
+template <typename Distance>
+self_type & cub::CacheModifiedInputIterator<MODIFIER, ValueType, OffsetT>::operator-=(
+    Distance n
+)
+```
+</CodeBlock>
+
+### operator[] <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Array subscript.
+
+<CodeBlock links={{"CacheModifiedInputIterator": "/library/api/cub::CacheModifiedInputIterator"}}>
+```cpp showLineNumbers={false}
+template <typename Distance>
+reference cub::CacheModifiedInputIterator<MODIFIER, ValueType, OffsetT>::operator[](
+    Distance n
+) const
+```
+</CodeBlock>
+
+### operator-> <Badge intent="note" minimal>inline</Badge>
+
+Structure dereference.
+
+<CodeBlock links={{"CacheModifiedInputIterator": "/library/api/cub::CacheModifiedInputIterator"}}>
+```cpp showLineNumbers={false}
+pointer cub::CacheModifiedInputIterator<MODIFIER, ValueType, OffsetT>::operator->()
+```
+</CodeBlock>
+
+### operator== <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Equal to.
+
+<CodeBlock links={{"CacheModifiedInputIterator": "/library/api/cub::CacheModifiedInputIterator"}}>
+```cpp showLineNumbers={false}
+bool cub::CacheModifiedInputIterator<MODIFIER, ValueType, OffsetT>::operator==(
+    const self_type &rhs
+) const
+```
+</CodeBlock>
+
+### operator!= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Not equal to.
+
+<CodeBlock links={{"CacheModifiedInputIterator": "/library/api/cub::CacheModifiedInputIterator"}}>
+```cpp showLineNumbers={false}
+bool cub::CacheModifiedInputIterator<MODIFIER, ValueType, OffsetT>::operator!=(
+    const self_type &rhs
+) const
+```
+</CodeBlock>
+
+### operator&lt;&lt; <Badge intent="note" minimal>inline</Badge>
+
+ostream operator
+
+<CodeBlock links={{"CacheModifiedInputIterator": "/library/api/cub::CacheModifiedInputIterator"}}>
+```cpp showLineNumbers={false}
+friend::std::ostream & cub::CacheModifiedInputIterator<MODIFIER, ValueType, OffsetT>::operator<<(
+    ::std::ostream &os,
+    const self_type &
+)
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `self_type` | `CacheModifiedInputIterator` | My own type. |
+| `difference_type` | `OffsetT` | Type to express the result of subtracting one iterator from another. |
+| `value_type` | `ValueType` | The type of the element the iterator can point to. |
+| `pointer` | `ValueType *` | The type of a pointer to an element the iterator can point to. |
+| `reference` | `ValueType` | The type of a reference to an element the iterator can point to. |
+| `iterator_category` | `THRUST_NS_QUALIFIER::detail::iterator_facade_category_t< THRUST_NS_QUALIFIER::device_system_tag, THRUST_NS_QUALIFIER::random_access_traversal_tag >` | |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `ptr` | `ValueType *` | Wrapped native pointer. |

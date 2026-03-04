@@ -1,0 +1,317 @@
+---
+title: thrust::transform_iterator
+description: "[`transform_iterator`](/library/api/thrust::transform_iterator) is an iterator which represents a pointer into a range of values after transformation by a function."
+---
+
+`transform_iterator` is an iterator which represents a pointer into a range of values after transformation by a function.
+
+This iterator is useful for creating a range filled with the result of applying an operation to another range without either explicitly storing it in memory, or explicitly executing the transformation. Using `transform_iterator` facilitates kernel fusion by deferring the execution of a transformation until the value is needed while saving both memory capacity and bandwidth.
+
+The following code snippet demonstrates how to create a `transform_iterator` which represents the result of `sqrtf` applied to the contents of a [`device_vector`](/library/api/thrust::device_vector).
+
+This next example demonstrates how to use a `transform_iterator` with the `thrust::reduce` function to compute the sum of squares of a sequence. We will create temporary `transform_iterators` with the `make_transform_iterator` function in order to avoid explicitly specifying their type:
+
+The following example illustrates how to use the third template argument to explicitly specify the return type of the function.
+
+```cpp showLineNumbers={false}
+#include <thrust/transform_iterator.h>
+```
+
+**See also:**
+make_transform_iterator
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <thrust/iterator/transform_iterator.h>
+#include <thrust/device_vector.h>
+
+struct square_root
+{
+  __host__ __device__
+  float operator()(float x) const
+  {
+    return sqrtf(x);
+  }
+};
+
+int main()
+{
+  thrust::device_vector<float> v{1.0f, 4.0f, 9.0f, 16.0f};
+
+  using FloatIterator = thrust::device_vector<float>::iterator;
+
+  thrust::transform_iterator<square_root, FloatIterator> iter(v.begin(), square_root());
+
+  *iter;   // returns 1.0f
+  iter[0]; // returns 1.0f;
+  iter[1]; // returns 2.0f;
+  iter[2]; // returns 3.0f;
+  iter[3]; // returns 4.0f;
+
+  // iter[4] is an out-of-bounds error
+}
+```
+
+```cpp showLineNumbers={false}
+#include <thrust/iterator/transform_iterator.h>
+#include <thrust/device_vector.h>
+#include <thrust/reduce.h>
+#include <iostream>
+
+struct square
+{
+  __host__ __device__
+  float operator()(float x) const
+  {
+    return x * x;
+  }
+};
+
+int main()
+{
+  // initialize a device array
+  thrust::device_vector<float> v{1.0f, 2.0f, 3.0f, 4.0f};
+
+  float sum_of_squares =
+   thrust::reduce(thrust::make_transform_iterator(v.begin(), square()),
+                  thrust::make_transform_iterator(v.end(),   square()));
+
+  std::cout << "sum of squares: " << sum_of_squares << std::endl;
+  return 0;
+}
+```
+
+```cpp showLineNumbers={false}
+#include <thrust/iterator/transform_iterator.h>
+#include <thrust/device_vector.h>
+
+struct square_root
+{
+  __host__ __device__
+  float operator()(float x) const
+  {
+    return sqrtf(x);
+  }
+};
+
+int main()
+{
+  thrust::device_vector<float> v{1.0f, 4.0f, 9.0f, 16.0f};
+
+  using FloatIterator = thrust::device_vector<float>::iterator;
+
+  // note: float result_type is specified explicitly
+  thrust::transform_iterator<square_root, FloatIterator, float> iter(v.begin(), square_root());
+
+  *iter;   // returns 1.0f
+  iter[0]; // returns 1.0f;
+  iter[1]; // returns 2.0f;
+  iter[2]; // returns 3.0f;
+  iter[3]; // returns 4.0f;
+
+  // iter[4] is an out-of-bounds error
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="AdaptableUnaryFunction" type="class">
+</ParamField>
+
+<ParamField path="Iterator" type="class">
+</ParamField>
+
+<ParamField path="Reference" type="class" default="use_default">
+</ParamField>
+
+<ParamField path="Value" type="class" default="use_default">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `thrust::iterator_adaptor< transform_iterator< AdaptableUnaryFunction, Iterator, use_default, use_default >, Iterator, value_type, use_default, use_default, reference >` (public)
+
+---
+
+## Constructors
+
+### transform_iterator
+
+<Tabs>
+<Tab title="Default">
+
+<CodeBlock links={{"transform_iterator": "/library/api/thrust::transform_iterator"}}>
+```cpp showLineNumbers={false}
+thrust::transform_iterator<AdaptableUnaryFunction, Iterator, Reference, Value>::transform_iterator() = default
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Copy">
+
+<CodeBlock links={{"transform_iterator": "/library/api/thrust::transform_iterator"}}>
+```cpp showLineNumbers={false}
+thrust::transform_iterator<AdaptableUnaryFunction, Iterator, Reference, Value>::transform_iterator(
+    transform_iterator const &
+) = default
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="From iterator range">
+
+<Badge intent="note" minimal>inline</Badge>
+
+This constructor takes as arguments an `Iterator` and an `AdaptableUnaryFunction` and copies them to a new `transform_iterator`.
+
+<CodeBlock links={{"transform_iterator": "/library/api/thrust::transform_iterator"}}>
+```cpp showLineNumbers={false}
+thrust::transform_iterator<AdaptableUnaryFunction, Iterator, Reference, Value>::transform_iterator(
+    Iterator const &x,
+    AdaptableUnaryFunction f
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="x" type="Iterator const &">
+An `Iterator` pointing to the input to this `transform_iterator``'s` `AdaptableUnaryFunction`.
+</ParamField>
+
+<ParamField path="f" type="AdaptableUnaryFunction">
+An `AdaptableUnaryFunction` used to transform the objects pointed to by `x`.
+</ParamField>
+
+</Tab>
+<Tab title="Copy">
+
+<Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>explicit</Badge>
+
+This explicit constructor copies the value of a given `Iterator` and creates this `transform_iterator``'s` `AdaptableUnaryFunction` using its null constructor.
+
+<CodeBlock links={{"transform_iterator": "/library/api/thrust::transform_iterator"}}>
+```cpp showLineNumbers={false}
+thrust::transform_iterator<AdaptableUnaryFunction, Iterator, Reference, Value>::transform_iterator(
+    Iterator const &x
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="x" type="Iterator const &">
+An `Iterator` to copy.
+</ParamField>
+
+</Tab>
+<Tab title="From iterator range">
+
+<Badge intent="note" minimal>inline</Badge>
+
+This copy constructor creates a new `transform_iterator` from another `transform_iterator`.
+
+<CodeBlock links={{"transform_iterator": "/library/api/thrust::transform_iterator"}}>
+```cpp showLineNumbers={false}
+template <typename OtherAdaptableUnaryFunction,
+          typename OtherIterator,
+          typename OtherReference,
+          typename OtherValue>
+thrust::transform_iterator<AdaptableUnaryFunction, Iterator, Reference, Value>::transform_iterator(
+    const transform_iterator<OtherAdaptableUnaryFunction, OtherIterator, OtherReference, OtherValue> &other,
+    detail::enable_if_convertible_t<OtherIterator, Iterator> * = 0,
+    detail::enable_if_convertible_t<OtherAdaptableUnaryFunction, AdaptableUnaryFunction> * = 0
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="other" type="const transform_iterator<OtherAdaptableUnaryFunction, OtherIterator, OtherReference, OtherValue> &">
+The `transform_iterator` to copy.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Assignment operators
+
+### operator= <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"transform_iterator": "/library/api/thrust::transform_iterator"}}>
+```cpp showLineNumbers={false}
+transform_iterator & thrust::transform_iterator<AdaptableUnaryFunction, Iterator, Reference, Value>::operator=(
+    transform_iterator const &other
+)
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### functor <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+This method returns a copy of this `transform_iterator``'s` `AdaptableUnaryFunction`.
+
+<CodeBlock links={{"transform_iterator": "/library/api/thrust::transform_iterator"}}>
+```cpp showLineNumbers={false}
+AdaptableUnaryFunction thrust::transform_iterator<AdaptableUnaryFunction, Iterator, Reference, Value>::functor() const
+```
+</CodeBlock>
+
+**Returns:** A copy of this `transform_iterator``'s` `AdaptableUnaryFunction`.
+
+### base <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"transform_iterator": "/library/api/thrust::transform_iterator", "iterator_adaptor": "/library/api/thrust::iterator_adaptor"}}>
+```cpp showLineNumbers={false}
+Base const  & thrust::iterator_adaptor<Derived, Base, Value, System, Traversal, Reference, Difference>::base() const
+```
+</CodeBlock>
+
+**Returns:** A `const` reference to the `Base` iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) adapts.
+
+### base_reference <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+<CodeBlock links={{"transform_iterator": "/library/api/thrust::transform_iterator", "iterator_adaptor": "/library/api/thrust::iterator_adaptor"}}>
+```cpp showLineNumbers={false}
+Base & thrust::iterator_adaptor<Derived, Base, Value, System, Traversal, Reference, Difference>::base_reference()
+```
+</CodeBlock>
+
+**Returns:** A mutable reference to the `Base` iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) adapts.
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"transform_iterator": "/library/api/thrust::transform_iterator", "iterator_adaptor": "/library/api/thrust::iterator_adaptor"}}>
+```cpp showLineNumbers={false}
+Base const  & thrust::iterator_adaptor<Derived, Base, Value, System, Traversal, Reference, Difference>::base_reference() const
+```
+</CodeBlock>
+
+**Returns:** A `const` reference to the `Base` iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) adapts.
+
+</Tab>
+</Tabs>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `base_type` | `Base` | The type of iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor)`'s` `adapts`. |

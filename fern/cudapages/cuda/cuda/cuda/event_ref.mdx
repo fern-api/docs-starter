@@ -1,0 +1,132 @@
+---
+title: "cuda::event_ref"
+description: "An non-owning wrapper for an untimed `cudaEvent_t`."
+---
+
+An non-owning wrapper for an untimed `cudaEvent_t`.
+
+```cpp showLineNumbers={false}
+#include <cuda/event_ref.h>
+```
+
+---
+
+## Constructors
+
+### event_ref <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="From native handle">
+
+Construct a new `event_ref` object from a `cudaEvent_t`.
+
+This constructor provides an implicit conversion from `cudaEvent_t`
+
+<CodeBlock links={{"event_ref": "/libcudacxx/api/cuda::event_ref"}}>
+```cpp showLineNumbers={false}
+cuda::event_ref::event_ref(
+    ::cudaEvent_t __evnt
+) noexcept
+```
+</CodeBlock>
+
+<Note>
+: It is the callers responsibility to ensure the `event_ref` does not outlive the event denoted by the `cudaEvent_t` handle.
+</Note>
+
+<Info title="Postconditions">
+[`get()`](/libcudacxx/api/cuda::event_ref::get())` == __evnt`
+</Info>
+
+</Tab>
+<Tab title="Deleted overloads">
+
+The following overloads are deleted to prevent misuse:
+
+<CodeBlock links={{"event_ref": "/libcudacxx/api/cuda::event_ref"}}>
+```cpp showLineNumbers={false}
+cuda::event_ref::event_ref(int) = delete;
+cuda::event_ref::event_ref(::cuda::std::nullptr_t) = delete;
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### record <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Records an event on the specified stream.
+
+<CodeBlock links={{"event_ref": "/libcudacxx/api/cuda::event_ref", "stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+void cuda::event_ref::record(
+    stream_ref __stream
+) const
+```
+</CodeBlock>
+
+**Throws:** `cuda_error` if the event record fails
+
+### sync <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Synchronizes the event.
+
+<CodeBlock links={{"event_ref": "/libcudacxx/api/cuda::event_ref"}}>
+```cpp showLineNumbers={false}
+void cuda::event_ref::sync() const
+```
+</CodeBlock>
+
+**Throws:** `cuda_error` if waiting for the event fails
+
+### is_done <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Checks if all the work in the stream prior to the record of the event has completed.
+
+If is_done returns true, calling [sync()](/libcudacxx/api/cuda::event_ref::sync()) on this event will return immediately
+
+<CodeBlock links={{"event_ref": "/libcudacxx/api/cuda::event_ref"}}>
+```cpp showLineNumbers={false}
+bool cuda::event_ref::is_done() const
+```
+</CodeBlock>
+
+**Throws:** `cuda_error` if the event query fails
+
+### get <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Retrieve the native `cudaEvent_t` handle.
+
+<CodeBlock links={{"event_ref": "/libcudacxx/api/cuda::event_ref"}}>
+```cpp showLineNumbers={false}
+::cudaEvent_t cuda::event_ref::get() const noexcept
+```
+</CodeBlock>
+
+**Returns:** cudaEvent_t The native handle being held by the `event_ref` object.
+
+### operator bool <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>explicit</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Checks if the `event_ref` is valid.
+
+<CodeBlock links={{"event_ref": "/libcudacxx/api/cuda::event_ref"}}>
+```cpp showLineNumbers={false}
+cuda::event_ref::operator bool() const noexcept
+```
+</CodeBlock>
+
+**Returns:** true if the `event_ref` is valid, false otherwise.
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `value_type` | `::cudaEvent_t` |

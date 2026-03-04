@@ -1,0 +1,415 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/agents
+title: langchain_core.agents
+---
+
+Schema definitions for representing agent actions, observations, and return values.
+
+!!! warning
+
+    The schema definitions are provided for backwards compatibility.
+
+!!! warning
+
+    New agents should be built using the
+    [`langchain` library](https://pypi.org/project/langchain/), which provides a
+    simpler and more flexible way to define agents.
+
+    See docs on [building agents](https://docs.langchain.com/oss/python/langchain/agents).
+
+Agents use language models to choose a sequence of actions to take.
+
+A basic agent works in the following manner:
+
+1. Given a prompt an agent uses an LLM to request an action to take
+    (e.g., a tool to run).
+2. The agent executes the action (e.g., runs the tool), and receives an observation.
+3. The agent returns the observation to the LLM, which can then be used to generate
+    the next action.
+4. When the agent reaches a stopping condition, it returns a final return value.
+
+The schemas for the agents themselves are defined in `langchain.agents.agent`.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`AgentAction`](#langchain_core-agents-AgentAction) | Represents a request to execute an action by an agent. |
+| [`AgentActionMessageLog`](#langchain_core-agents-AgentActionMessageLog) | Representation of an action to be executed by an agent. |
+| [`AgentFinish`](#langchain_core-agents-AgentFinish) | Final return value of an `ActionAgent`. |
+| [`AgentStep`](#langchain_core-agents-AgentStep) | Result of running an `AgentAction`. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_convert_agent_action_to_messages`](#langchain_core-agents-_convert_agent_action_to_messages) | Convert an agent action to a message. |
+| [`_convert_agent_observation_to_messages`](#langchain_core-agents-_convert_agent_observation_to_messages) | Convert an agent action to a message. |
+| [`_create_function_message`](#langchain_core-agents-_create_function_message) | Convert agent action and observation into a function message. |
+
+### API
+
+<Anchor id="langchain_core-agents-AgentAction">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.agents.AgentAction(
+    tool: str,
+    tool_input: str | dict,
+    log: str,
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [Serializable](/langchain-core/langchain_core/load/serializable#langchain_core-load-serializable-Serializable)
+
+Represents a request to execute an action by an agent.
+
+The action consists of the name of the tool to execute and the input to pass
+to the tool. The log is used to pass along extra information about the action.
+
+
+<ParamField path="log" type="str">
+Additional information to log about the action.
+
+This log can be used in a few ways. First, it can be used to audit what exactly the
+LLM predicted to lead to this `(tool, tool_input)`.
+
+Second, it can be used in future iterations to show the LLMs prior thoughts. This is
+useful when `(tool, tool_input)` does not contain full information about the LLM
+prediction (for example, any `thought` before the tool/tool_input).
+</ParamField>
+
+<ParamField path="messages" type="Sequence[BaseMessage]">
+Return the messages that correspond to this action.
+</ParamField>
+
+<ParamField path="tool" type="str">
+The name of the `Tool` to execute.
+</ParamField>
+
+<ParamField path="tool_input" type="str | dict">
+The input to pass in to the `Tool`.
+</ParamField>
+
+<ParamField path="type" type="Literal['AgentAction'] = 'AgentAction'">
+</ParamField>
+<Anchor id="langchain_core-agents-AgentAction-get_lc_namespace">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.agents.AgentAction.get_lc_namespace() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Get the namespace of the LangChain object.
+
+**Returns:** `list[str]`
+
+`["langchain", "schema", "agent"]`
+
+
+</Indent>
+<Anchor id="langchain_core-agents-AgentAction-is_lc_serializable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.agents.AgentAction.is_lc_serializable() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+`AgentAction` is serializable.
+
+**Returns:** `bool`
+
+`True`
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-agents-AgentActionMessageLog">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.agents.AgentActionMessageLog()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [AgentAction](#langchain_core-agents-AgentAction)
+
+Representation of an action to be executed by an agent.
+
+This is similar to `AgentAction`, but includes a message log consisting of
+chat messages.
+
+This is useful when working with `ChatModels`, and is used to reconstruct
+conversation history from the agent's perspective.
+
+
+<ParamField path="message_log" type="Sequence[BaseMessage]">
+Similar to log, this can be used to pass along extra information about what exact
+messages were predicted by the LLM before parsing out the `(tool, tool_input)`.
+
+This is again useful if `(tool, tool_input)` cannot be used to fully recreate the
+LLM prediction, and you need that LLM prediction (for future agent iteration).
+
+Compared to `log`, this is useful when the underlying LLM is a chat model (and
+therefore returns messages rather than a string).
+</ParamField>
+
+<ParamField path="type" type="Literal['AgentActionMessageLog'] = 'AgentActionMessageLog'">
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-agents-AgentFinish">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.agents.AgentFinish(
+    return_values: dict,
+    log: str,
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [Serializable](/langchain-core/langchain_core/load/serializable#langchain_core-load-serializable-Serializable)
+
+Final return value of an `ActionAgent`.
+
+Agents return an `AgentFinish` when they have reached a stopping condition.
+
+
+<ParamField path="log" type="str">
+Additional information to log about the return value.
+
+This is used to pass along the full LLM prediction, not just the parsed out
+return value.
+
+For example, if the full LLM prediction was `Final Answer: 2` you may want to just
+return `2` as a return value, but pass along the full string as a `log` (for
+debugging or observability purposes).
+</ParamField>
+
+<ParamField path="messages" type="Sequence[BaseMessage]">
+Messages that correspond to this observation.
+</ParamField>
+
+<ParamField path="return_values" type="dict">
+Dictionary of return values.
+</ParamField>
+
+<ParamField path="type" type="Literal['AgentFinish'] = 'AgentFinish'">
+</ParamField>
+<Anchor id="langchain_core-agents-AgentFinish-get_lc_namespace">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.agents.AgentFinish.get_lc_namespace() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Get the namespace of the LangChain object.
+
+**Returns:** `list[str]`
+
+`["langchain", "schema", "agent"]`
+
+
+</Indent>
+<Anchor id="langchain_core-agents-AgentFinish-is_lc_serializable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.agents.AgentFinish.is_lc_serializable() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Return `True` as this class is serializable.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-agents-AgentStep">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.agents.AgentStep()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [Serializable](/langchain-core/langchain_core/load/serializable#langchain_core-load-serializable-Serializable)
+
+Result of running an `AgentAction`.
+
+
+<ParamField path="action" type="AgentAction">
+The `AgentAction` that was executed.
+</ParamField>
+
+<ParamField path="messages" type="Sequence[BaseMessage]">
+Messages that correspond to this observation.
+</ParamField>
+
+<ParamField path="observation" type="Any">
+The result of the `AgentAction`.
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-agents-_convert_agent_action_to_messages">
+
+<CodeBlock links={{"langchain_core.agents.AgentAction":"#langchain_core-agents-AgentAction","langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.agents._convert_agent_action_to_messages(
+    agent_action: langchain_core.agents.AgentAction
+) -> collections.abc.Sequence[langchain_core.messages.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert an agent action to a message.
+
+This code is used to reconstruct the original AI message from the agent action.
+
+**Parameters:**
+
+<ParamField path="agent_action" type="AgentAction">
+Agent action to convert.
+</ParamField>
+
+**Returns:** `Sequence[BaseMessage]`
+
+`AIMessage` that corresponds to the original tool invocation.
+
+
+</Indent>
+
+<Anchor id="langchain_core-agents-_convert_agent_observation_to_messages">
+
+<CodeBlock links={{"langchain_core.agents.AgentAction":"#langchain_core-agents-AgentAction","langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.agents._convert_agent_observation_to_messages(
+    agent_action: langchain_core.agents.AgentAction,
+    observation: typing.Any
+) -> collections.abc.Sequence[langchain_core.messages.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert an agent action to a message.
+
+This code is used to reconstruct the original AI message from the agent action.
+
+**Parameters:**
+
+<ParamField path="agent_action" type="AgentAction">
+Agent action to convert.
+</ParamField>
+
+<ParamField path="observation" type="Any">
+Observation to convert to a message.
+</ParamField>
+
+**Returns:** `Sequence[BaseMessage]`
+
+`AIMessage` that corresponds to the original tool invocation.
+
+
+</Indent>
+
+<Anchor id="langchain_core-agents-_create_function_message">
+
+<CodeBlock links={{"langchain_core.agents.AgentAction":"#langchain_core-agents-AgentAction","langchain_core.messages.FunctionMessage":"/langchain-core/langchain_core/messages/function#langchain_core-messages-function-FunctionMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.agents._create_function_message(
+    agent_action: langchain_core.agents.AgentAction,
+    observation: typing.Any
+) -> langchain_core.messages.FunctionMessage
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert agent action and observation into a function message.
+
+**Parameters:**
+
+<ParamField path="agent_action" type="AgentAction">
+the tool invocation request from the agent.
+</ParamField>
+
+<ParamField path="observation" type="Any">
+the result of the tool invocation.
+</ParamField>
+
+**Returns:** `FunctionMessage`
+
+`FunctionMessage` that corresponds to the original tool invocation.
+
+
+</Indent>

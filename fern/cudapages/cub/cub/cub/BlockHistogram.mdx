@@ -1,0 +1,360 @@
+---
+title: cub::BlockHistogram
+description: ""
+---
+
+The BlockHistogram class provides collective methods for constructing block-wide histograms from data samples partitioned across a CUDA thread block.
+
+## Performance considerations
+
+- Performance is sensitive to the degree of data movement across the block.
+- All input values must fall between `[0, Bins)`, or behavior is undefined.
+- The histogram output can be constructed in shared or device-accessible memory
+- See `cub::BlockHistogramAlgorithm` for performance details regarding algorithmic alternatives
+
+## Example
+
+The code snippet below illustrates a 256-bin histogram of 512 integer samples that are partitioned across 128 threads where each thread owns 4 samples.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_histogram.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize a 256-bin BlockHistogram type for a 1D block of 128 threads having 4 character samples each
+    using BlockHistogram = cub::BlockHistogram<unsigned char, 128, 4, 256>;
+
+    // Allocate shared memory for BlockHistogram
+    __shared__ typename BlockHistogram::TempStorage temp_storage;
+
+    // Allocate shared memory for block-wide histogram bin counts
+    __shared__ unsigned int smem_histogram[256];
+
+    // Obtain input samples per thread
+    unsigned char data[4];
+    ...
+
+    // Compute the block-wide histogram
+    BlockHistogram(temp_storage).Histogram(data, smem_histogram);
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="T" type="typename">
+The sample type being histogrammed (must be castable to an integer bin identifier)
+</ParamField>
+
+<ParamField path="BlockDimX" type="int">
+The thread block length in threads along the X dimension
+</ParamField>
+
+<ParamField path="ItemsPerThread" type="int">
+The number of items per thread
+</ParamField>
+
+<ParamField path="Bins" type="int">
+The number bins within the histogram
+</ParamField>
+
+<ParamField path="Algorithm" type="BlockHistogramAlgorithm" default="BLOCK_HISTO_SORT">
+**[optional]** [cub::BlockHistogramAlgorithm](/library/api/cub::BlockHistogramAlgorithm) enumerator specifying the underlying algorithm to use (default: [cub::BLOCK_HISTO_SORT](/library/api/cub::BLOCK_HISTO_SORT))
+</ParamField>
+
+<ParamField path="BlockDimY" type="int" default="1">
+**[optional]** The thread block length in threads along the Y dimension (default: 1)
+</ParamField>
+
+<ParamField path="BlockDimZ" type="int" default="1">
+**[optional]** The thread block length in threads along the Z dimension (default: 1)
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Collective constructors
+
+### BlockHistogram <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+Collective constructor using a private static allocation of shared memory as temporary storage.
+
+<CodeBlock links={{"BlockHistogram": "/library/api/cub::BlockHistogram"}}>
+```cpp showLineNumbers={false}
+cub::BlockHistogram<T, BlockDimX, ItemsPerThread, Bins, Algorithm, BlockDimY, BlockDimZ>::BlockHistogram()
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+</Tab>
+<Tab title="With TempStorage">
+
+Collective constructor using the specified memory allocation as temporary storage.
+
+<CodeBlock links={{"BlockHistogram": "/library/api/cub::BlockHistogram", "TempStorage": "/library/api/cub::BlockHistogram::TempStorage"}}>
+```cpp showLineNumbers={false}
+cub::BlockHistogram<T, BlockDimX, ItemsPerThread, Bins, Algorithm, BlockDimY, BlockDimZ>::BlockHistogram(
+    TempStorage &temp_storage
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Parameters**
+
+<ParamField path="temp_storage" type="TempStorage &">
+Reference to memory allocation having layout type [TempStorage](/library/api/cub::BlockHistogram::TempStorage)
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Histogram operations
+
+### InitHistogram <Badge intent="note" minimal>inline</Badge>
+
+Initialize the shared histogram counters to zero.
+
+<CodeBlock links={{"BlockHistogram": "/library/api/cub::BlockHistogram"}}>
+```cpp showLineNumbers={false}
+template <typename CounterT>
+void cub::BlockHistogram<T, BlockDimX, ItemsPerThread, Bins, Algorithm, BlockDimY, BlockDimZ>::InitHistogram(
+    CounterT histogram[Bins]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Template parameters**
+
+<ParamField path="CounterT" type="typename">
+**[inferred]** Histogram counter type
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates a the initialization and update of a histogram of 512 integer samples that are partitioned across 128 threads where each thread owns 4 samples.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_histogram.cuh>
+
+__global__ void ExampleKernel(...)
+{
+  // Specialize a 256-bin BlockHistogram type for a 1D block of 128 threads having 4 character samples each
+  using BlockHistogram = cub::BlockHistogram<unsigned char, 128, 4, 256>;
+
+  // Allocate shared memory for BlockHistogram
+  __shared__ typename BlockHistogram::TempStorage temp_storage;
+
+  // Allocate shared memory for block-wide histogram bin counts
+  __shared__ unsigned int smem_histogram[256];
+
+  // Obtain input samples per thread
+  unsigned char thread_samples[4];
+  ...
+
+  // Initialize the block-wide histogram
+  BlockHistogram(temp_storage).InitHistogram(smem_histogram);
+
+  // Update the block-wide histogram
+  BlockHistogram(temp_storage).Composite(thread_samples, smem_histogram);
+}
+```
+
+### Histogram <Badge intent="note" minimal>inline</Badge>
+
+Constructs a block-wide histogram in shared/device-accessible memory. Each thread contributes an array of input elements.
+
+<CodeBlock links={{"BlockHistogram": "/library/api/cub::BlockHistogram"}}>
+```cpp showLineNumbers={false}
+template <typename CounterT>
+void cub::BlockHistogram<T, BlockDimX, ItemsPerThread, Bins, Algorithm, BlockDimY, BlockDimZ>::Histogram(
+    T (&items)[ItemsPerThread],
+    CounterT histogram[Bins]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Performance is sensitive to the degree of data movement across the block.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="CounterT" type="typename">
+**[inferred]** Histogram counter type
+</ParamField>
+
+**Parameters**
+
+<ParamField path="items" type="T(&)[ItemsPerThread]">
+Calling thread's input values to histogram
+</ParamField>
+
+<ParamField path="histogram" type="CounterT[Bins]">
+Reference to shared/device-accessible memory histogram
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates a 256-bin histogram of 512 integer samples that are partitioned across 128 threads where each thread owns 4 samples.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_histogram.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize a 256-bin BlockHistogram type for a 1D block of 128 threads having 4 character samples each
+    using BlockHistogram = cub::BlockHistogram<unsigned char, 128, 4, 256>;
+
+    // Allocate shared memory for BlockHistogram
+    __shared__ typename BlockHistogram::TempStorage temp_storage;
+
+    // Allocate shared memory for block-wide histogram bin counts
+    __shared__ unsigned int smem_histogram[256];
+
+    // Obtain input samples per thread
+    unsigned char thread_samples[4];
+    ...
+
+    // Compute the block-wide histogram
+    BlockHistogram(temp_storage).Histogram(thread_samples, smem_histogram);
+}
+```
+
+### Composite <Badge intent="note" minimal>inline</Badge>
+
+Updates an existing block-wide histogram in shared/device-accessible memory. Each thread composites an array of input elements.
+
+<CodeBlock links={{"BlockHistogram": "/library/api/cub::BlockHistogram"}}>
+```cpp showLineNumbers={false}
+template <typename CounterT>
+void cub::BlockHistogram<T, BlockDimX, ItemsPerThread, Bins, Algorithm, BlockDimY, BlockDimZ>::Composite(
+    T (&items)[ItemsPerThread],
+    CounterT histogram[Bins]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Performance is sensitive to the degree of data movement across the block.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="CounterT" type="typename">
+**[inferred]** Histogram counter type
+</ParamField>
+
+**Parameters**
+
+<ParamField path="items" type="T(&)[ItemsPerThread]">
+Calling thread's input values to histogram
+</ParamField>
+
+<ParamField path="histogram" type="CounterT[Bins]">
+Reference to shared/device-accessible memory histogram
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates a the initialization and update of a histogram of 512 integer samples that are partitioned across 128 threads where each thread owns 4 samples.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_histogram.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize a 256-bin BlockHistogram type for a 1D block of 128 threads having 4 character samples each
+    using BlockHistogram = cub::BlockHistogram<unsigned char, 128, 4, 256>;
+
+    // Allocate shared memory for BlockHistogram
+    __shared__ typename BlockHistogram::TempStorage temp_storage;
+
+    // Allocate shared memory for block-wide histogram bin counts
+    __shared__ unsigned int smem_histogram[256];
+
+    // Obtain input samples per thread
+    unsigned char thread_samples[4];
+    ...
+
+    // Initialize the block-wide histogram
+    BlockHistogram(temp_storage).InitHistogram(smem_histogram);
+
+    // Update the block-wide histogram
+    BlockHistogram(temp_storage).Composite(thread_samples, smem_histogram);
+}
+```
+
+---
+
+## Utility methods
+
+### PrivateStorage <Badge intent="note" minimal>inline</Badge>
+
+Internal storage allocator.
+
+<CodeBlock links={{"BlockHistogram": "/library/api/cub::BlockHistogram"}}>
+```cpp showLineNumbers={false}
+_TempStorage & cub::BlockHistogram<T, BlockDimX, ItemsPerThread, Bins, Algorithm, BlockDimY, BlockDimZ>::PrivateStorage()
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `InternalBlockHistogram` | `::cuda::std::_If< Algorithm==BLOCK_HISTO_SORT, detail::BlockHistogramSort< T, BlockDimX, ItemsPerThread, Bins, BlockDimY, BlockDimZ >, detail::BlockHistogramAtomic< Bins > >` | Internal specialization. |
+| `_TempStorage` | `typename InternalBlockHistogram::TempStorage` | Shared memory storage layout type for `BlockHistogram`. |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `BLOCK_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | The thread block size in threads. |
+| `temp_storage` | `_TempStorage &` | Shared storage reference. |
+| `linear_tid` | `unsigned int` | Linear thread-id. |
+
+---
+
+## Inner classes
+
+### TempStorage
+
+<CodeBlock links={{"BlockHistogram": "/library/api/cub::BlockHistogram"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockHistogram::TempStorage
+```
+</CodeBlock>
+
+The operations exposed by `BlockHistogram` require a temporary memory allocation of this nested type for thread communication. This opaque storage can be allocated directly using the `__shared__` keyword. Alternatively, it can be aliased to externally allocated memory (shared or global) or `union`'d with other storage allocation types to facilitate memory reuse.
+
+**Inherits from:** `Uninitialized< _TempStorage >` (public)

@@ -1,0 +1,116 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/callbacks/usage
+title: langchain_core.callbacks.usage
+---
+
+Callback Handler that tracks `AIMessage.usage_metadata`.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`UsageMetadataCallbackHandler`](#langchain_core-callbacks-usage-UsageMetadataCallbackHandler) | Callback Handler that tracks `AIMessage.usage_metadata`. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`get_usage_metadata_callback`](#langchain_core-callbacks-usage-get_usage_metadata_callback) | Get usage metadata callback. |
+
+### API
+
+<Anchor id="langchain_core-callbacks-usage-UsageMetadataCallbackHandler">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.usage.UsageMetadataCallbackHandler()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseCallbackHandler](/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-BaseCallbackHandler)
+
+Callback Handler that tracks `AIMessage.usage_metadata`.
+
+!!! version-added "Added in `langchain-core` 0.3.49"
+
+
+<ParamField path="_lock" type="= threading.Lock()">
+</ParamField>
+
+<ParamField path="usage_metadata" type="dict[str, UsageMetadata] = &#123;&#125;">
+</ParamField>
+<Anchor id="langchain_core-callbacks-usage-UsageMetadataCallbackHandler-__repr__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.usage.UsageMetadataCallbackHandler.__repr__() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-usage-UsageMetadataCallbackHandler-on_llm_end">
+
+<CodeBlock links={{"langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.usage.UsageMetadataCallbackHandler.on_llm_end(
+    response: langchain_core.outputs.LLMResult,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Collect token usage.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-usage-get_usage_metadata_callback">
+
+<CodeBlock links={{"langchain_core.callbacks.usage.UsageMetadataCallbackHandler":"#langchain_core-callbacks-usage-UsageMetadataCallbackHandler"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.usage.get_usage_metadata_callback(
+    name: str = 'usage_metadata_callback'
+) -> collections.abc.Generator[langchain_core.callbacks.usage.UsageMetadataCallbackHandler, None, None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get usage metadata callback.
+
+Get context manager for tracking usage metadata across chat model calls using
+[`AIMessage.usage_metadata`][langchain.messages.AIMessage.usage_metadata].
+
+!!! version-added "Added in `langchain-core` 0.3.49"
+
+**Parameters:**
+
+<ParamField path="name" type="str" default="'usage_metadata_callback'">
+The name of the context variable.
+</ParamField>
+
+
+</Indent>

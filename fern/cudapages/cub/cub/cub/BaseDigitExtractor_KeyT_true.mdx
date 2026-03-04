@@ -1,0 +1,38 @@
+---
+title: "cub::BaseDigitExtractor< KeyT, true >"
+description: ""
+---
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="KeyT" type="typename">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Static methods
+
+### ProcessFloatMinusZero <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"BaseDigitExtractor< KeyT, true >": "/library/api/cub::BaseDigitExtractor%3C KeyT, true %3E"}}>
+```cpp showLineNumbers={false}
+static UnsignedBits cub::BaseDigitExtractor<KeyT, true>::ProcessFloatMinusZero(
+    UnsignedBits key
+)
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `TraitsT` | `Traits< KeyT >` |
+| `UnsignedBits` | `typename TraitsT::UnsignedBits` |

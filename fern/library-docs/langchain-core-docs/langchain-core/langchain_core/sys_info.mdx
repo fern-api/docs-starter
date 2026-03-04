@@ -1,0 +1,64 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/sys_info
+title: langchain_core.sys_info
+---
+
+Print information about the system and langchain packages for debugging purposes.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_get_sub_deps`](#langchain_core-sys_info-_get_sub_deps) | Get any specified sub-dependencies. |
+| [`print_sys_info`](#langchain_core-sys_info-print_sys_info) | Print information about the environment for debugging purposes. |
+
+### API
+
+<Anchor id="langchain_core-sys_info-_get_sub_deps">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.sys_info._get_sub_deps(
+    packages: collections.abc.Sequence[str]
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get any specified sub-dependencies.
+
+
+</Indent>
+
+<Anchor id="langchain_core-sys_info-print_sys_info">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.sys_info.print_sys_info(
+    additional_pkgs: collections.abc.Sequence[str] = ()
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Print information about the environment for debugging purposes.
+
+**Parameters:**
+
+<ParamField path="additional_pkgs" type="Sequence[str]" default="()">
+Additional packages to include in the output.
+</ParamField>
+
+
+</Indent>

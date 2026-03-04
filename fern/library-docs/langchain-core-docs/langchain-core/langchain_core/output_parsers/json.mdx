@@ -1,0 +1,242 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/output_parsers/json
+title: langchain_core.output_parsers.json
+---
+
+Parser for JSON output.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`JsonOutputParser`](#langchain_core-output_parsers-json-JsonOutputParser) | Parse the output of an LLM call to a JSON object. |
+
+### Data
+
+[`PydanticBaseModel`](#langchain_core-output_parsers-json-PydanticBaseModel)
+
+[`SimpleJsonOutputParser`](#langchain_core-output_parsers-json-SimpleJsonOutputParser)
+
+[`TBaseModel`](#langchain_core-output_parsers-json-TBaseModel)
+
+[`__all__`](#langchain_core-output_parsers-json-__all__)
+
+### API
+
+<Anchor id="langchain_core-output_parsers-json-JsonOutputParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.output_parsers.json.JsonOutputParser()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseCumulativeTransformOutputParser[Any]](/langchain-core/langchain_core/output_parsers/transform#langchain_core-output_parsers-transform-BaseCumulativeTransformOutputParser)
+
+Parse the output of an LLM call to a JSON object.
+
+Probably the most reliable output parser for getting structured data that does *not*
+use function calling.
+
+When used in streaming mode, it will yield partial JSON objects containing all the
+keys that have been returned so far.
+
+In streaming, if `diff` is set to `True`, yields `JSONPatch` operations describing
+the difference between the previous and the current object.
+
+
+<ParamField path="_type" type="str">
+</ParamField>
+
+<ParamField path="pydantic_object" type="Annotated[type[TBaseModel] | None, SkipValidation()] = None">
+The Pydantic object to use for validation.
+
+If `None`, no validation is performed.
+</ParamField>
+<Anchor id="langchain_core-output_parsers-json-JsonOutputParser-_diff">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.json.JsonOutputParser._diff(
+    prev: typing.Any | None,
+    next: typing.Any
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-json-JsonOutputParser-_get_schema">
+
+<CodeBlock links={{"langchain_core.output_parsers.json.TBaseModel":"#langchain_core-output_parsers-json-TBaseModel"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.json.JsonOutputParser._get_schema(
+    pydantic_object: type[langchain_core.output_parsers.json.TBaseModel]
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-json-JsonOutputParser-get_format_instructions">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.json.JsonOutputParser.get_format_instructions() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return the format instructions for the JSON output.
+
+**Returns:** `str`
+
+The format instructions for the JSON output.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-json-JsonOutputParser-parse">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.json.JsonOutputParser.parse(
+    text: str
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse the output of an LLM call to a JSON object.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The output of the LLM call.
+</ParamField>
+
+**Returns:** `Any`
+
+The parsed JSON object.
+
+
+</Indent>
+<Anchor id="langchain_core-output_parsers-json-JsonOutputParser-parse_result">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"/langchain-core/langchain_core/output_parsers#langchain_core-output_parsers-list"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.json.JsonOutputParser.parse_result(
+    result: langchain_core.output_parsers.list[langchain_core.outputs.Generation],
+    partial: bool = False
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse the result of an LLM call to a JSON object.
+
+**Parameters:**
+
+<ParamField path="result" type="list[Generation]">
+The result of the LLM call.
+</ParamField>
+
+<ParamField path="partial" type="bool" default="False">
+Whether to parse partial JSON objects.
+
+If `True`, the output will be a JSON object containing all the keys that
+have been returned so far.
+
+If `False`, the output will be the full JSON object.
+</ParamField>
+
+**Returns:** `Any`
+
+The parsed JSON object.
+
+**Raises:**
+
+- `OutputParserException`: If the output is not valid JSON.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-json-PydanticBaseModel">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.json.PydanticBaseModel = BaseModel | pydantic.BaseModel
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-output_parsers-json-SimpleJsonOutputParser">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.json.SimpleJsonOutputParser = JsonOutputParser
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-output_parsers-json-TBaseModel">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.json.TBaseModel = TypeVar('TBaseModel', bound=PydanticBaseModel)
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-output_parsers-json-__all__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.json.__all__ = ['JsonOutputParser', 'SimpleJsonOutputParser', 'parse_and_check_json_markdown', ...
+```
+
+</CodeBlock>
+</Anchor>
+

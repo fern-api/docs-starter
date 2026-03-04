@@ -1,0 +1,49 @@
+---
+title: cub::BaseDigitExtractor
+description: "Base struct for digit extractor."
+---
+
+Base struct for digit extractor.
+
+Contains common code to provide special handling for floating-point -0.0.
+
+<Note>
+This handles correctly both the case when the keys are bitwise-complemented after twiddling for descending sort (in onesweep) as well as when the keys are not bit-negated, but the implementation handles descending sort separately (in other implementations in CUB). Twiddling alone maps -0.0f to 0x7fffffff and +0.0f to 0x80000000 for float, which are subsequent bit patterns and bitwise complements of each other. For onesweep, both -0.0f and +0.0f are mapped to the bit pattern of +0.0f (0x80000000) for ascending sort, and to the pattern of -0.0f (0x7fffffff) for descending sort. For all other sorting implementations in CUB, both are always mapped to +0.0f. Since bit patterns for both -0.0f and +0.0f are next to each other and only one of them is used, the sorting works correctly. For double, the same applies, but with 64-bit patterns.
+</Note>
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="KeyT" type="typename">
+</ParamField>
+
+<ParamField path="IsFP" type="bool" default="::cuda::is_floating_point_v<KeyT>">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Static methods
+
+### ProcessFloatMinusZero <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"BaseDigitExtractor": "/library/api/cub::BaseDigitExtractor"}}>
+```cpp showLineNumbers={false}
+static UnsignedBits cub::BaseDigitExtractor<KeyT, IsFP>::ProcessFloatMinusZero(
+    UnsignedBits key
+)
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `TraitsT` | `Traits< KeyT >` |
+| `UnsignedBits` | `typename TraitsT::UnsignedBits` |

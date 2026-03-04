@@ -1,0 +1,477 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/callbacks/file
+title: langchain_core.callbacks.file
+---
+
+Callback handler that writes to a file.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`FileCallbackHandler`](#langchain_core-callbacks-file-FileCallbackHandler) | Callback handler that writes to a file. |
+
+### Data
+
+[`_GLOBAL_DEPRECATION_WARNED`](#langchain_core-callbacks-file-_GLOBAL_DEPRECATION_WARNED)
+
+### API
+
+<Anchor id="langchain_core-callbacks-file-FileCallbackHandler">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.callbacks.file.FileCallbackHandler(
+    filename: str,
+    mode: str = 'a',
+    color: str | None = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseCallbackHandler](/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-BaseCallbackHandler)
+
+Callback handler that writes to a file.
+
+This handler supports both context manager usage (recommended) and direct
+instantiation (deprecated) for backwards compatibility.
+
+!!! note
+
+    When not used as a context manager, a deprecation warning will be issued on
+    first use. The file will be opened immediately in `__init__` and closed in
+    `__del__` or when `close()` is called explicitly.
+
+**Parameters:**
+
+<ParamField path="filename" type="str">
+The file path to write to.
+</ParamField>
+
+<ParamField path="mode" type="str" default="'a'">
+The file open mode. Defaults to `'a'` (append).
+</ParamField>
+
+<ParamField path="color" type="str | None" default="None">
+Default color for text output.
+</ParamField>
+
+**Examples:**
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+Using as a context manager (recommended):
+
+```python
+with FileCallbackHandler("output.txt") as handler:
+    # Use handler with your chain/agent
+    chain.invoke(inputs, config={"callbacks": [handler]})
+```
+
+Direct instantiation (deprecated):
+
+```python
+handler = FileCallbackHandler("output.txt")
+# File remains open until handler is garbage collected
+try:
+    chain.invoke(inputs, config={"callbacks": [handler]})
+finally:
+    handler.close()  # Explicit cleanup recommended
+```
+
+</CodeBlock>
+
+
+<ParamField path="file" type="TextIO">
+</ParamField>
+<Anchor id="langchain_core-callbacks-file-FileCallbackHandler-__del__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.file.FileCallbackHandler.__del__() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Destructor to cleanup when done.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-file-FileCallbackHandler-__enter__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.file.FileCallbackHandler.__enter__() -> typing_extensions.Self
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Enter the context manager.
+
+!!! note
+
+    The file is already opened in `__init__`, so this just marks that the
+    handler is being used as a context manager.
+
+**Returns:** `Self`
+
+The `FileCallbackHandler` instance.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-file-FileCallbackHandler-__exit__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.file.FileCallbackHandler.__exit__(
+    exc_type: type[BaseException] | None,
+    exc_val: BaseException | None,
+    exc_tb: object
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Exit the context manager and close the file.
+
+**Parameters:**
+
+<ParamField path="exc_type" type="type[BaseException] | None">
+Exception type if an exception occurred.
+</ParamField>
+
+<ParamField path="exc_val" type="BaseException | None">
+Exception value if an exception occurred.
+</ParamField>
+
+<ParamField path="exc_tb" type="object">
+Exception traceback if an exception occurred.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-file-FileCallbackHandler-_write">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.file.FileCallbackHandler._write(
+    text: str,
+    color: str | None = None,
+    end: str = ''
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Write text to the file with deprecation warning if needed.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The text to write to the file.
+</ParamField>
+
+<ParamField path="color" type="str | None" default="None">
+Optional color for the text. Defaults to `self.color`.
+</ParamField>
+
+<ParamField path="end" type="str" default="''">
+String appended after the text.
+</ParamField>
+
+<ParamField path="file">
+Optional file to write to. Defaults to `self.file`.
+</ParamField>
+
+**Raises:**
+
+- `RuntimeError`: If the file is closed or not available.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-file-FileCallbackHandler-close">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.file.FileCallbackHandler.close() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Close the file if it's open.
+
+This method is safe to call multiple times and will only close
+the file if it's currently open.
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-file-FileCallbackHandler-on_agent_action">
+
+<CodeBlock links={{"langchain_core.agents.AgentAction":"/langchain-core/langchain_core/agents#langchain_core-agents-AgentAction"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.file.FileCallbackHandler.on_agent_action(
+    action: langchain_core.agents.AgentAction,
+    color: str | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Handle agent action by writing the action log.
+
+**Parameters:**
+
+<ParamField path="action" type="AgentAction">
+The agent action containing the log to write.
+</ParamField>
+
+<ParamField path="color" type="str | None" default="None">
+Color override for this specific output.
+
+If `None`, uses `self.color`.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-file-FileCallbackHandler-on_agent_finish">
+
+<CodeBlock links={{"langchain_core.agents.AgentFinish":"/langchain-core/langchain_core/agents#langchain_core-agents-AgentFinish"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.file.FileCallbackHandler.on_agent_finish(
+    finish: langchain_core.agents.AgentFinish,
+    color: str | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Handle agent finish by writing the finish log.
+
+**Parameters:**
+
+<ParamField path="finish" type="AgentFinish">
+The agent finish object containing the log to write.
+</ParamField>
+
+<ParamField path="color" type="str | None" default="None">
+Color override for this specific output.
+
+If `None`, uses `self.color`.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-file-FileCallbackHandler-on_chain_end">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.file.FileCallbackHandler.on_chain_end(
+    outputs: dict[str, typing.Any],
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Print that we finished a chain.
+
+**Parameters:**
+
+<ParamField path="outputs" type="dict[str, Any]">
+The outputs of the chain.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-file-FileCallbackHandler-on_chain_start">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.file.FileCallbackHandler.on_chain_start(
+    serialized: dict[str, typing.Any],
+    inputs: dict[str, typing.Any],
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Print that we are entering a chain.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any]">
+The serialized chain information.
+</ParamField>
+
+<ParamField path="inputs" type="dict[str, Any]">
+The inputs to the chain.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments that may contain `'name'`.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-file-FileCallbackHandler-on_text">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.file.FileCallbackHandler.on_text(
+    text: str,
+    color: str | None = None,
+    end: str = '',
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Handle text output.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The text to write.
+</ParamField>
+
+<ParamField path="color" type="str | None" default="None">
+Color override for this specific output.
+
+If `None`, uses `self.color`.
+</ParamField>
+
+<ParamField path="end" type="str" default="''">
+String appended after the text.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-callbacks-file-FileCallbackHandler-on_tool_end">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.file.FileCallbackHandler.on_tool_end(
+    output: str,
+    color: str | None = None,
+    observation_prefix: str | None = None,
+    llm_prefix: str | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Handle tool end by writing the output with optional prefixes.
+
+**Parameters:**
+
+<ParamField path="output" type="str">
+The tool output to write.
+</ParamField>
+
+<ParamField path="color" type="str | None" default="None">
+Color override for this specific output.
+
+If `None`, uses `self.color`.
+</ParamField>
+
+<ParamField path="observation_prefix" type="str | None" default="None">
+Optional prefix to write before the output.
+</ParamField>
+
+<ParamField path="llm_prefix" type="str | None" default="None">
+Optional prefix to write after the output.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-callbacks-file-_GLOBAL_DEPRECATION_WARNED">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.callbacks.file._GLOBAL_DEPRECATION_WARNED = False
+```
+
+</CodeBlock>
+</Anchor>
+

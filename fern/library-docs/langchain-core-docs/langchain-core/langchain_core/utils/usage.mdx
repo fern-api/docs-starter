@@ -1,0 +1,81 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/utils/usage
+title: langchain_core.utils.usage
+---
+
+Usage utilities.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_dict_int_op`](#langchain_core-utils-usage-_dict_int_op) | Apply an integer operation to corresponding values in two dictionaries. |
+
+### API
+
+<Anchor id="langchain_core-utils-usage-_dict_int_op">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.usage._dict_int_op(
+    left: dict,
+    right: dict,
+    op: collections.abc.Callable[[int, int], int],
+    default: int = 0,
+    depth: int = 0,
+    max_depth: int = 100
+) -> dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Apply an integer operation to corresponding values in two dictionaries.
+
+Recursively combines two dictionaries by applying the given operation to integer
+values at matching keys.
+
+Supports nested dictionaries.
+
+**Parameters:**
+
+<ParamField path="left" type="dict">
+First dictionary to combine.
+</ParamField>
+
+<ParamField path="right" type="dict">
+Second dictionary to combine.
+</ParamField>
+
+<ParamField path="op" type="Callable[[int, int], int]">
+Binary operation function to apply to integer values.
+</ParamField>
+
+<ParamField path="default" type="int" default="0">
+Default value to use when a key is missing from a dictionary.
+</ParamField>
+
+<ParamField path="depth" type="int" default="0">
+Current recursion depth (used internally).
+</ParamField>
+
+<ParamField path="max_depth" type="int" default="100">
+Maximum recursion depth (to prevent infinite loops).
+</ParamField>
+
+**Returns:** `dict`
+
+A new dictionary with combined values.
+
+**Raises:**
+
+- `ValueError`: If `max_depth` is exceeded or if value types are not supported.
+
+
+</Indent>

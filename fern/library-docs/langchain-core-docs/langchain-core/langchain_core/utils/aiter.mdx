@@ -1,0 +1,541 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/utils/aiter
+title: langchain_core.utils.aiter
+---
+
+Asynchronous iterator utilities.
+
+Adapted from
+https://github.com/maxfischer2781/asyncstdlib/blob/master/asyncstdlib/itertools.py
+MIT License.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`NoLock`](#langchain_core-utils-aiter-NoLock) | Dummy lock that provides the proper interface but no protection. |
+| [`Tee`](#langchain_core-utils-aiter-Tee) | Create `n` separate asynchronous iterators over `iterable`. |
+| [`aclosing`](#langchain_core-utils-aiter-aclosing) | Async context manager to wrap an `AsyncGenerator` that has a `aclose()` method. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`abatch_iterate`](#langchain_core-utils-aiter-abatch_iterate) | Utility batching function for async iterables. |
+| [`py_anext`](#langchain_core-utils-aiter-py_anext) | Pure-Python implementation of `anext()` for testing purposes. |
+| [`tee_peer`](#langchain_core-utils-aiter-tee_peer) | An individual iterator of a `tee`. |
+
+### Data
+
+[`T`](#langchain_core-utils-aiter-T)
+
+[`_no_default`](#langchain_core-utils-aiter-_no_default)
+
+[`atee`](#langchain_core-utils-aiter-atee)
+
+### API
+
+<Anchor id="langchain_core-utils-aiter-NoLock">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.utils.aiter.NoLock()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Dummy lock that provides the proper interface but no protection.
+
+
+<Anchor id="langchain_core-utils-aiter-NoLock-__aenter__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.aiter.NoLock.__aenter__() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Do nothing.
+
+
+</Indent>
+<Anchor id="langchain_core-utils-aiter-NoLock-__aexit__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.aiter.NoLock.__aexit__(
+    exc_type: type[BaseException] | None,
+    exc_val: BaseException | None,
+    exc_tb: types.TracebackType | None
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Return False, exception not suppressed.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-utils-aiter-Tee">
+
+<CodeBlock links={{"langchain_core.utils.aiter.T":"#langchain_core-utils-aiter-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.utils.aiter.Tee(
+    iterable: collections.abc.AsyncIterator[langchain_core.utils.aiter.T],
+    n: int = 2,
+    lock: contextlib.AbstractAsyncContextManager[typing.Any] | None = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `Generic[T]`
+
+Create `n` separate asynchronous iterators over `iterable`.
+
+This splits a single `iterable` into multiple iterators, each providing
+the same items in the same order.
+
+All child iterators may advance separately but share the same items from `iterable`
+-- when the most advanced iterator retrieves an item, it is buffered until the least
+advanced iterator has yielded it as well.
+
+A `tee` works lazily and can handle an infinite `iterable`, provided
+that all iterators advance.
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+async def derivative(sensor_data):
+    previous, current = a.tee(sensor_data, n=2)
+    await a.anext(previous)  # advance one iterator
+    return a.map(operator.sub, previous, current)
+```
+
+</CodeBlock>
+
+Unlike `itertools.tee`, `.tee` returns a custom type instead of a `tuple`. Like a
+tuple, it can be indexed, iterated and unpacked to get the child iterators. In
+addition, its `.tee.aclose` method immediately closes all children, and it can be
+used in an `async with` context for the same effect.
+
+If `iterable` is an iterator and read elsewhere, `tee` will *not* provide these
+items. Also, `tee` must internally buffer each item until the last iterator has
+yielded it; if the most and least advanced iterator differ by most data, using a
+`list` is more efficient (but not lazy).
+
+If the underlying iterable is concurrency safe (`anext` may be awaited concurrently)
+the resulting iterators are concurrency safe as well. Otherwise, the iterators are
+safe if there is only ever one single "most advanced" iterator.
+
+To enforce sequential use of `anext`, provide a `lock`
+
+- e.g. an `asyncio.Lock` instance in an `asyncio` application - and access is
+    automatically synchronised.
+
+
+<ParamField path="_buffers" type="list[deque[T]] = [(deque()) for _ in (range(n))]">
+</ParamField>
+
+<ParamField path="_children">
+</ParamField>
+
+<ParamField path="_iterator" type="= iterable.__aiter__()">
+</ParamField>
+<Anchor id="langchain_core-utils-aiter-Tee-__aenter__">
+
+<CodeBlock links={{"langchain_core.utils.aiter.Tee":"#langchain_core-utils-aiter-Tee","langchain_core.utils.aiter.T":"#langchain_core-utils-aiter-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.aiter.Tee.__aenter__() -> langchain_core.utils.aiter.Tee[langchain_core.utils.aiter.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Return the tee instance.
+
+
+</Indent>
+<Anchor id="langchain_core-utils-aiter-Tee-__aexit__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.aiter.Tee.__aexit__(
+    exc_type: type[BaseException] | None,
+    exc_val: BaseException | None,
+    exc_tb: types.TracebackType | None
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Close all child iterators.
+
+**Returns:** `bool`
+
+`False`, exceptions not suppressed.
+
+
+</Indent>
+<Anchor id="langchain_core-utils-aiter-Tee-__getitem__">
+
+<CodeBlock links={{"langchain_core.utils.aiter.T":"#langchain_core-utils-aiter-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.aiter.Tee.__getitem__(
+    item: int | slice
+) -> collections.abc.AsyncIterator[langchain_core.utils.aiter.T] | tuple[collections.abc.AsyncIterator[langchain_core.utils.aiter.T], ...]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return the child iterator(s) for the given index or slice.
+
+
+</Indent>
+<Anchor id="langchain_core-utils-aiter-Tee-__iter__">
+
+<CodeBlock links={{"langchain_core.utils.aiter.T":"#langchain_core-utils-aiter-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.aiter.Tee.__iter__() -> collections.abc.Iterator[collections.abc.AsyncIterator[langchain_core.utils.aiter.T]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Iterate over the child iterators.
+
+
+</Indent>
+<Anchor id="langchain_core-utils-aiter-Tee-__len__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.aiter.Tee.__len__() -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return the number of child iterators.
+
+
+</Indent>
+<Anchor id="langchain_core-utils-aiter-Tee-aclose">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.aiter.Tee.aclose() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async close all child iterators.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-utils-aiter-aclosing">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.utils.aiter.aclosing(
+    thing: collections.abc.AsyncGenerator[typing.Any, typing.Any] | collections.abc.AsyncIterator[typing.Any]
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `AbstractAsyncContextManager`
+
+Async context manager to wrap an `AsyncGenerator` that has a `aclose()` method.
+
+Code like this:
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+async with aclosing(<module>.fetch(<arguments>)) as agen:
+    <block>
+```
+
+</CodeBlock>
+
+...is equivalent to this:
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+agen = <module>.fetch(<arguments>)
+try:
+    <block>
+finally:
+    await agen.aclose()
+
+```
+
+</CodeBlock>
+
+
+<Anchor id="langchain_core-utils-aiter-aclosing-__aenter__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.aiter.aclosing.__aenter__() -> collections.abc.AsyncGenerator[typing.Any, typing.Any] | collections.abc.AsyncIterator[typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-utils-aiter-aclosing-__aexit__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.aiter.aclosing.__aexit__(
+    exc_type: type[BaseException] | None,
+    exc_value: BaseException | None,
+    traceback: types.TracebackType | None
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-utils-aiter-abatch_iterate">
+
+<CodeBlock links={{"langchain_core.utils.aiter.T":"#langchain_core-utils-aiter-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.aiter.abatch_iterate(
+    size: int,
+    iterable: collections.abc.AsyncIterable[langchain_core.utils.aiter.T]
+) -> collections.abc.AsyncIterator[list[langchain_core.utils.aiter.T]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Utility batching function for async iterables.
+
+**Parameters:**
+
+<ParamField path="size" type="int">
+The size of the batch.
+</ParamField>
+
+<ParamField path="iterable" type="AsyncIterable[T]">
+The async iterable to batch.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-aiter-py_anext">
+
+<CodeBlock links={{"langchain_core.utils.aiter.T":"#langchain_core-utils-aiter-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.aiter.py_anext(
+    iterator: collections.abc.AsyncIterator[langchain_core.utils.aiter.T],
+    default: langchain_core.utils.aiter.T | typing.Any = _no_default
+) -> collections.abc.Awaitable[langchain_core.utils.aiter.T | typing.Any | None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Pure-Python implementation of `anext()` for testing purposes.
+
+Closely matches the builtin `anext()` C implementation.
+
+Can be used to compare the built-in implementation of the inner coroutines machinery
+to C-implementation of `__anext__()` and `send()` or `throw()` on the returned
+generator.
+
+**Parameters:**
+
+<ParamField path="iterator" type="AsyncIterator[T]">
+The async iterator to advance.
+</ParamField>
+
+<ParamField path="default" type="T | Any" default="_no_default">
+The value to return if the iterator is exhausted.
+
+If not provided, a `StopAsyncIteration` exception is raised.
+</ParamField>
+
+**Returns:** `Awaitable[T | Any | None]`
+
+The next value from the iterator, or the default value if the iterator is
+exhausted.
+
+**Raises:**
+
+- `TypeError`: If the iterator is not an async iterator.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-aiter-tee_peer">
+
+<CodeBlock links={{"langchain_core.utils.aiter.T":"#langchain_core-utils-aiter-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.aiter.tee_peer(
+    iterator: collections.abc.AsyncIterator[langchain_core.utils.aiter.T],
+    buffer: collections.deque[langchain_core.utils.aiter.T],
+    peers: list[collections.deque[langchain_core.utils.aiter.T]],
+    lock: contextlib.AbstractAsyncContextManager[typing.Any]
+) -> collections.abc.AsyncGenerator[langchain_core.utils.aiter.T, None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+An individual iterator of a `tee`.
+
+This function is a generator that yields items from the shared iterator
+`iterator`. It buffers items until the least advanced iterator has yielded them as
+well.
+
+The buffer is shared with all other peers.
+
+**Parameters:**
+
+<ParamField path="iterator" type="AsyncIterator[T]">
+The shared iterator.
+</ParamField>
+
+<ParamField path="buffer" type="deque[T]">
+The buffer for this peer.
+</ParamField>
+
+<ParamField path="peers" type="list[deque[T]]">
+The buffers of all peers.
+</ParamField>
+
+<ParamField path="lock" type="AbstractAsyncContextManager[Any]">
+The lock to synchronise access to the shared buffers.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-aiter-T">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.aiter.T = TypeVar('T')
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-aiter-_no_default">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.aiter._no_default = object()
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-aiter-atee">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.aiter.atee = Tee
+```
+
+</CodeBlock>
+</Anchor>
+

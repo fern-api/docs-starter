@@ -1,0 +1,266 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/utils/config
+title: nemo_rl.utils.config
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`OverridesError`](#nemo_rl-utils-config-OverridesError) | Custom exception for Hydra override parsing errors. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`load_config`](#nemo_rl-utils-config-load_config) | Load a config file with inheritance support and convert it to an OmegaConf object. |
+| [`load_config_with_inheritance`](#nemo_rl-utils-config-load_config_with_inheritance) | Load a config file with inheritance support. |
+| [`merge_with_override`](#nemo_rl-utils-config-merge_with_override) | Merge configs with support for _override_ marker to completely override sections. |
+| [`parse_hydra_overrides`](#nemo_rl-utils-config-parse_hydra_overrides) | Parse and apply Hydra overrides to an OmegaConf config. |
+| [`register_omegaconf_resolvers`](#nemo_rl-utils-config-register_omegaconf_resolvers) | Register shared OmegaConf resolvers used in configs. |
+| [`resolve_path`](#nemo_rl-utils-config-resolve_path) | Resolve a path relative to the base path. |
+
+### API
+
+<Anchor id="nemo_rl-utils-config-OverridesError">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.utils.config.OverridesError()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Exception</Badge>
+
+**Bases:** `Exception`
+
+Custom exception for Hydra override parsing errors.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-utils-config-load_config">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.config.load_config(
+    config_path: typing.Union[str, pathlib.Path]
+) -> omegaconf.DictConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Load a config file with inheritance support and convert it to an OmegaConf object.
+
+The config inheritance system supports:
+
+1. Single inheritance:
+    ```python
+    # child.yaml
+    defaults: parent.yaml
+    common:
+      value: 43
+    ```
+
+2. Multiple inheritance:
+    ```python
+    # child.yaml
+    defaults:
+      - parent1.yaml
+      - parent2.yaml
+    common:
+      value: 44
+    ```
+
+3. Nested inheritance:
+    ```python
+    # parent.yaml
+    defaults: grandparent.yaml
+    common:
+      value: 43
+
+    # child.yaml
+    defaults: parent.yaml
+    common:
+      value: 44
+    ```
+
+4. Variable interpolation:
+    ```python
+    # parent.yaml
+    base_value: 42
+    derived:
+      value: ${base_value}
+
+    # child.yaml
+    defaults: parent.yaml
+    base_value: 43  # This will update both base_value and derived.value
+    ```
+
+The system handles:
+- Relative and absolute paths
+- Multiple inheritance
+- Nested inheritance
+- Variable interpolation
+
+The inheritance is resolved depth-first, with later configs overriding earlier ones.
+This means in multiple inheritance, the last config in the list takes precedence.
+
+**Parameters:**
+
+<ParamField path="config_path" type="Union[str, Path]">
+Path to the config file
+</ParamField>
+
+**Returns:** `DictConfig`
+
+Merged config dictionary
+
+
+</Indent>
+
+<Anchor id="nemo_rl-utils-config-load_config_with_inheritance">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.config.load_config_with_inheritance(
+    config_path: typing.Union[str, pathlib.Path],
+    base_dir: typing.Optional[typing.Union[str, pathlib.Path]] = None
+) -> omegaconf.DictConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Load a config file with inheritance support.
+
+**Parameters:**
+
+<ParamField path="config_path" type="Union[str, Path]">
+Path to the config file
+</ParamField>
+
+<ParamField path="base_dir" type="Optional[Union[str, Path]]" default="None">
+Base directory for resolving relative paths. If None, uses config_path's directory
+</ParamField>
+
+**Returns:** `DictConfig`
+
+Merged config dictionary
+
+
+</Indent>
+
+<Anchor id="nemo_rl-utils-config-merge_with_override">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.config.merge_with_override(
+    base_config: omegaconf.DictConfig,
+    override_config: omegaconf.DictConfig
+) -> omegaconf.DictConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Merge configs with support for _override_ marker to completely override sections.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-utils-config-parse_hydra_overrides">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.config.parse_hydra_overrides(
+    cfg: omegaconf.DictConfig,
+    overrides: list[str]
+) -> omegaconf.DictConfig
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse and apply Hydra overrides to an OmegaConf config.
+
+**Parameters:**
+
+<ParamField path="cfg" type="DictConfig">
+OmegaConf config to apply overrides to
+</ParamField>
+
+<ParamField path="overrides" type="list[str]">
+List of Hydra override strings
+</ParamField>
+
+**Returns:** `DictConfig`
+
+Updated config with overrides applied
+
+**Raises:**
+
+- `OverridesError`: If there's an error parsing or applying overrides
+
+
+</Indent>
+
+<Anchor id="nemo_rl-utils-config-register_omegaconf_resolvers">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.config.register_omegaconf_resolvers() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Register shared OmegaConf resolvers used in configs.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-utils-config-resolve_path">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.utils.config.resolve_path(
+    base_path: pathlib.Path,
+    path: str
+) -> pathlib.Path
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Resolve a path relative to the base path.
+
+
+</Indent>

@@ -1,0 +1,1931 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/prompts/chat
+title: langchain_core.prompts.chat
+---
+
+Chat prompt template.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`AIMessagePromptTemplate`](#langchain_core-prompts-chat-AIMessagePromptTemplate) | AI message prompt template. |
+| [`BaseChatPromptTemplate`](#langchain_core-prompts-chat-BaseChatPromptTemplate) | Base class for chat prompt templates. |
+| [`BaseStringMessagePromptTemplate`](#langchain_core-prompts-chat-BaseStringMessagePromptTemplate) | Base class for message prompt templates that use a string prompt template. |
+| [`ChatMessagePromptTemplate`](#langchain_core-prompts-chat-ChatMessagePromptTemplate) | Chat message prompt template. |
+| [`ChatPromptTemplate`](#langchain_core-prompts-chat-ChatPromptTemplate) | Prompt template for chat models. |
+| [`HumanMessagePromptTemplate`](#langchain_core-prompts-chat-HumanMessagePromptTemplate) | Human message prompt template. |
+| [`MessagesPlaceholder`](#langchain_core-prompts-chat-MessagesPlaceholder) | Prompt template that assumes variable is already list of messages. |
+| [`SystemMessagePromptTemplate`](#langchain_core-prompts-chat-SystemMessagePromptTemplate) | System message prompt template. |
+| [`_ImageTemplateParam`](#langchain_core-prompts-chat-_ImageTemplateParam) | - |
+| [`_StringImageMessagePromptTemplate`](#langchain_core-prompts-chat-_StringImageMessagePromptTemplate) | Human message prompt template. This is a message sent from the user. |
+| [`_TextTemplateParam`](#langchain_core-prompts-chat-_TextTemplateParam) | - |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_convert_to_message_template`](#langchain_core-prompts-chat-_convert_to_message_template) | Instantiate a message from a variety of message formats. |
+| [`_create_template_from_message_type`](#langchain_core-prompts-chat-_create_template_from_message_type) | Create a message prompt template from a message type and template string. |
+
+### Data
+
+[`MessageLike`](#langchain_core-prompts-chat-MessageLike)
+
+[`MessageLikeRepresentation`](#langchain_core-prompts-chat-MessageLikeRepresentation)
+
+[`MessagePromptTemplateT`](#langchain_core-prompts-chat-MessagePromptTemplateT)
+
+[`_convert_to_message`](#langchain_core-prompts-chat-_convert_to_message)
+
+### API
+
+<Anchor id="langchain_core-prompts-chat-AIMessagePromptTemplate">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.prompts.chat.AIMessagePromptTemplate()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [_StringImageMessagePromptTemplate](#langchain_core-prompts-chat-_StringImageMessagePromptTemplate)
+
+AI message prompt template.
+
+This is a message sent from the AI.
+
+
+<ParamField path="_msg_class" type="type[BaseMessage] = AIMessage">
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-prompts-chat-BaseChatPromptTemplate">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.prompts.chat.BaseChatPromptTemplate()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+**Bases:** [BasePromptTemplate](/langchain-core/langchain_core/prompts/base#langchain_core-prompts-base-BasePromptTemplate)
+
+Base class for chat prompt templates.
+
+
+<ParamField path="lc_attributes" type="dict">
+</ParamField>
+<Anchor id="langchain_core-prompts-chat-BaseChatPromptTemplate-aformat">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.BaseChatPromptTemplate.aformat(
+    kwargs: typing.Any = {}
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async format the chat template into a string.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to use for filling in template variables in all
+the template messages in this chat template.
+</ParamField>
+
+**Returns:** `str`
+
+Formatted string.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-BaseChatPromptTemplate-aformat_messages">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.BaseChatPromptTemplate.aformat_messages(
+    kwargs: typing.Any = {}
+) -> list[langchain_core.messages.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async format kwargs into a list of messages.
+
+**Returns:** `list[BaseMessage]`
+
+List of `BaseMessage` objects.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-BaseChatPromptTemplate-aformat_prompt">
+
+<CodeBlock links={{"langchain_core.prompt_values.ChatPromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-ChatPromptValue"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.BaseChatPromptTemplate.aformat_prompt(
+    kwargs: typing.Any = {}
+) -> langchain_core.prompt_values.ChatPromptValue
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async format prompt.
+
+Should return a `ChatPromptValue`.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to use for formatting.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-BaseChatPromptTemplate-format">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.BaseChatPromptTemplate.format(
+    kwargs: typing.Any = {}
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format the chat template into a string.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to use for filling in template variables in all
+the template messages in this chat template.
+</ParamField>
+
+**Returns:** `str`
+
+Formatted string.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-BaseChatPromptTemplate-format_messages">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.BaseChatPromptTemplate.format_messages(
+    kwargs: typing.Any = {}
+) -> list[langchain_core.messages.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Format kwargs into a list of messages.
+
+**Returns:** `list[BaseMessage]`
+
+List of `BaseMessage` objects.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-BaseChatPromptTemplate-format_prompt">
+
+<CodeBlock links={{"langchain_core.prompt_values.ChatPromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-ChatPromptValue"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.BaseChatPromptTemplate.format_prompt(
+    kwargs: typing.Any = {}
+) -> langchain_core.prompt_values.ChatPromptValue
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format prompt.
+
+Should return a `ChatPromptValue`.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to use for formatting.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-BaseChatPromptTemplate-pretty_print">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.BaseChatPromptTemplate.pretty_print() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Print a human-readable representation.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-BaseChatPromptTemplate-pretty_repr">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.BaseChatPromptTemplate.pretty_repr(
+    html: bool = False
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Human-readable representation.
+
+**Parameters:**
+
+<ParamField path="html" type="bool" default="False">
+Whether to format as HTML.
+</ParamField>
+
+**Returns:** `str`
+
+Human-readable representation.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-prompts-chat-BaseStringMessagePromptTemplate">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.prompts.chat.BaseStringMessagePromptTemplate()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+**Bases:** [BaseMessagePromptTemplate](/langchain-core/langchain_core/prompts/message#langchain_core-prompts-message-BaseMessagePromptTemplate)
+
+Base class for message prompt templates that use a string prompt template.
+
+
+<ParamField path="additional_kwargs" type="dict = Field(default_factory=dict)">
+Additional keyword arguments to pass to the prompt template.
+</ParamField>
+
+<ParamField path="input_variables" type="list[str]">
+Input variables for this prompt template.
+</ParamField>
+
+<ParamField path="prompt" type="StringPromptTemplate">
+String prompt template.
+</ParamField>
+<Anchor id="langchain_core-prompts-chat-BaseStringMessagePromptTemplate-aformat">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.BaseStringMessagePromptTemplate.aformat(
+    kwargs: typing.Any = {}
+) -> langchain_core.messages.BaseMessage
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async format the prompt template.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to use for formatting.
+</ParamField>
+
+**Returns:** `BaseMessage`
+
+Formatted message.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-BaseStringMessagePromptTemplate-aformat_messages">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.BaseStringMessagePromptTemplate.aformat_messages(
+    kwargs: typing.Any = {}
+) -> list[langchain_core.messages.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async format messages from kwargs.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to use for formatting.
+</ParamField>
+
+**Returns:** `list[BaseMessage]`
+
+List of `BaseMessage` objects.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-BaseStringMessagePromptTemplate-format">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.BaseStringMessagePromptTemplate.format(
+    kwargs: typing.Any = {}
+) -> langchain_core.messages.BaseMessage
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Format the prompt template.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to use for formatting.
+</ParamField>
+
+**Returns:** `BaseMessage`
+
+Formatted message.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-BaseStringMessagePromptTemplate-format_messages">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.BaseStringMessagePromptTemplate.format_messages(
+    kwargs: typing.Any = {}
+) -> list[langchain_core.messages.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format messages from kwargs.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to use for formatting.
+</ParamField>
+
+**Returns:** `list[BaseMessage]`
+
+List of `BaseMessage` objects.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-BaseStringMessagePromptTemplate-from_template">
+
+<CodeBlock links={{"langchain_core.prompts.string.PromptTemplateFormat":"/langchain-core/langchain_core/prompts/string#langchain_core-prompts-string-PromptTemplateFormat","langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.BaseStringMessagePromptTemplate.from_template(
+    template: str,
+    template_format: langchain_core.prompts.string.PromptTemplateFormat = 'f-string',
+    partial_variables: langchain_core.prompts.dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> typing_extensions.Self
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Create a class from a string template.
+
+**Parameters:**
+
+<ParamField path="template" type="str">
+a template.
+</ParamField>
+
+<ParamField path="template_format" type="PromptTemplateFormat" default="'f-string'">
+format of the template.
+</ParamField>
+
+<ParamField path="partial_variables" type="dict[str, Any] | None" default="None">
+A dictionary of variables that can be used to partially
+fill in the template.
+
+For example, if the template is `"&#123;variable1&#125; &#123;variable2&#125;"`, and
+`partial_variables` is `&#123;"variable1": "foo"&#125;`, then the final prompt
+will be `"foo &#123;variable2&#125;"`.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to pass to the constructor.
+</ParamField>
+
+**Returns:** `Self`
+
+A new instance of this class.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-BaseStringMessagePromptTemplate-from_template_file">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.BaseStringMessagePromptTemplate.from_template_file(
+    template_file: str | pathlib.Path,
+    kwargs: typing.Any = {}
+) -> typing_extensions.Self
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Create a class from a template file.
+
+**Parameters:**
+
+<ParamField path="template_file" type="str | Path">
+path to a template file.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to pass to the constructor.
+</ParamField>
+
+**Returns:** `Self`
+
+A new instance of this class.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-BaseStringMessagePromptTemplate-pretty_repr">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.BaseStringMessagePromptTemplate.pretty_repr(
+    html: bool = False
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Human-readable representation.
+
+**Parameters:**
+
+<ParamField path="html" type="bool" default="False">
+Whether to format as HTML.
+</ParamField>
+
+**Returns:** `str`
+
+Human-readable representation.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-prompts-chat-ChatMessagePromptTemplate">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.prompts.chat.ChatMessagePromptTemplate()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseStringMessagePromptTemplate](#langchain_core-prompts-chat-BaseStringMessagePromptTemplate)
+
+Chat message prompt template.
+
+
+<ParamField path="role" type="str">
+Role of the message.
+</ParamField>
+<Anchor id="langchain_core-prompts-chat-ChatMessagePromptTemplate-aformat">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.ChatMessagePromptTemplate.aformat(
+    kwargs: typing.Any = {}
+) -> langchain_core.messages.BaseMessage
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async format the prompt template.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to use for formatting.
+</ParamField>
+
+**Returns:** `BaseMessage`
+
+Formatted message.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-ChatMessagePromptTemplate-format">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.ChatMessagePromptTemplate.format(
+    kwargs: typing.Any = {}
+) -> langchain_core.messages.BaseMessage
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format the prompt template.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to use for formatting.
+</ParamField>
+
+**Returns:** `BaseMessage`
+
+Formatted message.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-prompts-chat-ChatPromptTemplate">
+
+<CodeBlock links={{"langchain_core.prompts.chat.MessageLikeRepresentation":"#langchain_core-prompts-chat-MessageLikeRepresentation","langchain_core.prompts.string.PromptTemplateFormat":"/langchain-core/langchain_core/prompts/string#langchain_core-prompts-string-PromptTemplateFormat"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.prompts.chat.ChatPromptTemplate(
+    messages: collections.abc.Sequence[langchain_core.prompts.chat.MessageLikeRepresentation],
+    template_format: langchain_core.prompts.string.PromptTemplateFormat = 'f-string',
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseChatPromptTemplate](#langchain_core-prompts-chat-BaseChatPromptTemplate)
+
+Prompt template for chat models.
+
+Use to create flexible templated prompts for chat models.
+
+!!! example
+
+    ```python
+    from langchain_core.prompts import ChatPromptTemplate
+
+    template = ChatPromptTemplate(
+        [
+            ("system", "You are a helpful AI bot. Your name is {name}."),
+            ("human", "Hello, how are you doing?"),
+            ("ai", "I'm doing well, thanks!"),
+            ("human", "{user_input}"),
+        ]
+    )
+
+    prompt_value = template.invoke(
+        {
+            "name": "Bob",
+            "user_input": "What is your name?",
+        }
+    )
+    # Output:
+    # ChatPromptValue(
+    #    messages=[
+    #        SystemMessage(content='You are a helpful AI bot. Your name is Bob.'),
+    #        HumanMessage(content='Hello, how are you doing?'),
+    #        AIMessage(content="I'm doing well, thanks!"),
+    #        HumanMessage(content='What is your name?')
+    #    ]
+    # )
+    ```
+
+!!! note "Messages Placeholder"
+
+    ```python
+    # In addition to Human/AI/Tool/Function messages,
+    # you can initialize the template with a MessagesPlaceholder
+    # either using the class directly or with the shorthand tuple syntax:
+
+    template = ChatPromptTemplate(
+        [
+            ("system", "You are a helpful AI bot."),
+            # Means the template will receive an optional list of messages under
+            # the "conversation" key
+            ("placeholder", "{conversation}"),
+            # Equivalently:
+            # MessagesPlaceholder(variable_name="conversation", optional=True)
+        ]
+    )
+
+    prompt_value = template.invoke(
+        {
+            "conversation": [
+                ("human", "Hi!"),
+                ("ai", "How can I assist you today?"),
+                ("human", "Can you make me an ice cream sundae?"),
+                ("ai", "No."),
+            ]
+        }
+    )
+
+    # Output:
+    # ChatPromptValue(
+    #    messages=[
+    #        SystemMessage(content='You are a helpful AI bot.'),
+    #        HumanMessage(content='Hi!'),
+    #        AIMessage(content='How can I assist you today?'),
+    #        HumanMessage(content='Can you make me an ice cream sundae?'),
+    #        AIMessage(content='No.'),
+    #    ]
+    # )
+    ```
+
+!!! note "Single-variable template"
+
+    If your prompt has only a single input variable (i.e., one instance of
+    `'&#123;variable_nams&#125;'`), and you invoke the template with a non-dict object, the
+    prompt template will inject the provided argument into that variable location.
+
+    ```python
+    from langchain_core.prompts import ChatPromptTemplate
+
+    template = ChatPromptTemplate(
+        [
+            ("system", "You are a helpful AI bot. Your name is Carl."),
+            ("human", "{user_input}"),
+        ]
+    )
+
+    prompt_value = template.invoke("Hello, there!")
+    # Equivalent to
+    # prompt_value = template.invoke({"user_input": "Hello, there!"})
+
+    # Output:
+    #  ChatPromptValue(
+    #     messages=[
+    #         SystemMessage(content='You are a helpful AI bot. Your name is Carl.'),
+    #         HumanMessage(content='Hello, there!'),
+    #     ]
+    # )
+    ```
+
+
+<ParamField path="_prompt_type" type="str">
+Name of prompt type. Used for serialization.
+</ParamField>
+
+<ParamField path="messages" type="Annotated[list[MessageLike], SkipValidation()]">
+List of messages consisting of either message prompt templates or messages.
+</ParamField>
+
+<ParamField path="validate_template" type="bool = False">
+Whether or not to try validating the template.
+</ParamField>
+<Anchor id="langchain_core-prompts-chat-ChatPromptTemplate-__add__">
+
+<CodeBlock links={{"langchain_core.prompts.chat.ChatPromptTemplate":"#langchain_core-prompts-chat-ChatPromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.ChatPromptTemplate.__add__(
+    other: typing.Any
+) -> langchain_core.prompts.chat.ChatPromptTemplate
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Combine two prompt templates.
+
+**Parameters:**
+
+<ParamField path="other" type="Any">
+Another prompt template.
+</ParamField>
+
+**Returns:** `ChatPromptTemplate`
+
+Combined prompt template.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-ChatPromptTemplate-__getitem__">
+
+<CodeBlock links={{"langchain_core.prompts.chat.MessageLike":"#langchain_core-prompts-chat-MessageLike","langchain_core.prompts.chat.ChatPromptTemplate":"#langchain_core-prompts-chat-ChatPromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.ChatPromptTemplate.__getitem__(
+    index: int | slice
+) -> langchain_core.prompts.chat.MessageLike | langchain_core.prompts.chat.ChatPromptTemplate
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Use to index into the chat template.
+
+**Returns:** `MessageLike | ChatPromptTemplate`
+
+If index is an int, returns the message at that index.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-ChatPromptTemplate-__len__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.ChatPromptTemplate.__len__() -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return the length of the chat template.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-ChatPromptTemplate-aformat_messages">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.ChatPromptTemplate.aformat_messages(
+    kwargs: typing.Any = {}
+) -> list[langchain_core.messages.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async format the chat template into a list of finalized messages.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to use for filling in template variables
+in all the template messages in this chat template.
+</ParamField>
+
+**Returns:** `list[BaseMessage]`
+
+List of formatted messages.
+
+**Raises:**
+
+- `ValueError`: If unexpected input.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-ChatPromptTemplate-append">
+
+<CodeBlock links={{"langchain_core.prompts.chat.MessageLikeRepresentation":"#langchain_core-prompts-chat-MessageLikeRepresentation"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.ChatPromptTemplate.append(
+    message: langchain_core.prompts.chat.MessageLikeRepresentation
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Append a message to the end of the chat template.
+
+**Parameters:**
+
+<ParamField path="message" type="MessageLikeRepresentation">
+representation of a message to append.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-ChatPromptTemplate-extend">
+
+<CodeBlock links={{"langchain_core.prompts.chat.MessageLikeRepresentation":"#langchain_core-prompts-chat-MessageLikeRepresentation"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.ChatPromptTemplate.extend(
+    messages: collections.abc.Sequence[langchain_core.prompts.chat.MessageLikeRepresentation]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Extend the chat template with a sequence of messages.
+
+**Parameters:**
+
+<ParamField path="messages" type="Sequence[MessageLikeRepresentation]">
+Sequence of message representations to append.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-ChatPromptTemplate-format_messages">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.ChatPromptTemplate.format_messages(
+    kwargs: typing.Any = {}
+) -> list[langchain_core.messages.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format the chat template into a list of finalized messages.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to use for filling in template variables
+in all the template messages in this chat template.
+</ParamField>
+
+**Returns:** `list[BaseMessage]`
+
+List of formatted messages.
+
+**Raises:**
+
+- `ValueError`: If messages are of unexpected types.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-ChatPromptTemplate-from_messages">
+
+<CodeBlock links={{"langchain_core.prompts.chat.MessageLikeRepresentation":"#langchain_core-prompts-chat-MessageLikeRepresentation","langchain_core.prompts.string.PromptTemplateFormat":"/langchain-core/langchain_core/prompts/string#langchain_core-prompts-string-PromptTemplateFormat","langchain_core.prompts.chat.ChatPromptTemplate":"#langchain_core-prompts-chat-ChatPromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.ChatPromptTemplate.from_messages(
+    messages: collections.abc.Sequence[langchain_core.prompts.chat.MessageLikeRepresentation],
+    template_format: langchain_core.prompts.string.PromptTemplateFormat = 'f-string'
+) -> langchain_core.prompts.chat.ChatPromptTemplate
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Create a chat prompt template from a variety of message formats.
+
+Args:
+    messages: Sequence of message representations.
+
+        A message can be represented using the following formats:
+
+        1. `BaseMessagePromptTemplate`
+        2. `BaseMessage`
+        3. 2-tuple of `(message type, template)`; e.g.,
+            `('human', '&#123;user_input&#125;')`
+        4. 2-tuple of `(message class, template)`
+        5. A string which is shorthand for `('human', template)`; e.g.,
+            `'&#123;user_input&#125;'`
+    template_format: Format of the template.
+
+**Returns:** `ChatPromptTemplate`
+
+A chat prompt template.
+
+**Examples:**
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+Instantiation from a list of message templates:
+
+```python
+template = ChatPromptTemplate.from_messages(
+    [
+        ("human", "Hello, how are you?"),
+        ("ai", "I'm doing well, thanks!"),
+        ("human", "That's good to hear."),
+    ]
+)
+```
+
+Instantiation from mixed message formats:
+
+```python
+template = ChatPromptTemplate.from_messages(
+    [
+        SystemMessage(content="hello"),
+        ("human", "Hello, how are you?"),
+    ]
+)
+```
+
+</CodeBlock>
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-ChatPromptTemplate-from_template">
+
+<CodeBlock links={{"langchain_core.prompts.chat.ChatPromptTemplate":"#langchain_core-prompts-chat-ChatPromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.ChatPromptTemplate.from_template(
+    template: str,
+    kwargs: typing.Any = {}
+) -> langchain_core.prompts.chat.ChatPromptTemplate
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Create a chat prompt template from a template string.
+
+Creates a chat template consisting of a single message assumed to be from the
+human.
+
+**Parameters:**
+
+<ParamField path="template" type="str">
+Template string
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to pass to the constructor.
+</ParamField>
+
+**Returns:** `ChatPromptTemplate`
+
+A new instance of this class.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-ChatPromptTemplate-get_lc_namespace">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.ChatPromptTemplate.get_lc_namespace() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Get the namespace of the LangChain object.
+
+**Returns:** `list[str]`
+
+`["langchain", "prompts", "chat"]`
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-ChatPromptTemplate-partial">
+
+<CodeBlock links={{"langchain_core.prompts.chat.ChatPromptTemplate":"#langchain_core-prompts-chat-ChatPromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.ChatPromptTemplate.partial(
+    kwargs: typing.Any = {}
+) -> langchain_core.prompts.chat.ChatPromptTemplate
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get a new `ChatPromptTemplate` with some input variables already filled in.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to use for filling in template variables.
+
+Ought to be a subset of the input variables.
+</ParamField>
+
+**Returns:** `ChatPromptTemplate`
+
+A new `ChatPromptTemplate`.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-ChatPromptTemplate-pretty_repr">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.ChatPromptTemplate.pretty_repr(
+    html: bool = False
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Human-readable representation.
+
+**Parameters:**
+
+<ParamField path="html" type="bool" default="False">
+Whether to format as HTML.
+</ParamField>
+
+**Returns:** `str`
+
+Human-readable representation.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-ChatPromptTemplate-save">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.ChatPromptTemplate.save(
+    file_path: pathlib.Path | str
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Save prompt to file.
+
+**Parameters:**
+
+<ParamField path="file_path" type="Path | str">
+path to file.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-ChatPromptTemplate-validate_input_variables">
+
+<CodeBlock links={{"langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.ChatPromptTemplate.validate_input_variables(
+    values: langchain_core.prompts.dict
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Validate input variables.
+
+If `input_variables` is not set, it will be set to the union of all input
+variables in the messages.
+
+**Parameters:**
+
+<ParamField path="values" type="dict">
+values to validate.
+</ParamField>
+
+**Returns:** `Any`
+
+Validated values.
+
+**Raises:**
+
+- `ValueError`: If input variables do not match.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-prompts-chat-HumanMessagePromptTemplate">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.prompts.chat.HumanMessagePromptTemplate()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [_StringImageMessagePromptTemplate](#langchain_core-prompts-chat-_StringImageMessagePromptTemplate)
+
+Human message prompt template.
+
+This is a message sent from the user.
+
+
+<ParamField path="_msg_class" type="type[BaseMessage] = HumanMessage">
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-prompts-chat-MessagesPlaceholder">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.prompts.chat.MessagesPlaceholder(
+    variable_name: str,
+    optional: bool = False,
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseMessagePromptTemplate](/langchain-core/langchain_core/prompts/message#langchain_core-prompts-message-BaseMessagePromptTemplate)
+
+Prompt template that assumes variable is already list of messages.
+
+A placeholder which can be used to pass in a list of messages.
+
+!!! example "Direct usage"
+
+    ```python
+    from langchain_core.prompts import MessagesPlaceholder
+
+    prompt = MessagesPlaceholder("history")
+    prompt.format_messages()  # raises KeyError
+
+    prompt = MessagesPlaceholder("history", optional=True)
+    prompt.format_messages()  # returns empty list []
+
+    prompt.format_messages(
+        history=[
+            ("system", "You are an AI assistant."),
+            ("human", "Hello!"),
+        ]
+    )
+    # -> [
+    #     SystemMessage(content="You are an AI assistant."),
+    #     HumanMessage(content="Hello!"),
+    # ]
+    ```
+
+!!! example "Building a prompt with chat history"
+
+    ```python
+    from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", "You are a helpful assistant."),
+            MessagesPlaceholder("history"),
+            ("human", "{question}"),
+        ]
+    )
+    prompt.invoke(
+        {
+            "history": [("human", "what's 5 + 2"), ("ai", "5 + 2 is 7")],
+            "question": "now multiply that by 4",
+        }
+    )
+    # -> ChatPromptValue(messages=[
+    #     SystemMessage(content="You are a helpful assistant."),
+    #     HumanMessage(content="what's 5 + 2"),
+    #     AIMessage(content="5 + 2 is 7"),
+    #     HumanMessage(content="now multiply that by 4"),
+    # ])
+    ```
+
+!!! example "Limiting the number of messages"
+
+    ```python
+    from langchain_core.prompts import MessagesPlaceholder
+
+    prompt = MessagesPlaceholder("history", n_messages=1)
+
+    prompt.format_messages(
+        history=[
+            ("system", "You are an AI assistant."),
+            ("human", "Hello!"),
+        ]
+    )
+    # -> [
+    #     HumanMessage(content="Hello!"),
+    # ]
+    ```
+
+
+<ParamField path="input_variables" type="list[str]">
+Input variables for this prompt template.
+</ParamField>
+
+<ParamField path="n_messages" type="PositiveInt | None = None">
+Maximum number of messages to include.
+
+If `None`, then will include all.
+</ParamField>
+
+<ParamField path="optional" type="bool = False">
+Whether `format_messages` must be provided.
+
+If `True` `format_messages` can be called with no arguments and will return an empty
+list.
+
+If `False` then a named argument with name `variable_name` must be passed in, even
+if the value is an empty list.
+</ParamField>
+
+<ParamField path="variable_name" type="str">
+Name of variable to use as messages.
+</ParamField>
+<Anchor id="langchain_core-prompts-chat-MessagesPlaceholder-format_messages">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.MessagesPlaceholder.format_messages(
+    kwargs: typing.Any = {}
+) -> list[langchain_core.messages.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format messages from kwargs.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to use for formatting.
+</ParamField>
+
+**Returns:** `list[BaseMessage]`
+
+List of `BaseMessage` objects.
+
+**Raises:**
+
+- `ValueError`: If variable is not a list of messages.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-MessagesPlaceholder-pretty_repr">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.MessagesPlaceholder.pretty_repr(
+    html: bool = False
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Human-readable representation.
+
+**Parameters:**
+
+<ParamField path="html" type="bool" default="False">
+Whether to format as HTML.
+</ParamField>
+
+**Returns:** `str`
+
+Human-readable representation.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-prompts-chat-SystemMessagePromptTemplate">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.prompts.chat.SystemMessagePromptTemplate()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [_StringImageMessagePromptTemplate](#langchain_core-prompts-chat-_StringImageMessagePromptTemplate)
+
+System message prompt template.
+
+This is a message that is not sent to the user.
+
+
+<ParamField path="_msg_class" type="type[BaseMessage] = SystemMessage">
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-prompts-chat-_ImageTemplateParam">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.prompts.chat._ImageTemplateParam
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="image_url" type="str | dict">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-chat-_StringImageMessagePromptTemplate">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.prompts.chat._StringImageMessagePromptTemplate()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseMessagePromptTemplate](/langchain-core/langchain_core/prompts/message#langchain_core-prompts-message-BaseMessagePromptTemplate)
+
+Human message prompt template. This is a message sent from the user.
+
+
+<ParamField path="_msg_class" type="type[BaseMessage]">
+</ParamField>
+
+<ParamField path="additional_kwargs" type="dict = Field(default_factory=dict)">
+Additional keyword arguments to pass to the prompt template.
+</ParamField>
+
+<ParamField path="input_variables" type="list[str]">
+Input variables for this prompt template.
+</ParamField>
+
+<ParamField path="prompt" type="StringPromptTemplate | list[StringPromptTemplate | ImagePromptTemplate | DictPromptTemplate]">
+Prompt template.
+</ParamField>
+<Anchor id="langchain_core-prompts-chat-_StringImageMessagePromptTemplate-aformat">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat._StringImageMessagePromptTemplate.aformat(
+    kwargs: typing.Any = {}
+) -> langchain_core.messages.BaseMessage
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async format the prompt template.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to use for formatting.
+</ParamField>
+
+**Returns:** `BaseMessage`
+
+Formatted message.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-_StringImageMessagePromptTemplate-aformat_messages">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat._StringImageMessagePromptTemplate.aformat_messages(
+    kwargs: typing.Any = {}
+) -> list[langchain_core.messages.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async format messages from kwargs.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to use for formatting.
+</ParamField>
+
+**Returns:** `list[BaseMessage]`
+
+List of `BaseMessage` objects.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-_StringImageMessagePromptTemplate-format">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat._StringImageMessagePromptTemplate.format(
+    kwargs: typing.Any = {}
+) -> langchain_core.messages.BaseMessage
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format the prompt template.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to use for formatting.
+</ParamField>
+
+**Returns:** `BaseMessage`
+
+Formatted message.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-_StringImageMessagePromptTemplate-format_messages">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat._StringImageMessagePromptTemplate.format_messages(
+    kwargs: typing.Any = {}
+) -> list[langchain_core.messages.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format messages from kwargs.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to use for formatting.
+</ParamField>
+
+**Returns:** `list[BaseMessage]`
+
+List of `BaseMessage` objects.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-_StringImageMessagePromptTemplate-from_template">
+
+<CodeBlock links={{"langchain_core.prompts.chat._TextTemplateParam":"#langchain_core-prompts-chat-_TextTemplateParam","langchain_core.prompts.chat._ImageTemplateParam":"#langchain_core-prompts-chat-_ImageTemplateParam","langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict","langchain_core.prompts.string.PromptTemplateFormat":"/langchain-core/langchain_core/prompts/string#langchain_core-prompts-string-PromptTemplateFormat"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat._StringImageMessagePromptTemplate.from_template(
+    template: str | list[str | langchain_core.prompts.chat._TextTemplateParam | langchain_core.prompts.chat._ImageTemplateParam | langchain_core.prompts.dict[str, typing.Any]],
+    template_format: langchain_core.prompts.string.PromptTemplateFormat = 'f-string',
+    partial_variables: langchain_core.prompts.dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> typing_extensions.Self
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Create a class from a string template.
+
+**Parameters:**
+
+<ParamField path="template" type="str | list[str | _TextTemplateParam | _ImageTemplateParam | dict[str, Any]]">
+a template.
+</ParamField>
+
+<ParamField path="template_format" type="PromptTemplateFormat" default="'f-string'">
+format of the template.
+
+Options are: `'f-string'`, `'mustache'`, `'jinja2'`.
+</ParamField>
+
+<ParamField path="partial_variables" type="dict[str, Any] | None" default="None">
+A dictionary of variables that can be used too partially.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to pass to the constructor.
+</ParamField>
+
+**Returns:** `Self`
+
+A new instance of this class.
+
+**Raises:**
+
+- `ValueError`: If the template is not a string or list of strings.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-_StringImageMessagePromptTemplate-from_template_file">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat._StringImageMessagePromptTemplate.from_template_file(
+    template_file: str | pathlib.Path,
+    input_variables: list[str],
+    kwargs: typing.Any = {}
+) -> typing_extensions.Self
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Create a class from a template file.
+
+**Parameters:**
+
+<ParamField path="template_file" type="str | Path">
+path to a template file.
+</ParamField>
+
+<ParamField path="input_variables" type="list[str]">
+list of input variables.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to pass to the constructor.
+</ParamField>
+
+**Returns:** `Self`
+
+A new instance of this class.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-chat-_StringImageMessagePromptTemplate-pretty_repr">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat._StringImageMessagePromptTemplate.pretty_repr(
+    html: bool = False
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Human-readable representation.
+
+**Parameters:**
+
+<ParamField path="html" type="bool" default="False">
+Whether to format as HTML.
+</ParamField>
+
+**Returns:** `str`
+
+Human-readable representation.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-prompts-chat-_TextTemplateParam">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.prompts.chat._TextTemplateParam
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="text" type="str | dict">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-chat-_convert_to_message_template">
+
+<CodeBlock links={{"langchain_core.prompts.chat.MessageLikeRepresentation":"#langchain_core-prompts-chat-MessageLikeRepresentation","langchain_core.prompts.string.PromptTemplateFormat":"/langchain-core/langchain_core/prompts/string#langchain_core-prompts-string-PromptTemplateFormat","langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.prompts.message.BaseMessagePromptTemplate":"/langchain-core/langchain_core/prompts/message#langchain_core-prompts-message-BaseMessagePromptTemplate","langchain_core.prompts.chat.BaseChatPromptTemplate":"#langchain_core-prompts-chat-BaseChatPromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat._convert_to_message_template(
+    message: langchain_core.prompts.chat.MessageLikeRepresentation,
+    template_format: langchain_core.prompts.string.PromptTemplateFormat = 'f-string'
+) -> langchain_core.messages.BaseMessage | langchain_core.prompts.message.BaseMessagePromptTemplate | langchain_core.prompts.chat.BaseChatPromptTemplate
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Instantiate a message from a variety of message formats.
+
+A message can be represented using the following formats:
+
+1. `BaseMessagePromptTemplate`
+2. `BaseMessage`
+3. 2-tuple of `(message type, template)`; e.g., `('human', '&#123;user_input&#125;')`
+4. 2-tuple of `(message class, template)`
+5. A string which is shorthand for `('human', template)`; e.g., `'&#123;user_input&#125;'`
+
+**Parameters:**
+
+<ParamField path="message" type="MessageLikeRepresentation">
+A representation of a message in one of the supported formats.
+</ParamField>
+
+<ParamField path="template_format" type="PromptTemplateFormat" default="'f-string'">
+Format of the template.
+</ParamField>
+
+**Returns:** `BaseMessage | BaseMessagePromptTemplate | BaseChatPromptTemplate`
+
+An instance of a message or a message template.
+
+**Raises:**
+
+- `ValueError`: If unexpected message type.
+- `ValueError`: If 2-tuple does not have 2 elements.
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-chat-_create_template_from_message_type">
+
+<CodeBlock links={{"langchain_core.prompts.string.PromptTemplateFormat":"/langchain-core/langchain_core/prompts/string#langchain_core-prompts-string-PromptTemplateFormat","langchain_core.prompts.message.BaseMessagePromptTemplate":"/langchain-core/langchain_core/prompts/message#langchain_core-prompts-message-BaseMessagePromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat._create_template_from_message_type(
+    message_type: str,
+    template: str | list,
+    template_format: langchain_core.prompts.string.PromptTemplateFormat = 'f-string'
+) -> langchain_core.prompts.message.BaseMessagePromptTemplate
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a message prompt template from a message type and template string.
+
+**Parameters:**
+
+<ParamField path="message_type" type="str">
+The type of the message template (e.g., `'human'`, `'ai'`, etc.)
+</ParamField>
+
+<ParamField path="template" type="str | list">
+The template string.
+</ParamField>
+
+<ParamField path="template_format" type="PromptTemplateFormat" default="'f-string'">
+Format of the template.
+</ParamField>
+
+**Returns:** `BaseMessagePromptTemplate`
+
+A message prompt template of the appropriate type.
+
+**Raises:**
+
+- `ValueError`: If unexpected message type.
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-chat-MessageLike">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.MessageLike = BaseMessagePromptTemplate | BaseMessage | BaseChatPromptTemplate
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-prompts-chat-MessageLikeRepresentation">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.MessageLikeRepresentation = MessageLike | tuple[str | type, str | Sequence[dict] | Sequence[object]] | str |...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-prompts-chat-MessagePromptTemplateT">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat.MessagePromptTemplateT = TypeVar('MessagePromptTemplateT', bound='BaseStringMessagePromptTemplate')
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Type variable for message prompt templates.
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-chat-_convert_to_message">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.chat._convert_to_message = _convert_to_message_template
+```
+
+</CodeBlock>
+</Anchor>
+

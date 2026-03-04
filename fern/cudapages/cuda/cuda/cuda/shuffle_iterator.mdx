@@ -1,0 +1,259 @@
+---
+title: "cuda::shuffle_iterator"
+description: "[`shuffle_iterator`](/libcudacxx/api/cuda::shuffle_iterator) is an iterator which generates a sequence of integral values representing a random permutation."
+---
+
+`shuffle_iterator` is an iterator which generates a sequence of integral values representing a random permutation.
+
+`shuffle_iterator` is an iterator which generates a sequence of values representing a random permutation. This iterator is useful for working with random permutations of a range without explicitly storing them in memory. The shuffle iterator is also useful for sampling from a range by selecting only a subset of the elements in the permutation.
+
+The following code snippet demonstrates how to create a `shuffle_iterator` which generates a random permutation of the range[0, 4)
+
+```cpp showLineNumbers={false}
+#include <cuda/shuffle_iterator.h>
+```
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <cuda/iterator>
+...
+// create a shuffle_iterator
+cuda::shuffle_iterator iterator{cuda::random_bijection{4, cuda::std::minstd_rand(0xDEADBEEF)}};
+// iterator[0] returns 1
+// iterator[1] returns 3
+// iterator[2] returns 2
+// iterator[3] returns 0
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="_IndexType" type="class" default="::cuda::std::size_t">
+The type of the index to shuffle. Defaults to uint64_t
+</ParamField>
+
+<ParamField path="_Bijection" type="class" default="random_bijection<_IndexType>">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### shuffle_iterator <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+<CodeBlock links={{"shuffle_iterator": "/libcudacxx/api/cuda::shuffle_iterator"}}>
+```cpp showLineNumbers={false}
+cuda::shuffle_iterator<_IndexType, _Bijection>::shuffle_iterator() noexcept = default
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Overload 2">
+
+<Badge intent="note" minimal>inline</Badge>
+
+Constructs a `shuffle_iterator` from a given bijection and an optional start position.
+
+<CodeBlock links={{"shuffle_iterator": "/libcudacxx/api/cuda::shuffle_iterator"}}>
+```cpp showLineNumbers={false}
+cuda::shuffle_iterator<_IndexType, _Bijection>::shuffle_iterator(
+    _Bijection __bijection,
+    value_type __start = 0
+) noexcept(::cuda::std::is_nothrow_move_constructible_v< _Bijection >)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__bijection" type="_Bijection">
+The bijection representing the shuffled integer sequence
+</ParamField>
+
+<ParamField path="__start" type="value_type" default="0">
+The position of the iterator in the shuffled integer sequence
+</ParamField>
+
+</Tab>
+<Tab title="Overload 3">
+
+<Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>explicit</Badge>
+
+Constructs a `shuffle_iterator` by constructing the bijection function in place and an optional start position.
+
+<CodeBlock links={{"shuffle_iterator": "/libcudacxx/api/cuda::shuffle_iterator"}}>
+```cpp showLineNumbers={false}
+template <class _RNG>
+cuda::shuffle_iterator<_IndexType, _Bijection>::shuffle_iterator(
+    value_type __num_elements,
+    _RNG &&__gen,
+    value_type __start = 0
+) noexcept(::cuda::std::is_nothrow_constructible_v< _Bijection, value_type, _RNG >)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__num_elements" type="value_type">
+The size of the bijection sequence
+</ParamField>
+
+<ParamField path="__gen" type="_RNG &&">
+The random number generator to initialize the bijection
+</ParamField>
+
+<ParamField path="__start" type="value_type" default="0">
+The optional stating index of the `shuffle_iterator` in the bijection sequence
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### operator* <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Dereferences the `shuffle_iterator` by invoking the bijection with the stored index.
+
+<CodeBlock links={{"shuffle_iterator": "/libcudacxx/api/cuda::shuffle_iterator"}}>
+```cpp showLineNumbers={false}
+value_type cuda::shuffle_iterator<_IndexType, _Bijection>::operator*() const noexcept(__bijection_(0))
+```
+</CodeBlock>
+
+### operator[] <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Subscripts the `shuffle_iterator` by invoking the bijection with the stored index advanced by a given number of elements.
+
+<CodeBlock links={{"shuffle_iterator": "/libcudacxx/api/cuda::shuffle_iterator"}}>
+```cpp showLineNumbers={false}
+value_type cuda::shuffle_iterator<_IndexType, _Bijection>::operator[](
+    difference_type __n
+) const noexcept(__bijection_(0))
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The additional number of elements
+</ParamField>
+
+### operator++ <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Pre-increment">
+
+Increments the [`permutation_iterator`](/libcudacxx/api/cuda::permutation_iterator).
+
+<CodeBlock links={{"shuffle_iterator": "/libcudacxx/api/cuda::shuffle_iterator"}}>
+```cpp showLineNumbers={false}
+shuffle_iterator & cuda::shuffle_iterator<_IndexType, _Bijection>::operator++() noexcept
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Post-increment">
+
+Increments the [`permutation_iterator`](/libcudacxx/api/cuda::permutation_iterator).
+
+<CodeBlock links={{"shuffle_iterator": "/libcudacxx/api/cuda::shuffle_iterator"}}>
+```cpp showLineNumbers={false}
+shuffle_iterator cuda::shuffle_iterator<_IndexType, _Bijection>::operator++(
+    int
+) noexcept(::cuda::std::is_nothrow_copy_constructible_v< _Bijection >)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### operator-- <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Pre-decrement">
+
+Decrements the [`permutation_iterator`](/libcudacxx/api/cuda::permutation_iterator).
+
+<CodeBlock links={{"shuffle_iterator": "/libcudacxx/api/cuda::shuffle_iterator"}}>
+```cpp showLineNumbers={false}
+shuffle_iterator & cuda::shuffle_iterator<_IndexType, _Bijection>::operator--() noexcept
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Post-decrement">
+
+<Badge intent="note" minimal>nodiscard</Badge>
+
+Decrements the [`permutation_iterator`](/libcudacxx/api/cuda::permutation_iterator).
+
+<CodeBlock links={{"shuffle_iterator": "/libcudacxx/api/cuda::shuffle_iterator"}}>
+```cpp showLineNumbers={false}
+shuffle_iterator cuda::shuffle_iterator<_IndexType, _Bijection>::operator--(
+    int
+) noexcept(::cuda::std::is_nothrow_copy_constructible_v< _Bijection >)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### operator+= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Advances the [`permutation_iterator`](/libcudacxx/api/cuda::permutation_iterator) by a given number of elements.
+
+<CodeBlock links={{"shuffle_iterator": "/libcudacxx/api/cuda::shuffle_iterator"}}>
+```cpp showLineNumbers={false}
+shuffle_iterator & cuda::shuffle_iterator<_IndexType, _Bijection>::operator+=(
+    difference_type __n
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The number of elements to advance
+</ParamField>
+
+### operator-= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Decrements the [`permutation_iterator`](/libcudacxx/api/cuda::permutation_iterator) by a given number of elements.
+
+<CodeBlock links={{"shuffle_iterator": "/libcudacxx/api/cuda::shuffle_iterator"}}>
+```cpp showLineNumbers={false}
+shuffle_iterator & cuda::shuffle_iterator<_IndexType, _Bijection>::operator-=(
+    difference_type __n
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The number of elements to decrement
+</ParamField>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `iterator_category` | `::cuda::std::random_access_iterator_tag` |
+| `iterator_concept` | `::cuda::std::random_access_iterator_tag` |
+| `value_type` | `_IndexType` |
+| `difference_type` | `::cuda::std::make_signed_t< value_type >` |
+| `reference` | `_IndexType` |
+| `pointer` | `void` |

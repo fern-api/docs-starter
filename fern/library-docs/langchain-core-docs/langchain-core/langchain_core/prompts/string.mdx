@@ -1,0 +1,597 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/prompts/string
+title: langchain_core.prompts.string
+---
+
+`BasePrompt` schema definition.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`StringPromptTemplate`](#langchain_core-prompts-string-StringPromptTemplate) | String prompt that exposes the format method, returning a prompt. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_create_model_recursive`](#langchain_core-prompts-string-_create_model_recursive) | - |
+| [`_get_jinja2_variables_from_template`](#langchain_core-prompts-string-_get_jinja2_variables_from_template) | - |
+| [`check_valid_template`](#langchain_core-prompts-string-check_valid_template) | Check that template string is valid. |
+| [`get_template_variables`](#langchain_core-prompts-string-get_template_variables) | Get the variables from the template. |
+| [`is_subsequence`](#langchain_core-prompts-string-is_subsequence) | Return `True` if child is subsequence of parent. |
+| [`jinja2_formatter`](#langchain_core-prompts-string-jinja2_formatter) | Format a template using jinja2. |
+| [`mustache_formatter`](#langchain_core-prompts-string-mustache_formatter) | Format a template using mustache. |
+| [`mustache_schema`](#langchain_core-prompts-string-mustache_schema) | Get the variables from a mustache template. |
+| [`mustache_template_vars`](#langchain_core-prompts-string-mustache_template_vars) | Get the top-level variables from a mustache template. |
+| [`validate_jinja2`](#langchain_core-prompts-string-validate_jinja2) | Validate that the input variables are valid for the template. |
+
+### Data
+
+[`DEFAULT_FORMATTER_MAPPING`](#langchain_core-prompts-string-DEFAULT_FORMATTER_MAPPING)
+
+[`DEFAULT_VALIDATOR_MAPPING`](#langchain_core-prompts-string-DEFAULT_VALIDATOR_MAPPING)
+
+[`Defs`](#langchain_core-prompts-string-Defs)
+
+[`PromptTemplateFormat`](#langchain_core-prompts-string-PromptTemplateFormat)
+
+[`_HAS_JINJA2`](#langchain_core-prompts-string-_HAS_JINJA2)
+
+### API
+
+<Anchor id="langchain_core-prompts-string-StringPromptTemplate">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.prompts.string.StringPromptTemplate()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+**Bases:** [BasePromptTemplate](/langchain-core/langchain_core/prompts/base#langchain_core-prompts-base-BasePromptTemplate)
+
+String prompt that exposes the format method, returning a prompt.
+
+
+<Anchor id="langchain_core-prompts-string-StringPromptTemplate-aformat_prompt">
+
+<CodeBlock links={{"langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.string.StringPromptTemplate.aformat_prompt(
+    kwargs: typing.Any = {}
+) -> langchain_core.prompt_values.PromptValue
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async format the prompt with the inputs.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Any arguments to be passed to the prompt template.
+</ParamField>
+
+**Returns:** `PromptValue`
+
+A formatted string.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-string-StringPromptTemplate-format">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.string.StringPromptTemplate.format(
+    kwargs: typing.Any = {}
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-string-StringPromptTemplate-format_prompt">
+
+<CodeBlock links={{"langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.string.StringPromptTemplate.format_prompt(
+    kwargs: typing.Any = {}
+) -> langchain_core.prompt_values.PromptValue
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format the prompt with the inputs.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Any arguments to be passed to the prompt template.
+</ParamField>
+
+**Returns:** `PromptValue`
+
+A formatted string.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-string-StringPromptTemplate-get_lc_namespace">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.string.StringPromptTemplate.get_lc_namespace() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Get the namespace of the LangChain object.
+
+**Returns:** `list[str]`
+
+`["langchain", "prompts", "base"]`
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-string-StringPromptTemplate-pretty_print">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.string.StringPromptTemplate.pretty_print() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Print a pretty representation of the prompt.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-string-StringPromptTemplate-pretty_repr">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.string.StringPromptTemplate.pretty_repr(
+    html: bool = False
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get a pretty representation of the prompt.
+
+**Parameters:**
+
+<ParamField path="html" type="bool" default="False">
+Whether to return an HTML-formatted string.
+</ParamField>
+
+**Returns:** `str`
+
+A pretty representation of the prompt.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-prompts-string-_create_model_recursive">
+
+<CodeBlock links={{"langchain_core.prompts.string.Defs":"#langchain_core-prompts-string-Defs"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.string._create_model_recursive(
+    name: str,
+    defs: langchain_core.prompts.string.Defs
+) -> type[pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-string-_get_jinja2_variables_from_template">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.string._get_jinja2_variables_from_template(
+    template: str
+) -> set[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-string-check_valid_template">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.string.check_valid_template(
+    template: str,
+    template_format: str,
+    input_variables: list[str]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check that template string is valid.
+
+**Parameters:**
+
+<ParamField path="template" type="str">
+The template string.
+</ParamField>
+
+<ParamField path="template_format" type="str">
+The template format.
+
+Should be one of `'f-string'` or `'jinja2'`.
+</ParamField>
+
+<ParamField path="input_variables" type="list[str]">
+The input variables.
+</ParamField>
+
+**Raises:**
+
+- `ValueError`: If the template format is not supported.
+- `ValueError`: If the prompt schema is invalid.
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-string-get_template_variables">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.string.get_template_variables(
+    template: str,
+    template_format: str
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the variables from the template.
+
+**Parameters:**
+
+<ParamField path="template" type="str">
+The template string.
+</ParamField>
+
+<ParamField path="template_format" type="str">
+The template format.
+
+Should be one of `'f-string'`, `'mustache'` or `'jinja2'`.
+</ParamField>
+
+**Returns:** `list[str]`
+
+The variables from the template.
+
+**Raises:**
+
+- `ValueError`: If the template format is not supported.
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-string-is_subsequence">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.string.is_subsequence(
+    child: collections.abc.Sequence,
+    parent: collections.abc.Sequence
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return `True` if child is subsequence of parent.
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-string-jinja2_formatter">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.string.jinja2_formatter(
+    template: str,
+    kwargs: typing.Any = {}
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format a template using jinja2.
+
+!!! warning "Security"
+
+    As of LangChain 0.0.329, this method uses Jinja2's `SandboxedEnvironment` by
+    default. However, this sandboxing should be treated as a best-effort approach
+    rather than a guarantee of security.
+
+    Do not accept jinja2 templates from untrusted sources as they may lead
+    to arbitrary Python code execution.
+
+    [More information.](https://jinja.palletsprojects.com/en/3.1.x/sandbox/)
+
+**Parameters:**
+
+<ParamField path="template" type="str">
+The template string.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+The variables to format the template with.
+</ParamField>
+
+**Returns:** `str`
+
+The formatted string.
+
+**Raises:**
+
+- `ImportError`: If jinja2 is not installed.
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-string-mustache_formatter">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.string.mustache_formatter(
+    template: str,
+    kwargs: typing.Any = {}
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format a template using mustache.
+
+**Parameters:**
+
+<ParamField path="template" type="str">
+The template string.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+The variables to format the template with.
+</ParamField>
+
+**Returns:** `str`
+
+The formatted string.
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-string-mustache_schema">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.string.mustache_schema(
+    template: str
+) -> type[pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the variables from a mustache template.
+
+**Parameters:**
+
+<ParamField path="template" type="str">
+The template string.
+</ParamField>
+
+**Returns:** `type[BaseModel]`
+
+The variables from the template as a Pydantic model.
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-string-mustache_template_vars">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.string.mustache_template_vars(
+    template: str
+) -> set[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the top-level variables from a mustache template.
+
+For nested variables like `&#123;&#123;person.name&#125;&#125;`, only the top-level key (`person`) is
+returned.
+
+**Parameters:**
+
+<ParamField path="template" type="str">
+The template string.
+</ParamField>
+
+**Returns:** `set[str]`
+
+The top-level variables from the template.
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-string-validate_jinja2">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.string.validate_jinja2(
+    template: str,
+    input_variables: list[str]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Validate that the input variables are valid for the template.
+
+Issues a warning if missing or extra variables are found.
+
+**Parameters:**
+
+<ParamField path="template" type="str">
+The template string.
+</ParamField>
+
+<ParamField path="input_variables" type="list[str]">
+The input variables.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-string-DEFAULT_FORMATTER_MAPPING">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.string.DEFAULT_FORMATTER_MAPPING: dict[str, Callable[..., str]] = {'f-string': formatter.format, 'mustache': mustache_formatter, 'jinja2': jinja2_...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-prompts-string-DEFAULT_VALIDATOR_MAPPING">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.string.DEFAULT_VALIDATOR_MAPPING: dict[str, Callable] = {'f-string': formatter.validate_input_variables, 'jinja2': validate_jinja2}
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-prompts-string-Defs">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.string.Defs = dict[str, 'Defs']
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-prompts-string-PromptTemplateFormat">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.string.PromptTemplateFormat = Literal['f-string', 'mustache', 'jinja2']
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-prompts-string-_HAS_JINJA2">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.string._HAS_JINJA2 = True
+```
+
+</CodeBlock>
+</Anchor>
+

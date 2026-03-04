@@ -1,0 +1,207 @@
+---
+title: "cuda::compute_capability"
+description: "Type representing the CUDA compute capability."
+---
+
+Type representing the CUDA compute capability.
+
+```cpp showLineNumbers={false}
+#include <cuda/compute_capability.h>
+```
+
+---
+
+## Constructors
+
+### compute_capability <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+<CodeBlock links={{"compute_capability": "/libcudacxx/api/cuda::compute_capability"}}>
+```cpp showLineNumbers={false}
+cuda::compute_capability::compute_capability() noexcept = default
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Overload 2">
+
+<Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>explicit</Badge>
+
+Constructs the object from compute capability `__cc`.
+
+The expected format is 10 * major + minor.
+
+<CodeBlock links={{"compute_capability": "/libcudacxx/api/cuda::compute_capability"}}>
+```cpp showLineNumbers={false}
+cuda::compute_capability::compute_capability(
+    int __cc
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__cc" type="int">
+Compute capability.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 3">
+
+<Badge intent="note" minimal>inline</Badge>
+
+Constructs the object by combining the `__major` and `__minor` compute capability.
+
+<CodeBlock links={{"compute_capability": "/libcudacxx/api/cuda::compute_capability"}}>
+```cpp showLineNumbers={false}
+cuda::compute_capability::compute_capability(
+    int __major,
+    int __minor
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__major" type="int">
+The major compute capability.
+</ParamField>
+
+<ParamField path="__minor" type="int">
+The minor compute capability. Must be less than 10.
+</ParamField>
+
+</Tab>
+<Tab title="Constructs the object from the architecture id">
+
+<Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>explicit</Badge>
+
+Constructs the object from the architecture id.
+
+<CodeBlock links={{"compute_capability": "/libcudacxx/api/cuda::compute_capability"}}>
+```cpp showLineNumbers={false}
+cuda::compute_capability::compute_capability(
+    arch_id __arch_id
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__arch_id" type="arch_id">
+The architecture id.
+</ParamField>
+
+</Tab>
+<Tab title="Copy">
+
+<CodeBlock links={{"compute_capability": "/libcudacxx/api/cuda::compute_capability"}}>
+```cpp showLineNumbers={false}
+cuda::compute_capability::compute_capability(
+    const compute_capability &
+) noexcept = default
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Assignment operators
+
+### operator= <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<CodeBlock links={{"compute_capability": "/libcudacxx/api/cuda::compute_capability"}}>
+```cpp showLineNumbers={false}
+compute_capability & cuda::compute_capability::operator=(
+    const compute_capability &__other
+) noexcept = default
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### get <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Gets the stored compute capability.
+
+<CodeBlock links={{"compute_capability": "/libcudacxx/api/cuda::compute_capability"}}>
+```cpp showLineNumbers={false}
+int cuda::compute_capability::get() const noexcept
+```
+</CodeBlock>
+
+**Returns:** The stored compute capability in format 10 * major + minor.
+
+### major <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Gets the major compute capability.
+
+<CodeBlock links={{"compute_capability": "/libcudacxx/api/cuda::compute_capability"}}>
+```cpp showLineNumbers={false}
+int cuda::compute_capability::major() const noexcept
+```
+</CodeBlock>
+
+<Error title="Deprecated">
+This symbol is deprecated because it collides with major(...) macro defined in &lt;sys/sysmacros.h&gt; and will be removed in next major release. Use cc.major_cap() instead.
+</Error>
+
+**Returns:** Major compute capability.
+
+### major_cap <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Gets the major compute capability.
+
+<CodeBlock links={{"compute_capability": "/libcudacxx/api/cuda::compute_capability"}}>
+```cpp showLineNumbers={false}
+int cuda::compute_capability::major_cap() const noexcept
+```
+</CodeBlock>
+
+**Returns:** Major compute capability.
+
+### minor <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Gets the minor compute capability.
+
+<CodeBlock links={{"compute_capability": "/libcudacxx/api/cuda::compute_capability"}}>
+```cpp showLineNumbers={false}
+int cuda::compute_capability::minor() const noexcept
+```
+</CodeBlock>
+
+<Error title="Deprecated">
+This symbol is deprecated because it collides with minor(...) macro defined in &lt;sys/sysmacros.h&gt; and will be removed in next major release. Use cc.minor_cap() instead.
+</Error>
+
+**Returns:** Minor compute capability. The value is always less than 10.
+
+### minor_cap <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Gets the minor compute capability.
+
+<CodeBlock links={{"compute_capability": "/libcudacxx/api/cuda::compute_capability"}}>
+```cpp showLineNumbers={false}
+int cuda::compute_capability::minor_cap() const noexcept
+```
+</CodeBlock>
+
+**Returns:** Minor compute capability. The value is always less than 10.
+
+### operator int <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>explicit</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Conversion operator to `int`.
+
+<CodeBlock links={{"compute_capability": "/libcudacxx/api/cuda::compute_capability"}}>
+```cpp showLineNumbers={false}
+cuda::compute_capability::operator int() const noexcept
+```
+</CodeBlock>
+
+**Returns:** The stored compute capability in format 10 * major + minor.

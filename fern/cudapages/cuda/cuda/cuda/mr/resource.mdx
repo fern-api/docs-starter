@@ -1,0 +1,39 @@
+---
+title: "cuda::mr::resource"
+description: "The `resource` concept verifies that a type Resource satisfies the basic requirements of a memory resource and additionally supports stream ordered allocations."
+---
+
+<Badge intent="info">C++20 concept</Badge>
+
+The `resource` concept verifies that a type Resource satisfies the basic requirements of a memory resource and additionally supports stream ordered allocations.
+
+<CodeBlock>
+```cpp showLineNumbers={false}
+template <class _Resource>
+concept resource = /* see description */;
+```
+</CodeBlock>
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="_Resource" type="class">
+The type that should implement the resource concept
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Description
+
+We require that an resource supports the following interface
+
+  - `allocate(size_t bytes, size_t alignment)`
+  - `deallocate(void* ptr, size_t bytes, size_t alignment)`
+  - `T() == T()`
+  - `T() != T()`
+
+  - `allocate(cuda::stream_ref stream, size_t bytes, size_t alignment)`
+  - `deallocate( cuda::stream_ref stream, void* ptr, size_t bytes, size_t alignment)`

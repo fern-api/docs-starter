@@ -1,0 +1,115 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/tracers/_streaming
+title: langchain_core.tracers._streaming
+---
+
+Internal tracers used for `stream_log` and `astream` events implementations.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`_StreamingCallbackHandler`](#langchain_core-tracers-_streaming-_StreamingCallbackHandler) | Types for streaming callback handlers. |
+
+### Data
+
+[`T`](#langchain_core-tracers-_streaming-T)
+
+[`__all__`](#langchain_core-tracers-_streaming-__all__)
+
+### API
+
+<Anchor id="langchain_core-tracers-_streaming-_StreamingCallbackHandler">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tracers._streaming._StreamingCallbackHandler()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Protocol</Badge>
+
+**Bases:** `Protocol[T]`
+
+Types for streaming callback handlers.
+
+This is a common mixin that the callback handlers for both astream events and
+astream log inherit from.
+
+The `tap_output_aiter` method is invoked in some contexts to produce callbacks for
+intermediate results.
+
+
+<Anchor id="langchain_core-tracers-_streaming-_StreamingCallbackHandler-tap_output_aiter">
+
+<CodeBlock links={{"langchain_core.tracers._streaming.T":"#langchain_core-tracers-_streaming-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers._streaming._StreamingCallbackHandler.tap_output_aiter(
+    run_id: uuid.UUID,
+    output: collections.abc.AsyncIterator[langchain_core.tracers._streaming.T]
+) -> collections.abc.AsyncIterator[langchain_core.tracers._streaming.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Used for internal astream_log and astream events implementations.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-_streaming-_StreamingCallbackHandler-tap_output_iter">
+
+<CodeBlock links={{"langchain_core.tracers._streaming.T":"#langchain_core-tracers-_streaming-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers._streaming._StreamingCallbackHandler.tap_output_iter(
+    run_id: uuid.UUID,
+    output: collections.abc.Iterator[langchain_core.tracers._streaming.T]
+) -> collections.abc.Iterator[langchain_core.tracers._streaming.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Used for internal astream_log and astream events implementations.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-tracers-_streaming-T">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers._streaming.T = typing.TypeVar('T')
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-tracers-_streaming-__all__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers._streaming.__all__ = ['_StreamingCallbackHandler']
+```
+
+</CodeBlock>
+</Anchor>
+

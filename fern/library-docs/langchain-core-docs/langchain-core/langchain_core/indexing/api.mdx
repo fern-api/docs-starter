@@ -1,0 +1,789 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/indexing/api
+title: langchain_core.indexing.api
+---
+
+Module contains logic for indexing documents into vector stores.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`IndexingException`](#langchain_core-indexing-api-IndexingException) | Raised when an indexing operation fails. |
+| [`IndexingResult`](#langchain_core-indexing-api-IndexingResult) | Return a detailed a breakdown of the result of the indexing operation. |
+| [`_HashedDocument`](#langchain_core-indexing-api-_HashedDocument) | - |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_abatch`](#langchain_core-indexing-api-_abatch) | Utility batching function. |
+| [`_adelete`](#langchain_core-indexing-api-_adelete) | - |
+| [`_batch`](#langchain_core-indexing-api-_batch) | Utility batching function. |
+| [`_calculate_hash`](#langchain_core-indexing-api-_calculate_hash) | Return a hexadecimal digest of *text* using *algorithm*. |
+| [`_deduplicate_in_order`](#langchain_core-indexing-api-_deduplicate_in_order) | Deduplicate a list of hashed documents while preserving order. |
+| [`_delete`](#langchain_core-indexing-api-_delete) | Delete documents from a vector store or document index by their IDs. |
+| [`_get_document_with_hash`](#langchain_core-indexing-api-_get_document_with_hash) | Calculate a hash of the document, and assign it to the uid. |
+| [`_get_source_id_assigner`](#langchain_core-indexing-api-_get_source_id_assigner) | Get the source id from the document. |
+| [`_hash_nested_dict`](#langchain_core-indexing-api-_hash_nested_dict) | Hash a nested dictionary to a UUID using the configured algorithm. |
+| [`_hash_string`](#langchain_core-indexing-api-_hash_string) | Hash *input_string* to a deterministic UUID using the configured algorithm. |
+| [`_hash_string_to_uuid`](#langchain_core-indexing-api-_hash_string_to_uuid) | Hashes a string and returns the corresponding UUID. |
+| [`_to_async_iterator`](#langchain_core-indexing-api-_to_async_iterator) | Convert an iterable to an async iterator. |
+| [`_warn_about_sha1`](#langchain_core-indexing-api-_warn_about_sha1) | Emit a one-time warning about SHA-1 collision weaknesses. |
+| [`aindex`](#langchain_core-indexing-api-aindex) | Async index data from the loader into the vector store. |
+| [`index`](#langchain_core-indexing-api-index) | Index data from the loader into the vector store. |
+
+### Data
+
+[`NAMESPACE_UUID`](#langchain_core-indexing-api-NAMESPACE_UUID)
+
+[`T`](#langchain_core-indexing-api-T)
+
+[`_WARNED_ABOUT_SHA1`](#langchain_core-indexing-api-_WARNED_ABOUT_SHA1)
+
+### API
+
+<Anchor id="langchain_core-indexing-api-IndexingException">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.indexing.api.IndexingException()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Exception</Badge>
+
+**Bases:** [LangChainException](/langchain-core/langchain_core/exceptions#langchain_core-exceptions-LangChainException)
+
+Raised when an indexing operation fails.
+
+
+</Indent>
+
+<Anchor id="langchain_core-indexing-api-IndexingResult">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.indexing.api.IndexingResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+Return a detailed a breakdown of the result of the indexing operation.
+
+<ParamField path="num_added" type="int">
+Number of added documents.
+</ParamField>
+
+<ParamField path="num_deleted" type="int">
+Number of deleted documents.
+</ParamField>
+
+<ParamField path="num_skipped" type="int">
+Number of skipped documents because they were already up to date.
+</ParamField>
+
+<ParamField path="num_updated" type="int">
+Number of updated documents because they were not up to date.
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-indexing-api-_HashedDocument">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.indexing.api._HashedDocument(
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+</Indent>
+
+<Anchor id="langchain_core-indexing-api-_abatch">
+
+<CodeBlock links={{"langchain_core.indexing.api.T":"#langchain_core-indexing-api-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.api._abatch(
+    size: int,
+    iterable: collections.abc.AsyncIterable[langchain_core.indexing.api.T]
+) -> collections.abc.AsyncIterator[list[langchain_core.indexing.api.T]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Utility batching function.
+
+
+</Indent>
+
+<Anchor id="langchain_core-indexing-api-_adelete">
+
+<CodeBlock links={{"langchain_core.vectorstores.VectorStore":"/langchain-core/langchain_core/vectorstores/base#langchain_core-vectorstores-base-VectorStore","langchain_core.indexing.base.DocumentIndex":"/langchain-core/langchain_core/indexing/base#langchain_core-indexing-base-DocumentIndex"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.api._adelete(
+    vector_store: langchain_core.vectorstores.VectorStore | langchain_core.indexing.base.DocumentIndex,
+    ids: list[str]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+
+<Anchor id="langchain_core-indexing-api-_batch">
+
+<CodeBlock links={{"langchain_core.indexing.api.T":"#langchain_core-indexing-api-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.api._batch(
+    size: int,
+    iterable: collections.abc.Iterable[langchain_core.indexing.api.T]
+) -> collections.abc.Iterator[list[langchain_core.indexing.api.T]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Utility batching function.
+
+
+</Indent>
+
+<Anchor id="langchain_core-indexing-api-_calculate_hash">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.api._calculate_hash(
+    text: str,
+    algorithm: typing.Literal['sha1', 'sha256', 'sha512', 'blake2b']
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return a hexadecimal digest of *text* using *algorithm*.
+
+
+</Indent>
+
+<Anchor id="langchain_core-indexing-api-_deduplicate_in_order">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.api._deduplicate_in_order(
+    hashed_documents: collections.abc.Iterable[langchain_core.documents.Document]
+) -> collections.abc.Iterator[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Deduplicate a list of hashed documents while preserving order.
+
+
+</Indent>
+
+<Anchor id="langchain_core-indexing-api-_delete">
+
+<CodeBlock links={{"langchain_core.vectorstores.VectorStore":"/langchain-core/langchain_core/vectorstores/base#langchain_core-vectorstores-base-VectorStore","langchain_core.indexing.base.DocumentIndex":"/langchain-core/langchain_core/indexing/base#langchain_core-indexing-base-DocumentIndex"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.api._delete(
+    vector_store: langchain_core.vectorstores.VectorStore | langchain_core.indexing.base.DocumentIndex,
+    ids: list[str]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Delete documents from a vector store or document index by their IDs.
+
+**Parameters:**
+
+<ParamField path="vector_store" type="VectorStore | DocumentIndex">
+The vector store or document index to delete from.
+</ParamField>
+
+<ParamField path="ids" type="list[str]">
+List of document IDs to delete.
+</ParamField>
+
+**Raises:**
+
+- `IndexingException`: If the delete operation fails.
+- `TypeError`: If the `vector_store` is neither a `VectorStore` nor a
+`DocumentIndex`.
+
+
+</Indent>
+
+<Anchor id="langchain_core-indexing-api-_get_document_with_hash">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.api._get_document_with_hash(
+    document: langchain_core.documents.Document,
+    key_encoder: collections.abc.Callable[[Document], str] | typing.Literal['sha1', 'sha256', 'sha512', 'blake2b']
+) -> langchain_core.documents.Document
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Calculate a hash of the document, and assign it to the uid.
+
+When using one of the predefined hashing algorithms, the hash is calculated
+by hashing the content and the metadata of the document.
+
+**Parameters:**
+
+<ParamField path="document" type="Document">
+Document to hash.
+</ParamField>
+
+<ParamField path="key_encoder" type="Callable[[Document], str] | Literal['sha1', 'sha256', 'sha512', 'blake2b']">
+Hashing algorithm to use for hashing the document.
+If not provided, a default encoder using SHA-1 will be used.
+SHA-1 is not collision-resistant, and a motivated attacker
+could craft two different texts that hash to the
+same cache key.
+
+New applications should use one of the alternative encoders
+or provide a custom and strong key encoder function to avoid this risk.
+
+When changing the key encoder, you must change the
+index as well to avoid duplicated documents in the cache.
+</ParamField>
+
+**Returns:** `Document`
+
+Document with a unique identifier based on the hash of the content and metadata.
+
+**Raises:**
+
+- `ValueError`: If the metadata cannot be serialized using json.
+
+
+</Indent>
+
+<Anchor id="langchain_core-indexing-api-_get_source_id_assigner">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.api._get_source_id_assigner(
+    source_id_key: str | collections.abc.Callable[[Document], str] | None
+) -> collections.abc.Callable[[Document], str | None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the source id from the document.
+
+
+</Indent>
+
+<Anchor id="langchain_core-indexing-api-_hash_nested_dict">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.api._hash_nested_dict(
+    data: dict[typing.Any, typing.Any],
+    algorithm: typing.Literal['sha1', 'sha256', 'sha512', 'blake2b']
+) -> uuid.UUID
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Hash a nested dictionary to a UUID using the configured algorithm.
+
+
+</Indent>
+
+<Anchor id="langchain_core-indexing-api-_hash_string">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.api._hash_string(
+    input_string: str,
+    algorithm: typing.Literal['sha1', 'sha256', 'sha512', 'blake2b']
+) -> uuid.UUID
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Hash *input_string* to a deterministic UUID using the configured algorithm.
+
+
+</Indent>
+
+<Anchor id="langchain_core-indexing-api-_hash_string_to_uuid">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.api._hash_string_to_uuid(
+    input_string: str
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Hashes a string and returns the corresponding UUID.
+
+
+</Indent>
+
+<Anchor id="langchain_core-indexing-api-_to_async_iterator">
+
+<CodeBlock links={{"langchain_core.indexing.api.T":"#langchain_core-indexing-api-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.api._to_async_iterator(
+    iterator: collections.abc.Iterable[langchain_core.indexing.api.T]
+) -> collections.abc.AsyncIterator[langchain_core.indexing.api.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Convert an iterable to an async iterator.
+
+
+</Indent>
+
+<Anchor id="langchain_core-indexing-api-_warn_about_sha1">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.api._warn_about_sha1() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Emit a one-time warning about SHA-1 collision weaknesses.
+
+
+</Indent>
+
+<Anchor id="langchain_core-indexing-api-aindex">
+
+<CodeBlock links={{"langchain_core.document_loaders.base.BaseLoader":"/langchain-core/langchain_core/document_loaders/base#langchain_core-document_loaders-base-BaseLoader","langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document","langchain_core.indexing.base.RecordManager":"/langchain-core/langchain_core/indexing/base#langchain_core-indexing-base-RecordManager","langchain_core.vectorstores.VectorStore":"/langchain-core/langchain_core/vectorstores/base#langchain_core-vectorstores-base-VectorStore","langchain_core.indexing.base.DocumentIndex":"/langchain-core/langchain_core/indexing/base#langchain_core-indexing-base-DocumentIndex","langchain_core.indexing.api.IndexingResult":"#langchain_core-indexing-api-IndexingResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.api.aindex(
+    docs_source: langchain_core.document_loaders.base.BaseLoader | collections.abc.Iterable[langchain_core.documents.Document] | collections.abc.AsyncIterator[langchain_core.documents.Document],
+    record_manager: langchain_core.indexing.base.RecordManager,
+    vector_store: langchain_core.vectorstores.VectorStore | langchain_core.indexing.base.DocumentIndex,
+    batch_size: int = 100,
+    cleanup: typing.Literal['incremental', 'full', 'scoped_full'] | None = None,
+    source_id_key: str | collections.abc.Callable[[Document], str] | None = None,
+    cleanup_batch_size: int = 1000,
+    force_update: bool = False,
+    key_encoder: typing.Literal['sha1', 'sha256', 'sha512', 'blake2b'] | collections.abc.Callable[[Document], str] = 'sha1',
+    upsert_kwargs: dict[str, typing.Any] | None = None
+) -> langchain_core.indexing.api.IndexingResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async index data from the loader into the vector store.
+
+Indexing functionality uses a manager to keep track of which documents
+are in the vector store.
+
+This allows us to keep track of which documents were updated, and which
+documents were deleted, which documents should be skipped.
+
+For the time being, documents are indexed using their hashes, and users
+are not able to specify the uid of the document.
+
+!!! warning "Behavior changed in `langchain-core` 0.3.25"
+
+    Added `scoped_full` cleanup mode.
+
+!!! warning
+
+    * In full mode, the loader should be returning
+        the entire dataset, and not just a subset of the dataset.
+        Otherwise, the auto_cleanup will remove documents that it is not
+        supposed to.
+    * In incremental mode, if documents associated with a particular
+        source id appear across different batches, the indexing API
+        will do some redundant work. This will still result in the
+        correct end state of the index, but will unfortunately not be
+        100% efficient. For example, if a given document is split into 15
+        chunks, and we index them using a batch size of 5, we'll have 3 batches
+        all with the same source id. In general, to avoid doing too much
+        redundant work select as big a batch size as possible.
+    * The `scoped_full` mode is suitable if determining an appropriate batch size
+        is challenging or if your data loader cannot return the entire dataset at
+        once. This mode keeps track of source IDs in memory, which should be fine
+        for most use cases. If your dataset is large (10M+ docs), you will likely
+        need to parallelize the indexing process regardless.
+
+**Parameters:**
+
+<ParamField path="docs_source" type="BaseLoader | Iterable[Document] | AsyncIterator[Document]">
+Data loader or iterable of documents to index.
+</ParamField>
+
+<ParamField path="record_manager" type="RecordManager">
+Timestamped set to keep track of which documents were
+updated.
+</ParamField>
+
+<ParamField path="vector_store" type="VectorStore | DocumentIndex">
+`VectorStore` or DocumentIndex to index the documents into.
+</ParamField>
+
+<ParamField path="batch_size" type="int" default="100">
+Batch size to use when indexing.
+</ParamField>
+
+<ParamField path="cleanup" type="Literal['incremental', 'full', 'scoped_full'] | None" default="None">
+How to handle clean up of documents.
+
+- incremental: Cleans up all documents that haven't been updated AND
+    that are associated with source IDs that were seen during indexing.
+    Clean up is done continuously during indexing helping to minimize the
+    probability of users seeing duplicated content.
+- full: Delete all documents that have not been returned by the loader
+    during this run of indexing.
+    Clean up runs after all documents have been indexed.
+    This means that users may see duplicated content during indexing.
+- scoped_full: Similar to Full, but only deletes all documents
+    that haven't been updated AND that are associated with
+    source IDs that were seen during indexing.
+- None: Do not delete any documents.
+</ParamField>
+
+<ParamField path="source_id_key" type="str | Callable[[Document], str] | None" default="None">
+Optional key that helps identify the original source
+of the document.
+</ParamField>
+
+<ParamField path="cleanup_batch_size" type="int" default="1000">
+Batch size to use when cleaning up documents.
+</ParamField>
+
+<ParamField path="force_update" type="bool" default="False">
+Force update documents even if they are present in the
+record manager. Useful if you are re-indexing with updated embeddings.
+</ParamField>
+
+<ParamField path="key_encoder" type="Literal['sha1', 'sha256', 'sha512', 'blake2b'] | Callable[[Document], str]" default="'sha1'">
+Hashing algorithm to use for hashing the document content and
+metadata. Options include "blake2b", "sha256", and "sha512".
+
+!!! version-added "Added in `langchain-core` 0.3.66"
+</ParamField>
+
+<ParamField path="key_encoder" type="Literal['sha1', 'sha256', 'sha512', 'blake2b'] | Callable[[Document], str]" default="'sha1'">
+Hashing algorithm to use for hashing the document.
+If not provided, a default encoder using SHA-1 will be used.
+SHA-1 is not collision-resistant, and a motivated attacker
+could craft two different texts that hash to the
+same cache key.
+
+New applications should use one of the alternative encoders
+or provide a custom and strong key encoder function to avoid this risk.
+
+When changing the key encoder, you must change the
+index as well to avoid duplicated documents in the cache.
+</ParamField>
+
+<ParamField path="upsert_kwargs" type="dict[str, Any] | None" default="None">
+Additional keyword arguments to pass to the add_documents
+method of the `VectorStore` or the upsert method of the DocumentIndex.
+For example, you can use this to specify a custom vector_field:
+upsert_kwargs=&#123;"vector_field": "embedding"&#125;
+!!! version-added "Added in `langchain-core` 0.3.10"
+</ParamField>
+
+**Returns:** `IndexingResult`
+
+Indexing result which contains information about how many documents
+
+**Raises:**
+
+- `ValueError`: If cleanup mode is not one of 'incremental', 'full' or None
+- `ValueError`: If cleanup mode is incremental and source_id_key is None.
+- `ValueError`: If `VectorStore` does not have
+"adelete" and "aadd_documents" required methods.
+- `ValueError`: If source_id_key is not None, but is not a string or callable.
+- `TypeError`: If `vector_store` is not a `VectorStore` or DocumentIndex.
+- `AssertionError`: If `source_id_key` is None when cleanup mode is
+incremental or `scoped_full` (should be unreachable).
+
+
+</Indent>
+
+<Anchor id="langchain_core-indexing-api-index">
+
+<CodeBlock links={{"langchain_core.document_loaders.base.BaseLoader":"/langchain-core/langchain_core/document_loaders/base#langchain_core-document_loaders-base-BaseLoader","langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document","langchain_core.indexing.base.RecordManager":"/langchain-core/langchain_core/indexing/base#langchain_core-indexing-base-RecordManager","langchain_core.vectorstores.VectorStore":"/langchain-core/langchain_core/vectorstores/base#langchain_core-vectorstores-base-VectorStore","langchain_core.indexing.base.DocumentIndex":"/langchain-core/langchain_core/indexing/base#langchain_core-indexing-base-DocumentIndex","langchain_core.indexing.api.IndexingResult":"#langchain_core-indexing-api-IndexingResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.api.index(
+    docs_source: langchain_core.document_loaders.base.BaseLoader | collections.abc.Iterable[langchain_core.documents.Document],
+    record_manager: langchain_core.indexing.base.RecordManager,
+    vector_store: langchain_core.vectorstores.VectorStore | langchain_core.indexing.base.DocumentIndex,
+    batch_size: int = 100,
+    cleanup: typing.Literal['incremental', 'full', 'scoped_full'] | None = None,
+    source_id_key: str | collections.abc.Callable[[Document], str] | None = None,
+    cleanup_batch_size: int = 1000,
+    force_update: bool = False,
+    key_encoder: typing.Literal['sha1', 'sha256', 'sha512', 'blake2b'] | collections.abc.Callable[[Document], str] = 'sha1',
+    upsert_kwargs: dict[str, typing.Any] | None = None
+) -> langchain_core.indexing.api.IndexingResult
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Index data from the loader into the vector store.
+
+Indexing functionality uses a manager to keep track of which documents
+are in the vector store.
+
+This allows us to keep track of which documents were updated, and which
+documents were deleted, which documents should be skipped.
+
+For the time being, documents are indexed using their hashes, and users
+are not able to specify the uid of the document.
+
+!!! warning "Behavior changed in `langchain-core` 0.3.25"
+
+    Added `scoped_full` cleanup mode.
+
+!!! warning
+
+    * In full mode, the loader should be returning
+        the entire dataset, and not just a subset of the dataset.
+        Otherwise, the auto_cleanup will remove documents that it is not
+        supposed to.
+    * In incremental mode, if documents associated with a particular
+        source id appear across different batches, the indexing API
+        will do some redundant work. This will still result in the
+        correct end state of the index, but will unfortunately not be
+        100% efficient. For example, if a given document is split into 15
+        chunks, and we index them using a batch size of 5, we'll have 3 batches
+        all with the same source id. In general, to avoid doing too much
+        redundant work select as big a batch size as possible.
+    * The `scoped_full` mode is suitable if determining an appropriate batch size
+        is challenging or if your data loader cannot return the entire dataset at
+        once. This mode keeps track of source IDs in memory, which should be fine
+        for most use cases. If your dataset is large (10M+ docs), you will likely
+        need to parallelize the indexing process regardless.
+
+**Parameters:**
+
+<ParamField path="docs_source" type="BaseLoader | Iterable[Document]">
+Data loader or iterable of documents to index.
+</ParamField>
+
+<ParamField path="record_manager" type="RecordManager">
+Timestamped set to keep track of which documents were
+updated.
+</ParamField>
+
+<ParamField path="vector_store" type="VectorStore | DocumentIndex">
+`VectorStore` or DocumentIndex to index the documents into.
+</ParamField>
+
+<ParamField path="batch_size" type="int" default="100">
+Batch size to use when indexing.
+</ParamField>
+
+<ParamField path="cleanup" type="Literal['incremental', 'full', 'scoped_full'] | None" default="None">
+How to handle clean up of documents.
+
+- incremental: Cleans up all documents that haven't been updated AND
+    that are associated with source IDs that were seen during indexing.
+    Clean up is done continuously during indexing helping to minimize the
+    probability of users seeing duplicated content.
+- full: Delete all documents that have not been returned by the loader
+    during this run of indexing.
+    Clean up runs after all documents have been indexed.
+    This means that users may see duplicated content during indexing.
+- scoped_full: Similar to Full, but only deletes all documents
+    that haven't been updated AND that are associated with
+    source IDs that were seen during indexing.
+- None: Do not delete any documents.
+</ParamField>
+
+<ParamField path="source_id_key" type="str | Callable[[Document], str] | None" default="None">
+Optional key that helps identify the original source
+of the document.
+</ParamField>
+
+<ParamField path="cleanup_batch_size" type="int" default="1000">
+Batch size to use when cleaning up documents.
+</ParamField>
+
+<ParamField path="force_update" type="bool" default="False">
+Force update documents even if they are present in the
+record manager. Useful if you are re-indexing with updated embeddings.
+</ParamField>
+
+<ParamField path="key_encoder" type="Literal['sha1', 'sha256', 'sha512', 'blake2b'] | Callable[[Document], str]" default="'sha1'">
+Hashing algorithm to use for hashing the document content and
+metadata. Options include "blake2b", "sha256", and "sha512".
+
+!!! version-added "Added in `langchain-core` 0.3.66"
+</ParamField>
+
+<ParamField path="key_encoder" type="Literal['sha1', 'sha256', 'sha512', 'blake2b'] | Callable[[Document], str]" default="'sha1'">
+Hashing algorithm to use for hashing the document.
+If not provided, a default encoder using SHA-1 will be used.
+SHA-1 is not collision-resistant, and a motivated attacker
+could craft two different texts that hash to the
+same cache key.
+
+New applications should use one of the alternative encoders
+or provide a custom and strong key encoder function to avoid this risk.
+
+When changing the key encoder, you must change the
+index as well to avoid duplicated documents in the cache.
+</ParamField>
+
+<ParamField path="upsert_kwargs" type="dict[str, Any] | None" default="None">
+Additional keyword arguments to pass to the add_documents
+method of the `VectorStore` or the upsert method of the DocumentIndex.
+For example, you can use this to specify a custom vector_field:
+upsert_kwargs=&#123;"vector_field": "embedding"&#125;
+!!! version-added "Added in `langchain-core` 0.3.10"
+</ParamField>
+
+**Returns:** `IndexingResult`
+
+Indexing result which contains information about how many documents
+
+**Raises:**
+
+- `ValueError`: If cleanup mode is not one of 'incremental', 'full' or None
+- `ValueError`: If cleanup mode is incremental and source_id_key is None.
+- `ValueError`: If `VectorStore` does not have
+"delete" and "add_documents" required methods.
+- `ValueError`: If source_id_key is not None, but is not a string or callable.
+- `TypeError`: If `vectorstore` is not a `VectorStore` or a DocumentIndex.
+- `AssertionError`: If `source_id` is None when cleanup mode is incremental.
+(should be unreachable code).
+
+
+</Indent>
+
+<Anchor id="langchain_core-indexing-api-NAMESPACE_UUID">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.api.NAMESPACE_UUID = uuid.UUID(int=1984)
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-indexing-api-T">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.api.T = TypeVar('T')
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-indexing-api-_WARNED_ABOUT_SHA1">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.api._WARNED_ABOUT_SHA1: bool = False
+```
+
+</CodeBlock>
+</Anchor>
+

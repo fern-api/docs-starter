@@ -1,0 +1,43 @@
+---
+title: cub::AgentSubWarpMergeSortPolicy
+description: ""
+---
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="BlockThreadsArg" type="int">
+</ParamField>
+
+<ParamField path="WarpThreadsArg" type="int">
+</ParamField>
+
+<ParamField path="ItemsPerThreadArg" type="int">
+</ParamField>
+
+<ParamField path="LoadAlgorithmArg" type="cub::WarpLoadAlgorithm" default="cub::WARP_LOAD_DIRECT">
+</ParamField>
+
+<ParamField path="LoadModifierArg" type="cub::CacheLoadModifier" default="cub::LOAD_LDG">
+</ParamField>
+
+<ParamField path="StoreAlgorithmArg" type="cub::WarpStoreAlgorithm" default="cub::WARP_STORE_DIRECT">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `BLOCK_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `WARP_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `ITEMS_PER_THREAD` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `ITEMS_PER_TILE` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `SEGMENTS_PER_BLOCK` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `LOAD_ALGORITHM` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `cub::WarpLoadAlgorithm` | |
+| `LOAD_MODIFIER` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `cub::CacheLoadModifier` | |
+| `STORE_ALGORITHM` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `cub::WarpStoreAlgorithm` | |

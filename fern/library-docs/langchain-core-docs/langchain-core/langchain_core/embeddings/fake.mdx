@@ -1,0 +1,196 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/embeddings/fake
+title: langchain_core.embeddings.fake
+---
+
+Module contains a few fake embedding models for testing purposes.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`DeterministicFakeEmbedding`](#langchain_core-embeddings-fake-DeterministicFakeEmbedding) | Deterministic fake embedding model for unit testing purposes. |
+| [`FakeEmbeddings`](#langchain_core-embeddings-fake-FakeEmbeddings) | Fake embedding model for unit testing purposes. |
+
+### API
+
+<Anchor id="langchain_core-embeddings-fake-DeterministicFakeEmbedding">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.embeddings.fake.DeterministicFakeEmbedding()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [Embeddings](/langchain-core/langchain_core/embeddings/embeddings#langchain_core-embeddings-embeddings-Embeddings), `BaseModel`
+
+Deterministic fake embedding model for unit testing purposes.
+
+This embedding model creates embeddings by sampling from a normal distribution
+with a seed based on the hash of the text.
+
+!!! danger "Toy model"
+    Do not use this outside of testing, as it is not a real embedding model.
+
+
+<ParamField path="size" type="int">
+The size of the embedding vector.
+</ParamField>
+<Anchor id="langchain_core-embeddings-fake-DeterministicFakeEmbedding-_get_embedding">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.embeddings.fake.DeterministicFakeEmbedding._get_embedding(
+    seed: int
+) -> list[float]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-embeddings-fake-DeterministicFakeEmbedding-_get_seed">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.embeddings.fake.DeterministicFakeEmbedding._get_seed(
+    text: str
+) -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>staticmethod</Badge>
+
+Get a seed for the random generator, using the hash of the text.
+
+
+</Indent>
+<Anchor id="langchain_core-embeddings-fake-DeterministicFakeEmbedding-embed_documents">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.embeddings.fake.DeterministicFakeEmbedding.embed_documents(
+    texts: list[str]
+) -> list[list[float]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-embeddings-fake-DeterministicFakeEmbedding-embed_query">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.embeddings.fake.DeterministicFakeEmbedding.embed_query(
+    text: str
+) -> list[float]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-embeddings-fake-FakeEmbeddings">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.embeddings.fake.FakeEmbeddings()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [Embeddings](/langchain-core/langchain_core/embeddings/embeddings#langchain_core-embeddings-embeddings-Embeddings), `BaseModel`
+
+Fake embedding model for unit testing purposes.
+
+This embedding model creates embeddings by sampling from a normal distribution.
+
+!!! danger "Toy model"
+    Do not use this outside of testing, as it is not a real embedding model.
+
+
+<ParamField path="size" type="int">
+The size of the embedding vector.
+</ParamField>
+<Anchor id="langchain_core-embeddings-fake-FakeEmbeddings-_get_embedding">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.embeddings.fake.FakeEmbeddings._get_embedding() -> list[float]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-embeddings-fake-FakeEmbeddings-embed_documents">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.embeddings.fake.FakeEmbeddings.embed_documents(
+    texts: list[str]
+) -> list[list[float]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-embeddings-fake-FakeEmbeddings-embed_query">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.embeddings.fake.FakeEmbeddings.embed_query(
+    text: str
+) -> list[float]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>

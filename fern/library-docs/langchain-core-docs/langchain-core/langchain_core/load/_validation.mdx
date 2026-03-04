@@ -1,0 +1,252 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/load/_validation
+title: langchain_core.load._validation
+---
+
+Validation utilities for LangChain serialization.
+
+Provides escape-based protection against injection attacks in serialized objects. The
+approach uses an allowlist design: only dicts explicitly produced by
+`Serializable.to_json()` are treated as LC objects during deserialization.
+
+## How escaping works
+
+During serialization, plain dicts (user data) that contain an `'lc'` key are wrapped:
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+{"lc": 1, ...}  # user data that looks like LC object
+# becomes:
+{"__lc_escaped__": {"lc": 1, ...}}
+```
+
+</CodeBlock>
+
+During deserialization, escaped dicts are unwrapped and returned as plain dicts,
+NOT instantiated as LC objects.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_escape_dict`](#langchain_core-load-_validation-_escape_dict) | Wrap a dict in the escape marker. |
+| [`_is_escaped_dict`](#langchain_core-load-_validation-_is_escaped_dict) | Check if a dict is an escaped user dict. |
+| [`_is_lc_secret`](#langchain_core-load-_validation-_is_lc_secret) | Check if an object is a LangChain secret marker. |
+| [`_needs_escaping`](#langchain_core-load-_validation-_needs_escaping) | Check if a dict needs escaping to prevent confusion with LC objects. |
+| [`_serialize_lc_object`](#langchain_core-load-_validation-_serialize_lc_object) | Serialize a `Serializable` object with escaping of user data in kwargs. |
+| [`_serialize_value`](#langchain_core-load-_validation-_serialize_value) | Serialize a value with escaping of user dicts. |
+| [`_unescape_value`](#langchain_core-load-_validation-_unescape_value) | Unescape a value, processing escape markers in dict values and lists. |
+
+### Data
+
+[`_LC_ESCAPED_KEY`](#langchain_core-load-_validation-_LC_ESCAPED_KEY)
+
+### API
+
+<Anchor id="langchain_core-load-_validation-_escape_dict">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load._validation._escape_dict(
+    obj: dict[str, typing.Any]
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Wrap a dict in the escape marker.
+
+
+</Indent>
+
+<Anchor id="langchain_core-load-_validation-_is_escaped_dict">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load._validation._is_escaped_dict(
+    obj: dict[str, typing.Any]
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if a dict is an escaped user dict.
+
+
+</Indent>
+
+<Anchor id="langchain_core-load-_validation-_is_lc_secret">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load._validation._is_lc_secret(
+    obj: typing.Any
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if an object is a LangChain secret marker.
+
+
+</Indent>
+
+<Anchor id="langchain_core-load-_validation-_needs_escaping">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load._validation._needs_escaping(
+    obj: dict[str, typing.Any]
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if a dict needs escaping to prevent confusion with LC objects.
+
+A dict needs escaping if:
+
+1. It has an `'lc'` key (could be confused with LC serialization format)
+2. It has only the escape key (would be mistaken for an escaped dict)
+
+
+</Indent>
+
+<Anchor id="langchain_core-load-_validation-_serialize_lc_object">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load._validation._serialize_lc_object(
+    obj: typing.Any
+) -> dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Serialize a `Serializable` object with escaping of user data in kwargs.
+
+**Parameters:**
+
+<ParamField path="obj" type="Any">
+The `Serializable` object to serialize.
+</ParamField>
+
+**Returns:** `dict[str, Any]`
+
+The serialized dict with user data in kwargs escaped as needed.
+
+
+</Indent>
+
+<Anchor id="langchain_core-load-_validation-_serialize_value">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load._validation._serialize_value(
+    obj: typing.Any
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Serialize a value with escaping of user dicts.
+
+Called recursively on kwarg values to escape any plain dicts that could be confused
+with LC objects.
+
+**Parameters:**
+
+<ParamField path="obj" type="Any">
+The value to serialize.
+</ParamField>
+
+**Returns:** `Any`
+
+The serialized value with user dicts escaped as needed.
+
+
+</Indent>
+
+<Anchor id="langchain_core-load-_validation-_unescape_value">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load._validation._unescape_value(
+    obj: typing.Any
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Unescape a value, processing escape markers in dict values and lists.
+
+When an escaped dict is encountered (`&#123;"__lc_escaped__": ...&#125;`), it's
+unwrapped and the contents are returned AS-IS (no further processing).
+The contents represent user data that should not be modified.
+
+For regular dicts and lists, we recurse to find any nested escape markers.
+
+**Parameters:**
+
+<ParamField path="obj" type="Any">
+The value to unescape.
+</ParamField>
+
+**Returns:** `Any`
+
+The unescaped value.
+
+
+</Indent>
+
+<Anchor id="langchain_core-load-_validation-_LC_ESCAPED_KEY">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.load._validation._LC_ESCAPED_KEY = '__lc_escaped__'
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Sentinel key used to mark escaped user dicts during serialization.
+
+When a plain dict contains 'lc' key (which could be confused with LC objects),
+we wrap it as &#123;"__lc_escaped__": &#123;...original...&#125;&#125;.
+
+</Indent>

@@ -1,0 +1,370 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/utils/iter
+title: langchain_core.utils.iter
+---
+
+Utilities for working with iterators.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`NoLock`](#langchain_core-utils-iter-NoLock) | Dummy lock that provides the proper interface but no protection. |
+| [`Tee`](#langchain_core-utils-iter-Tee) | Create `n` separate asynchronous iterators over `iterable`. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`batch_iterate`](#langchain_core-utils-iter-batch_iterate) | Utility batching function. |
+| [`tee_peer`](#langchain_core-utils-iter-tee_peer) | An individual iterator of a `.tee`. |
+
+### Data
+
+[`T`](#langchain_core-utils-iter-T)
+
+[`safetee`](#langchain_core-utils-iter-safetee)
+
+### API
+
+<Anchor id="langchain_core-utils-iter-NoLock">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.utils.iter.NoLock()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Dummy lock that provides the proper interface but no protection.
+
+
+<Anchor id="langchain_core-utils-iter-NoLock-__enter__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.iter.NoLock.__enter__() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Do nothing.
+
+
+</Indent>
+<Anchor id="langchain_core-utils-iter-NoLock-__exit__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.iter.NoLock.__exit__(
+    exc_type: type[BaseException] | None,
+    exc_val: BaseException | None,
+    exc_tb: types.TracebackType | None
+) -> typing.Literal[False]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return False (exception not suppressed).
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-utils-iter-Tee">
+
+<CodeBlock links={{"langchain_core.utils.iter.T":"#langchain_core-utils-iter-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.utils.iter.Tee(
+    iterable: collections.abc.Iterator[langchain_core.utils.iter.T],
+    n: int = 2,
+    lock: contextlib.AbstractContextManager[typing.Any] | None = None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `Generic[T]`
+
+Create `n` separate asynchronous iterators over `iterable`.
+
+This splits a single `iterable` into multiple iterators, each providing the same
+items in the same order.
+
+All child iterators may advance separately but share the same items from `iterable`
+-- when the most advanced iterator retrieves an item, it is buffered until the least
+advanced iterator has yielded it as well. A `tee` works lazily and can handle an
+infinite `iterable`, provided that all iterators advance.
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+async def derivative(sensor_data):
+    previous, current = a.tee(sensor_data, n=2)
+    await a.anext(previous)  # advance one iterator
+    return a.map(operator.sub, previous, current)
+```
+
+</CodeBlock>
+
+Unlike `itertools.tee`, `.tee` returns a custom type instead of a `tuple`. Like a
+tuple, it can be indexed, iterated and unpacked to get the child iterators. In
+addition, its `.tee.aclose` method immediately closes all children, and it can be
+used in an `async with` context for the same effect.
+
+If `iterable` is an iterator and read elsewhere, `tee` will *not* provide these
+items. Also, `tee` must internally buffer each item until the last iterator has
+yielded it; if the most and least advanced iterator differ by most data, using a
+`list` is more efficient (but not lazy).
+
+If the underlying iterable is concurrency safe (`anext` may be awaited concurrently)
+the resulting iterators are concurrency safe as well. Otherwise, the iterators are
+safe if there is only ever one single "most advanced" iterator. To enforce
+sequential use of `anext`, provide a `lock`
+
+- e.g., an `asyncio.Lock` instance in an `asyncio` application - and access is
+    automatically synchronised.
+
+
+<ParamField path="_buffers" type="list[deque[T]] = [(deque()) for _ in (range(n))]">
+</ParamField>
+
+<ParamField path="_children">
+</ParamField>
+
+<ParamField path="_iterator" type="= iter(iterable)">
+</ParamField>
+<Anchor id="langchain_core-utils-iter-Tee-__enter__">
+
+<CodeBlock links={{"langchain_core.utils.iter.Tee":"#langchain_core-utils-iter-Tee","langchain_core.utils.iter.T":"#langchain_core-utils-iter-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.iter.Tee.__enter__() -> langchain_core.utils.iter.Tee[langchain_core.utils.iter.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return `Tee` instance.
+
+
+</Indent>
+<Anchor id="langchain_core-utils-iter-Tee-__exit__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.iter.Tee.__exit__(
+    exc_type: type[BaseException] | None,
+    exc_val: BaseException | None,
+    exc_tb: types.TracebackType | None
+) -> typing.Literal[False]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Close all child iterators.
+
+**Returns:** `Literal[False]`
+
+`False` (exception not suppressed).
+
+
+</Indent>
+<Anchor id="langchain_core-utils-iter-Tee-__getitem__">
+
+<CodeBlock links={{"langchain_core.utils.iter.T":"#langchain_core-utils-iter-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.iter.Tee.__getitem__(
+    item: int | slice
+) -> collections.abc.Iterator[langchain_core.utils.iter.T] | tuple[collections.abc.Iterator[langchain_core.utils.iter.T], ...]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return the child iterator(s) at the given index or slice.
+
+
+</Indent>
+<Anchor id="langchain_core-utils-iter-Tee-__iter__">
+
+<CodeBlock links={{"langchain_core.utils.iter.T":"#langchain_core-utils-iter-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.iter.Tee.__iter__() -> collections.abc.Iterator[collections.abc.Iterator[langchain_core.utils.iter.T]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return an iterator over the child iterators.
+
+
+</Indent>
+<Anchor id="langchain_core-utils-iter-Tee-__len__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.iter.Tee.__len__() -> int
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return the number of child iterators.
+
+
+</Indent>
+<Anchor id="langchain_core-utils-iter-Tee-close">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.iter.Tee.close() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Close all child iterators.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-utils-iter-batch_iterate">
+
+<CodeBlock links={{"langchain_core.utils.iter.T":"#langchain_core-utils-iter-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.iter.batch_iterate(
+    size: int | None,
+    iterable: collections.abc.Iterable[langchain_core.utils.iter.T]
+) -> collections.abc.Iterator[list[langchain_core.utils.iter.T]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Utility batching function.
+
+**Parameters:**
+
+<ParamField path="size" type="int | None">
+The size of the batch.
+
+If `None`, returns a single batch.
+</ParamField>
+
+<ParamField path="iterable" type="Iterable[T]">
+The iterable to batch.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-iter-tee_peer">
+
+<CodeBlock links={{"langchain_core.utils.iter.T":"#langchain_core-utils-iter-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.iter.tee_peer(
+    iterator: collections.abc.Iterator[langchain_core.utils.iter.T],
+    buffer: collections.deque[langchain_core.utils.iter.T],
+    peers: list[collections.deque[langchain_core.utils.iter.T]],
+    lock: contextlib.AbstractContextManager[typing.Any]
+) -> collections.abc.Generator[langchain_core.utils.iter.T, None, None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+An individual iterator of a `.tee`.
+
+This function is a generator that yields items from the shared iterator `iterator`.
+It buffers items until the least advanced iterator has yielded them as well. The
+buffer is shared with all other peers.
+
+**Parameters:**
+
+<ParamField path="iterator" type="Iterator[T]">
+The shared iterator.
+</ParamField>
+
+<ParamField path="buffer" type="deque[T]">
+The buffer for this peer.
+</ParamField>
+
+<ParamField path="peers" type="list[deque[T]]">
+The buffers of all peers.
+</ParamField>
+
+<ParamField path="lock" type="AbstractContextManager[Any]">
+The lock to synchronise access to the shared buffers.
+</ParamField>
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-iter-T">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.iter.T = TypeVar('T')
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-utils-iter-safetee">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.iter.safetee = Tee
+```
+
+</CodeBlock>
+</Anchor>
+

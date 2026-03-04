@@ -1,0 +1,239 @@
+---
+title: thrust::xor_combine_engine
+description: "An [`xor_combine_engine`](/library/api/thrust::xor_combine_engine) adapts two existing base random number engines and produces random values by combining the values produced by each."
+---
+
+An `xor_combine_engine` adapts two existing base random number engines and produces random values by combining the values produced by each.
+
+The following code snippet shows an example of using an `xor_combine_engine` instance:
+
+```cpp showLineNumbers={false}
+#include <thrust/xor_combine_engine.h>
+```
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <thrust/random/linear_congruential_engine.h>
+#include <thrust/random/xor_combine_engine.h>
+#include <iostream>
+
+int main()
+{
+  // create an xor_combine_engine from minstd_rand and minstd_rand0
+  // use a shift of 0 for each
+  thrust::xor_combine_engine<thrust::minstd_rand,0,thrust::minstd_rand0,0> rng;
+
+  // print a random number to standard output
+  std::cout << rng() << std::endl;
+
+  return 0;
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="Engine1" type="typename">
+The type of the first base random number engine to adapt.
+</ParamField>
+
+<ParamField path="s1" type="size_t">
+The size of the first shift to use in the generation algorithm.
+</ParamField>
+
+<ParamField path="Engine2" type="typename">
+The type of the second base random number engine to adapt.
+</ParamField>
+
+<ParamField path="s2" type="size_t" default="0u">
+The second of the second shift to use in the generation algorithm. Defaults to `0`.
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### xor_combine_engine
+
+<Tabs>
+<Tab title="Default">
+
+This constructor constructs a new `xor_combine_engine` and constructs its adapted engines using their null constructors.
+
+<CodeBlock links={{"xor_combine_engine": "/library/api/thrust::xor_combine_engine"}}>
+```cpp showLineNumbers={false}
+thrust::random::xor_combine_engine<Engine1, s1, Engine2, s2>::xor_combine_engine()
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Copy">
+
+This constructor constructs a new `xor_combine_engine` using given [`base1_type`](/library/api/thrust::random::xor_combine_engine::base1_type) and [`base2_type`](/library/api/thrust::random::xor_combine_engine::base2_type) engines to initialize its adapted base engines.
+
+<CodeBlock links={{"xor_combine_engine": "/library/api/thrust::xor_combine_engine"}}>
+```cpp showLineNumbers={false}
+thrust::random::xor_combine_engine<Engine1, s1, Engine2, s2>::xor_combine_engine(
+    const base1_type &urng1,
+    const base2_type &urng2
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="urng1" type="const base1_type &">
+A [`base1_type`](/library/api/thrust::random::xor_combine_engine::base1_type) to use to initialize this `xor_combine_engine``'s` first adapted base engine.
+</ParamField>
+
+<ParamField path="urng2" type="const base2_type &">
+A [`base2_type`](/library/api/thrust::random::xor_combine_engine::base2_type) to use to initialize this `xor_combine_engine``'s` first adapted base engine.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 3">
+
+This constructor initializes a new `xor_combine_engine` with a given seed.
+
+<CodeBlock links={{"xor_combine_engine": "/library/api/thrust::xor_combine_engine"}}>
+```cpp showLineNumbers={false}
+thrust::random::xor_combine_engine<Engine1, s1, Engine2, s2>::xor_combine_engine(
+    result_type s
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="s" type="result_type">
+The seed used to initialize this `xor_combine_engine``'s` adapted base engines.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### seed
+
+<Tabs>
+<Tab title="Overload 1">
+
+This method initializes the state of this `xor_combine_engine``'s` adapted base engines by using their `default_seed` values.
+
+<CodeBlock links={{"xor_combine_engine": "/library/api/thrust::xor_combine_engine"}}>
+```cpp showLineNumbers={false}
+void thrust::random::xor_combine_engine<Engine1, s1, Engine2, s2>::seed()
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Overload 2">
+
+This method initializes the state of this `xor_combine_engine``'s` adapted base engines by using the given seed.
+
+<CodeBlock links={{"xor_combine_engine": "/library/api/thrust::xor_combine_engine"}}>
+```cpp showLineNumbers={false}
+void thrust::random::xor_combine_engine<Engine1, s1, Engine2, s2>::seed(
+    result_type s
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="s" type="result_type">
+The seed with which to initialize this `xor_combine_engine``'s` adapted base engines.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### operator()
+
+This member function produces a new random value and updates this `xor_combine_engine``'s` state.
+
+<CodeBlock links={{"xor_combine_engine": "/library/api/thrust::xor_combine_engine"}}>
+```cpp showLineNumbers={false}
+result_type thrust::random::xor_combine_engine<Engine1, s1, Engine2, s2>::operator()(
+    void
+)
+```
+</CodeBlock>
+
+**Returns:** A new random number.
+
+### discard
+
+This member function advances this `xor_combine_engine``'s` state a given number of times and discards the results.
+
+<CodeBlock links={{"xor_combine_engine": "/library/api/thrust::xor_combine_engine"}}>
+```cpp showLineNumbers={false}
+void thrust::random::xor_combine_engine<Engine1, s1, Engine2, s2>::discard(
+    unsigned long long z
+)
+```
+</CodeBlock>
+
+<Note>
+This function is provided because an implementation may be able to accelerate it.
+</Note>
+
+**Parameters**
+
+<ParamField path="z" type="unsigned long long">
+The number of random values to discard.
+</ParamField>
+
+### base1 <Badge intent="note" minimal>const</Badge>
+
+This member function returns a const reference to this `xor_combine_engine``'s` first adapted base engine.
+
+<CodeBlock links={{"xor_combine_engine": "/library/api/thrust::xor_combine_engine"}}>
+```cpp showLineNumbers={false}
+const base1_type & thrust::random::xor_combine_engine<Engine1, s1, Engine2, s2>::base1() const
+```
+</CodeBlock>
+
+**Returns:** A const reference to the first base engine this `xor_combine_engine` adapts.
+
+### base2 <Badge intent="note" minimal>const</Badge>
+
+This member function returns a const reference to this `xor_combine_engine``'s` second adapted base engine.
+
+<CodeBlock links={{"xor_combine_engine": "/library/api/thrust::xor_combine_engine"}}>
+```cpp showLineNumbers={false}
+const base2_type & thrust::random::xor_combine_engine<Engine1, s1, Engine2, s2>::base2() const
+```
+</CodeBlock>
+
+**Returns:** A const reference to the second base engine this `xor_combine_engine` adapts.
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `base1_type` | `Engine1` | The type of the first adapted base random number engine. |
+| `base2_type` | `Engine2` | The type of the second adapted base random number engine. |
+| `result_type` | `typename thrust::detail::eval_if<(sizeof(typename base2_type::result_type) > sizeof(typename base1_type::result_type)), ::cuda::std::type_identity< typename base2_type::result_type >, ::cuda::std::type_identity< typename base1_type::result_type > >::type` | The type of the unsigned integer produced by this `xor_combine_engine`. |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `shift1` <Badge intent="note" minimal>static</Badge> | `const size_t` | The size of the first shift used in the generation algorithm. |
+| `shift2` <Badge intent="note" minimal>static</Badge> | `const size_t` | The size of the second shift used in the generation algorithm. |
+| `min` <Badge intent="note" minimal>static</Badge> | `const result_type` | The smallest value this `xor_combine_engine` may potentially produce. |
+| `max` <Badge intent="note" minimal>static</Badge> | `const result_type` | The largest value this `xor_combine_engine` may potentially produce. |

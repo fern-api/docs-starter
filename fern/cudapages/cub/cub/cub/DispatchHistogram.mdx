@@ -1,0 +1,661 @@
+---
+title: cub::DispatchHistogram
+description: "Utility class for dispatching the appropriately-tuned kernels for [DeviceHistogram](/library/api/cub::_device_histogram)."
+---
+
+Utility class for dispatching the appropriately-tuned kernels for [DeviceHistogram](/library/api/cub::_device_histogram).
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="NUM_CHANNELS" type="int">
+Number of channels interleaved in the input data (may be greater than the number of channels being actively histogrammed)
+</ParamField>
+
+<ParamField path="NUM_ACTIVE_CHANNELS" type="int">
+Number of channels actively being histogrammed
+</ParamField>
+
+<ParamField path="SampleIteratorT" type="typename">
+Random-access input iterator type for reading input items (may be a simple pointer type)
+</ParamField>
+
+<ParamField path="CounterT" type="typename">
+Integer type for counting sample occurrences per histogram bin
+</ParamField>
+
+<ParamField path="LevelT" type="typename">
+Type for specifying bin level boundaries
+</ParamField>
+
+<ParamField path="OffsetT" type="typename">
+Signed integer type for global offsets
+</ParamField>
+
+<ParamField path="PolicyHub" type="typename" default="void">
+Implementation detail, do not specify directly, requirements on the content of this type are subject to breaking change.
+</ParamField>
+
+<ParamField path="SampleT" type="typename" default="cub::detail::it_value_t<SampleIteratorT>">
+</ParamField>
+
+<ParamField path="KernelSource" type="typename" default="detail::histogram:: DeviceHistogramKernelSource<NUM_CHANNELS, NUM_ACTIVE_CHANNELS, SampleIteratorT, CounterT, LevelT, OffsetT, SampleT>">
+</ParamField>
+
+<ParamField path="KernelLauncherFactory" type="typename" default="CUB_DETAIL_DEFAULT_KERNEL_LAUNCHER_FACTORY">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Static methods
+
+### DispatchRange <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Dispatch routine for HistogramRange with host-side decode operator initialization, specialized for sample types larger than 8bit.
+
+This variant initializes the decode operators on the host before kernel launch.
+
+<CodeBlock links={{"DispatchHistogram": "/library/api/cub::DispatchHistogram"}}>
+```cpp showLineNumbers={false}
+template <typename MaxPolicyT>
+static cudaError_t cub::DispatchHistogram<NUM_CHANNELS, NUM_ACTIVE_CHANNELS, SampleIteratorT, CounterT, LevelT, OffsetT, PolicyHub, SampleT, KernelSource, KernelLauncherFactory>::DispatchRange(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    SampleIteratorT d_samples,
+    ::cuda::std::array<CounterT *, NUM_ACTIVE_CHANNELS> d_output_histograms,
+    ::cuda::std::array<int, NUM_ACTIVE_CHANNELS> num_output_levels,
+    ::cuda::std::array<const LevelT *, NUM_ACTIVE_CHANNELS> d_levels,
+    OffsetT num_row_pixels,
+    OffsetT num_rows,
+    OffsetT row_stride_samples,
+    cudaStream_t stream,
+    ::cuda::std::false_type,
+    KernelSource kernel_source = {},
+    KernelLauncherFactory launcher_factory = {},
+    MaxPolicyT max_policy = {}
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When nullptr, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_samples" type="SampleIteratorT">
+The pointer to the multi-channel input sequence of data samples. The samples from different channels are assumed to be interleaved (e.g., an array of 32-bit pixels where each pixel consists of four RGBA 8-bit samples).
+</ParamField>
+
+<ParamField path="d_output_histograms" type="::cuda::std::array<CounterT *, NUM_ACTIVE_CHANNELS>">
+The pointers to the histogram counter output arrays, one for each active channel. For channel<sub>i</sub>, the allocation length of `d_histograms[i]` should be `num_output_levels[i] - 1`.
+</ParamField>
+
+<ParamField path="num_output_levels" type="::cuda::std::array<int, NUM_ACTIVE_CHANNELS>">
+The number of boundaries (levels) for delineating histogram samples in each active channel. Implies that the number of bins for channel<sub>i</sub> is `num_output_levels[i] - 1`.
+</ParamField>
+
+<ParamField path="d_levels" type="::cuda::std::array<const LevelT *, NUM_ACTIVE_CHANNELS>">
+The pointers to the arrays of boundaries (levels), one for each active channel. Bin ranges are defined by consecutive boundary pairings: lower sample value boundaries are inclusive and upper sample value boundaries are exclusive.
+</ParamField>
+
+<ParamField path="num_row_pixels" type="OffsetT">
+The number of multi-channel pixels per row in the region of interest
+</ParamField>
+
+<ParamField path="num_rows" type="OffsetT">
+The number of rows in the region of interest
+</ParamField>
+
+<ParamField path="row_stride_samples" type="OffsetT">
+The number of samples between starts of consecutive rows in the region of interest
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t">
+CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Dispatch routine for HistogramRange with host-side decode operator initialization, specialized for 8-bit sample types (computes 256-bin privatized histograms and then reduces to user-specified levels).
+
+This variant initializes the decode operators on the host before kernel launch.
+
+<CodeBlock links={{"DispatchHistogram": "/library/api/cub::DispatchHistogram"}}>
+```cpp showLineNumbers={false}
+template <typename MaxPolicyT>
+static cudaError_t cub::DispatchHistogram<NUM_CHANNELS, NUM_ACTIVE_CHANNELS, SampleIteratorT, CounterT, LevelT, OffsetT, PolicyHub, SampleT, KernelSource, KernelLauncherFactory>::DispatchRange(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    SampleIteratorT d_samples,
+    ::cuda::std::array<CounterT *, NUM_ACTIVE_CHANNELS> d_output_histograms,
+    ::cuda::std::array<int, NUM_ACTIVE_CHANNELS> num_output_levels,
+    ::cuda::std::array<const LevelT *, NUM_ACTIVE_CHANNELS> d_levels,
+    OffsetT num_row_pixels,
+    OffsetT num_rows,
+    OffsetT row_stride_samples,
+    cudaStream_t stream,
+    ::cuda::std::true_type,
+    KernelSource kernel_source = {},
+    KernelLauncherFactory launcher_factory = {},
+    MaxPolicyT max_policy = {}
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When nullptr, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_samples" type="SampleIteratorT">
+The pointer to the multi-channel input sequence of data samples. The samples from different channels are assumed to be interleaved (e.g., an array of 32-bit pixels where each pixel consists of four RGBA 8-bit samples).
+</ParamField>
+
+<ParamField path="d_output_histograms" type="::cuda::std::array<CounterT *, NUM_ACTIVE_CHANNELS>">
+The pointers to the histogram counter output arrays, one for each active channel. For channel<sub>i</sub>, the allocation length of `d_histograms[i]` should be `num_output_levels[i] - 1`.
+</ParamField>
+
+<ParamField path="num_output_levels" type="::cuda::std::array<int, NUM_ACTIVE_CHANNELS>">
+The number of boundaries (levels) for delineating histogram samples in each active channel. Implies that the number of bins for channel<sub>i</sub> is `num_output_levels[i] - 1`.
+</ParamField>
+
+<ParamField path="d_levels" type="::cuda::std::array<const LevelT *, NUM_ACTIVE_CHANNELS>">
+The pointers to the arrays of boundaries (levels), one for each active channel. Bin ranges are defined by consecutive boundary pairings: lower sample value boundaries are inclusive and upper sample value boundaries are exclusive.
+</ParamField>
+
+<ParamField path="num_row_pixels" type="OffsetT">
+The number of multi-channel pixels per row in the region of interest
+</ParamField>
+
+<ParamField path="num_rows" type="OffsetT">
+The number of rows in the region of interest
+</ParamField>
+
+<ParamField path="row_stride_samples" type="OffsetT">
+The number of samples between starts of consecutive rows in the region of interest
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t">
+CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### DispatchEven <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Dispatch routine for HistogramEven with host-side decode operator initialization, specialized for sample types larger than 8-bit.
+
+This variant initializes the decode operators on the host before kernel launch.
+
+<CodeBlock links={{"DispatchHistogram": "/library/api/cub::DispatchHistogram"}}>
+```cpp showLineNumbers={false}
+template <typename MaxPolicyT>
+static cudaError_t cub::DispatchHistogram<NUM_CHANNELS, NUM_ACTIVE_CHANNELS, SampleIteratorT, CounterT, LevelT, OffsetT, PolicyHub, SampleT, KernelSource, KernelLauncherFactory>::DispatchEven(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    SampleIteratorT d_samples,
+    ::cuda::std::array<CounterT *, NUM_ACTIVE_CHANNELS> d_output_histograms,
+    ::cuda::std::array<int, NUM_ACTIVE_CHANNELS> num_output_levels,
+    ::cuda::std::array<LevelT, NUM_ACTIVE_CHANNELS> lower_level,
+    ::cuda::std::array<LevelT, NUM_ACTIVE_CHANNELS> upper_level,
+    OffsetT num_row_pixels,
+    OffsetT num_rows,
+    OffsetT row_stride_samples,
+    cudaStream_t stream,
+    ::cuda::std::false_type,
+    KernelSource kernel_source = {},
+    KernelLauncherFactory launcher_factory = {},
+    MaxPolicyT max_policy = {}
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When nullptr, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_samples" type="SampleIteratorT">
+The pointer to the input sequence of sample items. The samples from different channels are assumed to be interleaved (e.g., an array of 32-bit pixels where each pixel consists of four RGBA 8-bit samples).
+</ParamField>
+
+<ParamField path="d_output_histograms" type="::cuda::std::array<CounterT *, NUM_ACTIVE_CHANNELS>">
+The pointers to the histogram counter output arrays, one for each active channel. For channel<sub>i</sub>, the allocation length of `d_histograms[i]` should be `num_output_levels[i] - 1`.
+</ParamField>
+
+<ParamField path="num_output_levels" type="::cuda::std::array<int, NUM_ACTIVE_CHANNELS>">
+The number of bin level boundaries for delineating histogram samples in each active channel. Implies that the number of bins for channel<sub>i</sub> is `num_output_levels[i] - 1`.
+</ParamField>
+
+<ParamField path="lower_level" type="::cuda::std::array<LevelT, NUM_ACTIVE_CHANNELS>">
+The lower sample value bound (inclusive) for the lowest histogram bin in each active channel.
+</ParamField>
+
+<ParamField path="upper_level" type="::cuda::std::array<LevelT, NUM_ACTIVE_CHANNELS>">
+The upper sample value bound (exclusive) for the highest histogram bin in each active channel.
+</ParamField>
+
+<ParamField path="num_row_pixels" type="OffsetT">
+The number of multi-channel pixels per row in the region of interest
+</ParamField>
+
+<ParamField path="num_rows" type="OffsetT">
+The number of rows in the region of interest
+</ParamField>
+
+<ParamField path="row_stride_samples" type="OffsetT">
+The number of samples between starts of consecutive rows in the region of interest
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t">
+CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Dispatch routine for HistogramEven with host-side decode operator initialization, specialized for 8-bit sample types (computes 256-bin privatized histograms and then reduces to user-specified levels).
+
+This variant initializes the decode operators on the host before kernel launch.
+
+<CodeBlock links={{"DispatchHistogram": "/library/api/cub::DispatchHistogram"}}>
+```cpp showLineNumbers={false}
+template <typename MaxPolicyT>
+static cudaError_t cub::DispatchHistogram<NUM_CHANNELS, NUM_ACTIVE_CHANNELS, SampleIteratorT, CounterT, LevelT, OffsetT, PolicyHub, SampleT, KernelSource, KernelLauncherFactory>::DispatchEven(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    SampleIteratorT d_samples,
+    ::cuda::std::array<CounterT *, NUM_ACTIVE_CHANNELS> d_output_histograms,
+    ::cuda::std::array<int, NUM_ACTIVE_CHANNELS> num_output_levels,
+    ::cuda::std::array<LevelT, NUM_ACTIVE_CHANNELS> lower_level,
+    ::cuda::std::array<LevelT, NUM_ACTIVE_CHANNELS> upper_level,
+    OffsetT num_row_pixels,
+    OffsetT num_rows,
+    OffsetT row_stride_samples,
+    cudaStream_t stream,
+    ::cuda::std::true_type,
+    KernelSource kernel_source = {},
+    KernelLauncherFactory launcher_factory = {},
+    MaxPolicyT max_policy = {}
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When nullptr, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_samples" type="SampleIteratorT">
+The pointer to the input sequence of sample items. The samples from different channels are assumed to be interleaved (e.g., an array of 32-bit pixels where each pixel consists of four RGBA 8-bit samples).
+</ParamField>
+
+<ParamField path="d_output_histograms" type="::cuda::std::array<CounterT *, NUM_ACTIVE_CHANNELS>">
+The pointers to the histogram counter output arrays, one for each active channel. For channel<sub>i</sub>, the allocation length of `d_histograms[i]` should be `num_output_levels[i] - 1`.
+</ParamField>
+
+<ParamField path="num_output_levels" type="::cuda::std::array<int, NUM_ACTIVE_CHANNELS>">
+The number of bin level boundaries for delineating histogram samples in each active channel. Implies that the number of bins for channel<sub>i</sub> is `num_output_levels[i] - 1`.
+</ParamField>
+
+<ParamField path="lower_level" type="::cuda::std::array<LevelT, NUM_ACTIVE_CHANNELS>">
+The lower sample value bound (inclusive) for the lowest histogram bin in each active channel.
+</ParamField>
+
+<ParamField path="upper_level" type="::cuda::std::array<LevelT, NUM_ACTIVE_CHANNELS>">
+The upper sample value bound (exclusive) for the highest histogram bin in each active channel.
+</ParamField>
+
+<ParamField path="num_row_pixels" type="OffsetT">
+The number of multi-channel pixels per row in the region of interest
+</ParamField>
+
+<ParamField path="num_rows" type="OffsetT">
+The number of rows in the region of interest
+</ParamField>
+
+<ParamField path="row_stride_samples" type="OffsetT">
+The number of samples between starts of consecutive rows in the region of interest
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t">
+CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### __dispatch_range_device_init <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Dispatch routine for HistogramRange with device-side decode operator initialization, specialized for sample types larger than 8bit.
+
+This variant initializes the decode operators inside the kernel from level arrays.
+
+<CodeBlock links={{"DispatchHistogram": "/library/api/cub::DispatchHistogram"}}>
+```cpp showLineNumbers={false}
+template <typename MaxPolicyT, typename NumOutputLevelsArrayT, typename LevelsArrayT>
+static cudaError_t cub::DispatchHistogram<NUM_CHANNELS, NUM_ACTIVE_CHANNELS, SampleIteratorT, CounterT, LevelT, OffsetT, PolicyHub, SampleT, KernelSource, KernelLauncherFactory>::__dispatch_range_device_init(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    SampleIteratorT d_samples,
+    ::cuda::std::array<CounterT *, NUM_ACTIVE_CHANNELS> d_output_histograms,
+    NumOutputLevelsArrayT num_output_levels,
+    LevelsArrayT d_levels,
+    OffsetT num_row_pixels,
+    OffsetT num_rows,
+    OffsetT row_stride_samples,
+    cudaStream_t stream,
+    ::cuda::std::false_type,
+    KernelSource kernel_source = {},
+    KernelLauncherFactory launcher_factory = {},
+    MaxPolicyT max_policy = {}
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When nullptr, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_samples" type="SampleIteratorT">
+The pointer to the multi-channel input sequence of data samples. The samples from different channels are assumed to be interleaved (e.g., an array of 32-bit pixels where each pixel consists of four RGBA 8-bit samples).
+</ParamField>
+
+<ParamField path="d_output_histograms" type="::cuda::std::array<CounterT *, NUM_ACTIVE_CHANNELS>">
+The pointers to the histogram counter output arrays, one for each active channel. For channel<sub>i</sub>, the allocation length of `d_histograms[i]` should be `num_output_levels[i] - 1`.
+</ParamField>
+
+<ParamField path="num_output_levels" type="NumOutputLevelsArrayT">
+The number of boundaries (levels) for delineating histogram samples in each active channel. Implies that the number of bins for channel<sub>i</sub> is `num_output_levels[i] - 1`.
+</ParamField>
+
+<ParamField path="d_levels" type="LevelsArrayT">
+The pointers to the arrays of boundaries (levels), one for each active channel. Bin ranges are defined by consecutive boundary pairings: lower sample value boundaries are inclusive and upper sample value boundaries are exclusive.
+</ParamField>
+
+<ParamField path="num_row_pixels" type="OffsetT">
+The number of multi-channel pixels per row in the region of interest
+</ParamField>
+
+<ParamField path="num_rows" type="OffsetT">
+The number of rows in the region of interest
+</ParamField>
+
+<ParamField path="row_stride_samples" type="OffsetT">
+The number of samples between starts of consecutive rows in the region of interest
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t">
+CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Dispatch routine for HistogramRange with device-side decode operator initialization, specialized for 8-bit sample types (computes 256-bin privatized histograms and then reduces to user-specified levels).
+
+This variant initializes the decode operators inside the kernel from level arrays.
+
+<CodeBlock links={{"DispatchHistogram": "/library/api/cub::DispatchHistogram"}}>
+```cpp showLineNumbers={false}
+template <typename MaxPolicyT, typename NumOutputLevelsArrayT, typename LevelsArrayT>
+static cudaError_t cub::DispatchHistogram<NUM_CHANNELS, NUM_ACTIVE_CHANNELS, SampleIteratorT, CounterT, LevelT, OffsetT, PolicyHub, SampleT, KernelSource, KernelLauncherFactory>::__dispatch_range_device_init(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    SampleIteratorT d_samples,
+    ::cuda::std::array<CounterT *, NUM_ACTIVE_CHANNELS> d_output_histograms,
+    NumOutputLevelsArrayT num_output_levels,
+    LevelsArrayT d_levels,
+    OffsetT num_row_pixels,
+    OffsetT num_rows,
+    OffsetT row_stride_samples,
+    cudaStream_t stream,
+    ::cuda::std::true_type,
+    KernelSource kernel_source = {},
+    KernelLauncherFactory launcher_factory = {},
+    MaxPolicyT max_policy = {}
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When nullptr, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_samples" type="SampleIteratorT">
+The pointer to the multi-channel input sequence of data samples. The samples from different channels are assumed to be interleaved (e.g., an array of 32-bit pixels where each pixel consists of four RGBA 8-bit samples).
+</ParamField>
+
+<ParamField path="d_output_histograms" type="::cuda::std::array<CounterT *, NUM_ACTIVE_CHANNELS>">
+The pointers to the histogram counter output arrays, one for each active channel. For channel<sub>i</sub>, the allocation length of `d_histograms[i]` should be `num_output_levels[i] - 1`.
+</ParamField>
+
+<ParamField path="num_output_levels" type="NumOutputLevelsArrayT">
+The number of boundaries (levels) for delineating histogram samples in each active channel. Implies that the number of bins for channel<sub>i</sub> is `num_output_levels[i] - 1`.
+</ParamField>
+
+<ParamField path="d_levels" type="LevelsArrayT">
+The pointers to the arrays of boundaries (levels), one for each active channel. Bin ranges are defined by consecutive boundary pairings: lower sample value boundaries are inclusive and upper sample value boundaries are exclusive.
+</ParamField>
+
+<ParamField path="num_row_pixels" type="OffsetT">
+The number of multi-channel pixels per row in the region of interest
+</ParamField>
+
+<ParamField path="num_rows" type="OffsetT">
+The number of rows in the region of interest
+</ParamField>
+
+<ParamField path="row_stride_samples" type="OffsetT">
+The number of samples between starts of consecutive rows in the region of interest
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t">
+CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### __dispatch_even_device_init <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Dispatch routine for HistogramEven with device-side decode operator initialization, specialized for sample types larger than 8-bit.
+
+This variant initializes the decode operators inside the kernel from level bounds.
+
+<CodeBlock links={{"DispatchHistogram": "/library/api/cub::DispatchHistogram"}}>
+```cpp showLineNumbers={false}
+template <typename MaxPolicyT, typename LowerLevelArrayT, typename UpperLevelArrayT>
+static cudaError_t cub::DispatchHistogram<NUM_CHANNELS, NUM_ACTIVE_CHANNELS, SampleIteratorT, CounterT, LevelT, OffsetT, PolicyHub, SampleT, KernelSource, KernelLauncherFactory>::__dispatch_even_device_init(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    SampleIteratorT d_samples,
+    ::cuda::std::array<CounterT *, NUM_ACTIVE_CHANNELS> d_output_histograms,
+    ::cuda::std::array<int, NUM_ACTIVE_CHANNELS> num_output_levels,
+    LowerLevelArrayT lower_level,
+    UpperLevelArrayT upper_level,
+    OffsetT num_row_pixels,
+    OffsetT num_rows,
+    OffsetT row_stride_samples,
+    cudaStream_t stream,
+    ::cuda::std::false_type,
+    KernelSource kernel_source = {},
+    KernelLauncherFactory launcher_factory = {},
+    MaxPolicyT max_policy = {}
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When nullptr, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_samples" type="SampleIteratorT">
+The pointer to the input sequence of sample items. The samples from different channels are assumed to be interleaved (e.g., an array of 32-bit pixels where each pixel consists of four RGBA 8-bit samples).
+</ParamField>
+
+<ParamField path="d_output_histograms" type="::cuda::std::array<CounterT *, NUM_ACTIVE_CHANNELS>">
+The pointers to the histogram counter output arrays, one for each active channel. For channel<sub>i</sub>, the allocation length of `d_histograms[i]` should be `num_output_levels[i] - 1`.
+</ParamField>
+
+<ParamField path="num_output_levels" type="::cuda::std::array<int, NUM_ACTIVE_CHANNELS>">
+The number of bin level boundaries for delineating histogram samples in each active channel. Implies that the number of bins for channel<sub>i</sub> is `num_output_levels[i] - 1`.
+</ParamField>
+
+<ParamField path="lower_level" type="LowerLevelArrayT">
+The lower sample value bound (inclusive) for the lowest histogram bin in each active channel.
+</ParamField>
+
+<ParamField path="upper_level" type="UpperLevelArrayT">
+The upper sample value bound (exclusive) for the highest histogram bin in each active channel.
+</ParamField>
+
+<ParamField path="num_row_pixels" type="OffsetT">
+The number of multi-channel pixels per row in the region of interest
+</ParamField>
+
+<ParamField path="num_rows" type="OffsetT">
+The number of rows in the region of interest
+</ParamField>
+
+<ParamField path="row_stride_samples" type="OffsetT">
+The number of samples between starts of consecutive rows in the region of interest
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t">
+CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Dispatch routine for HistogramEven with device-side decode operator initialization, specialized for 8-bit sample types (computes 256-bin privatized histograms and then reduces to user-specified levels).
+
+This variant initializes the decode operators inside the kernel from level bounds.
+
+<CodeBlock links={{"DispatchHistogram": "/library/api/cub::DispatchHistogram"}}>
+```cpp showLineNumbers={false}
+template <typename MaxPolicyT, typename LowerLevelArrayT, typename UpperLevelArrayT>
+static cudaError_t cub::DispatchHistogram<NUM_CHANNELS, NUM_ACTIVE_CHANNELS, SampleIteratorT, CounterT, LevelT, OffsetT, PolicyHub, SampleT, KernelSource, KernelLauncherFactory>::__dispatch_even_device_init(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    SampleIteratorT d_samples,
+    ::cuda::std::array<CounterT *, NUM_ACTIVE_CHANNELS> d_output_histograms,
+    ::cuda::std::array<int, NUM_ACTIVE_CHANNELS> num_output_levels,
+    LowerLevelArrayT lower_level,
+    UpperLevelArrayT upper_level,
+    OffsetT num_row_pixels,
+    OffsetT num_rows,
+    OffsetT row_stride_samples,
+    cudaStream_t stream,
+    ::cuda::std::true_type,
+    KernelSource kernel_source = {},
+    KernelLauncherFactory launcher_factory = {},
+    MaxPolicyT max_policy = {}
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When nullptr, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Reference to size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+<ParamField path="d_samples" type="SampleIteratorT">
+The pointer to the input sequence of sample items. The samples from different channels are assumed to be interleaved (e.g., an array of 32-bit pixels where each pixel consists of four RGBA 8-bit samples).
+</ParamField>
+
+<ParamField path="d_output_histograms" type="::cuda::std::array<CounterT *, NUM_ACTIVE_CHANNELS>">
+The pointers to the histogram counter output arrays, one for each active channel. For channel<sub>i</sub>, the allocation length of `d_histograms[i]` should be `num_output_levels[i] - 1`.
+</ParamField>
+
+<ParamField path="num_output_levels" type="::cuda::std::array<int, NUM_ACTIVE_CHANNELS>">
+The number of bin level boundaries for delineating histogram samples in each active channel. Implies that the number of bins for channel<sub>i</sub> is `num_output_levels[i] - 1`.
+</ParamField>
+
+<ParamField path="lower_level" type="LowerLevelArrayT">
+The lower sample value bound (inclusive) for the lowest histogram bin in each active channel.
+</ParamField>
+
+<ParamField path="upper_level" type="UpperLevelArrayT">
+The upper sample value bound (exclusive) for the highest histogram bin in each active channel.
+</ParamField>
+
+<ParamField path="num_row_pixels" type="OffsetT">
+The number of multi-channel pixels per row in the region of interest
+</ParamField>
+
+<ParamField path="num_rows" type="OffsetT">
+The number of rows in the region of interest
+</ParamField>
+
+<ParamField path="row_stride_samples" type="OffsetT">
+The number of samples between starts of consecutive rows in the region of interest
+</ParamField>
+
+<ParamField path="stream" type="cudaStream_t">
+CUDA stream to launch kernels within. Default is stream<sub>0</sub>.
+</ParamField>
+
+</Tab>
+</Tabs>

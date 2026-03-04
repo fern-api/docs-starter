@@ -1,0 +1,435 @@
+---
+title: "cuda::mr::shared_resource"
+description: ""
+---
+
+`shared_resource` holds a reference counted instance of a memory resource. This allows the user to pass a resource around with reference semantics while avoiding lifetime issues.
+
+@note `shared_resource` satisfies the `cuda::mr::resource` concept iff \tparam _Resource satisfies it. @tparam _Resource The resource type to hold.
+
+```cpp showLineNumbers={false}
+#include <cuda/mr/shared_resource.h>
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="_Resource" type="class">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `cuda::mr::__copy_default_queries< _Resource >` (public)
+
+---
+
+## Constructors
+
+### shared_resource <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+<Badge intent="note" minimal>explicit</Badge>
+
+Constructs a `shared_resource` referring to an object of type `_Resource` that has been constructed with arguments `__args`.
+
+The `_Resource` object is dynamically allocated with `new`.
+
+<CodeBlock links={{"shared_resource": "/library/api/cuda::mr::shared_resource"}}>
+```cpp showLineNumbers={false}
+template <class... _Args>
+cuda::mr::shared_resource<_Resource>::shared_resource(
+    ::cuda::std::in_place_type_t<_Resource>,
+    _Args &&... __args
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__args" type="_Args &&...">
+The arguments to be passed to the `_Resource` constructor.
+</ParamField>
+
+</Tab>
+<Tab title="Copy">
+
+<Badge intent="note" minimal>noexcept</Badge>
+
+Copy-constructs a `shared_resource` object resulting in an copy that shares ownership of the wrapped resource with `__other`.
+
+<CodeBlock links={{"shared_resource": "/library/api/cuda::mr::shared_resource"}}>
+```cpp showLineNumbers={false}
+cuda::mr::shared_resource<_Resource>::shared_resource(
+    const shared_resource &__other
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__other" type="const shared_resource &">
+The `shared_resource` object to copy from.
+</ParamField>
+
+</Tab>
+<Tab title="Move">
+
+<Badge intent="note" minimal>noexcept</Badge>
+
+Move-constructs a `shared_resource` assuming ownership of the resource stored in `__other`.
+
+<CodeBlock links={{"shared_resource": "/library/api/cuda::mr::shared_resource"}}>
+```cpp showLineNumbers={false}
+cuda::mr::shared_resource<_Resource>::shared_resource(
+    shared_resource &&__other
+) noexcept
+```
+</CodeBlock>
+
+<Info title="Postconditions">
+`__other` is left in a valid but unspecified state.
+</Info>
+
+**Parameters**
+
+<ParamField path="__other" type="shared_resource &&">
+The `shared_resource` object to move from.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### Destructor
+
+### ~shared_resource <Badge intent="note" minimal>inline</Badge>
+
+Releases the reference held by this `shared_resource` object.
+
+If this is the last reference to the wrapped resource, the resource is deleted.
+
+<CodeBlock links={{"shared_resource": "/library/api/cuda::mr::shared_resource"}}>
+```cpp showLineNumbers={false}
+cuda::mr::shared_resource<_Resource>::~shared_resource()
+```
+</CodeBlock>
+
+---
+
+## Assignment operators
+
+### operator= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Copy assign">
+
+Copy-assigns from `__other`.
+
+Self-assignment is a no-op. Otherwise, the reference held by this `shared_resource` object is released and a new reference is acquired to the wrapped resource of `__other`, if any.
+
+<CodeBlock links={{"shared_resource": "/library/api/cuda::mr::shared_resource"}}>
+```cpp showLineNumbers={false}
+shared_resource & cuda::mr::shared_resource<_Resource>::operator=(
+    const shared_resource &__other
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__other" type="const shared_resource &">
+The `shared_resource` object to copy from.
+</ParamField>
+
+</Tab>
+<Tab title="Move assign">
+
+Move-assigns from `__other`.
+
+Self-assignment is a no-op. Otherwise, the reference held by this `shared_resource` object is released, while the reference held by `__other` is transferred to this object.
+
+<CodeBlock links={{"shared_resource": "/library/api/cuda::mr::shared_resource"}}>
+```cpp showLineNumbers={false}
+shared_resource & cuda::mr::shared_resource<_Resource>::operator=(
+    shared_resource &&__other
+) noexcept
+```
+</CodeBlock>
+
+<Info title="Postconditions">
+`__other` is left in a valid but unspecified state.
+</Info>
+
+**Parameters**
+
+<ParamField path="__other" type="shared_resource &&">
+The `shared_resource` object to move from.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### swap <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Swaps a `shared_resource` with another one.
+
+<CodeBlock links={{"shared_resource": "/library/api/cuda::mr::shared_resource"}}>
+```cpp showLineNumbers={false}
+void cuda::mr::shared_resource<_Resource>::swap(
+    shared_resource &__other
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__other" type="shared_resource &">
+The other `shared_resource`.
+</ParamField>
+
+### get <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+Returns a reference to the stored resource.
+
+<CodeBlock links={{"shared_resource": "/library/api/cuda::mr::shared_resource"}}>
+```cpp showLineNumbers={false}
+_Resource & cuda::mr::shared_resource<_Resource>::get() noexcept
+```
+</CodeBlock>
+
+**Returns:** A reference to the stored resource.
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+Returns a const reference to the stored resource.
+
+<CodeBlock links={{"shared_resource": "/library/api/cuda::mr::shared_resource"}}>
+```cpp showLineNumbers={false}
+const _Resource & cuda::mr::shared_resource<_Resource>::get() const noexcept
+```
+</CodeBlock>
+
+**Returns:** A const reference to the stored resource.
+
+</Tab>
+</Tabs>
+
+### operator-> <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+Returns a pointer to the stored resource.
+
+<CodeBlock links={{"shared_resource": "/library/api/cuda::mr::shared_resource"}}>
+```cpp showLineNumbers={false}
+_Resource * cuda::mr::shared_resource<_Resource>::operator->() noexcept
+```
+</CodeBlock>
+
+**Returns:** A pointer to the stored resource.
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+Returns a const pointer to the stored resource.
+
+<CodeBlock links={{"shared_resource": "/library/api/cuda::mr::shared_resource"}}>
+```cpp showLineNumbers={false}
+const _Resource * cuda::mr::shared_resource<_Resource>::operator->() const noexcept
+```
+</CodeBlock>
+
+**Returns:** A const pointer to the stored resource.
+
+</Tab>
+</Tabs>
+
+### operator* <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+Returns a reference to the stored resource.
+
+<CodeBlock links={{"shared_resource": "/library/api/cuda::mr::shared_resource"}}>
+```cpp showLineNumbers={false}
+_Resource & cuda::mr::shared_resource<_Resource>::operator*() noexcept
+```
+</CodeBlock>
+
+**Returns:** A reference to the stored resource.
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+Returns a const reference to the stored resource.
+
+<CodeBlock links={{"shared_resource": "/library/api/cuda::mr::shared_resource"}}>
+```cpp showLineNumbers={false}
+const _Resource & cuda::mr::shared_resource<_Resource>::operator*() const noexcept
+```
+</CodeBlock>
+
+**Returns:** A const reference to the stored resource.
+
+</Tab>
+</Tabs>
+
+### allocate_sync <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Allocate memory of size at least `__bytes` using the stored resource.
+
+<CodeBlock links={{"shared_resource": "/library/api/cuda::mr::shared_resource"}}>
+```cpp showLineNumbers={false}
+void * cuda::mr::shared_resource<_Resource>::allocate_sync(
+    size_t __bytes,
+    size_t __alignment = alignof(::cuda::std::max_align_t)
+)
+```
+</CodeBlock>
+
+**Returns:** Pointer to the newly allocated memory
+
+**Parameters**
+
+<ParamField path="__bytes" type="size_t">
+The size in bytes of the allocation.
+</ParamField>
+
+<ParamField path="__alignment" type="size_t" default="alignof(::cuda::std::max_align_t)">
+The requested alignment of the allocation.
+</ParamField>
+
+### deallocate_sync <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Deallocate memory pointed to by `__ptr` using the stored resource.
+
+<CodeBlock links={{"shared_resource": "/library/api/cuda::mr::shared_resource"}}>
+```cpp showLineNumbers={false}
+void cuda::mr::shared_resource<_Resource>::deallocate_sync(
+    void *__ptr,
+    size_t __bytes,
+    size_t __alignment = alignof(::cuda::std::max_align_t)
+) noexcept
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__ptr" type="void *">
+Pointer to be deallocated. Must have been allocated through a call to [`allocate`](/library/api/cuda::mr::shared_resource::allocate) or [`allocate_sync`](/library/api/cuda::mr::shared_resource::allocate_sync)
+</ParamField>
+
+<ParamField path="__bytes" type="size_t">
+The number of bytes that was passed to the allocation call that returned `__ptr`.
+</ParamField>
+
+<ParamField path="__alignment" type="size_t" default="alignof(::cuda::std::max_align_t)">
+The alignment that was passed to the allocation call that returned `__ptr`.
+</ParamField>
+
+### allocate <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Enqueues an allocation of memory of size at least `__bytes` using the wrapped resource.
+
+The allocation is performed asynchronously on stream `__stream`.
+
+<CodeBlock links={{"shared_resource": "/library/api/cuda::mr::shared_resource", "stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+template <class _ThisResource>
+void * cuda::mr::shared_resource<_Resource>::allocate(
+    ::cuda::stream_ref __stream,
+    size_t __bytes,
+    size_t __alignment
+)
+```
+</CodeBlock>
+
+<Note>
+The caller is responsible for ensuring that the memory is not accessed until the operation has completed.
+</Note>
+
+<Info title="Preconditions">
+`_Resource` must satisfy `resource`.
+</Info>
+
+**Returns:** Pointer to the newly allocated memory.
+
+**Parameters**
+
+<ParamField path="__bytes" type="size_t">
+The size in bytes of the allocation.
+</ParamField>
+
+<ParamField path="__alignment" type="size_t">
+The requested alignment of the allocation.
+</ParamField>
+
+### deallocate <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Enqueues the deallocation of memory pointed to by `__ptr`.
+
+The deallocation is performed asynchronously on stream `__stream`.
+
+<CodeBlock links={{"shared_resource": "/library/api/cuda::mr::shared_resource", "stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+template <class _ThisResource>
+void cuda::mr::shared_resource<_Resource>::deallocate(
+    ::cuda::stream_ref __stream,
+    void *__ptr,
+    size_t __bytes,
+    size_t __alignment
+) noexcept
+```
+</CodeBlock>
+
+<Note>
+The caller is responsible for ensuring that the memory is not accessed after the operation has completed.
+</Note>
+
+<Info title="Preconditions">
+`_Resource` must satisfy `resource`.
+</Info>
+
+**Parameters**
+
+<ParamField path="__ptr" type="void *">
+Pointer to be deallocated. Must have been allocated through a call to [`allocate`](/library/api/cuda::mr::shared_resource::allocate) or [`allocate_sync`](/library/api/cuda::mr::shared_resource::allocate_sync)
+</ParamField>
+
+<ParamField path="__bytes" type="size_t">
+The number of bytes that was passed to the allocation call that returned `__ptr`.
+</ParamField>
+
+<ParamField path="__alignment" type="size_t">
+The alignment that was passed to the allocation call that returned `__ptr`.
+</ParamField>
+
+---
+
+## Inner classes
+
+### _Control_block
+
+<CodeBlock links={{"shared_resource": "/library/api/cuda::mr::shared_resource"}}>
+```cpp showLineNumbers={false}
+struct cuda::mr::shared_resource::_Control_block
+```
+</CodeBlock>

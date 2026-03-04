@@ -1,0 +1,367 @@
+---
+title: "cuda::permutation_iterator"
+description: "[`permutation_iterator`](/libcudacxx/api/cuda::permutation_iterator) is an iterator which represents a pointer into a reordered view of a given range."
+---
+
+`permutation_iterator` is an iterator which represents a pointer into a reordered view of a given range.
+
+`permutation_iterator` is an imprecise name; the reordered view need not be a strict permutation. This iterator is useful for fusing a scatter or gather operation with other algorithms.
+
+This iterator takes two arguments:
+
+- an iterator to the range `V` on which the "permutation" will be applied, referred to as `iter` below
+- an iterator to a range of indices defining the reindexing scheme that determines how the elements of `V` will be permuted, referred to as `index` below
+
+Note that `permutation_iterator` is not limited to strict permutations of the given range `V`. The distance between begin and end of the reindexing iterators is allowed to be smaller compared to the size of the range `V`, in which case the `permutation_iterator` only provides a "permutation" of a subset of `V`. The indices do not need to be unique. In this same context, it must be noted that the past-the-end `permutation_iterator` is completely defined by means of the past-the-end iterator to the indices.
+
+The following code snippet demonstrates how to create a `permutation_iterator` which represents a reordering of the contents of a `device_vector`.
+
+```cpp showLineNumbers={false}
+#include <cuda/permutation_iterator.h>
+```
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <cuda/iterator>
+#include <thrust/device_vector.h>
+...
+thrust::device_vector<float> values{10.0f, 20.0f, 30.0f, 40.0f, 50.0f, 60.0f, 70.0f, 80.0f};
+thrust::device_vector<int> indices{2, 6, 1, 3};
+
+using ElementIterator = thrust::device_vector<float>::iterator;
+using IndexIterator = thrust::device_vector<int>::iterator;
+
+cuda::permutation_iterator<ElementIterator,IndexIterator> iter(values.begin(), indices.begin());
+
+*iter;   // returns 30.0f;
+iter[0]; // returns 30.0f;
+iter[1]; // returns 70.0f;
+iter[2]; // returns 20.0f;
+iter[3]; // returns 40.0f;
+
+// iter[4] is an out-of-bounds error
+
+*iter   = -1.0f; // sets values[2] to -1.0f;
+iter[0] = -1.0f; // sets values[2] to -1.0f;
+iter[1] = -1.0f; // sets values[6] to -1.0f;
+iter[2] = -1.0f; // sets values[1] to -1.0f;
+iter[3] = -1.0f; // sets values[3] to -1.0f;
+
+// values is now {10, -1, -1, -1, 50, 60, -1, 80}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="_Iter" type="class">
+</ParamField>
+
+<ParamField path="_Index" type="class" default="_Iter">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### permutation_iterator <Badge intent="note" minimal>constexpr</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+Ensure that the user passes an iterator to something interger_like.
+
+Ensure that the index [value_type](/libcudacxx/api/cuda::permutation_iterator::value_type) is convertible to [difference_type](/libcudacxx/api/cuda::permutation_iterator::difference_type) To actually use operator+ we need the index iterator to be random access To actually use operator+ we need the base iterator to be random access
+
+Default constructs an `permutation_iterator` with a value initialized iterator and index
+
+<CodeBlock links={{"permutation_iterator": "/libcudacxx/api/cuda::permutation_iterator"}}>
+```cpp showLineNumbers={false}
+cuda::permutation_iterator<_Iter, _Index>::permutation_iterator() = default
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="From iterator range">
+
+<Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Constructs an `permutation_iterator` from an iterator and an optional index.
+
+<CodeBlock links={{"permutation_iterator": "/libcudacxx/api/cuda::permutation_iterator"}}>
+```cpp showLineNumbers={false}
+cuda::permutation_iterator<_Iter, _Index>::permutation_iterator(
+    _Iter __iter,
+    _Index __index
+) noexcept(::cuda::std::is_nothrow_copy_constructible_v< _Iter > &&::cuda::std::is_nothrow_copy_constructible_v< _Index >)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="__iter" type="_Iter">
+The iterator to to index from
+</ParamField>
+
+<ParamField path="__index" type="_Index">
+The iterator with the permutations
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### base <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+Extracts the stored base iterator `iter`.
+
+<CodeBlock links={{"permutation_iterator": "/libcudacxx/api/cuda::permutation_iterator"}}>
+```cpp showLineNumbers={false}
+_Iter cuda::permutation_iterator<_Iter, _Index>::base() && noexcept(::cuda::std::is_nothrow_move_constructible_v< _Iter >)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+Returns a const reference to the stored base iterator `iter`.
+
+<CodeBlock links={{"permutation_iterator": "/libcudacxx/api/cuda::permutation_iterator"}}>
+```cpp showLineNumbers={false}
+const _Iter & cuda::permutation_iterator<_Iter, _Index>::base() const & noexcept
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### index <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Returns the current index.
+
+<CodeBlock links={{"permutation_iterator": "/libcudacxx/api/cuda::permutation_iterator"}}>
+```cpp showLineNumbers={false}
+difference_type cuda::permutation_iterator<_Iter, _Index>::index() const noexcept
+```
+</CodeBlock>
+
+**Returns:** Equivalent to `*index`
+
+### operator* <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+Dereferences the `permutation_iterator`.
+
+<CodeBlock links={{"permutation_iterator": "/libcudacxx/api/cuda::permutation_iterator"}}>
+```cpp showLineNumbers={false}
+decltype(
+    auto
+) noexcept(__iter_[static_cast< __iter_difference_t >(*__index_)])
+```
+</CodeBlock>
+
+**Returns:** Equivalent to `iter[*index]`
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+Dereferences the `permutation_iterator`.
+
+<CodeBlock links={{"permutation_iterator": "/libcudacxx/api/cuda::permutation_iterator"}}>
+```cpp showLineNumbers={false}
+template <class _Iter2>
+decltype(
+    auto
+) const noexcept(__iter_[static_cast< __iter_difference_t >(*__index_)])
+```
+</CodeBlock>
+
+**Returns:** Equivalent to `iter[*index]`
+
+</Tab>
+</Tabs>
+
+### operator[] <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+Subscripts the `permutation_iterator` by an offset.
+
+<CodeBlock links={{"permutation_iterator": "/libcudacxx/api/cuda::permutation_iterator"}}>
+```cpp showLineNumbers={false}
+decltype(
+    auto
+) noexcept(__iter_[static_cast< __iter_difference_t >(__index_[__n])])
+```
+</CodeBlock>
+
+**Returns:** Equivalent to `iter[`[`index`](/libcudacxx/api/cuda::permutation_iterator::index)`[__n]]`
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The additional offset
+</ParamField>
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+Subscripts the `permutation_iterator` by an offset.
+
+<CodeBlock links={{"permutation_iterator": "/libcudacxx/api/cuda::permutation_iterator"}}>
+```cpp showLineNumbers={false}
+template <class _Iter2>
+decltype(
+    auto
+) const noexcept(__iter_[static_cast< __iter_difference_t >(__index_[__n])])
+```
+</CodeBlock>
+
+**Returns:** Equivalent to `iter[`[`index`](/libcudacxx/api/cuda::permutation_iterator::index)`[__n]]`
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The additional offset
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### operator++ <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Pre-increment">
+
+Increments the `permutation_iterator`.
+
+<CodeBlock links={{"permutation_iterator": "/libcudacxx/api/cuda::permutation_iterator"}}>
+```cpp showLineNumbers={false}
+permutation_iterator & cuda::permutation_iterator<_Iter, _Index>::operator++() noexcept(++__index_)
+```
+</CodeBlock>
+
+**Returns:** Equivalent to `++`[`index`](/libcudacxx/api/cuda::permutation_iterator::index)
+
+</Tab>
+<Tab title="Post-increment">
+
+Increments the `permutation_iterator`.
+
+<CodeBlock links={{"permutation_iterator": "/libcudacxx/api/cuda::permutation_iterator"}}>
+```cpp showLineNumbers={false}
+permutation_iterator cuda::permutation_iterator<_Iter, _Index>::operator++(
+    int
+) noexcept(noexcept(++__index_) &&::cuda::std::is_nothrow_copy_constructible_v< _Iter > &&::cuda::std::is_nothrow_copy_constructible_v< _Index >)
+```
+</CodeBlock>
+
+**Returns:** Equivalent to `index++`
+
+</Tab>
+</Tabs>
+
+### operator-- <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Pre-decrement">
+
+Increments the `permutation_iterator`.
+
+<CodeBlock links={{"permutation_iterator": "/libcudacxx/api/cuda::permutation_iterator"}}>
+```cpp showLineNumbers={false}
+permutation_iterator & cuda::permutation_iterator<_Iter, _Index>::operator--() noexcept(--__index_)
+```
+</CodeBlock>
+
+**Returns:** Equivalent to `--`[`index`](/libcudacxx/api/cuda::permutation_iterator::index)
+
+</Tab>
+<Tab title="Post-decrement">
+
+Increments the `permutation_iterator`.
+
+<CodeBlock links={{"permutation_iterator": "/libcudacxx/api/cuda::permutation_iterator"}}>
+```cpp showLineNumbers={false}
+permutation_iterator cuda::permutation_iterator<_Iter, _Index>::operator--(
+    int
+) noexcept(noexcept(--__index_) &&::cuda::std::is_nothrow_copy_constructible_v< _Iter > &&::cuda::std::is_nothrow_copy_constructible_v< _Index >)
+```
+</CodeBlock>
+
+**Returns:** Equivalent to `index++`
+
+</Tab>
+</Tabs>
+
+### operator+= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Advances the `permutation_iterator` by a given number of elements.
+
+<CodeBlock links={{"permutation_iterator": "/libcudacxx/api/cuda::permutation_iterator"}}>
+```cpp showLineNumbers={false}
+permutation_iterator & cuda::permutation_iterator<_Iter, _Index>::operator+=(
+    difference_type __n
+) noexcept(__index_+=__n)
+```
+</CodeBlock>
+
+**Returns:** Equivalent to [`index`](/libcudacxx/api/cuda::permutation_iterator::index)` + __n`
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The number of elements to advance
+</ParamField>
+
+### operator-= <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Decrements the `permutation_iterator` by a given number of elements.
+
+<CodeBlock links={{"permutation_iterator": "/libcudacxx/api/cuda::permutation_iterator"}}>
+```cpp showLineNumbers={false}
+permutation_iterator & cuda::permutation_iterator<_Iter, _Index>::operator-=(
+    difference_type __n
+) noexcept(__index_ -=__n)
+```
+</CodeBlock>
+
+**Returns:** Equivalent to [`index`](/libcudacxx/api/cuda::permutation_iterator::index)` - __n`
+
+**Parameters**
+
+<ParamField path="__n" type="difference_type">
+The number of elements to decrement
+</ParamField>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `iterator_type` | `_Iter` |
+| `iterator_concept` | `::cuda::std::random_access_iterator_tag` |
+| `iterator_category` | `::cuda::std::random_access_iterator_tag` |
+| `value_type` | `::cuda::std::iter_value_t< _Iter >` |
+| `difference_type` | `::cuda::std::iter_difference_t< _Index >` |

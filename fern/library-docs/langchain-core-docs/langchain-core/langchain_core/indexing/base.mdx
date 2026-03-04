@@ -1,0 +1,1269 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/indexing/base
+title: langchain_core.indexing.base
+---
+
+Base classes for indexing.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`DeleteResponse`](#langchain_core-indexing-base-DeleteResponse) | A generic response for delete operation. |
+| [`DocumentIndex`](#langchain_core-indexing-base-DocumentIndex) | A document retriever that supports indexing operations. |
+| [`InMemoryRecordManager`](#langchain_core-indexing-base-InMemoryRecordManager) | An in-memory record manager for testing purposes. |
+| [`RecordManager`](#langchain_core-indexing-base-RecordManager) | Abstract base class representing the interface for a record manager. |
+| [`UpsertResponse`](#langchain_core-indexing-base-UpsertResponse) | A generic response for upsert operations. |
+| [`_Record`](#langchain_core-indexing-base-_Record) | - |
+
+### API
+
+<Anchor id="langchain_core-indexing-base-DeleteResponse">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.indexing.base.DeleteResponse
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+A generic response for delete operation.
+
+The fields in this response are optional and whether the `VectorStore`
+returns them or not is up to the implementation.
+
+<ParamField path="failed" type="Sequence[str]">
+The IDs that failed to be deleted.
+
+!!! warning
+    Deleting an ID that does not exist is **NOT** considered a failure.
+</ParamField>
+
+<ParamField path="num_deleted" type="int">
+The number of items that were successfully deleted.
+
+If returned, this should only include *actual* deletions.
+
+If the ID did not exist to begin with,
+it should not be included in this count.
+</ParamField>
+
+<ParamField path="num_failed" type="int">
+The number of items that failed to be deleted.
+</ParamField>
+
+<ParamField path="succeeded" type="Sequence[str]">
+The IDs that were successfully deleted.
+
+If returned, this should only include *actual* deletions.
+
+If the ID did not exist to begin with,
+it should not be included in this list.
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-indexing-base-DocumentIndex">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.indexing.base.DocumentIndex()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseRetriever](/langchain-core/langchain_core/retrievers#langchain_core-retrievers-BaseRetriever)
+
+A document retriever that supports indexing operations.
+
+This indexing interface is designed to be a generic abstraction for storing and
+querying documents that has an ID and metadata associated with it.
+
+The interface is designed to be agnostic to the underlying implementation of the
+indexing system.
+
+The interface is designed to support the following operations:
+
+1. Storing document in the index.
+2. Fetching document by ID.
+3. Searching for document using a query.
+
+
+<Anchor id="langchain_core-indexing-base-DocumentIndex-adelete">
+
+<CodeBlock links={{"langchain_core.indexing.base.DeleteResponse":"#langchain_core-indexing-base-DeleteResponse"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.DocumentIndex.adelete(
+    ids: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.indexing.base.DeleteResponse
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Delete by IDs or other criteria. Async variant.
+
+Calling adelete without any input parameters should raise a ValueError!
+
+**Parameters:**
+
+<ParamField path="ids" type="list[str] | None" default="None">
+List of IDs to delete.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments. This is up to the implementation.
+For example, can include an option to delete the entire index.
+</ParamField>
+
+**Returns:** `DeleteResponse`
+
+A response object that contains the list of IDs that were
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-DocumentIndex-aget">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.DocumentIndex.aget(
+    ids: collections.abc.Sequence[str],
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Get documents by id.
+
+Fewer documents may be returned than requested if some IDs are not found or
+if there are duplicated IDs.
+
+Users should not assume that the order of the returned documents matches
+the order of the input IDs. Instead, users should rely on the ID field of the
+returned documents.
+
+This method should **NOT** raise exceptions if no documents are found for
+some IDs.
+
+**Parameters:**
+
+<ParamField path="ids" type="Sequence[str]">
+List of IDs to get.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments. These are up to the implementation.
+</ParamField>
+
+**Returns:** `list[Document]`
+
+List of documents that were found.
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-DocumentIndex-aupsert">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document","langchain_core.indexing.base.UpsertResponse":"#langchain_core-indexing-base-UpsertResponse"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.DocumentIndex.aupsert(
+    items: collections.abc.Sequence[langchain_core.documents.Document],
+    kwargs: typing.Any = {}
+) -> langchain_core.indexing.base.UpsertResponse
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Add or update documents in the `VectorStore`. Async version of `upsert`.
+
+The upsert functionality should utilize the ID field of the item
+if it is provided. If the ID is not provided, the upsert method is free
+to generate an ID for the item.
+
+When an ID is specified and the item already exists in the `VectorStore`,
+the upsert method should update the item with the new data. If the item
+does not exist, the upsert method should add the item to the `VectorStore`.
+
+**Parameters:**
+
+<ParamField path="items" type="Sequence[Document]">
+Sequence of documents to add to the `VectorStore`.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+**Returns:** `UpsertResponse`
+
+A response object that contains the list of IDs that were
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-DocumentIndex-delete">
+
+<CodeBlock links={{"langchain_core.indexing.base.DeleteResponse":"#langchain_core-indexing-base-DeleteResponse"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.DocumentIndex.delete(
+    ids: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.indexing.base.DeleteResponse
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Delete by IDs or other criteria.
+
+Calling delete without any input parameters should raise a ValueError!
+
+**Parameters:**
+
+<ParamField path="ids" type="list[str] | None" default="None">
+List of IDs to delete.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments. This is up to the implementation.
+For example, can include an option to delete the entire index,
+or else issue a non-blocking delete etc.
+</ParamField>
+
+**Returns:** `DeleteResponse`
+
+A response object that contains the list of IDs that were
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-DocumentIndex-get">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.DocumentIndex.get(
+    ids: collections.abc.Sequence[str],
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Get documents by id.
+
+Fewer documents may be returned than requested if some IDs are not found or
+if there are duplicated IDs.
+
+Users should not assume that the order of the returned documents matches
+the order of the input IDs. Instead, users should rely on the ID field of the
+returned documents.
+
+This method should **NOT** raise exceptions if no documents are found for
+some IDs.
+
+**Parameters:**
+
+<ParamField path="ids" type="Sequence[str]">
+List of IDs to get.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments. These are up to the implementation.
+</ParamField>
+
+**Returns:** `list[Document]`
+
+List of documents that were found.
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-DocumentIndex-upsert">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document","langchain_core.indexing.base.UpsertResponse":"#langchain_core-indexing-base-UpsertResponse"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.DocumentIndex.upsert(
+    items: collections.abc.Sequence[langchain_core.documents.Document],
+    kwargs: typing.Any = {}
+) -> langchain_core.indexing.base.UpsertResponse
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Upsert documents into the index.
+
+The upsert functionality should utilize the ID field of the content object
+if it is provided. If the ID is not provided, the upsert method is free
+to generate an ID for the content.
+
+When an ID is specified and the content already exists in the `VectorStore`,
+the upsert method should update the content with the new data. If the content
+does not exist, the upsert method should add the item to the `VectorStore`.
+
+**Parameters:**
+
+<ParamField path="items" type="Sequence[Document]">
+Sequence of documents to add to the `VectorStore`.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+**Returns:** `UpsertResponse`
+
+A response object that contains the list of IDs that were
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-indexing-base-InMemoryRecordManager">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.indexing.base.InMemoryRecordManager(
+    namespace: str
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RecordManager](#langchain_core-indexing-base-RecordManager)
+
+An in-memory record manager for testing purposes.
+
+
+<ParamField path="records" type="dict[str, _Record] = &#123;&#125;">
+</ParamField>
+<Anchor id="langchain_core-indexing-base-InMemoryRecordManager-acreate_schema">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.InMemoryRecordManager.acreate_schema() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+In-memory schema creation is simply ensuring the structure is initialized.
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-InMemoryRecordManager-adelete_keys">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.InMemoryRecordManager.adelete_keys(
+    keys: collections.abc.Sequence[str]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async delete specified records from the database.
+
+**Parameters:**
+
+<ParamField path="keys" type="Sequence[str]">
+A list of keys to delete.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-InMemoryRecordManager-aexists">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.InMemoryRecordManager.aexists(
+    keys: collections.abc.Sequence[str]
+) -> list[bool]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async check if the provided keys exist in the database.
+
+**Parameters:**
+
+<ParamField path="keys" type="Sequence[str]">
+A list of keys to check.
+</ParamField>
+
+**Returns:** `list[bool]`
+
+A list of boolean values indicating the existence of each key.
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-InMemoryRecordManager-aget_time">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.InMemoryRecordManager.aget_time() -> float
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-InMemoryRecordManager-alist_keys">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.InMemoryRecordManager.alist_keys(
+    before: float | None = None,
+    after: float | None = None,
+    group_ids: collections.abc.Sequence[str] | None = None,
+    limit: int | None = None
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async list records in the database based on the provided filters.
+
+**Parameters:**
+
+<ParamField path="before" type="float | None" default="None">
+Filter to list records updated before this time.
+</ParamField>
+
+<ParamField path="after" type="float | None" default="None">
+Filter to list records updated after this time.
+</ParamField>
+
+<ParamField path="group_ids" type="Sequence[str] | None" default="None">
+Filter to list records with specific group IDs.
+</ParamField>
+
+<ParamField path="limit" type="int | None" default="None">
+optional limit on the number of records to return.
+</ParamField>
+
+**Returns:** `list[str]`
+
+A list of keys for the matching records.
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-InMemoryRecordManager-aupdate">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.InMemoryRecordManager.aupdate(
+    keys: collections.abc.Sequence[str],
+    group_ids: collections.abc.Sequence[str | None] | None = None,
+    time_at_least: float | None = None
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async upsert records into the database.
+
+**Parameters:**
+
+<ParamField path="keys" type="Sequence[str]">
+A list of record keys to upsert.
+</ParamField>
+
+<ParamField path="group_ids" type="Sequence[str | None] | None" default="None">
+A list of group IDs corresponding to the keys.
+</ParamField>
+
+<ParamField path="time_at_least" type="float | None" default="None">
+Optional timestamp. Implementation can use this
+to optionally verify that the timestamp IS at least this time
+in the system that stores.
+E.g., use to validate that the time in the postgres database
+is equal to or larger than the given timestamp, if not
+raise an error.
+This is meant to help prevent time-drift issues since
+time may not be monotonically increasing!
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-InMemoryRecordManager-create_schema">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.InMemoryRecordManager.create_schema() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+In-memory schema creation is simply ensuring the structure is initialized.
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-InMemoryRecordManager-delete_keys">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.InMemoryRecordManager.delete_keys(
+    keys: collections.abc.Sequence[str]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Delete specified records from the database.
+
+**Parameters:**
+
+<ParamField path="keys" type="Sequence[str]">
+A list of keys to delete.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-InMemoryRecordManager-exists">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.InMemoryRecordManager.exists(
+    keys: collections.abc.Sequence[str]
+) -> list[bool]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if the provided keys exist in the database.
+
+**Parameters:**
+
+<ParamField path="keys" type="Sequence[str]">
+A list of keys to check.
+</ParamField>
+
+**Returns:** `list[bool]`
+
+A list of boolean values indicating the existence of each key.
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-InMemoryRecordManager-get_time">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.InMemoryRecordManager.get_time() -> float
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-InMemoryRecordManager-list_keys">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.InMemoryRecordManager.list_keys(
+    before: float | None = None,
+    after: float | None = None,
+    group_ids: collections.abc.Sequence[str] | None = None,
+    limit: int | None = None
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+List records in the database based on the provided filters.
+
+**Parameters:**
+
+<ParamField path="before" type="float | None" default="None">
+Filter to list records updated before this time.
+</ParamField>
+
+<ParamField path="after" type="float | None" default="None">
+Filter to list records updated after this time.
+</ParamField>
+
+<ParamField path="group_ids" type="Sequence[str] | None" default="None">
+Filter to list records with specific group IDs.
+</ParamField>
+
+<ParamField path="limit" type="int | None" default="None">
+optional limit on the number of records to return.
+</ParamField>
+
+**Returns:** `list[str]`
+
+A list of keys for the matching records.
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-InMemoryRecordManager-update">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.InMemoryRecordManager.update(
+    keys: collections.abc.Sequence[str],
+    group_ids: collections.abc.Sequence[str | None] | None = None,
+    time_at_least: float | None = None
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Upsert records into the database.
+
+**Parameters:**
+
+<ParamField path="keys" type="Sequence[str]">
+A list of record keys to upsert.
+</ParamField>
+
+<ParamField path="group_ids" type="Sequence[str | None] | None" default="None">
+A list of group IDs corresponding to the keys.
+</ParamField>
+
+<ParamField path="time_at_least" type="float | None" default="None">
+Optional timestamp. Implementation can use this
+to optionally verify that the timestamp IS at least this time
+in the system that stores.
+E.g., use to validate that the time in the postgres database
+is equal to or larger than the given timestamp, if not
+raise an error.
+This is meant to help prevent time-drift issues since
+time may not be monotonically increasing!
+</ParamField>
+
+**Raises:**
+
+- `ValueError`: If the length of keys doesn't match the length of group
+ids.
+- `ValueError`: If time_at_least is in the future.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-indexing-base-RecordManager">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.indexing.base.RecordManager(
+    namespace: str
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+Abstract base class representing the interface for a record manager.
+
+The record manager abstraction is used by the langchain indexing API.
+
+The record manager keeps track of which documents have been
+written into a `VectorStore` and when they were written.
+
+The indexing API computes hashes for each document and stores the hash
+together with the write time and the source id in the record manager.
+
+On subsequent indexing runs, the indexing API can check the record manager
+to determine which documents have already been indexed and which have not.
+
+This allows the indexing API to avoid re-indexing documents that have
+already been indexed, and to only index new documents.
+
+The main benefit of this abstraction is that it works across many vectorstores.
+To be supported, a `VectorStore` needs to only support the ability to add and
+delete documents by ID. Using the record manager, the indexing API will
+be able to delete outdated documents and avoid redundant indexing of documents
+that have already been indexed.
+
+The main constraints of this abstraction are:
+
+1. It relies on the time-stamps to determine which documents have been
+    indexed and which have not. This means that the time-stamps must be
+    monotonically increasing. The timestamp should be the timestamp
+    as measured by the server to minimize issues.
+2. The record manager is currently implemented separately from the
+    vectorstore, which means that the overall system becomes distributed
+    and may create issues with consistency. For example, writing to
+    record manager succeeds, but corresponding writing to `VectorStore` fails.
+
+
+<Anchor id="langchain_core-indexing-base-RecordManager-acreate_schema">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.RecordManager.acreate_schema() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge> <Badge>abstract</Badge>
+
+Asynchronously create the database schema for the record manager.
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-RecordManager-adelete_keys">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.RecordManager.adelete_keys(
+    keys: collections.abc.Sequence[str]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge> <Badge>abstract</Badge>
+
+Asynchronously delete specified records from the database.
+
+**Parameters:**
+
+<ParamField path="keys" type="Sequence[str]">
+A list of keys to delete.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-RecordManager-aexists">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.RecordManager.aexists(
+    keys: collections.abc.Sequence[str]
+) -> list[bool]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge> <Badge>abstract</Badge>
+
+Asynchronously check if the provided keys exist in the database.
+
+**Parameters:**
+
+<ParamField path="keys" type="Sequence[str]">
+A list of keys to check.
+</ParamField>
+
+**Returns:** `list[bool]`
+
+A list of boolean values indicating the existence of each key.
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-RecordManager-aget_time">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.RecordManager.aget_time() -> float
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge> <Badge>abstract</Badge>
+
+Asynchronously get the current server time as a high resolution timestamp.
+
+It's important to get this from the server to ensure a monotonic clock,
+otherwise there may be data loss when cleaning up old documents!
+
+**Returns:** `float`
+
+The current server time as a float timestamp.
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-RecordManager-alist_keys">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.RecordManager.alist_keys(
+    before: float | None = None,
+    after: float | None = None,
+    group_ids: collections.abc.Sequence[str] | None = None,
+    limit: int | None = None
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge> <Badge>abstract</Badge>
+
+Asynchronously list records in the database based on the provided filters.
+
+**Parameters:**
+
+<ParamField path="before" type="float | None" default="None">
+Filter to list records updated before this time.
+</ParamField>
+
+<ParamField path="after" type="float | None" default="None">
+Filter to list records updated after this time.
+</ParamField>
+
+<ParamField path="group_ids" type="Sequence[str] | None" default="None">
+Filter to list records with specific group IDs.
+</ParamField>
+
+<ParamField path="limit" type="int | None" default="None">
+optional limit on the number of records to return.
+</ParamField>
+
+**Returns:** `list[str]`
+
+A list of keys for the matching records.
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-RecordManager-aupdate">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.RecordManager.aupdate(
+    keys: collections.abc.Sequence[str],
+    group_ids: collections.abc.Sequence[str | None] | None = None,
+    time_at_least: float | None = None
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge> <Badge>abstract</Badge>
+
+Asynchronously upsert records into the database.
+
+**Parameters:**
+
+<ParamField path="keys" type="Sequence[str]">
+A list of record keys to upsert.
+</ParamField>
+
+<ParamField path="group_ids" type="Sequence[str | None] | None" default="None">
+A list of group IDs corresponding to the keys.
+</ParamField>
+
+<ParamField path="time_at_least" type="float | None" default="None">
+Optional timestamp. Implementation can use this
+to optionally verify that the timestamp IS at least this time
+in the system that stores the data.
+
+e.g., use to validate that the time in the postgres database
+is equal to or larger than the given timestamp, if not
+raise an error.
+
+This is meant to help prevent time-drift issues since
+time may not be monotonically increasing!
+</ParamField>
+
+**Raises:**
+
+- `ValueError`: If the length of keys doesn't match the length of group_ids.
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-RecordManager-create_schema">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.RecordManager.create_schema() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Create the database schema for the record manager.
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-RecordManager-delete_keys">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.RecordManager.delete_keys(
+    keys: collections.abc.Sequence[str]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Delete specified records from the database.
+
+**Parameters:**
+
+<ParamField path="keys" type="Sequence[str]">
+A list of keys to delete.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-RecordManager-exists">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.RecordManager.exists(
+    keys: collections.abc.Sequence[str]
+) -> list[bool]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Check if the provided keys exist in the database.
+
+**Parameters:**
+
+<ParamField path="keys" type="Sequence[str]">
+A list of keys to check.
+</ParamField>
+
+**Returns:** `list[bool]`
+
+A list of boolean values indicating the existence of each key.
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-RecordManager-get_time">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.RecordManager.get_time() -> float
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Get the current server time as a high resolution timestamp!
+
+It's important to get this from the server to ensure a monotonic clock,
+otherwise there may be data loss when cleaning up old documents!
+
+**Returns:** `float`
+
+The current server time as a float timestamp.
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-RecordManager-list_keys">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.RecordManager.list_keys(
+    before: float | None = None,
+    after: float | None = None,
+    group_ids: collections.abc.Sequence[str] | None = None,
+    limit: int | None = None
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+List records in the database based on the provided filters.
+
+**Parameters:**
+
+<ParamField path="before" type="float | None" default="None">
+Filter to list records updated before this time.
+</ParamField>
+
+<ParamField path="after" type="float | None" default="None">
+Filter to list records updated after this time.
+</ParamField>
+
+<ParamField path="group_ids" type="Sequence[str] | None" default="None">
+Filter to list records with specific group IDs.
+</ParamField>
+
+<ParamField path="limit" type="int | None" default="None">
+optional limit on the number of records to return.
+</ParamField>
+
+**Returns:** `list[str]`
+
+A list of keys for the matching records.
+
+
+</Indent>
+<Anchor id="langchain_core-indexing-base-RecordManager-update">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.indexing.base.RecordManager.update(
+    keys: collections.abc.Sequence[str],
+    group_ids: collections.abc.Sequence[str | None] | None = None,
+    time_at_least: float | None = None
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Upsert records into the database.
+
+**Parameters:**
+
+<ParamField path="keys" type="Sequence[str]">
+A list of record keys to upsert.
+</ParamField>
+
+<ParamField path="group_ids" type="Sequence[str | None] | None" default="None">
+A list of group IDs corresponding to the keys.
+</ParamField>
+
+<ParamField path="time_at_least" type="float | None" default="None">
+Optional timestamp. Implementation can use this
+to optionally verify that the timestamp IS at least this time
+in the system that stores the data.
+
+e.g., use to validate that the time in the postgres database
+is equal to or larger than the given timestamp, if not
+raise an error.
+
+This is meant to help prevent time-drift issues since
+time may not be monotonically increasing!
+</ParamField>
+
+**Raises:**
+
+- `ValueError`: If the length of keys doesn't match the length of group_ids.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-indexing-base-UpsertResponse">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.indexing.base.UpsertResponse
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+A generic response for upsert operations.
+
+The upsert response will be used by abstractions that implement an upsert
+operation for content that can be upserted by ID.
+
+Upsert APIs that accept inputs with IDs and generate IDs internally
+will return a response that includes the IDs that succeeded and the IDs
+that failed.
+
+If there are no failures, the failed list will be empty, and the order
+of the IDs in the succeeded list will match the order of the input documents.
+
+If there are failures, the response becomes ill defined, and a user of the API
+cannot determine which generated ID corresponds to which input document.
+
+It is recommended for users explicitly attach the IDs to the items being
+indexed to avoid this issue.
+
+<ParamField path="failed" type="list[str]">
+The IDs that failed to index.
+</ParamField>
+
+<ParamField path="succeeded" type="list[str]">
+The IDs that were successfully indexed.
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-indexing-base-_Record">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.indexing.base._Record
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="group_id" type="str | None">
+
+</ParamField>
+
+<ParamField path="updated_at" type="float">
+
+</ParamField>
+
+</Indent>

@@ -1,0 +1,47 @@
+---
+title: cub::AgentScanByKeyPolicy
+description: "Parameterizable tuning policy type for AgentScanByKey."
+---
+
+Parameterizable tuning policy type for AgentScanByKey.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="BlockThreads" type="int">
+</ParamField>
+
+<ParamField path="ItemsPerThread" type="int" default="1">
+</ParamField>
+
+<ParamField path="LoadAlgorithm" type="BlockLoadAlgorithm" default="BLOCK_LOAD_DIRECT">
+</ParamField>
+
+<ParamField path="LoadModifier" type="CacheLoadModifier" default="LOAD_DEFAULT">
+</ParamField>
+
+<ParamField path="ScanAlgorithm" type="BlockScanAlgorithm" default="BLOCK_SCAN_WARP_SCANS">
+</ParamField>
+
+<ParamField path="StoreAlgorithm" type="BlockStoreAlgorithm" default="BLOCK_STORE_DIRECT">
+</ParamField>
+
+<ParamField path="DelayConstructorT" type="typename" default="detail::fixed_delay_constructor_t<350, 450>">
+Implementation detail, do not specify directly, requirements on the content of this type are subject to breaking change.
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `BLOCK_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `ITEMS_PER_THREAD` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `LOAD_ALGORITHM` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `BlockLoadAlgorithm` | |
+| `LOAD_MODIFIER` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `CacheLoadModifier` | |
+| `SCAN_ALGORITHM` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `BlockScanAlgorithm` | |
+| `STORE_ALGORITHM` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `BlockStoreAlgorithm` | |

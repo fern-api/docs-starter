@@ -1,0 +1,476 @@
+---
+title: cub::DeviceTransform
+description: "[DeviceTransform](/library/api/cub::_device_transform) provides device-wide, parallel operations for transforming elements tuple-wise from multiple input sequences into an output sequence."
+---
+
+`DeviceTransform` provides device-wide, parallel operations for transforming elements tuple-wise from multiple input sequences into an output sequence.
+
+---
+
+## Methods
+
+### TransformInternal <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<Tabs>
+<Tab title="Partial tile">
+
+<CodeBlock links={{"DeviceTransform": "/library/api/cub::DeviceTransform"}}>
+```cpp showLineNumbers={false}
+template <detail::transform::requires_stable_address StableAddress,
+          typename... RandomAccessIteratorsIn,
+          typename RandomAccessIteratorOut,
+          typename NumItemsT,
+          typename Predicate,
+          typename TransformOp,
+          typename Env>
+static cudaError_t cub::DeviceTransform::TransformInternal(
+    ::cuda::std::tuple<RandomAccessIteratorsIn...> inputs,
+    RandomAccessIteratorOut output,
+    NumItemsT num_items,
+    Predicate predicate,
+    TransformOp transform_op,
+    Env env
+)
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Partial tile">
+
+<CodeBlock links={{"DeviceTransform": "/library/api/cub::DeviceTransform"}}>
+```cpp showLineNumbers={false}
+template <detail::transform::requires_stable_address StableAddress,
+          typename... RandomAccessIteratorsIn,
+          typename... RandomAccessIteratorsOut,
+          typename NumItemsT,
+          typename Predicate,
+          typename TransformOp,
+          typename Env>
+static cudaError_t cub::DeviceTransform::TransformInternal(
+    ::cuda::std::tuple<RandomAccessIteratorsIn...> inputs,
+    ::cuda::std::tuple<RandomAccessIteratorsOut...> outputs,
+    NumItemsT num_items,
+    Predicate predicate,
+    TransformOp transform_op,
+    Env env
+)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Static methods
+
+### Transform <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<Tabs>
+<Tab title="Partial tile">
+
+<CodeBlock links={{"DeviceTransform": "/library/api/cub::DeviceTransform"}}>
+```cpp showLineNumbers={false}
+template <typename... RandomAccessIteratorsIn,
+          typename... RandomAccessIteratorsOut,
+          typename NumItemsT,
+          typename TransformOp,
+          typename Env>
+static cudaError_t cub::DeviceTransform::Transform(
+    ::cuda::std::tuple<RandomAccessIteratorsIn...> inputs,
+    ::cuda::std::tuple<RandomAccessIteratorsOut...> outputs,
+    NumItemsT num_items,
+    TransformOp transform_op,
+    Env env = {}
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="inputs" type="::cuda::std::tuple<RandomAccessIteratorsIn...>">
+A tuple of iterators to the input sequences where num_items elements are read from each. The iterators' value types must be trivially relocatable.
+</ParamField>
+
+<ParamField path="outputs" type="::cuda::std::tuple<RandomAccessIteratorsOut...>">
+A tuple of iterators to the output sequences where num_items results are written to each. Each sequence may point to the beginning of one of the input sequences, performing the transformation inplace. Any output sequence must not overlap with any of the input sequence in any other way.
+</ParamField>
+
+<ParamField path="num_items" type="NumItemsT">
+The number of elements in each input and output sequence.
+</ParamField>
+
+<ParamField path="transform_op" type="TransformOp">
+An n-ary function object, where n is the number of input sequences. The input iterators' value types must be convertible to the parameters of the function object's call operator. The return type of the call operator must be a tuple where each tuple element is assignable to the corresponding dereferenced output iterators.
+</ParamField>
+
+<ParamField path="env" type="Env" default="{}">
+Execution environment, or cudaStream_t. Default is `cuda::std::execution::env{}`, which will run on stream\ :sub:`0`
+</ParamField>
+
+</Tab>
+<Tab title="Partial tile">
+
+<CodeBlock links={{"DeviceTransform": "/library/api/cub::DeviceTransform"}}>
+```cpp showLineNumbers={false}
+template <typename... RandomAccessIteratorsIn,
+          typename RandomAccessIteratorOut,
+          typename NumItemsT,
+          typename TransformOp,
+          typename Env>
+static cudaError_t cub::DeviceTransform::Transform(
+    ::cuda::std::tuple<RandomAccessIteratorsIn...> inputs,
+    RandomAccessIteratorOut output,
+    NumItemsT num_items,
+    TransformOp transform_op,
+    Env env = {}
+)
+```
+</CodeBlock>
+
+*Added in v2.8.0. First appears in CUDA Toolkit 12.9.*
+
+**Parameters**
+
+<ParamField path="inputs" type="::cuda::std::tuple<RandomAccessIteratorsIn...>">
+A tuple of iterators to the input sequences where num_items elements are read from each.
+</ParamField>
+
+<ParamField path="output" type="RandomAccessIteratorOut">
+An iterator to the output sequence where num_items results are written to. May point to the beginning of one of the input sequences, performing the transformation inplace. The output sequence must not overlap with any of the input sequence in any other way.
+</ParamField>
+
+<ParamField path="num_items" type="NumItemsT">
+The number of elements in each input sequence.
+</ParamField>
+
+<ParamField path="transform_op" type="TransformOp">
+An n-ary function object, where n is the number of input sequences. The input iterators' value types must be convertible to the parameters of the function object's call operator. The return type of the call operator must be assignable to the dereferenced output iterator.
+</ParamField>
+
+<ParamField path="env" type="Env" default="{}">
+Execution environment, or cudaStream_t. Default is `cuda::std::execution::env{}`, which will run on stream\ :sub:`0`
+</ParamField>
+
+</Tab>
+<Tab title="Partial tile">
+
+Transforms one input sequence into one output sequence, by applying a transformation operation on each input element and writing the result to the corresponding output element. No guarantee is given on the identity (i.e. address) of the objects passed to the call operator of the transformation operation.
+
+<CodeBlock links={{"DeviceTransform": "/library/api/cub::DeviceTransform"}}>
+```cpp showLineNumbers={false}
+template <typename RandomAccessIteratorIn,
+          typename RandomAccessIteratorOut,
+          typename NumItemsT,
+          typename TransformOp,
+          typename Env>
+static cudaError_t cub::DeviceTransform::Transform(
+    RandomAccessIteratorIn input,
+    RandomAccessIteratorOut output,
+    NumItemsT num_items,
+    TransformOp transform_op,
+    Env env = {}
+)
+```
+</CodeBlock>
+
+*Added in v2.8.0. First appears in CUDA Toolkit 12.9.*
+
+**Parameters**
+
+<ParamField path="input" type="RandomAccessIteratorIn">
+An iterator to the input sequence where num_items elements are read from.
+</ParamField>
+
+<ParamField path="output" type="RandomAccessIteratorOut">
+An iterator to the output sequence where num_items results are written to. May point to the same sequence as `input`, performing the transformation inplace. The output sequence must not overlap with the input sequence in any other way.
+</ParamField>
+
+<ParamField path="num_items" type="NumItemsT">
+The number of elements in each input sequence.
+</ParamField>
+
+<ParamField path="transform_op" type="TransformOp">
+A unary function object. The input iterator's value type must be convertible to the parameter of the function object's call operator. The return type of the call operator must be assignable to the dereferenced output iterator.
+</ParamField>
+
+<ParamField path="env" type="Env" default="{}">
+Execution environment, or cudaStream_t. Default is `cuda::std::execution::env{}`, which will run on stream\ :sub:`0`
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### Generate <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"DeviceTransform": "/library/api/cub::DeviceTransform"}}>
+```cpp showLineNumbers={false}
+template <typename RandomAccessIteratorOut,
+          typename NumItemsT,
+          typename Generator,
+          typename Env>
+static cudaError_t cub::DeviceTransform::Generate(
+    RandomAccessIteratorOut output,
+    NumItemsT num_items,
+    Generator generator,
+    Env env = {}
+)
+```
+</CodeBlock>
+
+*Added in v2.8.0. First appears in CUDA Toolkit 12.9.*
+
+**Parameters**
+
+<ParamField path="output" type="RandomAccessIteratorOut">
+An iterator to the output sequence where num_items results are written to.
+</ParamField>
+
+<ParamField path="num_items" type="NumItemsT">
+The number of elements to write to the output sequence.
+</ParamField>
+
+<ParamField path="generator" type="Generator">
+A nullary function object. The return type of the call operator must be assignable to the dereferenced output iterator.
+</ParamField>
+
+<ParamField path="env" type="Env" default="{}">
+Execution environment, or cudaStream_t. Default is `cuda::std::execution::env{}`, which will run on stream\ :sub:`0`
+</ParamField>
+
+### Fill <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"DeviceTransform": "/library/api/cub::DeviceTransform"}}>
+```cpp showLineNumbers={false}
+template <typename RandomAccessIteratorOut,
+          typename NumItemsT,
+          typename Value,
+          typename Env>
+static cudaError_t cub::DeviceTransform::Fill(
+    RandomAccessIteratorOut output,
+    NumItemsT num_items,
+    Value value,
+    Env env = {}
+)
+```
+</CodeBlock>
+
+*Added in v2.8.0. First appears in CUDA Toolkit 12.9.*
+
+**Parameters**
+
+<ParamField path="output" type="RandomAccessIteratorOut">
+An iterator to the output sequence where num_items results are written to.
+</ParamField>
+
+<ParamField path="num_items" type="NumItemsT">
+The number of elements to write to the output sequence.
+</ParamField>
+
+<ParamField path="value" type="Value">
+The value to write. Must be assignable to the dereferenced output iterator.
+</ParamField>
+
+<ParamField path="env" type="Env" default="{}">
+Execution environment, or cudaStream_t. Default is `cuda::std::execution::env{}`, which will run on stream\ :sub:`0`
+</ParamField>
+
+### TransformIf <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<Tabs>
+<Tab title="Partial tile">
+
+<CodeBlock links={{"DeviceTransform": "/library/api/cub::DeviceTransform"}}>
+```cpp showLineNumbers={false}
+template <typename... RandomAccessIteratorsIn,
+          typename RandomAccessIteratorOut,
+          typename NumItemsT,
+          typename Predicate,
+          typename TransformOp,
+          typename Env>
+static cudaError_t cub::DeviceTransform::TransformIf(
+    ::cuda::std::tuple<RandomAccessIteratorsIn...> inputs,
+    RandomAccessIteratorOut output,
+    NumItemsT num_items,
+    Predicate predicate,
+    TransformOp transform_op,
+    Env env = {}
+)
+```
+</CodeBlock>
+
+*Added in v2.8.0. First appears in CUDA Toolkit 12.9.*
+
+**Parameters**
+
+<ParamField path="inputs" type="::cuda::std::tuple<RandomAccessIteratorsIn...>">
+A tuple of iterators to the input sequences where num_items elements are read from each.
+</ParamField>
+
+<ParamField path="output" type="RandomAccessIteratorOut">
+An iterator to the output sequence where num_items results are written to. May point to the beginning of one of the input sequences, performing the transformation inplace. The output sequence must not overlap with any of the input sequence in any other way.
+</ParamField>
+
+<ParamField path="num_items" type="NumItemsT">
+The number of elements in each input sequence.
+</ParamField>
+
+<ParamField path="predicate" type="Predicate">
+An n-ary function object, where n is the number of input sequences. The input iterators' value types must be convertible to the parameters of the function object's call operator, which must return a boolean value.
+</ParamField>
+
+<ParamField path="transform_op" type="TransformOp">
+An n-ary function object, where n is the number of input sequences. The input iterators' value types must be convertible to the parameters of the function object's call operator. The return type of the call operator must be assignable to the dereferenced output iterator. Will only be invoked if `predicate` returns true.
+</ParamField>
+
+<ParamField path="env" type="Env" default="{}">
+Execution environment, or cudaStream_t. Default is `cuda::std::execution::env{}`, which will run on stream\ :sub:`0`
+</ParamField>
+
+</Tab>
+<Tab title="Partial tile">
+
+<CodeBlock links={{"DeviceTransform": "/library/api/cub::DeviceTransform"}}>
+```cpp showLineNumbers={false}
+template <typename RandomAccessIteratorIn,
+          typename RandomAccessIteratorOut,
+          typename NumItemsT,
+          typename Predicate,
+          typename TransformOp,
+          typename Env>
+static cudaError_t cub::DeviceTransform::TransformIf(
+    RandomAccessIteratorIn input,
+    RandomAccessIteratorOut output,
+    NumItemsT num_items,
+    Predicate predicate,
+    TransformOp transform_op,
+    Env env = {}
+)
+```
+</CodeBlock>
+
+*Added in v2.8.0. First appears in CUDA Toolkit 12.9.*
+
+**Parameters**
+
+<ParamField path="input" type="RandomAccessIteratorIn">
+An iterator to the input sequence where num_items elements are read from.
+</ParamField>
+
+<ParamField path="output" type="RandomAccessIteratorOut">
+An iterator to the output sequence where num_items results are written to. May point to the same sequence as `input`, performing the transformation inplace. The output sequence must not overlap with the input sequence in any other way.
+</ParamField>
+
+<ParamField path="num_items" type="NumItemsT">
+The number of elements in each input sequence.
+</ParamField>
+
+<ParamField path="predicate" type="Predicate">
+A unary function objects returning `bool`. The input iterators' value types must be convertible to the parameters of the function object's call operator.
+</ParamField>
+
+<ParamField path="transform_op" type="TransformOp">
+A unary function object. The input iterator's value type must be convertible to the parameter of the function object's call operator. The return type of the call operator must be assignable to the dereferenced output iterator. Will only be invoked if `predicate` returns true.
+</ParamField>
+
+<ParamField path="env" type="Env" default="{}">
+Execution environment, or cudaStream_t. Default is `cuda::std::execution::env{}`, which will run on stream\ :sub:`0`
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### TransformStableArgumentAddresses <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<Tabs>
+<Tab title="Partial tile">
+
+<CodeBlock links={{"DeviceTransform": "/library/api/cub::DeviceTransform"}}>
+```cpp showLineNumbers={false}
+template <typename... RandomAccessIteratorsIn,
+          typename RandomAccessIteratorOut,
+          typename NumItemsT,
+          typename TransformOp,
+          typename Env>
+static cudaError_t cub::DeviceTransform::TransformStableArgumentAddresses(
+    ::cuda::std::tuple<RandomAccessIteratorsIn...> inputs,
+    RandomAccessIteratorOut output,
+    NumItemsT num_items,
+    TransformOp transform_op,
+    Env env = {}
+)
+```
+</CodeBlock>
+
+*Added in v2.8.0. First appears in CUDA Toolkit 12.9.*
+
+**Parameters**
+
+<ParamField path="inputs" type="::cuda::std::tuple<RandomAccessIteratorsIn...>">
+A tuple of iterators to the input sequences where num_items elements are read from each.
+</ParamField>
+
+<ParamField path="output" type="RandomAccessIteratorOut">
+An iterator to the output sequence where num_items results are written to. May point to the beginning of one of the input sequences, performing the transformation inplace. The output sequence must not overlap with any of the input sequence in any other way.
+</ParamField>
+
+<ParamField path="num_items" type="NumItemsT">
+The number of elements in each input sequence.
+</ParamField>
+
+<ParamField path="transform_op" type="TransformOp">
+An n-ary function object, where n is the number of input sequences. The input iterators' value types must be convertible to the parameters of the function object's call operator. The return type of the call operator must be assignable to the dereferenced output iterator.
+</ParamField>
+
+<ParamField path="env" type="Env" default="{}">
+Execution environment, or cudaStream_t. Default is `cuda::std::execution::env{}`, which will run on stream\ :sub:`0`
+</ParamField>
+
+</Tab>
+<Tab title="Partial tile">
+
+Transforms one input sequence into one output sequence, by applying a transformation operation on corresponding input elements and writing the result to the corresponding output element. The objects passed to the call operator of the transformation operation are guaranteed to reside in the input sequences and are never copied.
+
+<CodeBlock links={{"DeviceTransform": "/library/api/cub::DeviceTransform"}}>
+```cpp showLineNumbers={false}
+template <typename RandomAccessIteratorIn,
+          typename RandomAccessIteratorOut,
+          typename NumItemsT,
+          typename TransformOp,
+          typename Env>
+static cudaError_t cub::DeviceTransform::TransformStableArgumentAddresses(
+    RandomAccessIteratorIn input,
+    RandomAccessIteratorOut output,
+    NumItemsT num_items,
+    TransformOp transform_op,
+    Env env = {}
+)
+```
+</CodeBlock>
+
+*Added in v2.8.0. First appears in CUDA Toolkit 12.9.*
+
+**Parameters**
+
+<ParamField path="input" type="RandomAccessIteratorIn">
+An iterator to the input sequence where num_items elements are read from.
+</ParamField>
+
+<ParamField path="output" type="RandomAccessIteratorOut">
+An iterator to the output sequence where num_items results are written to. May point to the beginning of one of the input sequences, performing the transformation inplace. The output sequence must not overlap with any of the input sequence in any other way.
+</ParamField>
+
+<ParamField path="num_items" type="NumItemsT">
+The number of elements in each input sequence.
+</ParamField>
+
+<ParamField path="transform_op" type="TransformOp">
+An n-ary function object, where n is the number of input sequences. The input iterators' value types must be convertible to the parameters of the function object's call operator. The return type of the call operator must be assignable to the dereferenced output iterator.
+</ParamField>
+
+<ParamField path="env" type="Env" default="{}">
+Execution environment, or cudaStream_t. Default is `cuda::std::execution::env{}`, which will run on stream\ :sub:`0`
+</ParamField>
+
+</Tab>
+</Tabs>

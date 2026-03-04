@@ -1,0 +1,657 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/stores
+title: langchain_core.stores
+---
+
+**Store** implements the key-value stores and storage helpers.
+
+Module provides implementations of various key-value stores that conform
+to a simple key-value interface.
+
+The primary goal of these storages is to support implementation of caching.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`BaseStore`](#langchain_core-stores-BaseStore) | Abstract interface for a key-value store. |
+| [`InMemoryBaseStore`](#langchain_core-stores-InMemoryBaseStore) | In-memory implementation of the `BaseStore` using a dictionary. |
+| [`InMemoryByteStore`](#langchain_core-stores-InMemoryByteStore) | In-memory store for bytes. |
+| [`InMemoryStore`](#langchain_core-stores-InMemoryStore) | In-memory store for any type of data. |
+| [`InvalidKeyException`](#langchain_core-stores-InvalidKeyException) | Raised when a key is invalid; e.g., uses incorrect characters. |
+
+### Data
+
+[`ByteStore`](#langchain_core-stores-ByteStore)
+
+[`K`](#langchain_core-stores-K)
+
+[`V`](#langchain_core-stores-V)
+
+### API
+
+<Anchor id="langchain_core-stores-BaseStore">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.stores.BaseStore()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+**Bases:** `Generic[K, V]`
+
+Abstract interface for a key-value store.
+
+This is an interface that's meant to abstract away the details of different
+key-value stores. It provides a simple interface for getting, setting, and deleting
+key-value pairs.
+
+The basic methods are `mget`, `mset`, and `mdelete` for getting, setting, and
+deleting multiple key-value pairs at once. The `yield_keys` method is used to
+iterate over keys that match a given prefix.
+
+The async versions of these methods are also provided, which are meant to be used in
+async contexts. The async methods are named with an `a` prefix, e.g., `amget`,
+`amset`, `amdelete`, and `ayield_keys`.
+
+By default, the `amget`, `amset`, `amdelete`, and `ayield_keys` methods are
+implemented using the synchronous methods. If the store can natively support async
+operations, it should override these methods.
+
+By design the methods only accept batches of keys and values, and not single keys or
+values. This is done to force user code to work with batches which will usually be
+more efficient by saving on round trips to the store.
+
+**Examples:**
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+from langchain.storage import BaseStore
+
+
+class MyInMemoryStore(BaseStore[str, int]):
+    def __init__(self) -> None:
+        self.store: dict[str, int] = {}
+
+    def mget(self, keys: Sequence[str]) -> list[int | None]:
+        return [self.store.get(key) for key in keys]
+
+    def mset(self, key_value_pairs: Sequence[tuple[str, int]]) -> None:
+        for key, value in key_value_pairs:
+            self.store[key] = value
+
+    def mdelete(self, keys: Sequence[str]) -> None:
+        for key in keys:
+            if key in self.store:
+                del self.store[key]
+
+    def yield_keys(self, prefix: str | None = None) -> Iterator[str]:
+        if prefix is None:
+            yield from self.store.keys()
+        else:
+            for key in self.store.keys():
+                if key.startswith(prefix):
+                    yield key
+```
+
+</CodeBlock>
+
+
+<Anchor id="langchain_core-stores-BaseStore-amdelete">
+
+<CodeBlock links={{"langchain_core.stores.K":"#langchain_core-stores-K"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.stores.BaseStore.amdelete(
+    keys: collections.abc.Sequence[langchain_core.stores.K]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async delete the given keys and their associated values.
+
+**Parameters:**
+
+<ParamField path="keys" type="Sequence[K]">
+A sequence of keys to delete.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-stores-BaseStore-amget">
+
+<CodeBlock links={{"langchain_core.stores.K":"#langchain_core-stores-K","langchain_core.stores.V":"#langchain_core-stores-V"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.stores.BaseStore.amget(
+    keys: collections.abc.Sequence[langchain_core.stores.K]
+) -> list[langchain_core.stores.V | None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async get the values associated with the given keys.
+
+**Parameters:**
+
+<ParamField path="keys" type="Sequence[K]">
+A sequence of keys.
+</ParamField>
+
+**Returns:** `list[V | None]`
+
+A sequence of optional values associated with the keys.
+If a key is not found, the corresponding value will be `None`.
+
+
+</Indent>
+<Anchor id="langchain_core-stores-BaseStore-amset">
+
+<CodeBlock links={{"langchain_core.stores.K":"#langchain_core-stores-K","langchain_core.stores.V":"#langchain_core-stores-V"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.stores.BaseStore.amset(
+    key_value_pairs: collections.abc.Sequence[tuple[langchain_core.stores.K, langchain_core.stores.V]]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async set the values for the given keys.
+
+**Parameters:**
+
+<ParamField path="key_value_pairs" type="Sequence[tuple[K, V]]">
+A sequence of key-value pairs.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-stores-BaseStore-ayield_keys">
+
+<CodeBlock links={{"langchain_core.stores.K":"#langchain_core-stores-K"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.stores.BaseStore.ayield_keys(
+    prefix: str | None = None
+) -> collections.abc.AsyncIterator[langchain_core.stores.K] | collections.abc.AsyncIterator[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async get an iterator over keys that match the given prefix.
+
+**Parameters:**
+
+<ParamField path="prefix" type="str | None" default="None">
+The prefix to match.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-stores-BaseStore-mdelete">
+
+<CodeBlock links={{"langchain_core.stores.K":"#langchain_core-stores-K"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.stores.BaseStore.mdelete(
+    keys: collections.abc.Sequence[langchain_core.stores.K]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Delete the given keys and their associated values.
+
+**Parameters:**
+
+<ParamField path="keys" type="Sequence[K]">
+A sequence of keys to delete.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-stores-BaseStore-mget">
+
+<CodeBlock links={{"langchain_core.stores.K":"#langchain_core-stores-K","langchain_core.stores.V":"#langchain_core-stores-V"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.stores.BaseStore.mget(
+    keys: collections.abc.Sequence[langchain_core.stores.K]
+) -> list[langchain_core.stores.V | None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Get the values associated with the given keys.
+
+**Parameters:**
+
+<ParamField path="keys" type="Sequence[K]">
+A sequence of keys.
+</ParamField>
+
+**Returns:** `list[V | None]`
+
+A sequence of optional values associated with the keys.
+If a key is not found, the corresponding value will be `None`.
+
+
+</Indent>
+<Anchor id="langchain_core-stores-BaseStore-mset">
+
+<CodeBlock links={{"langchain_core.stores.K":"#langchain_core-stores-K","langchain_core.stores.V":"#langchain_core-stores-V"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.stores.BaseStore.mset(
+    key_value_pairs: collections.abc.Sequence[tuple[langchain_core.stores.K, langchain_core.stores.V]]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Set the values for the given keys.
+
+**Parameters:**
+
+<ParamField path="key_value_pairs" type="Sequence[tuple[K, V]]">
+A sequence of key-value pairs.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-stores-BaseStore-yield_keys">
+
+<CodeBlock links={{"langchain_core.stores.K":"#langchain_core-stores-K"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.stores.BaseStore.yield_keys(
+    prefix: str | None = None
+) -> collections.abc.Iterator[langchain_core.stores.K] | collections.abc.Iterator[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Get an iterator over keys that match the given prefix.
+
+**Parameters:**
+
+<ParamField path="prefix" type="str | None" default="None">
+The prefix to match.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-stores-InMemoryBaseStore">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.stores.InMemoryBaseStore()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseStore[str, V]](#langchain_core-stores-BaseStore), `Generic[V]`
+
+In-memory implementation of the `BaseStore` using a dictionary.
+
+
+<ParamField path="store" type="dict[str, V] = &#123;&#125;">
+</ParamField>
+<Anchor id="langchain_core-stores-InMemoryBaseStore-amdelete">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.stores.InMemoryBaseStore.amdelete(
+    keys: collections.abc.Sequence[str]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-stores-InMemoryBaseStore-amget">
+
+<CodeBlock links={{"langchain_core.stores.V":"#langchain_core-stores-V"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.stores.InMemoryBaseStore.amget(
+    keys: collections.abc.Sequence[str]
+) -> list[langchain_core.stores.V | None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-stores-InMemoryBaseStore-amset">
+
+<CodeBlock links={{"langchain_core.stores.V":"#langchain_core-stores-V"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.stores.InMemoryBaseStore.amset(
+    key_value_pairs: collections.abc.Sequence[tuple[str, langchain_core.stores.V]]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-stores-InMemoryBaseStore-ayield_keys">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.stores.InMemoryBaseStore.ayield_keys(
+    prefix: str | None = None
+) -> collections.abc.AsyncIterator[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async get an async iterator over keys that match the given prefix.
+
+**Parameters:**
+
+<ParamField path="prefix" type="str | None" default="None">
+The prefix to match.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-stores-InMemoryBaseStore-mdelete">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.stores.InMemoryBaseStore.mdelete(
+    keys: collections.abc.Sequence[str]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-stores-InMemoryBaseStore-mget">
+
+<CodeBlock links={{"langchain_core.stores.V":"#langchain_core-stores-V"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.stores.InMemoryBaseStore.mget(
+    keys: collections.abc.Sequence[str]
+) -> list[langchain_core.stores.V | None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-stores-InMemoryBaseStore-mset">
+
+<CodeBlock links={{"langchain_core.stores.V":"#langchain_core-stores-V"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.stores.InMemoryBaseStore.mset(
+    key_value_pairs: collections.abc.Sequence[tuple[str, langchain_core.stores.V]]
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-stores-InMemoryBaseStore-yield_keys">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.stores.InMemoryBaseStore.yield_keys(
+    prefix: str | None = None
+) -> collections.abc.Iterator[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get an iterator over keys that match the given prefix.
+
+**Parameters:**
+
+<ParamField path="prefix" type="str | None" default="None">
+The prefix to match.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-stores-InMemoryByteStore">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.stores.InMemoryByteStore()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [InMemoryBaseStore[bytes]](#langchain_core-stores-InMemoryBaseStore)
+
+In-memory store for bytes.
+
+**Examples:**
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+from langchain.storage import InMemoryByteStore
+
+store = InMemoryByteStore()
+store.mset([("key1", b"value1"), ("key2", b"value2")])
+store.mget(["key1", "key2"])
+# [b'value1', b'value2']
+store.mdelete(["key1"])
+list(store.yield_keys())
+# ['key2']
+list(store.yield_keys(prefix="k"))
+# ['key2']
+```
+
+</CodeBlock>
+
+
+</Indent>
+
+<Anchor id="langchain_core-stores-InMemoryStore">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.stores.InMemoryStore()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [InMemoryBaseStore[Any]](#langchain_core-stores-InMemoryBaseStore)
+
+In-memory store for any type of data.
+
+**Examples:**
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+from langchain.storage import InMemoryStore
+
+store = InMemoryStore()
+store.mset([("key1", "value1"), ("key2", "value2")])
+store.mget(["key1", "key2"])
+# ['value1', 'value2']
+store.mdelete(["key1"])
+list(store.yield_keys())
+# ['key2']
+list(store.yield_keys(prefix="k"))
+# ['key2']
+```
+
+</CodeBlock>
+
+
+</Indent>
+
+<Anchor id="langchain_core-stores-InvalidKeyException">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.stores.InvalidKeyException()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Exception</Badge>
+
+**Bases:** [LangChainException](/langchain-core/langchain_core/exceptions#langchain_core-exceptions-LangChainException)
+
+Raised when a key is invalid; e.g., uses incorrect characters.
+
+
+</Indent>
+
+<Anchor id="langchain_core-stores-ByteStore">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.stores.ByteStore = BaseStore[str, bytes]
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-stores-K">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.stores.K = TypeVar('K')
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-stores-V">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.stores.V = TypeVar('V')
+```
+
+</CodeBlock>
+</Anchor>
+

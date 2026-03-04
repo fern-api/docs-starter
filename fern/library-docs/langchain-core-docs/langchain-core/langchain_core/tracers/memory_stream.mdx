@@ -1,0 +1,282 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/tracers/memory_stream
+title: langchain_core.tracers.memory_stream
+---
+
+Module implements a memory stream for communication between two co-routines.
+
+This module provides a way to communicate between two co-routines using a memory
+channel. The writer and reader can be in the same event loop or in different event
+loops. When they're in different event loops, they will also be in different threads.
+
+Useful in situations when there's a mix of synchronous and asynchronous used in the
+code.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`_MemoryStream`](#langchain_core-tracers-memory_stream-_MemoryStream) | Stream data from a writer to a reader even if they are in different threads. |
+| [`_ReceiveStream`](#langchain_core-tracers-memory_stream-_ReceiveStream) | - |
+| [`_SendStream`](#langchain_core-tracers-memory_stream-_SendStream) | - |
+
+### Data
+
+[`T`](#langchain_core-tracers-memory_stream-T)
+
+### API
+
+<Anchor id="langchain_core-tracers-memory_stream-_MemoryStream">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tracers.memory_stream._MemoryStream(
+    loop: asyncio.AbstractEventLoop
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `Generic[T]`
+
+Stream data from a writer to a reader even if they are in different threads.
+
+Uses asyncio queues to communicate between two co-routines. This implementation
+should work even if the writer and reader co-routines belong to two different event
+loops (e.g. one running from an event loop in the main thread and the other running
+in an event loop in a background thread).
+
+This implementation is meant to be used with a single writer and a single reader.
+
+This is an internal implementation to LangChain. Do not use it directly.
+
+
+<ParamField path="_done" type="= object()">
+</ParamField>
+
+<ParamField path="_queue" type="Queue = asyncio.Queue(maxsize=0)">
+</ParamField>
+<Anchor id="langchain_core-tracers-memory_stream-_MemoryStream-get_receive_stream">
+
+<CodeBlock links={{"langchain_core.tracers.memory_stream._ReceiveStream":"#langchain_core-tracers-memory_stream-_ReceiveStream","langchain_core.tracers.memory_stream.T":"#langchain_core-tracers-memory_stream-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.memory_stream._MemoryStream.get_receive_stream() -> langchain_core.tracers.memory_stream._ReceiveStream[langchain_core.tracers.memory_stream.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get a reader for the channel.
+
+**Returns:** `_ReceiveStream[T]`
+
+The reader for the channel.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-memory_stream-_MemoryStream-get_send_stream">
+
+<CodeBlock links={{"langchain_core.tracers.memory_stream._SendStream":"#langchain_core-tracers-memory_stream-_SendStream","langchain_core.tracers.memory_stream.T":"#langchain_core-tracers-memory_stream-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.memory_stream._MemoryStream.get_send_stream() -> langchain_core.tracers.memory_stream._SendStream[langchain_core.tracers.memory_stream.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get a writer for the channel.
+
+**Returns:** `_SendStream[T]`
+
+The writer for the channel.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-tracers-memory_stream-_ReceiveStream">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tracers.memory_stream._ReceiveStream(
+    queue: asyncio.Queue,
+    done: object
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `Generic[T]`
+
+<Anchor id="langchain_core-tracers-memory_stream-_ReceiveStream-__aiter__">
+
+<CodeBlock links={{"langchain_core.tracers.memory_stream.T":"#langchain_core-tracers-memory_stream-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.memory_stream._ReceiveStream.__aiter__() -> collections.abc.AsyncIterator[langchain_core.tracers.memory_stream.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-tracers-memory_stream-_SendStream">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tracers.memory_stream._SendStream(
+    reader_loop: asyncio.AbstractEventLoop,
+    queue: asyncio.Queue,
+    done: object
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `Generic[T]`
+
+<Anchor id="langchain_core-tracers-memory_stream-_SendStream-aclose">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.memory_stream._SendStream.aclose() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async schedule the done object write the queue using the original loop.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-memory_stream-_SendStream-close">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.memory_stream._SendStream.close() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Schedule the done object write the queue using the original loop.
+
+This is a non-blocking call.
+
+**Raises:**
+
+- `RuntimeError`: If the event loop is already closed when trying to write to
+the queue.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-memory_stream-_SendStream-send">
+
+<CodeBlock links={{"langchain_core.tracers.memory_stream.T":"#langchain_core-tracers-memory_stream-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.memory_stream._SendStream.send(
+    item: langchain_core.tracers.memory_stream.T
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Schedule the item to be written to the queue using the original loop.
+
+This is a coroutine that can be awaited.
+
+**Parameters:**
+
+<ParamField path="item" type="T">
+The item to write to the queue.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-memory_stream-_SendStream-send_nowait">
+
+<CodeBlock links={{"langchain_core.tracers.memory_stream.T":"#langchain_core-tracers-memory_stream-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.memory_stream._SendStream.send_nowait(
+    item: langchain_core.tracers.memory_stream.T
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Schedule the item to be written to the queue using the original loop.
+
+This is a non-blocking call.
+
+**Parameters:**
+
+<ParamField path="item" type="T">
+The item to write to the queue.
+</ParamField>
+
+**Raises:**
+
+- `RuntimeError`: If the event loop is already closed when trying to write to
+the queue.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-tracers-memory_stream-T">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.memory_stream.T = TypeVar('T')
+```
+
+</CodeBlock>
+</Anchor>
+

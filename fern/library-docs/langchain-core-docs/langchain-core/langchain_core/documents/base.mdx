@@ -1,0 +1,495 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/documents/base
+title: langchain_core.documents.base
+---
+
+Base classes for media and documents.
+
+This module contains core abstractions for **data retrieval and processing workflows**:
+
+- `BaseMedia`: Base class providing `id` and `metadata` fields
+- `Blob`: Raw data loading (files, binary data) - used by document loaders
+- `Document`: Text content for retrieval (RAG, vector stores, semantic search)
+
+!!! note "Not for LLM chat messages"
+
+    These classes are for data processing pipelines, not LLM I/O. For multimodal
+    content in chat messages (images, audio in conversations), see
+    `langchain.messages` content blocks instead.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`BaseMedia`](#langchain_core-documents-base-BaseMedia) | Base class for content used in retrieval and data processing workflows. |
+| [`Blob`](#langchain_core-documents-base-Blob) | Raw data abstraction for document loading and file processing. |
+| [`Document`](#langchain_core-documents-base-Document) | Class for storing a piece of text and associated metadata. |
+
+### Data
+
+[`PathLike`](#langchain_core-documents-base-PathLike)
+
+### API
+
+<Anchor id="langchain_core-documents-base-BaseMedia">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.documents.base.BaseMedia()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [Serializable](/langchain-core/langchain_core/load/serializable#langchain_core-load-serializable-Serializable)
+
+Base class for content used in retrieval and data processing workflows.
+
+Provides common fields for content that needs to be stored, indexed, or searched.
+
+!!! note
+
+    For multimodal content in **chat messages** (images, audio sent to/from LLMs),
+    use `langchain.messages` content blocks instead.
+
+
+<ParamField path="id" type="str | None = Field(default=None, coerce_numbers_to_str=True)">
+An optional identifier for the document.
+
+Ideally this should be unique across the document collection and formatted
+as a UUID, but this will not be enforced.
+</ParamField>
+
+<ParamField path="metadata" type="dict = Field(default_factory=dict)">
+Arbitrary metadata associated with the content.
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-documents-base-Blob">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.documents.base.Blob()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseMedia](#langchain_core-documents-base-BaseMedia)
+
+Raw data abstraction for document loading and file processing.
+
+Represents raw bytes or text, either in-memory or by file reference. Used
+primarily by document loaders to decouple data loading from parsing.
+
+Inspired by [Mozilla's `Blob`](https://developer.mozilla.org/en-US/docs/Web/API/Blob)
+
+???+ example "Initialize a blob from in-memory data"
+
+    ```python
+    from langchain_core.documents import Blob
+
+    blob = Blob.from_data("Hello, world!")
+
+    # Read the blob as a string
+    print(blob.as_string())
+
+    # Read the blob as bytes
+    print(blob.as_bytes())
+
+    # Read the blob as a byte stream
+    with blob.as_bytes_io() as f:
+        print(f.read())
+    ```
+
+??? example "Load from memory and specify MIME type and metadata"
+
+    ```python
+    from langchain_core.documents import Blob
+
+    blob = Blob.from_data(
+        data="Hello, world!",
+        mime_type="text/plain",
+        metadata={"source": "https://example.com"},
+    )
+    ```
+
+??? example "Load the blob from a file"
+
+    ```python
+    from langchain_core.documents import Blob
+
+    blob = Blob.from_path("path/to/file.txt")
+
+    # Read the blob as a string
+    print(blob.as_string())
+
+    # Read the blob as bytes
+    print(blob.as_bytes())
+
+    # Read the blob as a byte stream
+    with blob.as_bytes_io() as f:
+        print(f.read())
+    ```
+
+
+<ParamField path="data" type="bytes | str | None = None">
+Raw data associated with the `Blob`.
+</ParamField>
+
+<ParamField path="encoding" type="str = 'utf-8'">
+Encoding to use if decoding the bytes into a string.
+
+Uses `utf-8` as default encoding if decoding to string.
+</ParamField>
+
+<ParamField path="mimetype" type="str | None = None">
+MIME type, not to be confused with a file extension.
+</ParamField>
+
+<ParamField path="model_config">
+</ParamField>
+
+<ParamField path="path" type="PathLike | None = None">
+Location where the original content was found.
+</ParamField>
+
+<ParamField path="source" type="str | None">
+The source location of the blob as string if known otherwise none.
+
+If a path is associated with the `Blob`, it will default to the path location.
+
+Unless explicitly set via a metadata field called `'source'`, in which
+case that value will be used instead.
+</ParamField>
+<Anchor id="langchain_core-documents-base-Blob-__repr__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.documents.base.Blob.__repr__() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return the blob representation.
+
+
+</Indent>
+<Anchor id="langchain_core-documents-base-Blob-as_bytes">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.documents.base.Blob.as_bytes() -> bytes
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Read data as bytes.
+
+**Returns:** `bytes`
+
+The data as bytes.
+
+**Raises:**
+
+- `ValueError`: If the blob cannot be represented as bytes.
+
+
+</Indent>
+<Anchor id="langchain_core-documents-base-Blob-as_bytes_io">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.documents.base.Blob.as_bytes_io() -> collections.abc.Generator[io.BytesIO | io.BufferedReader, None, None]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Read data as a byte stream.
+
+**Raises:**
+
+- `NotImplementedError`: If the blob cannot be represented as a byte stream.
+
+
+</Indent>
+<Anchor id="langchain_core-documents-base-Blob-as_string">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.documents.base.Blob.as_string() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Read data as a string.
+
+**Returns:** `str`
+
+The data as a string.
+
+**Raises:**
+
+- `ValueError`: If the blob cannot be represented as a string.
+
+
+</Indent>
+<Anchor id="langchain_core-documents-base-Blob-check_blob_is_valid">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.documents.base.Blob.check_blob_is_valid(
+    values: dict[str, typing.Any]
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Verify that either data or path is provided.
+
+
+</Indent>
+<Anchor id="langchain_core-documents-base-Blob-from_data">
+
+<CodeBlock links={{"langchain_core.documents.base.Blob":"#langchain_core-documents-base-Blob"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.documents.base.Blob.from_data(
+    data: str | bytes,
+    encoding: str = 'utf-8',
+    mime_type: str | None = None,
+    path: str | None = None,
+    metadata: dict | None = None
+) -> langchain_core.documents.base.Blob
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Initialize the `Blob` from in-memory data.
+
+**Parameters:**
+
+<ParamField path="data" type="str | bytes">
+The in-memory data associated with the `Blob`
+</ParamField>
+
+<ParamField path="encoding" type="str" default="'utf-8'">
+Encoding to use if decoding the bytes into a string
+</ParamField>
+
+<ParamField path="mime_type" type="str | None" default="None">
+If provided, will be set as the MIME type of the data
+</ParamField>
+
+<ParamField path="path" type="str | None" default="None">
+If provided, will be set as the source from which the data came
+</ParamField>
+
+<ParamField path="metadata" type="dict | None" default="None">
+Metadata to associate with the `Blob`
+</ParamField>
+
+**Returns:** `Blob`
+
+`Blob` instance
+
+
+</Indent>
+<Anchor id="langchain_core-documents-base-Blob-from_path">
+
+<CodeBlock links={{"langchain_core.documents.base.PathLike":"#langchain_core-documents-base-PathLike","langchain_core.documents.base.Blob":"#langchain_core-documents-base-Blob"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.documents.base.Blob.from_path(
+    path: langchain_core.documents.base.PathLike,
+    encoding: str = 'utf-8',
+    mime_type: str | None = None,
+    guess_type: bool = True,
+    metadata: dict | None = None
+) -> langchain_core.documents.base.Blob
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Load the blob from a path like object.
+
+**Parameters:**
+
+<ParamField path="path" type="PathLike">
+Path-like object to file to be read
+</ParamField>
+
+<ParamField path="encoding" type="str" default="'utf-8'">
+Encoding to use if decoding the bytes into a string
+</ParamField>
+
+<ParamField path="mime_type" type="str | None" default="None">
+If provided, will be set as the MIME type of the data
+</ParamField>
+
+<ParamField path="guess_type" type="bool" default="True">
+If `True`, the MIME type will be guessed from the file
+extension, if a MIME type was not provided
+</ParamField>
+
+<ParamField path="metadata" type="dict | None" default="None">
+Metadata to associate with the `Blob`
+</ParamField>
+
+**Returns:** `Blob`
+
+`Blob` instance
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-documents-base-Document">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.documents.base.Document(
+    page_content: str,
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseMedia](#langchain_core-documents-base-BaseMedia)
+
+Class for storing a piece of text and associated metadata.
+
+!!! note
+
+    `Document` is for **retrieval workflows**, not chat I/O. For sending text
+    to an LLM in a conversation, use message types from `langchain.messages`.
+
+
+<ParamField path="page_content" type="str">
+String text.
+</ParamField>
+
+<ParamField path="type" type="Literal['Document'] = 'Document'">
+</ParamField>
+<Anchor id="langchain_core-documents-base-Document-__str__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.documents.base.Document.__str__() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Override `__str__` to restrict it to page_content and metadata.
+
+**Returns:** `str`
+
+A string representation of the `Document`.
+
+
+</Indent>
+<Anchor id="langchain_core-documents-base-Document-get_lc_namespace">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.documents.base.Document.get_lc_namespace() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Get the namespace of the LangChain object.
+
+**Returns:** `list[str]`
+
+`["langchain", "schema", "document"]`
+
+
+</Indent>
+<Anchor id="langchain_core-documents-base-Document-is_lc_serializable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.documents.base.Document.is_lc_serializable() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Return `True` as this class is serializable.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-documents-base-PathLike">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.documents.base.PathLike = str | PurePath
+```
+
+</CodeBlock>
+</Anchor>
+

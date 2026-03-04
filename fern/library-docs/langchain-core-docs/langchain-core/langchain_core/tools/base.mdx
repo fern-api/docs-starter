@@ -1,0 +1,1764 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/tools/base
+title: langchain_core.tools.base
+---
+
+Base classes and utilities for LangChain tools.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`BaseTool`](#langchain_core-tools-base-BaseTool) | Base class for all LangChain tools. |
+| [`BaseToolkit`](#langchain_core-tools-base-BaseToolkit) | Base class for toolkits containing related tools. |
+| [`InjectedToolArg`](#langchain_core-tools-base-InjectedToolArg) | Annotation for tool arguments that are injected at runtime. |
+| [`InjectedToolCallId`](#langchain_core-tools-base-InjectedToolCallId) | Annotation for injecting the tool call ID. |
+| [`SchemaAnnotationError`](#langchain_core-tools-base-SchemaAnnotationError) | Raised when `args_schema` is missing or has an incorrect type annotation. |
+| [`ToolException`](#langchain_core-tools-base-ToolException) | Exception thrown when a tool execution error occurs. |
+| [`_DirectlyInjectedToolArg`](#langchain_core-tools-base-_DirectlyInjectedToolArg) | Annotation for tool arguments that are injected at runtime. |
+| [`_SchemaConfig`](#langchain_core-tools-base-_SchemaConfig) | Configuration for Pydantic models generated from function signatures. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_format_output`](#langchain_core-tools-base-_format_output) | Format tool output as a `ToolMessage` if appropriate. |
+| [`_function_annotations_are_pydantic_v1`](#langchain_core-tools-base-_function_annotations_are_pydantic_v1) | Check if all Pydantic annotations in a function are from v1. |
+| [`_get_annotation_description`](#langchain_core-tools-base-_get_annotation_description) | Extract description from an `Annotated` type. |
+| [`_get_filtered_args`](#langchain_core-tools-base-_get_filtered_args) | Get filtered arguments from a function's signature. |
+| [`_get_runnable_config_param`](#langchain_core-tools-base-_get_runnable_config_param) | Find the parameter name for `RunnableConfig` in a function. |
+| [`_get_type_hints`](#langchain_core-tools-base-_get_type_hints) | Get type hints from a function, handling partial functions. |
+| [`_handle_tool_error`](#langchain_core-tools-base-_handle_tool_error) | Handle tool execution errors based on the configured flag. |
+| [`_handle_validation_error`](#langchain_core-tools-base-_handle_validation_error) | Handle validation errors based on the configured flag. |
+| [`_infer_arg_descriptions`](#langchain_core-tools-base-_infer_arg_descriptions) | Infer argument descriptions from function docstring and annotations. |
+| [`_is_annotated_type`](#langchain_core-tools-base-_is_annotated_type) | Check if a type is an `Annotated` type. |
+| [`_is_directly_injected_arg_type`](#langchain_core-tools-base-_is_directly_injected_arg_type) | Check if a type annotation indicates a directly injected argument. |
+| [`_is_injected_arg_type`](#langchain_core-tools-base-_is_injected_arg_type) | Check if a type annotation indicates an injected argument. |
+| [`_is_message_content_block`](#langchain_core-tools-base-_is_message_content_block) | Check if object is a valid message content block. |
+| [`_is_message_content_type`](#langchain_core-tools-base-_is_message_content_type) | Check if object is valid message content format. |
+| [`_is_pydantic_annotation`](#langchain_core-tools-base-_is_pydantic_annotation) | Check if a type annotation is a Pydantic model. |
+| [`_is_tool_call`](#langchain_core-tools-base-_is_tool_call) | Check if the input is a tool call dictionary. |
+| [`_parse_python_function_docstring`](#langchain_core-tools-base-_parse_python_function_docstring) | Parse function and argument descriptions from a docstring. |
+| [`_prep_run_args`](#langchain_core-tools-base-_prep_run_args) | Prepare arguments for tool execution. |
+| [`_replace_type_vars`](#langchain_core-tools-base-_replace_type_vars) | Replace `TypeVar`s in a type annotation with concrete types. |
+| [`_stringify`](#langchain_core-tools-base-_stringify) | Convert content to string, preferring JSON format. |
+| [`_validate_docstring_args_against_annotations`](#langchain_core-tools-base-_validate_docstring_args_against_annotations) | Validate that docstring arguments match function annotations. |
+| [`create_schema_from_function`](#langchain_core-tools-base-create_schema_from_function) | Create a Pydantic schema from a function's signature. |
+| [`get_all_basemodel_annotations`](#langchain_core-tools-base-get_all_basemodel_annotations) | Get all annotations from a Pydantic `BaseModel` and its parents. |
+
+### Data
+
+[`ArgsSchema`](#langchain_core-tools-base-ArgsSchema)
+
+[`FILTERED_ARGS`](#langchain_core-tools-base-FILTERED_ARGS)
+
+[`TOOL_MESSAGE_BLOCK_TYPES`](#langchain_core-tools-base-TOOL_MESSAGE_BLOCK_TYPES)
+
+[`_EMPTY_SET`](#langchain_core-tools-base-_EMPTY_SET)
+
+[`_logger`](#langchain_core-tools-base-_logger)
+
+### API
+
+<Anchor id="langchain_core-tools-base-BaseTool">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tools.base.BaseTool(
+    kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RunnableSerializable[str | dict | ToolCall, Any]](/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-RunnableSerializable)
+
+Base class for all LangChain tools.
+
+This abstract class defines the interface that all LangChain tools must implement.
+
+Tools are components that can be called by agents to perform specific actions.
+
+
+<ParamField path="_injected_args_keys" type="frozenset[str]">
+</ParamField>
+
+<ParamField path="args" type="dict">
+Get the tool's input arguments schema.
+</ParamField>
+
+<ParamField path="args_schema" type="Annotated[ArgsSchema | None, SkipValidation()]">
+Pydantic model class to validate and parse the tool's input arguments.
+
+Args schema should be either:
+
+- A subclass of `pydantic.BaseModel`.
+- A subclass of `pydantic.v1.BaseModel` if accessing v1 namespace in pydantic 2
+- A JSON schema dict
+</ParamField>
+
+<ParamField path="callbacks" type="Callbacks = Field(default=None, exclude=True)">
+Callbacks to be called during tool execution.
+</ParamField>
+
+<ParamField path="description" type="str">
+Used to tell the model how/when/why to use the tool.
+
+You can provide few-shot examples as a part of the description.
+</ParamField>
+
+<ParamField path="extras" type="dict[str, Any] | None = None">
+Optional provider-specific extra fields for the tool.
+
+This is used to pass provider-specific configuration that doesn't fit into
+standard tool fields.
+</ParamField>
+
+<ParamField path="handle_tool_error" type="bool | str | Callable[[ToolException], str] | None = False">
+Handle the content of the `ToolException` thrown.
+</ParamField>
+
+<ParamField path="handle_validation_error" type="bool | str | Callable[[ValidationError | ValidationErrorV1], str] | None = False">
+Handle the content of the `ValidationError` thrown.
+</ParamField>
+
+<ParamField path="is_single_input" type="bool">
+Check if the tool accepts only a single input argument.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None = None">
+Optional metadata associated with the tool.
+
+This metadata will be associated with each call to this tool,
+and passed as arguments to the handlers defined in `callbacks`.
+
+You can use these to, e.g., identify a specific instance of a tool with its usecase.
+</ParamField>
+
+<ParamField path="model_config" type="= ConfigDict(arbitrary_types_allowed=True)">
+</ParamField>
+
+<ParamField path="name" type="str">
+The unique name of the tool that clearly communicates its purpose.
+</ParamField>
+
+<ParamField path="response_format" type="Literal['content', 'content_and_artifact'] = 'content'">
+The tool response format.
+
+If `'content'` then the output of the tool is interpreted as the contents of a
+`ToolMessage`. If `'content_and_artifact'` then the output is expected to be a
+two-tuple corresponding to the `(content, artifact)` of a `ToolMessage`.
+</ParamField>
+
+<ParamField path="return_direct" type="bool = False">
+Whether to return the tool's output directly.
+
+Setting this to `True` means that after the tool is called, the `AgentExecutor` will
+stop looping.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None = None">
+Optional list of tags associated with the tool.
+
+These tags will be associated with each call to this tool,
+and passed as arguments to the handlers defined in `callbacks`.
+
+You can use these to, e.g., identify a specific instance of a tool with its use
+case.
+</ParamField>
+
+<ParamField path="tool_call_schema" type="ArgsSchema">
+Get the schema for tool calls, excluding injected arguments.
+</ParamField>
+
+<ParamField path="verbose" type="bool = False">
+Whether to log the tool's progress.
+</ParamField>
+<Anchor id="langchain_core-tools-base-BaseTool-__init_subclass__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base.BaseTool.__init_subclass__(
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Validate the tool class definition during subclass creation.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments passed to the parent class.
+</ParamField>
+
+**Raises:**
+
+- `SchemaAnnotationError`: If `args_schema` has incorrect type annotation.
+
+
+</Indent>
+<Anchor id="langchain_core-tools-base-BaseTool-_arun">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base.BaseTool._arun(
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Use the tool asynchronously.
+
+Add `run_manager: AsyncCallbackManagerForToolRun | None = None` to child
+implementations to enable tracing.
+
+**Returns:** `Any`
+
+The result of the tool execution.
+
+
+</Indent>
+<Anchor id="langchain_core-tools-base-BaseTool-_filter_injected_args">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base.BaseTool._filter_injected_args(
+    tool_input: dict
+) -> dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Filter out injected tool arguments from the input dictionary.
+
+Injected arguments are those annotated with `InjectedToolArg` or its
+subclasses, or arguments in `FILTERED_ARGS` like `run_manager` and callbacks.
+
+**Parameters:**
+
+<ParamField path="tool_input" type="dict">
+The tool input dictionary to filter.
+</ParamField>
+
+**Returns:** `dict`
+
+A filtered dictionary with injected arguments removed.
+
+
+</Indent>
+<Anchor id="langchain_core-tools-base-BaseTool-_parse_input">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base.BaseTool._parse_input(
+    tool_input: str | dict,
+    tool_call_id: str | None
+) -> str | dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse and validate tool input using the args schema.
+
+**Parameters:**
+
+<ParamField path="tool_input" type="str | dict">
+The raw input to the tool.
+</ParamField>
+
+<ParamField path="tool_call_id" type="str | None">
+The ID of the tool call, if available.
+</ParamField>
+
+**Returns:** `str | dict[str, Any]`
+
+The parsed and validated input.
+
+**Raises:**
+
+- `ValueError`: If `string` input is provided with JSON schema `args_schema`.
+- `ValueError`: If `InjectedToolCallId` is required but `tool_call_id` is not
+provided.
+- `TypeError`: If `args_schema` is not a Pydantic `BaseModel` or dict.
+
+
+</Indent>
+<Anchor id="langchain_core-tools-base-BaseTool-_run">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base.BaseTool._run(
+    args: typing.Any = (),
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Use the tool.
+
+Add `run_manager: CallbackManagerForToolRun | None = None` to child
+implementations to enable tracing.
+
+**Returns:** `Any`
+
+The result of the tool execution.
+
+
+</Indent>
+<Anchor id="langchain_core-tools-base-BaseTool-_to_args_and_kwargs">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base.BaseTool._to_args_and_kwargs(
+    tool_input: str | dict,
+    tool_call_id: str | None
+) -> tuple[tuple, dict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert tool input to positional and keyword arguments.
+
+**Parameters:**
+
+<ParamField path="tool_input" type="str | dict">
+The input to the tool.
+</ParamField>
+
+<ParamField path="tool_call_id" type="str | None">
+The ID of the tool call, if available.
+</ParamField>
+
+**Returns:** `tuple[tuple, dict]`
+
+A tuple of `(positional_args, keyword_args)` for the tool.
+
+**Raises:**
+
+- `TypeError`: If the tool input type is invalid.
+
+
+</Indent>
+<Anchor id="langchain_core-tools-base-BaseTool-ainvoke">
+
+<CodeBlock links={{"langchain_core.messages.tool.ToolCall":"/langchain-core/langchain_core/messages/tool#langchain_core-messages-tool-ToolCall","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base.BaseTool.ainvoke(
+    input: str | dict | langchain_core.messages.tool.ToolCall,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-tools-base-BaseTool-arun">
+
+<CodeBlock links={{"langchain_core.callbacks.Callbacks":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-Callbacks","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base.BaseTool.arun(
+    tool_input: str | dict,
+    verbose: bool | None = None,
+    start_color: str | None = 'green',
+    color: str | None = 'green',
+    callbacks: langchain_core.callbacks.Callbacks = None,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    run_name: str | None = None,
+    run_id: uuid.UUID | None = None,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    tool_call_id: str | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Run the tool asynchronously.
+
+**Parameters:**
+
+<ParamField path="tool_input" type="str | dict">
+The input to the tool.
+</ParamField>
+
+<ParamField path="verbose" type="bool | None" default="None">
+Whether to log the tool's progress.
+</ParamField>
+
+<ParamField path="start_color" type="str | None" default="'green'">
+The color to use when starting the tool.
+</ParamField>
+
+<ParamField path="color" type="str | None" default="'green'">
+The color to use when ending the tool.
+</ParamField>
+
+<ParamField path="callbacks" type="Callbacks" default="None">
+Callbacks to be called during tool execution.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+Optional list of tags associated with the tool.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+Optional metadata associated with the tool.
+</ParamField>
+
+<ParamField path="run_name" type="str | None" default="None">
+The name of the run.
+</ParamField>
+
+<ParamField path="run_id" type="uuid.UUID | None" default="None">
+The id of the run.
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig | None" default="None">
+The configuration for the tool.
+</ParamField>
+
+<ParamField path="tool_call_id" type="str | None" default="None">
+The id of the tool call.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to be passed to tool callbacks
+</ParamField>
+
+**Returns:** `Any`
+
+The output of the tool.
+
+**Raises:**
+
+- `ToolException`: If an error occurs during tool execution.
+
+
+</Indent>
+<Anchor id="langchain_core-tools-base-BaseTool-get_input_schema">
+
+<CodeBlock links={{"langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base.BaseTool.get_input_schema(
+    config: langchain_core.runnables.RunnableConfig | None = None
+) -> type[pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+The tool's input schema.
+
+**Parameters:**
+
+<ParamField path="config" type="RunnableConfig | None" default="None">
+The configuration for the tool.
+</ParamField>
+
+**Returns:** `type[BaseModel]`
+
+The input schema for the tool.
+
+
+</Indent>
+<Anchor id="langchain_core-tools-base-BaseTool-invoke">
+
+<CodeBlock links={{"langchain_core.messages.tool.ToolCall":"/langchain-core/langchain_core/messages/tool#langchain_core-messages-tool-ToolCall","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base.BaseTool.invoke(
+    input: str | dict | langchain_core.messages.tool.ToolCall,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-tools-base-BaseTool-run">
+
+<CodeBlock links={{"langchain_core.callbacks.Callbacks":"/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-Callbacks","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base.BaseTool.run(
+    tool_input: str | dict[str, typing.Any],
+    verbose: bool | None = None,
+    start_color: str | None = 'green',
+    color: str | None = 'green',
+    callbacks: langchain_core.callbacks.Callbacks = None,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    run_name: str | None = None,
+    run_id: uuid.UUID | None = None,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    tool_call_id: str | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run the tool.
+
+**Parameters:**
+
+<ParamField path="tool_input" type="str | dict[str, Any]">
+The input to the tool.
+</ParamField>
+
+<ParamField path="verbose" type="bool | None" default="None">
+Whether to log the tool's progress.
+</ParamField>
+
+<ParamField path="start_color" type="str | None" default="'green'">
+The color to use when starting the tool.
+</ParamField>
+
+<ParamField path="color" type="str | None" default="'green'">
+The color to use when ending the tool.
+</ParamField>
+
+<ParamField path="callbacks" type="Callbacks" default="None">
+Callbacks to be called during tool execution.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+Optional list of tags associated with the tool.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+Optional metadata associated with the tool.
+</ParamField>
+
+<ParamField path="run_name" type="str | None" default="None">
+The name of the run.
+</ParamField>
+
+<ParamField path="run_id" type="uuid.UUID | None" default="None">
+The id of the run.
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig | None" default="None">
+The configuration for the tool.
+</ParamField>
+
+<ParamField path="tool_call_id" type="str | None" default="None">
+The id of the tool call.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to be passed to tool callbacks (event handler)
+</ParamField>
+
+**Returns:** `Any`
+
+The output of the tool.
+
+**Raises:**
+
+- `ToolException`: If an error occurs during tool execution.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-tools-base-BaseToolkit">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tools.base.BaseToolkit()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+**Bases:** `BaseModel`
+
+Base class for toolkits containing related tools.
+
+A toolkit is a collection of related tools that can be used together to accomplish a
+specific task or work with a particular system.
+
+
+<Anchor id="langchain_core-tools-base-BaseToolkit-get_tools">
+
+<CodeBlock links={{"langchain_core.tools.base.BaseTool":"#langchain_core-tools-base-BaseTool"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base.BaseToolkit.get_tools() -> list[langchain_core.tools.base.BaseTool]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Get all tools in the toolkit.
+
+**Returns:** `list[BaseTool]`
+
+List of tools contained in this toolkit.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-tools-base-InjectedToolArg">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tools.base.InjectedToolArg()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Annotation for tool arguments that are injected at runtime.
+
+Tool arguments annotated with this class are not included in the tool
+schema sent to language models and are instead injected during execution.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-InjectedToolCallId">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tools.base.InjectedToolCallId()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [InjectedToolArg](#langchain_core-tools-base-InjectedToolArg)
+
+Annotation for injecting the tool call ID.
+
+This annotation is used to mark a tool parameter that should receive the tool call
+ID at runtime.
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+from typing import Annotated
+from langchain_core.messages import ToolMessage
+from langchain_core.tools import tool, InjectedToolCallId
+
+@tool
+def foo(
+    x: int, tool_call_id: Annotated[str, InjectedToolCallId]
+) -> ToolMessage:
+    """Return x."""
+    return ToolMessage(
+        str(x),
+        artifact=x,
+        name="foo",
+        tool_call_id=tool_call_id
+    )
+```
+
+</CodeBlock>
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-SchemaAnnotationError">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tools.base.SchemaAnnotationError()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `TypeError`
+
+Raised when `args_schema` is missing or has an incorrect type annotation.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-ToolException">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tools.base.ToolException()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Exception</Badge>
+
+**Bases:** `Exception`
+
+Exception thrown when a tool execution error occurs.
+
+This exception allows tools to signal errors without stopping the agent.
+
+The error is handled according to the tool's `handle_tool_error` setting, and the
+result is returned as an observation to the agent.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_DirectlyInjectedToolArg">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tools.base._DirectlyInjectedToolArg()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Annotation for tool arguments that are injected at runtime.
+
+Injected via direct type annotation, rather than annotated metadata.
+
+For example, `ToolRuntime` is a directly injected argument.
+
+Note the direct annotation rather than the verbose alternative:
+`Annotated[ToolRuntime, InjectedRuntime]`
+
+<CodeBlock showLineNumbers={false}>
+
+```python
+from langchain_core.tools import tool, ToolRuntime
+
+
+@tool
+def foo(x: int, runtime: ToolRuntime) -> str:
+    # use runtime.state, runtime.context, runtime.store, etc.
+    ...
+```
+
+</CodeBlock>
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_SchemaConfig">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tools.base._SchemaConfig()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Configuration for Pydantic models generated from function signatures.
+
+
+<ParamField path="arbitrary_types_allowed" type="bool = True">
+Whether to allow arbitrary types in the model.
+</ParamField>
+
+<ParamField path="extra" type="str = 'forbid'">
+Whether to allow extra fields in the model.
+</ParamField>
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_format_output">
+
+<CodeBlock links={{"langchain_core.messages.tool.ToolOutputMixin":"/langchain-core/langchain_core/messages/tool#langchain_core-messages-tool-ToolOutputMixin"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._format_output(
+    content: typing.Any,
+    artifact: typing.Any,
+    tool_call_id: str | None,
+    name: str,
+    status: str
+) -> langchain_core.messages.tool.ToolOutputMixin | typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format tool output as a `ToolMessage` if appropriate.
+
+**Parameters:**
+
+<ParamField path="content" type="Any">
+The main content of the tool output.
+</ParamField>
+
+<ParamField path="artifact" type="Any">
+Any artifact data from the tool.
+</ParamField>
+
+<ParamField path="tool_call_id" type="str | None">
+The ID of the tool call.
+</ParamField>
+
+<ParamField path="name" type="str">
+The name of the tool.
+</ParamField>
+
+<ParamField path="status" type="str">
+The execution status.
+</ParamField>
+
+**Returns:** `ToolOutputMixin | Any`
+
+The formatted output, either as a `ToolMessage` or the original content.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_function_annotations_are_pydantic_v1">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._function_annotations_are_pydantic_v1(
+    signature: inspect.Signature,
+    func: collections.abc.Callable
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if all Pydantic annotations in a function are from v1.
+
+**Parameters:**
+
+<ParamField path="signature" type="inspect.Signature">
+The function signature to check.
+</ParamField>
+
+<ParamField path="func" type="Callable">
+The function being checked.
+</ParamField>
+
+**Returns:** `bool`
+
+True if all Pydantic annotations are from v1, `False` otherwise.
+
+**Raises:**
+
+- `NotImplementedError`: If the function contains mixed v1 and v2 annotations.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_get_annotation_description">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._get_annotation_description(
+    arg_type: type
+) -> str | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Extract description from an `Annotated` type.
+
+Checks for string annotations and `FieldInfo` objects with descriptions.
+
+**Parameters:**
+
+<ParamField path="arg_type" type="type">
+The type to extract description from.
+</ParamField>
+
+**Returns:** `str | None`
+
+The description string if found, `None` otherwise.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_get_filtered_args">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._get_filtered_args(
+    inferred_model: type[pydantic.BaseModel],
+    func: collections.abc.Callable,
+    filter_args: collections.abc.Sequence[str],
+    include_injected: bool = True
+) -> dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get filtered arguments from a function's signature.
+
+**Parameters:**
+
+<ParamField path="inferred_model" type="type[BaseModel]">
+The Pydantic model inferred from the function.
+</ParamField>
+
+<ParamField path="func" type="Callable">
+The function to extract arguments from.
+</ParamField>
+
+<ParamField path="filter_args" type="Sequence[str]">
+Arguments to exclude from the result.
+</ParamField>
+
+<ParamField path="include_injected" type="bool" default="True">
+Whether to include injected arguments.
+</ParamField>
+
+**Returns:** `dict`
+
+Dictionary of filtered arguments with their schema definitions.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_get_runnable_config_param">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._get_runnable_config_param(
+    func: collections.abc.Callable
+) -> str | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Find the parameter name for `RunnableConfig` in a function.
+
+**Parameters:**
+
+<ParamField path="func" type="Callable">
+The function to check.
+</ParamField>
+
+**Returns:** `str | None`
+
+The parameter name for `RunnableConfig`, or `None` if not found.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_get_type_hints">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._get_type_hints(
+    func: collections.abc.Callable
+) -> dict[str, type] | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get type hints from a function, handling partial functions.
+
+**Parameters:**
+
+<ParamField path="func" type="Callable">
+The function to get type hints from.
+</ParamField>
+
+**Returns:** `dict[str, type] | None`
+
+`dict` of type hints, or `None` if extraction fails.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_handle_tool_error">
+
+<CodeBlock links={{"langchain_core.tools.base.ToolException":"#langchain_core-tools-base-ToolException"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._handle_tool_error(
+    e: langchain_core.tools.base.ToolException,
+    flag: typing.Literal[True] | str | collections.abc.Callable[[ToolException], str] | None
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Handle tool execution errors based on the configured flag.
+
+**Parameters:**
+
+<ParamField path="e" type="ToolException">
+The tool exception that occurred.
+</ParamField>
+
+<ParamField path="flag" type="Literal[True] | str | Callable[[ToolException], str] | None">
+How to handle the error (`bool`, `str`, or `Callable`).
+</ParamField>
+
+**Returns:** `str`
+
+The error message to return.
+
+**Raises:**
+
+- `ValueError`: If the flag type is unexpected.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_handle_validation_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._handle_validation_error(
+    e: pydantic.ValidationError | pydantic.v1.ValidationError,
+    flag: typing.Literal[True] | str | collections.abc.Callable[[ValidationError | ValidationErrorV1], str]
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Handle validation errors based on the configured flag.
+
+**Parameters:**
+
+<ParamField path="e" type="ValidationError | ValidationErrorV1">
+The validation error that occurred.
+</ParamField>
+
+<ParamField path="flag" type="Literal[True] | str | Callable[[ValidationError | ValidationErrorV1], str]">
+How to handle the error (`bool`, `str`, or `Callable`).
+</ParamField>
+
+**Returns:** `str`
+
+The error message to return.
+
+**Raises:**
+
+- `ValueError`: If the flag type is unexpected.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_infer_arg_descriptions">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._infer_arg_descriptions(
+    fn: collections.abc.Callable,
+    parse_docstring: bool = False,
+    error_on_invalid_docstring: bool = False
+) -> tuple[str, dict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Infer argument descriptions from function docstring and annotations.
+
+**Parameters:**
+
+<ParamField path="fn" type="Callable">
+The function to infer descriptions from.
+</ParamField>
+
+<ParamField path="parse_docstring" type="bool" default="False">
+Whether to parse the docstring for descriptions.
+</ParamField>
+
+<ParamField path="error_on_invalid_docstring" type="bool" default="False">
+Whether to raise error on invalid docstring.
+</ParamField>
+
+**Returns:** `tuple[str, dict]`
+
+A tuple containing the function description and argument descriptions.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_is_annotated_type">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._is_annotated_type(
+    typ: type[typing.Any]
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if a type is an `Annotated` type.
+
+**Parameters:**
+
+<ParamField path="typ" type="type[Any]">
+The type to check.
+</ParamField>
+
+**Returns:** `bool`
+
+`True` if the type is an `Annotated` type, `False` otherwise.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_is_directly_injected_arg_type">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._is_directly_injected_arg_type(
+    type_: typing.Any
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if a type annotation indicates a directly injected argument.
+
+This is currently only used for `ToolRuntime`.
+
+Checks if either the annotation itself is a subclass of `_DirectlyInjectedToolArg`
+or the origin of the annotation is a subclass of `_DirectlyInjectedToolArg`.
+
+For example, `ToolRuntime` or `ToolRuntime[ContextT, StateT]` would both return
+`True`.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_is_injected_arg_type">
+
+<CodeBlock links={{"langchain_core.tools.base.InjectedToolArg":"#langchain_core-tools-base-InjectedToolArg"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._is_injected_arg_type(
+    type_: type | typing.TypeVar,
+    injected_type: type[langchain_core.tools.base.InjectedToolArg] | None = None
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if a type annotation indicates an injected argument.
+
+**Parameters:**
+
+<ParamField path="type_" type="type | TypeVar">
+The type annotation to check.
+</ParamField>
+
+<ParamField path="injected_type" type="type[InjectedToolArg] | None" default="None">
+The specific injected type to check for.
+</ParamField>
+
+**Returns:** `bool`
+
+`True` if the type is an injected argument, `False` otherwise.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_is_message_content_block">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._is_message_content_block(
+    obj: typing.Any
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if object is a valid message content block.
+
+Validates content blocks for OpenAI or Anthropic format.
+
+**Parameters:**
+
+<ParamField path="obj" type="Any">
+The object to check.
+</ParamField>
+
+**Returns:** `bool`
+
+`True` if the object is a valid content block, `False` otherwise.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_is_message_content_type">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._is_message_content_type(
+    obj: typing.Any
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if object is valid message content format.
+
+Validates content for OpenAI or Anthropic format tool messages.
+
+**Parameters:**
+
+<ParamField path="obj" type="Any">
+The object to check.
+</ParamField>
+
+**Returns:** `bool`
+
+`True` if the object is valid message content, `False` otherwise.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_is_pydantic_annotation">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._is_pydantic_annotation(
+    annotation: typing.Any,
+    pydantic_version: str = 'v2'
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if a type annotation is a Pydantic model.
+
+**Parameters:**
+
+<ParamField path="annotation" type="Any">
+The type annotation to check.
+</ParamField>
+
+<ParamField path="pydantic_version" type="str" default="'v2'">
+The Pydantic version to check against (`'v1'` or `'v2'`).
+</ParamField>
+
+**Returns:** `bool`
+
+`True` if the annotation is a Pydantic model, `False` otherwise.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_is_tool_call">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._is_tool_call(
+    x: typing.Any
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if the input is a tool call dictionary.
+
+**Parameters:**
+
+<ParamField path="x" type="Any">
+The input to check.
+</ParamField>
+
+**Returns:** `bool`
+
+`True` if the input is a tool call, `False` otherwise.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_parse_python_function_docstring">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._parse_python_function_docstring(
+    function: collections.abc.Callable,
+    annotations: dict,
+    error_on_invalid_docstring: bool = False
+) -> tuple[str, dict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse function and argument descriptions from a docstring.
+
+Assumes the function docstring follows Google Python style guide.
+
+**Parameters:**
+
+<ParamField path="function" type="Callable">
+The function to parse the docstring from.
+</ParamField>
+
+<ParamField path="annotations" type="dict">
+Type annotations for the function parameters.
+</ParamField>
+
+<ParamField path="error_on_invalid_docstring" type="bool" default="False">
+Whether to raise an error on invalid docstring.
+</ParamField>
+
+**Returns:** `tuple[str, dict]`
+
+A tuple containing the function description and argument descriptions.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_prep_run_args">
+
+<CodeBlock links={{"langchain_core.messages.tool.ToolCall":"/langchain-core/langchain_core/messages/tool#langchain_core-messages-tool-ToolCall","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._prep_run_args(
+    value: str | dict | langchain_core.messages.tool.ToolCall,
+    config: langchain_core.runnables.RunnableConfig | None,
+    kwargs: typing.Any = {}
+) -> tuple[str | dict, dict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Prepare arguments for tool execution.
+
+**Parameters:**
+
+<ParamField path="value" type="str | dict | ToolCall">
+The input value (`str`, `dict`, or `ToolCall`).
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig | None">
+The runnable configuration.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments.
+</ParamField>
+
+**Returns:** `tuple[str | dict, dict]`
+
+A tuple of `(tool_input, run_kwargs)`.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_replace_type_vars">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._replace_type_vars(
+    type_: type | typing.TypeVar,
+    generic_map: dict[typing.TypeVar, type] | None = None,
+    default_to_bound: bool = True
+) -> type | typing.TypeVar
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Replace `TypeVar`s in a type annotation with concrete types.
+
+**Parameters:**
+
+<ParamField path="type_" type="type | TypeVar">
+The type annotation to process.
+</ParamField>
+
+<ParamField path="generic_map" type="dict[TypeVar, type] | None" default="None">
+Mapping of `TypeVar`s to concrete types.
+</ParamField>
+
+<ParamField path="default_to_bound" type="bool" default="True">
+Whether to use `TypeVar` bounds as defaults.
+</ParamField>
+
+**Returns:** `type | TypeVar`
+
+The type with `TypeVar`s replaced.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_stringify">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._stringify(
+    content: typing.Any
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert content to string, preferring JSON format.
+
+**Parameters:**
+
+<ParamField path="content" type="Any">
+The content to stringify.
+</ParamField>
+
+**Returns:** `str`
+
+String representation of the content.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-_validate_docstring_args_against_annotations">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._validate_docstring_args_against_annotations(
+    arg_descriptions: dict,
+    annotations: dict
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Validate that docstring arguments match function annotations.
+
+**Parameters:**
+
+<ParamField path="arg_descriptions" type="dict">
+Arguments described in the docstring.
+</ParamField>
+
+<ParamField path="annotations" type="dict">
+Type annotations from the function signature.
+</ParamField>
+
+**Raises:**
+
+- `ValueError`: If a docstring argument is not found in function signature.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-create_schema_from_function">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base.create_schema_from_function(
+    model_name: str,
+    func: collections.abc.Callable,
+    filter_args: collections.abc.Sequence[str] | None = None,
+    parse_docstring: bool = False,
+    error_on_invalid_docstring: bool = False,
+    include_injected: bool = True
+) -> type[pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a Pydantic schema from a function's signature.
+
+**Parameters:**
+
+<ParamField path="model_name" type="str">
+Name to assign to the generated Pydantic schema.
+</ParamField>
+
+<ParamField path="func" type="Callable">
+Function to generate the schema from.
+</ParamField>
+
+<ParamField path="filter_args" type="Sequence[str] | None" default="None">
+Optional list of arguments to exclude from the schema.
+
+Defaults to `FILTERED_ARGS`.
+</ParamField>
+
+<ParamField path="parse_docstring" type="bool" default="False">
+Whether to parse the function's docstring for descriptions
+for each argument.
+</ParamField>
+
+<ParamField path="error_on_invalid_docstring" type="bool" default="False">
+If `parse_docstring` is provided, configure
+whether to raise `ValueError` on invalid Google Style docstrings.
+</ParamField>
+
+<ParamField path="include_injected" type="bool" default="True">
+Whether to include injected arguments in the schema.
+
+Defaults to `True`, since we want to include them in the schema when
+*validating* tool inputs.
+</ParamField>
+
+**Returns:** `type[BaseModel]`
+
+A Pydantic model with the same arguments as the function.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-get_all_basemodel_annotations">
+
+<CodeBlock links={{"langchain_core.utils.pydantic.TypeBaseModel":"/langchain-core/langchain_core/utils/pydantic#langchain_core-utils-pydantic-TypeBaseModel"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base.get_all_basemodel_annotations(
+    cls: langchain_core.utils.pydantic.TypeBaseModel | typing.Any,
+    default_to_bound: bool = True
+) -> dict[str, type | typing.TypeVar]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get all annotations from a Pydantic `BaseModel` and its parents.
+
+**Parameters:**
+
+<ParamField path="cls" type="TypeBaseModel | Any">
+The Pydantic `BaseModel` class.
+</ParamField>
+
+<ParamField path="default_to_bound" type="bool" default="True">
+Whether to default to the bound of a `TypeVar` if it exists.
+</ParamField>
+
+**Returns:** `dict[str, type | TypeVar]`
+
+`dict` of field names to their type annotations.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tools-base-ArgsSchema">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base.ArgsSchema = TypeBaseModel | dict[str, Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-tools-base-FILTERED_ARGS">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base.FILTERED_ARGS = ('run_manager', 'callbacks')
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-tools-base-TOOL_MESSAGE_BLOCK_TYPES">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base.TOOL_MESSAGE_BLOCK_TYPES = ('text', 'image_url', 'image', 'json', 'search_result', 'custom_tool_call_output...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-tools-base-_EMPTY_SET">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._EMPTY_SET: frozenset[str] = frozenset()
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-tools-base-_logger">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tools.base._logger = logging.getLogger(__name__)
+```
+
+</CodeBlock>
+</Anchor>
+

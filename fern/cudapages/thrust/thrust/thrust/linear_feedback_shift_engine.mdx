@@ -1,0 +1,144 @@
+---
+title: thrust::linear_feedback_shift_engine
+description: "A [`linear_feedback_shift_engine`](/library/api/thrust::linear_feedback_shift_engine) random number engine produces unsigned integer random values using a linear feedback shift random number generation algorithm."
+---
+
+A `linear_feedback_shift_engine` random number engine produces unsigned integer random values using a linear feedback shift random number generation algorithm.
+
+```cpp showLineNumbers={false}
+#include <thrust/linear_feedback_shift_engine.h>
+```
+
+<Note>
+`linear_feedback_shift_engine` is based on the Boost Template Library's linear_feedback_shift.
+</Note>
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="UIntType" type="typename">
+The type of unsigned integer to produce.
+</ParamField>
+
+<ParamField path="w" type="size_t">
+The word size of the produced values (`w <= sizeof(UIntType)`).
+</ParamField>
+
+<ParamField path="k" type="size_t">
+The k parameter of Tausworthe's 1965 algorithm.
+</ParamField>
+
+<ParamField path="q" type="size_t">
+The q exponent of Tausworthe's 1965 algorithm.
+</ParamField>
+
+<ParamField path="s" type="size_t">
+The step size of Tausworthe's 1965 algorithm.
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### linear_feedback_shift_engine <Badge intent="note" minimal>explicit</Badge>
+
+This constructor, which optionally accepts a seed, initializes a new `linear_feedback_shift_engine`.
+
+<CodeBlock links={{"linear_feedback_shift_engine": "/library/api/thrust::linear_feedback_shift_engine"}}>
+```cpp showLineNumbers={false}
+thrust::random::linear_feedback_shift_engine<UIntType, w, k, q, s>::linear_feedback_shift_engine(
+    result_type value = default_seed
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="value" type="result_type" default="default_seed">
+The seed used to initialize this `linear_feedback_shift_engine``'s` state.
+</ParamField>
+
+---
+
+## Methods
+
+### seed
+
+This method initializes this `linear_feedback_shift_engine``'s` state, and optionally accepts a seed value.
+
+<CodeBlock links={{"linear_feedback_shift_engine": "/library/api/thrust::linear_feedback_shift_engine"}}>
+```cpp showLineNumbers={false}
+void thrust::random::linear_feedback_shift_engine<UIntType, w, k, q, s>::seed(
+    result_type value = default_seed
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="value" type="result_type" default="default_seed">
+The seed used to initializes this `linear_feedback_shift_engine``'s` state.
+</ParamField>
+
+### operator()
+
+This member function produces a new random value and updates this `linear_feedback_shift_engine``'s` state.
+
+<CodeBlock links={{"linear_feedback_shift_engine": "/library/api/thrust::linear_feedback_shift_engine"}}>
+```cpp showLineNumbers={false}
+result_type thrust::random::linear_feedback_shift_engine<UIntType, w, k, q, s>::operator()(
+    void
+)
+```
+</CodeBlock>
+
+**Returns:** A new random number.
+
+### discard
+
+This member function advances this `linear_feedback_shift_engine``'s` state a given number of times and discards the results.
+
+<CodeBlock links={{"linear_feedback_shift_engine": "/library/api/thrust::linear_feedback_shift_engine"}}>
+```cpp showLineNumbers={false}
+void thrust::random::linear_feedback_shift_engine<UIntType, w, k, q, s>::discard(
+    unsigned long long z
+)
+```
+</CodeBlock>
+
+<Note>
+This function is provided because an implementation may be able to accelerate it.
+</Note>
+
+**Parameters**
+
+<ParamField path="z" type="unsigned long long">
+The number of random values to discard.
+</ParamField>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `result_type` | `UIntType` | The type of the unsigned integer produced by this `linear_feedback_shift_engine`. |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `word_size` <Badge intent="note" minimal>static</Badge> | `const size_t` | The word size of the produced values. |
+| `exponent1` <Badge intent="note" minimal>static</Badge> | `const size_t` | A constant used in the generation algorithm. |
+| `exponent2` <Badge intent="note" minimal>static</Badge> | `const size_t` | A constant used in the generation algorithm. |
+| `step_size` <Badge intent="note" minimal>static</Badge> | `const size_t` | The step size used in the generation algorithm. |
+| `min` <Badge intent="note" minimal>static</Badge> | `const result_type` | The smallest value this `linear_feedback_shift_engine` may potentially produce. |
+| `max` <Badge intent="note" minimal>static</Badge> | `const result_type` | The largest value this `linear_feedback_shift_engine` may potentially produce. |
+| `default_seed` <Badge intent="note" minimal>static</Badge> | `const result_type` | The default seed of this `linear_feedback_shift_engine`. |

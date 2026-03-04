@@ -1,0 +1,155 @@
+---
+title: "cuda::device_ref"
+description: "A non-owning representation of a CUDA device."
+---
+
+A non-owning representation of a CUDA device.
+
+```cpp showLineNumbers={false}
+#include <cuda/device_ref.h>
+```
+
+---
+
+## Constructors
+
+### device_ref <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Create a `device_ref` object from a native device ordinal.
+
+<CodeBlock links={{"device_ref": "/libcudacxx/api/cuda::device_ref"}}>
+```cpp showLineNumbers={false}
+cuda::device_ref::device_ref(
+    int __id
+) noexcept
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### get <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Retrieve the native ordinal of the `device_ref`.
+
+<CodeBlock links={{"device_ref": "/libcudacxx/api/cuda::device_ref"}}>
+```cpp showLineNumbers={false}
+int cuda::device_ref::get() const noexcept
+```
+</CodeBlock>
+
+**Returns:** int The native device ordinal held by the `device_ref` object
+
+### attribute <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<Tabs>
+<Tab title="Const">
+
+Retrieve the specified attribute for the device.
+
+<CodeBlock links={{"device_ref": "/libcudacxx/api/cuda::device_ref"}}>
+```cpp showLineNumbers={false}
+template <typename _Attr>
+auto cuda::device_ref::attribute(
+    _Attr __attr
+) const
+```
+</CodeBlock>
+
+**Throws:** `cuda_error` if the attribute query fails
+
+**Parameters**
+
+<ParamField path="__attr" type="_Attr">
+The attribute to query. See `device::attrs` for the available attributes.
+</ParamField>
+
+**See also:**
+device::attrs
+
+
+</Tab>
+<Tab title="Const">
+
+This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts.
+
+<CodeBlock links={{"device_ref": "/libcudacxx/api/cuda::device_ref"}}>
+```cpp showLineNumbers={false}
+template <::cudaDeviceAttr _Attr>
+auto cuda::device_ref::attribute() const
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+### operator memory_location <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Retrieve the memory location of this device.
+
+<CodeBlock links={{"device_ref": "/libcudacxx/api/cuda::device_ref"}}>
+```cpp showLineNumbers={false}
+cuda::device_ref::operator memory_location() const noexcept
+```
+</CodeBlock>
+
+**Returns:** The memory location of this device
+
+### init <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Initializes the primary context of the device.
+
+<CodeBlock links={{"device_ref": "/libcudacxx/api/cuda::device_ref"}}>
+```cpp showLineNumbers={false}
+void cuda::device_ref::init() const
+```
+</CodeBlock>
+
+### name <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Retrieve the name of this device.
+
+<CodeBlock links={{"device_ref": "/libcudacxx/api/cuda::device_ref"}}>
+```cpp showLineNumbers={false}
+cuda::std::string_view cuda::device_ref::name() const
+```
+</CodeBlock>
+
+**Returns:** String view containing the name of this device.
+
+### has_peer_access_to <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Queries if its possible for this device to directly access specified device's memory.
+
+If this function returns true, device supplied to this call can be passed into enable_peer_access on memory resource or pool that manages memory on this device. It will make allocations from that pool accessible by this device.
+
+<CodeBlock links={{"device_ref": "/libcudacxx/api/cuda::device_ref"}}>
+```cpp showLineNumbers={false}
+bool cuda::device_ref::has_peer_access_to(
+    device_ref __other_dev
+) const
+```
+</CodeBlock>
+
+**Returns:** true if its possible for this device to access the specified device's memory
+
+**Parameters**
+
+<ParamField path="__other_dev" type="device_ref">
+Device to query the peer access
+</ParamField>
+
+### peers <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Retrieve `device_ref`s that are peers of this device.
+
+The device on which this API is called is not included in the vector.
+
+<CodeBlock links={{"device_ref": "/libcudacxx/api/cuda::device_ref"}}>
+```cpp showLineNumbers={false}
+cuda::std::span<const device_ref> cuda::device_ref::peers() const
+```
+</CodeBlock>
+
+**Throws:** `cuda_error` if any peer access query fails

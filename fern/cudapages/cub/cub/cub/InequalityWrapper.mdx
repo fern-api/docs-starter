@@ -1,0 +1,57 @@
+---
+title: cub::InequalityWrapper
+description: "Inequality functor (wraps equality functor)."
+---
+
+Inequality functor (wraps equality functor).
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="EqualityOp" type="typename">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### InequalityWrapper <Badge intent="note" minimal>inline</Badge>
+
+Constructor.
+
+<CodeBlock links={{"InequalityWrapper": "/library/api/cub::InequalityWrapper"}}>
+```cpp showLineNumbers={false}
+cub::InequalityWrapper<EqualityOp>::InequalityWrapper(
+    EqualityOp op
+)
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### operator() <Badge intent="note" minimal>inline</Badge>
+
+Boolean inequality operator, returns `t != u`.
+
+<CodeBlock links={{"InequalityWrapper": "/library/api/cub::InequalityWrapper"}}>
+```cpp showLineNumbers={false}
+template <typename T, typename U>
+bool cub::InequalityWrapper<EqualityOp>::operator()(
+    T &&t,
+    U &&u
+)
+```
+</CodeBlock>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `op` | `EqualityOp` | Wrapped equality operator. |

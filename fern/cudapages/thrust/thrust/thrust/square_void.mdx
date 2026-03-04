@@ -1,0 +1,33 @@
+---
+title: "thrust::square< void >"
+description: ""
+---
+
+```cpp showLineNumbers={false}
+#include <thrust/functional.h>
+```
+
+---
+
+## Methods
+
+### operator() <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<CodeBlock links={{"square< void >": "/library/api/thrust::square%3C void %3E"}}>
+```cpp showLineNumbers={false}
+template <typename T>
+T thrust::square<void>::operator()(
+    const T &x
+) const noexcept(x *x)
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `is_transparent` | `void` |

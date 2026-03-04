@@ -1,0 +1,218 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/tracers/root_listeners
+title: langchain_core.tracers.root_listeners
+---
+
+Tracers that call listeners.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`AsyncRootListenersTracer`](#langchain_core-tracers-root_listeners-AsyncRootListenersTracer) | Async tracer that calls listeners on run start, end, and error. |
+| [`RootListenersTracer`](#langchain_core-tracers-root_listeners-RootListenersTracer) | Tracer that calls listeners on run start, end, and error. |
+
+### Data
+
+[`AsyncListener`](#langchain_core-tracers-root_listeners-AsyncListener)
+
+[`Listener`](#langchain_core-tracers-root_listeners-Listener)
+
+### API
+
+<Anchor id="langchain_core-tracers-root_listeners-AsyncRootListenersTracer">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.tracers.root_listeners.AsyncListener":"#langchain_core-tracers-root_listeners-AsyncListener"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tracers.root_listeners.AsyncRootListenersTracer(
+    config: langchain_core.runnables.config.RunnableConfig,
+    on_start: langchain_core.tracers.root_listeners.AsyncListener | None,
+    on_end: langchain_core.tracers.root_listeners.AsyncListener | None,
+    on_error: langchain_core.tracers.root_listeners.AsyncListener | None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [AsyncBaseTracer](/langchain-core/langchain_core/tracers/base#langchain_core-tracers-base-AsyncBaseTracer)
+
+Async tracer that calls listeners on run start, end, and error.
+
+
+<ParamField path="log_missing_parent" type="= False">
+Whether to log a warning if the parent is missing.
+</ParamField>
+
+<ParamField path="root_id" type="UUID | None = None">
+</ParamField>
+<Anchor id="langchain_core-tracers-root_listeners-AsyncRootListenersTracer-_on_run_create">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.root_listeners.AsyncRootListenersTracer._on_run_create(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-root_listeners-AsyncRootListenersTracer-_on_run_update">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.root_listeners.AsyncRootListenersTracer._on_run_update(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-root_listeners-AsyncRootListenersTracer-_persist_run">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.root_listeners.AsyncRootListenersTracer._persist_run(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-tracers-root_listeners-RootListenersTracer">
+
+<CodeBlock links={{"langchain_core.runnables.config.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.tracers.root_listeners.Listener":"#langchain_core-tracers-root_listeners-Listener"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tracers.root_listeners.RootListenersTracer(
+    config: langchain_core.runnables.config.RunnableConfig,
+    on_start: langchain_core.tracers.root_listeners.Listener | None,
+    on_end: langchain_core.tracers.root_listeners.Listener | None,
+    on_error: langchain_core.tracers.root_listeners.Listener | None
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseTracer](/langchain-core/langchain_core/tracers/base#langchain_core-tracers-base-BaseTracer)
+
+Tracer that calls listeners on run start, end, and error.
+
+
+<ParamField path="log_missing_parent" type="= False">
+Whether to log a warning if the parent is missing.
+</ParamField>
+
+<ParamField path="root_id" type="UUID | None = None">
+</ParamField>
+<Anchor id="langchain_core-tracers-root_listeners-RootListenersTracer-_on_run_create">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.root_listeners.RootListenersTracer._on_run_create(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-root_listeners-RootListenersTracer-_on_run_update">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.root_listeners.RootListenersTracer._on_run_update(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-root_listeners-RootListenersTracer-_persist_run">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.root_listeners.RootListenersTracer._persist_run(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-tracers-root_listeners-AsyncListener">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.root_listeners.AsyncListener = Callable[[Run], Awaitable[None]] | Callable[[Run, RunnableConfig], Awaitable[Non...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-tracers-root_listeners-Listener">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.root_listeners.Listener = Callable[[Run], None] | Callable[[Run, RunnableConfig], None]
+```
+
+</CodeBlock>
+</Anchor>
+

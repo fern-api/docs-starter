@@ -1,0 +1,286 @@
+---
+title: "cuda::timed_event"
+description: "An owning wrapper for a `cudaEvent_t` with timing enabled."
+---
+
+An owning wrapper for a `cudaEvent_t` with timing enabled.
+
+```cpp showLineNumbers={false}
+#include <cuda/timed_event.h>
+```
+
+**Inherits from:** `cuda::event` (public)
+
+---
+
+## Constructors
+
+### timed_event
+
+<Tabs>
+<Tab title="Empty">
+
+<Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>explicit</Badge>
+
+Construct a new `timed_event` object with the specified flags and record the event on the specified stream.
+
+<CodeBlock links={{"timed_event": "/libcudacxx/api/cuda::timed_event", "stream_ref": "/libcudacxx/api/cuda::stream_ref"}}>
+```cpp showLineNumbers={false}
+cuda::timed_event::timed_event(
+    stream_ref __stream,
+    event_flags __flags = event_flags::none
+)
+```
+</CodeBlock>
+
+**Throws:** `cuda_error` if the event creation fails.
+
+</Tab>
+<Tab title="Overload 2">
+
+<Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>explicit</Badge>
+
+Construct a new `timed_event` object with the specified flags.
+
+The event can only be recorded on streams from the specified device.
+
+<CodeBlock links={{"timed_event": "/libcudacxx/api/cuda::timed_event", "device_ref": "/libcudacxx/api/cuda::device_ref"}}>
+```cpp showLineNumbers={false}
+cuda::timed_event::timed_event(
+    device_ref __device,
+    event_flags __flags = event_flags::none
+)
+```
+</CodeBlock>
+
+**Throws:** `cuda_error` if the event creation fails.
+
+</Tab>
+<Tab title="No-init">
+
+<Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>explicit</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Construct a new `timed_event` object into the moved-from state.
+
+<CodeBlock links={{"timed_event": "/libcudacxx/api/cuda::timed_event"}}>
+```cpp showLineNumbers={false}
+cuda::timed_event::timed_event(
+    no_init_t
+) noexcept
+```
+</CodeBlock>
+
+<Info title="Postconditions">
+[`get()`](/libcudacxx/api/cuda::event_ref::get()) returns `cudaEvent_t()`.
+</Info>
+
+</Tab>
+<Tab title="Move">
+
+<Badge intent="note" minimal>noexcept</Badge>
+
+<CodeBlock links={{"timed_event": "/libcudacxx/api/cuda::timed_event"}}>
+```cpp showLineNumbers={false}
+cuda::timed_event::timed_event(
+    timed_event &&
+) noexcept = default
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="From native handle">
+
+<Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>explicit</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+<CodeBlock links={{"timed_event": "/libcudacxx/api/cuda::timed_event"}}>
+```cpp showLineNumbers={false}
+cuda::timed_event::timed_event(
+    ::cudaEvent_t __evnt
+) noexcept
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Copy (deleted)">
+
+<CodeBlock links={{"timed_event": "/libcudacxx/api/cuda::timed_event"}}>
+```cpp showLineNumbers={false}
+cuda::timed_event::timed_event(
+    const timed_event &
+) = delete
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Assignment operators
+
+### operator= <Badge intent="note" minimal>noexcept</Badge>
+
+<Tabs>
+<Tab title="Move assign">
+
+<CodeBlock links={{"timed_event": "/libcudacxx/api/cuda::timed_event"}}>
+```cpp showLineNumbers={false}
+timed_event & cuda::timed_event::operator=(
+    timed_event &&
+) noexcept = default
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="Copy assign (deleted)">
+
+<CodeBlock links={{"timed_event": "/libcudacxx/api/cuda::timed_event"}}>
+```cpp showLineNumbers={false}
+timed_event & cuda::timed_event::operator=(
+    const timed_event &
+) = delete
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### release <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Retrieve the native `cudaEvent_t` handle and give up ownership.
+
+<CodeBlock links={{"timed_event": "/libcudacxx/api/cuda::timed_event", "event": "/libcudacxx/api/cuda::event"}}>
+```cpp showLineNumbers={false}
+::cudaEvent_t cuda::timed_event::release() noexcept
+```
+</CodeBlock>
+
+<Info title="Postconditions">
+The event object is in a moved-from state.
+</Info>
+
+**Returns:** cudaEvent_t The native handle being held by the [`event`](/libcudacxx/api/cuda::event) object.
+
+### record <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Records an event on the specified stream.
+
+<CodeBlock links={{"timed_event": "/libcudacxx/api/cuda::timed_event", "stream_ref": "/libcudacxx/api/cuda::stream_ref", "event": "/libcudacxx/api/cuda::event"}}>
+```cpp showLineNumbers={false}
+void cuda::event_ref::record(
+    stream_ref __stream
+) const
+```
+</CodeBlock>
+
+**Throws:** `cuda_error` if the event record fails
+
+### sync <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Synchronizes the event.
+
+<CodeBlock links={{"timed_event": "/libcudacxx/api/cuda::timed_event", "event": "/libcudacxx/api/cuda::event"}}>
+```cpp showLineNumbers={false}
+void cuda::event_ref::sync() const
+```
+</CodeBlock>
+
+**Throws:** `cuda_error` if waiting for the event fails
+
+### is_done <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Checks if all the work in the stream prior to the record of the event has completed.
+
+If is_done returns true, calling [sync()](/libcudacxx/api/cuda::event_ref::sync()) on this event will return immediately
+
+<CodeBlock links={{"timed_event": "/libcudacxx/api/cuda::timed_event", "event": "/libcudacxx/api/cuda::event"}}>
+```cpp showLineNumbers={false}
+bool cuda::event_ref::is_done() const
+```
+</CodeBlock>
+
+**Throws:** `cuda_error` if the event query fails
+
+### get <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Retrieve the native `cudaEvent_t` handle.
+
+<CodeBlock links={{"timed_event": "/libcudacxx/api/cuda::timed_event", "event": "/libcudacxx/api/cuda::event"}}>
+```cpp showLineNumbers={false}
+::cudaEvent_t cuda::event_ref::get() const noexcept
+```
+</CodeBlock>
+
+**Returns:** cudaEvent_t The native handle being held by the [event_ref](/libcudacxx/api/cuda::event_ref) object.
+
+### operator bool <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>constexpr</Badge> <Badge intent="note" minimal>explicit</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+Checks if the [`event_ref`](/libcudacxx/api/cuda::event_ref) is valid.
+
+<CodeBlock links={{"timed_event": "/libcudacxx/api/cuda::timed_event", "event": "/libcudacxx/api/cuda::event"}}>
+```cpp showLineNumbers={false}
+cuda::event_ref::operator bool() const noexcept
+```
+</CodeBlock>
+
+**Returns:** true if the [`event_ref`](/libcudacxx/api/cuda::event_ref) is valid, false otherwise.
+
+---
+
+## Static methods
+
+### from_native_handle <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>nodiscard</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Construct a `timed_event` object from a native `cudaEvent_t` handle.
+
+<CodeBlock links={{"timed_event": "/libcudacxx/api/cuda::timed_event"}}>
+```cpp showLineNumbers={false}
+static timed_event cuda::timed_event::from_native_handle(
+    ::cudaEvent_t __evnt
+) noexcept
+```
+</CodeBlock>
+
+<Note>
+The constructed `timed_event` object takes ownership of the native handle.
+</Note>
+
+**Returns:** `timed_event` The constructed `timed_event` object
+
+**Parameters**
+
+<ParamField path="__evnt" type="::cudaEvent_t">
+The native handle
+</ParamField>
+
+</Tab>
+<Tab title="Deleted overloads">
+
+The following overloads are deleted to prevent misuse:
+
+<CodeBlock links={{"timed_event": "/libcudacxx/api/cuda::timed_event"}}>
+```cpp showLineNumbers={false}
+static timed_event cuda::timed_event::from_native_handle(int) = delete;
+static timed_event cuda::timed_event::from_native_handle(::cuda::std::nullptr_t) = delete;
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `value_type` | `::cudaEvent_t` |

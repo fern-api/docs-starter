@@ -1,0 +1,1678 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/tracers/base
+title: langchain_core.tracers.base
+---
+
+Base interfaces for tracing runs.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`AsyncBaseTracer`](#langchain_core-tracers-base-AsyncBaseTracer) | Async base interface for tracers. |
+| [`BaseTracer`](#langchain_core-tracers-base-BaseTracer) | Base interface for tracers. |
+
+### Data
+
+[`logger`](#langchain_core-tracers-base-logger)
+
+### API
+
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tracers.base.AsyncBaseTracer()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+**Bases:** [_TracerCore](/langchain-core/langchain_core/tracers/core#langchain_core-tracers-core-_TracerCore), [AsyncCallbackHandler](/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-AsyncCallbackHandler)
+
+Async base interface for tracers.
+
+
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-_end_trace">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer._end_trace(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+End a trace for a run.
+
+Ending a trace will run concurrently with each `_on_[run_type]_end` method.
+No `_on_[run_type]_end` callback should depend on operations in `_end_trace`.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-_on_chain_end">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer._on_chain_end(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Process the Chain Run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-_on_chain_error">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer._on_chain_error(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Process the Chain Run upon error.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-_on_chain_start">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer._on_chain_start(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Process the Chain Run upon start.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-_on_chat_model_start">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer._on_chat_model_start(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Process the Chat Model Run upon start.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-_on_llm_end">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer._on_llm_end(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Process the LLM Run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-_on_llm_error">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer._on_llm_error(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Process the LLM Run upon error.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-_on_llm_new_token">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer._on_llm_new_token(
+    run: langchain_core.tracers.schemas.Run,
+    token: str,
+    chunk: langchain_core.outputs.GenerationChunk | langchain_core.outputs.ChatGenerationChunk | None
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Process new LLM token.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-_on_llm_start">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer._on_llm_start(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Process the LLM Run upon start.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-_on_retriever_end">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer._on_retriever_end(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Process the Retriever Run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-_on_retriever_error">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer._on_retriever_error(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Process the Retriever Run upon error.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-_on_retriever_start">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer._on_retriever_start(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Process the Retriever Run upon start.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-_on_run_create">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer._on_run_create(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Process a run upon creation.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-_on_run_update">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer._on_run_update(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Process a run upon update.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-_on_tool_end">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer._on_tool_end(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Process the Tool Run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-_on_tool_error">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer._on_tool_error(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Process the Tool Run upon error.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-_on_tool_start">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer._on_tool_start(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Process the Tool Run upon start.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-_persist_run">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer._persist_run(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge> <Badge>abstract</Badge>
+
+Persist a run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-_start_trace">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer._start_trace(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Start a trace for a run.
+
+Starting a trace will run concurrently with each `_on_[run_type]_start` method.
+No `_on_[run_type]_start` callback should depend on operations in
+`_start_trace`.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-on_chain_end">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer.on_chain_end(
+    outputs: dict[str, typing.Any],
+    run_id: uuid.UUID,
+    inputs: dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-on_chain_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer.on_chain_error(
+    error: BaseException,
+    inputs: dict[str, typing.Any] | None = None,
+    run_id: uuid.UUID,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-on_chain_start">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer.on_chain_start(
+    serialized: dict[str, typing.Any],
+    inputs: dict[str, typing.Any],
+    run_id: uuid.UUID,
+    tags: list[str] | None = None,
+    parent_run_id: uuid.UUID | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    run_type: str | None = None,
+    name: str | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-on_chat_model_start">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer.on_chat_model_start(
+    serialized: dict[str, typing.Any],
+    messages: list[list[langchain_core.messages.BaseMessage]],
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    name: str | None = None,
+    kwargs: typing.Any = {}
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-on_llm_end">
+
+<CodeBlock links={{"langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer.on_llm_end(
+    response: langchain_core.outputs.LLMResult,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-on_llm_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer.on_llm_error(
+    error: BaseException,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-on_llm_new_token">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer.on_llm_new_token(
+    token: str,
+    chunk: langchain_core.outputs.GenerationChunk | langchain_core.outputs.ChatGenerationChunk | None = None,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-on_llm_start">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer.on_llm_start(
+    serialized: dict[str, typing.Any],
+    prompts: list[str],
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-on_retriever_end">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer.on_retriever_end(
+    documents: collections.abc.Sequence[langchain_core.documents.Document],
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-on_retriever_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer.on_retriever_error(
+    error: BaseException,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-on_retriever_start">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer.on_retriever_start(
+    serialized: dict[str, typing.Any],
+    query: str,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    name: str | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-on_retry">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer.on_retry(
+    retry_state: tenacity.RetryCallState,
+    run_id: uuid.UUID,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-on_tool_end">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer.on_tool_end(
+    output: typing.Any,
+    run_id: uuid.UUID,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-on_tool_error">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer.on_tool_error(
+    error: BaseException,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-AsyncBaseTracer-on_tool_start">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.AsyncBaseTracer.on_tool_start(
+    serialized: dict[str, typing.Any],
+    input_str: str,
+    run_id: uuid.UUID,
+    tags: list[str] | None = None,
+    parent_run_id: uuid.UUID | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    name: str | None = None,
+    inputs: dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-tracers-base-BaseTracer">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tracers.base.BaseTracer()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+**Bases:** [_TracerCore](/langchain-core/langchain_core/tracers/core#langchain_core-tracers-core-_TracerCore), [BaseCallbackHandler](/langchain-core/langchain_core/callbacks/base#langchain_core-callbacks-base-BaseCallbackHandler)
+
+Base interface for tracers.
+
+
+<Anchor id="langchain_core-tracers-base-BaseTracer-__copy__">
+
+<CodeBlock links={{"langchain_core.tracers.base.BaseTracer":"#langchain_core-tracers-base-BaseTracer"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.BaseTracer.__copy__() -> langchain_core.tracers.base.BaseTracer
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return self.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-BaseTracer-__deepcopy__">
+
+<CodeBlock links={{"langchain_core.tracers.base.BaseTracer":"#langchain_core-tracers-base-BaseTracer"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.BaseTracer.__deepcopy__(
+    memo: dict
+) -> langchain_core.tracers.base.BaseTracer
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return self.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-BaseTracer-_end_trace">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.BaseTracer._end_trace(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+End a trace for a run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-BaseTracer-_persist_run">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.BaseTracer._persist_run(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Persist a run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-BaseTracer-_start_trace">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.BaseTracer._start_trace(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Start a trace for a run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-BaseTracer-on_chain_end">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.BaseTracer.on_chain_end(
+    outputs: dict[str, typing.Any],
+    run_id: uuid.UUID,
+    inputs: dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.tracers.schemas.Run
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+End a trace for a chain run.
+
+**Parameters:**
+
+<ParamField path="outputs" type="dict[str, Any]">
+The outputs for the chain.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The run ID.
+</ParamField>
+
+<ParamField path="inputs" type="dict[str, Any] | None" default="None">
+The inputs for the chain.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments.
+</ParamField>
+
+**Returns:** `Run`
+
+The run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-BaseTracer-on_chain_error">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.BaseTracer.on_chain_error(
+    error: BaseException,
+    inputs: dict[str, typing.Any] | None = None,
+    run_id: uuid.UUID,
+    kwargs: typing.Any = {}
+) -> langchain_core.tracers.schemas.Run
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Handle an error for a chain run.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error.
+</ParamField>
+
+<ParamField path="inputs" type="dict[str, Any] | None" default="None">
+The inputs for the chain.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The run ID.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments.
+</ParamField>
+
+**Returns:** `Run`
+
+The run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-BaseTracer-on_chain_start">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.BaseTracer.on_chain_start(
+    serialized: dict[str, typing.Any],
+    inputs: dict[str, typing.Any],
+    run_id: uuid.UUID,
+    tags: list[str] | None = None,
+    parent_run_id: uuid.UUID | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    run_type: str | None = None,
+    name: str | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.tracers.schemas.Run
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Start a trace for a chain run.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any]">
+The serialized chain.
+</ParamField>
+
+<ParamField path="inputs" type="dict[str, Any]">
+The inputs for the chain.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The run ID.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags for the run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The parent run ID.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+The metadata for the run.
+</ParamField>
+
+<ParamField path="run_type" type="str | None" default="None">
+The type of the run.
+</ParamField>
+
+<ParamField path="name" type="str | None" default="None">
+The name of the run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments.
+</ParamField>
+
+**Returns:** `Run`
+
+The run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-BaseTracer-on_chat_model_start">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.BaseTracer.on_chat_model_start(
+    serialized: dict[str, typing.Any],
+    messages: list[list[langchain_core.messages.BaseMessage]],
+    run_id: uuid.UUID,
+    tags: list[str] | None = None,
+    parent_run_id: uuid.UUID | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    name: str | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.tracers.schemas.Run
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Start a trace for an LLM run.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any]">
+The serialized model.
+</ParamField>
+
+<ParamField path="messages" type="list[list[BaseMessage]]">
+The messages to start the chat with.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The run ID.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags for the run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The parent run ID.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+The metadata for the run.
+</ParamField>
+
+<ParamField path="name" type="str | None" default="None">
+The name of the run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments.
+</ParamField>
+
+**Returns:** `Run`
+
+The run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-BaseTracer-on_llm_end">
+
+<CodeBlock links={{"langchain_core.outputs.LLMResult":"/langchain-core/langchain_core/outputs/llm_result#langchain_core-outputs-llm_result-LLMResult","langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.BaseTracer.on_llm_end(
+    response: langchain_core.outputs.LLMResult,
+    run_id: uuid.UUID,
+    kwargs: typing.Any = {}
+) -> langchain_core.tracers.schemas.Run
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+End a trace for an LLM run.
+
+**Parameters:**
+
+<ParamField path="response" type="LLMResult">
+The response.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The run ID.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments.
+</ParamField>
+
+**Returns:** `Run`
+
+The run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-BaseTracer-on_llm_error">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.BaseTracer.on_llm_error(
+    error: BaseException,
+    run_id: uuid.UUID,
+    kwargs: typing.Any = {}
+) -> langchain_core.tracers.schemas.Run
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Handle an error for an LLM run.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The run ID.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments.
+</ParamField>
+
+**Returns:** `Run`
+
+The run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-BaseTracer-on_llm_new_token">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.BaseTracer.on_llm_new_token(
+    token: str,
+    chunk: langchain_core.outputs.GenerationChunk | langchain_core.outputs.ChatGenerationChunk | None = None,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.tracers.schemas.Run
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run on new LLM token.
+
+Only available when streaming is enabled.
+
+**Parameters:**
+
+<ParamField path="token" type="str">
+The token.
+</ParamField>
+
+<ParamField path="chunk" type="GenerationChunk | ChatGenerationChunk | None" default="None">
+The chunk.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The run ID.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The parent run ID.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments.
+</ParamField>
+
+**Returns:** `Run`
+
+The run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-BaseTracer-on_llm_start">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.BaseTracer.on_llm_start(
+    serialized: dict[str, typing.Any],
+    prompts: list[str],
+    run_id: uuid.UUID,
+    tags: list[str] | None = None,
+    parent_run_id: uuid.UUID | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    name: str | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.tracers.schemas.Run
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Start a trace for an LLM run.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any]">
+The serialized model.
+</ParamField>
+
+<ParamField path="prompts" type="list[str]">
+The prompts to start the LLM with.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The run ID.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags for the run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The parent run ID.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+The metadata for the run.
+</ParamField>
+
+<ParamField path="name" type="str | None" default="None">
+The name of the run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments.
+</ParamField>
+
+**Returns:** `Run`
+
+The run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-BaseTracer-on_retriever_end">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document","langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.BaseTracer.on_retriever_end(
+    documents: collections.abc.Sequence[langchain_core.documents.Document],
+    run_id: uuid.UUID,
+    kwargs: typing.Any = {}
+) -> langchain_core.tracers.schemas.Run
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when the `Retriever` ends running.
+
+**Parameters:**
+
+<ParamField path="documents" type="Sequence[Document]">
+The documents.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The run ID.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments.
+</ParamField>
+
+**Returns:** `Run`
+
+The run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-BaseTracer-on_retriever_error">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.BaseTracer.on_retriever_error(
+    error: BaseException,
+    run_id: uuid.UUID,
+    kwargs: typing.Any = {}
+) -> langchain_core.tracers.schemas.Run
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when `Retriever` errors.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The run ID.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments.
+</ParamField>
+
+**Returns:** `Run`
+
+The run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-BaseTracer-on_retriever_start">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.BaseTracer.on_retriever_start(
+    serialized: dict[str, typing.Any],
+    query: str,
+    run_id: uuid.UUID,
+    parent_run_id: uuid.UUID | None = None,
+    tags: list[str] | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    name: str | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.tracers.schemas.Run
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run when the `Retriever` starts running.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any]">
+The serialized retriever.
+</ParamField>
+
+<ParamField path="query" type="str">
+The query.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The run ID.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The parent run ID.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags for the run.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+The metadata for the run.
+</ParamField>
+
+<ParamField path="name" type="str | None" default="None">
+The name of the run.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments.
+</ParamField>
+
+**Returns:** `Run`
+
+The run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-BaseTracer-on_retry">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.BaseTracer.on_retry(
+    retry_state: tenacity.RetryCallState,
+    run_id: uuid.UUID,
+    kwargs: typing.Any = {}
+) -> langchain_core.tracers.schemas.Run
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Run on retry.
+
+**Parameters:**
+
+<ParamField path="retry_state" type="RetryCallState">
+The retry state.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The run ID.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments.
+</ParamField>
+
+**Returns:** `Run`
+
+The run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-BaseTracer-on_tool_end">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.BaseTracer.on_tool_end(
+    output: typing.Any,
+    run_id: uuid.UUID,
+    kwargs: typing.Any = {}
+) -> langchain_core.tracers.schemas.Run
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+End a trace for a tool run.
+
+**Parameters:**
+
+<ParamField path="output" type="Any">
+The output for the tool.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The run ID.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments.
+</ParamField>
+
+**Returns:** `Run`
+
+The run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-BaseTracer-on_tool_error">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.BaseTracer.on_tool_error(
+    error: BaseException,
+    run_id: uuid.UUID,
+    kwargs: typing.Any = {}
+) -> langchain_core.tracers.schemas.Run
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Handle an error for a tool run.
+
+**Parameters:**
+
+<ParamField path="error" type="BaseException">
+The error.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The run ID.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments.
+</ParamField>
+
+**Returns:** `Run`
+
+The run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-base-BaseTracer-on_tool_start">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.BaseTracer.on_tool_start(
+    serialized: dict[str, typing.Any],
+    input_str: str,
+    run_id: uuid.UUID,
+    tags: list[str] | None = None,
+    parent_run_id: uuid.UUID | None = None,
+    metadata: dict[str, typing.Any] | None = None,
+    name: str | None = None,
+    inputs: dict[str, typing.Any] | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.tracers.schemas.Run
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Start a trace for a tool run.
+
+**Parameters:**
+
+<ParamField path="serialized" type="dict[str, Any]">
+The serialized tool.
+</ParamField>
+
+<ParamField path="input_str" type="str">
+The input string.
+</ParamField>
+
+<ParamField path="run_id" type="UUID">
+The run ID.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None" default="None">
+The tags for the run.
+</ParamField>
+
+<ParamField path="parent_run_id" type="UUID | None" default="None">
+The parent run ID.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None" default="None">
+The metadata for the run.
+</ParamField>
+
+<ParamField path="name" type="str | None" default="None">
+The name of the run.
+</ParamField>
+
+<ParamField path="inputs" type="dict[str, Any] | None" default="None">
+The inputs for the tool.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments.
+</ParamField>
+
+**Returns:** `Run`
+
+The run.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-tracers-base-logger">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.base.logger = logging.getLogger(__name__)
+```
+
+</CodeBlock>
+</Anchor>
+

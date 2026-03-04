@@ -1,0 +1,538 @@
+---
+layout: overview
+slug: nemo-rl/nemo_rl/models/megatron/train
+title: nemo_rl.models.megatron.train
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`LogprobsPostProcessor`](#nemo_rl-models-megatron-train-LogprobsPostProcessor) | - |
+| [`LossPostProcessor`](#nemo_rl-models-megatron-train-LossPostProcessor) | - |
+| [`TopkLogitsPostProcessor`](#nemo_rl-models-megatron-train-TopkLogitsPostProcessor) | - |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`aggregate_training_statistics`](#nemo_rl-models-megatron-train-aggregate_training_statistics) | Aggregate training statistics across microbatches and data-parallel ranks. |
+| [`apply_temperature_scaling`](#nemo_rl-models-megatron-train-apply_temperature_scaling) | Apply temperature scaling to logits. |
+| [`forward_with_post_processing_fn`](#nemo_rl-models-megatron-train-forward_with_post_processing_fn) | Perform forward pass with pre-processed microbatch and return output tensor and post-processing function. |
+| [`megatron_forward_backward`](#nemo_rl-models-megatron-train-megatron_forward_backward) | Execute forward and backward passes using Megatron's utilities. |
+| [`model_forward`](#nemo_rl-models-megatron-train-model_forward) | Perform a single forward pass through the model. |
+
+### Data
+
+[`PostProcessingFunction`](#nemo_rl-models-megatron-train-PostProcessingFunction)
+
+### API
+
+<Anchor id="nemo_rl-models-megatron-train-LogprobsPostProcessor">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.megatron.train.LogprobsPostProcessor(
+    cfg: nemo_rl.models.policy.PolicyConfig
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Anchor id="nemo_rl-models-megatron-train-LogprobsPostProcessor-__call__">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.train.LogprobsPostProcessor.__call__(
+    data_dict: nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any],
+    input_ids: torch.Tensor,
+    cu_seqlens_padded: torch.Tensor
+) -> typing.Callable[[torch.Tensor], typing.Tuple[torch.Tensor, typing.Dict[str, torch.Tensor]]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a post-processing function that computes token log probabilities.
+
+This function returns a processor that takes model logits and converts them
+to token-level log probabilities, handling both packed and unpacked sequences.
+
+**Parameters:**
+
+<ParamField path="data_dict" type="BatchedDataDict[Any]">
+Batched data dictionary containing input sequences
+</ParamField>
+
+<ParamField path="input_ids" type="torch.Tensor">
+Processed input token IDs
+</ParamField>
+
+<ParamField path="cu_seqlens_padded" type="torch.Tensor">
+Cumulative sequence lengths for packed sequences
+</ParamField>
+
+**Returns:** `Callable[[torch.Tensor], Tuple[torch.Tensor, Dict[str, torch.Tensor]]]`
+
+Function that takes output tensor and returns (dummy_loss, &#123;"logprobs": token_logprobs&#125;)
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-train-LossPostProcessor">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.megatron.train.LossPostProcessor(
+    loss_fn: nemo_rl.algorithms.loss_functions.LossFunction,
+    cfg: nemo_rl.models.policy.PolicyConfig,
+    num_microbatches: int = 1,
+    cp_normalize: bool = True
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Anchor id="nemo_rl-models-megatron-train-LossPostProcessor-__call__">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.train.LossPostProcessor.__call__(
+    data_dict: nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any],
+    packed_seq_params: typing.Optional[megatron.core.packed_seq_params.PackedSeqParams] = None,
+    global_valid_seqs: typing.Optional[torch.Tensor] = None,
+    global_valid_toks: typing.Optional[torch.Tensor] = None
+) -> typing.Callable[[torch.Tensor], typing.Tuple[torch.Tensor, typing.Dict[str, typing.Any]]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a loss post-processing function for training.
+
+This function wraps a loss function with the necessary context and parameters
+to compute loss and metrics from model outputs. It handles sequence packing
+and context parallelism normalization.
+
+**Parameters:**
+
+<ParamField path="data_dict" type="BatchedDataDict[Any]">
+Batched data dictionary for the current microbatch
+</ParamField>
+
+<ParamField path="packed_seq_params" type="Optional[PackedSeqParams]" default="None">
+Parameters for packed sequences (optional)
+</ParamField>
+
+<ParamField path="global_valid_seqs" type="Optional[torch.Tensor]" default="None">
+Global valid sequence count for loss normalization
+</ParamField>
+
+<ParamField path="global_valid_toks" type="Optional[torch.Tensor]" default="None">
+Global valid token count for loss normalization
+</ParamField>
+
+**Returns:** `Callable[[torch.Tensor], Tuple[torch.Tensor, Dict[str, Any]]]`
+
+Function that takes output tensor and returns (loss, metrics) tuple
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-train-TopkLogitsPostProcessor">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class nemo_rl.models.megatron.train.TopkLogitsPostProcessor(
+    cfg: nemo_rl.models.policy.PolicyConfig,
+    k: int
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Anchor id="nemo_rl-models-megatron-train-TopkLogitsPostProcessor-__call__">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.train.TopkLogitsPostProcessor.__call__(
+    data_dict: nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any],
+    cu_seqlens_padded: torch.Tensor
+) -> typing.Callable[[torch.Tensor], typing.Tuple[torch.Tensor, typing.Dict[str, torch.Tensor]]]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a post-processing function that computes top-k logits and indices.
+
+This function returns a processor that extracts the top-k highest logits
+and their corresponding vocabulary indices from model outputs. It handles
+tensor parallelism, context parallelism, and sequence packing.
+
+**Parameters:**
+
+<ParamField path="data_dict" type="BatchedDataDict[Any]">
+Batched data dictionary
+</ParamField>
+
+<ParamField path="cu_seqlens_padded" type="torch.Tensor">
+Cumulative sequence lengths for packed sequences
+</ParamField>
+
+**Returns:** `Callable[[torch.Tensor], Tuple[torch.Tensor, Dict[str, torch.Tensor]]]`
+
+Function that takes output tensor and returns
+      (dummy_loss, &#123;"topk_logits": values, "topk_indices": indices&#125;)
+
+
+</Indent>
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-train-aggregate_training_statistics">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.train.aggregate_training_statistics(
+    all_mb_metrics: typing.List[typing.Dict[str, typing.Any]],
+    losses: typing.List[float],
+    data_parallel_group: torch.distributed.ProcessGroup
+) -> typing.Tuple[typing.Dict[str, typing.List[typing.Any]], torch.Tensor]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Aggregate training statistics across microbatches and data-parallel ranks.
+
+Computes a global loss by all-reducing per-gradient-buffer losses across the
+data-parallel group, then collects per-microbatch metrics into lists keyed by
+metric name.
+
+**Parameters:**
+
+<ParamField path="all_mb_metrics" type="List[Dict[str, Any]]">
+List of metric dicts from each microbatch.
+</ParamField>
+
+<ParamField path="losses" type="List[float]">
+List of per-gradient-buffer scalar losses on this rank.
+</ParamField>
+
+<ParamField path="data_parallel_group" type="torch.distributed.ProcessGroup">
+The data-parallel process group for all-reduce.
+</ParamField>
+
+**Returns:** `Tuple[Dict[str, List[Any]], torch.Tensor]`
+
+Tuple of:
+- mb_metrics: Dict mapping metric names to lists of values across microbatches.
+- global_loss: Tensor of losses summed across all data-parallel ranks.
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-train-apply_temperature_scaling">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.train.apply_temperature_scaling(
+    logits: torch.Tensor,
+    cfg: nemo_rl.models.policy.PolicyConfig
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Apply temperature scaling to logits.
+
+**Parameters:**
+
+<ParamField path="logits" type="torch.Tensor">
+Logits tensor to scale
+</ParamField>
+
+<ParamField path="cfg" type="PolicyConfig">
+Policy configuration containing generation settings
+</ParamField>
+
+**Returns:** `torch.Tensor`
+
+torch.Tensor: Temperature-scaled logits
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-train-forward_with_post_processing_fn">
+
+<CodeBlock links={{"nemo_rl.models.megatron.data.ProcessedMicrobatch":"/nemo-rl/nemo_rl/models/megatron/data#nemo_rl-models-megatron-data-ProcessedMicrobatch","nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig","nemo_rl.models.megatron.train.PostProcessingFunction":"#nemo_rl-models-megatron-train-PostProcessingFunction"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.train.forward_with_post_processing_fn(
+    data_iterator: typing.Iterator[nemo_rl.models.megatron.data.ProcessedMicrobatch],
+    model: megatron.core.models.gpt.GPTModel,
+    cfg: nemo_rl.models.policy.PolicyConfig,
+    post_processing_fn: nemo_rl.models.megatron.train.PostProcessingFunction,
+    defer_fp32_logits: typing.Optional[bool] = False,
+    global_valid_seqs: typing.Optional[torch.Tensor] = None,
+    global_valid_toks: typing.Optional[torch.Tensor] = None,
+    straggler_timer: typing.Optional[megatron.core.utils.StragglerDetector] = None
+) -> typing.Tuple[torch.Tensor, typing.Callable]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Perform forward pass with pre-processed microbatch and return output tensor and post-processing function.
+
+This function takes a pre-processed microbatch (with sequence packing already handled),
+runs the forward step through the model, and prepares a post-processing function for
+post-processing the outputs.
+
+**Parameters:**
+
+<ParamField path="data_iterator" type="Iterator[ProcessedMicrobatch]">
+Iterator yielding ProcessedMicrobatch objects (already processed)
+</ParamField>
+
+<ParamField path="model" type="GPTModel">
+The model to run forward pass on
+</ParamField>
+
+<ParamField path="cfg" type="PolicyConfig">
+Policy configuration dictionary
+</ParamField>
+
+<ParamField path="post_processing_fn" type="PostProcessingFunction">
+Post-processing function to post-process the logits
+</ParamField>
+
+<ParamField path="defer_fp32_logits" type="Optional[bool]" default="False">
+Whether to defer FP32 conversion of logits
+</ParamField>
+
+<ParamField path="global_valid_seqs" type="Optional[torch.Tensor]" default="None">
+Global valid sequence count for loss normalization
+</ParamField>
+
+<ParamField path="global_valid_toks" type="Optional[torch.Tensor]" default="None">
+Global valid token count for loss normalization
+</ParamField>
+
+<ParamField path="straggler_timer" type="Optional[StragglerDetector]" default="None">
+Straggler detector for profiling the forward pass
+</ParamField>
+
+**Returns:** `Tuple[torch.Tensor, Callable]`
+
+(output_tensor, post_processing_fn_wrapped)
+- output_tensor: Raw model outputs (logits)
+- post_processing_fn_wrapped: Function to create output post-processing function when called
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-train-megatron_forward_backward">
+
+<CodeBlock links={{"nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig","nemo_rl.models.megatron.data.ProcessedMicrobatch":"/nemo-rl/nemo_rl/models/megatron/data#nemo_rl-models-megatron-data-ProcessedMicrobatch","nemo_rl.models.megatron.train.PostProcessingFunction":"#nemo_rl-models-megatron-train-PostProcessingFunction"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.train.megatron_forward_backward(
+    model: megatron.core.models.gpt.GPTModel,
+    cfg: nemo_rl.models.policy.PolicyConfig,
+    data_iterator: typing.Iterator[nemo_rl.models.megatron.data.ProcessedMicrobatch],
+    num_microbatches: int,
+    seq_length: int,
+    mbs: int,
+    post_processing_fn: nemo_rl.models.megatron.train.PostProcessingFunction,
+    forward_only: bool = False,
+    defer_fp32_logits: typing.Optional[bool] = False,
+    global_valid_seqs: typing.Optional[torch.Tensor] = None,
+    global_valid_toks: typing.Optional[torch.Tensor] = None,
+    straggler_timer: typing.Optional[megatron.core.utils.StragglerDetector] = None
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Execute forward and backward passes using Megatron's utilities.
+
+This is the main training loop function that coordinates forward and backward
+passes across multiple microbatches using Megatron's pipeline parallel
+execution framework.
+
+**Parameters:**
+
+<ParamField path="model" type="GPTModel">
+The model to train
+</ParamField>
+
+<ParamField path="cfg" type="PolicyConfig">
+Policy configuration dictionary
+</ParamField>
+
+<ParamField path="data_iterator" type="Iterator[ProcessedMicrobatch]">
+Iterator yielding ProcessedMicrobatch objects (already processed)
+</ParamField>
+
+<ParamField path="num_microbatches" type="int">
+Number of microbatches to process
+</ParamField>
+
+<ParamField path="seq_length" type="int">
+Sequence length
+</ParamField>
+
+<ParamField path="mbs" type="int">
+Micro batch size
+</ParamField>
+
+<ParamField path="post_processing_fn" type="PostProcessingFunction">
+Post-processing function to post-process the logits
+</ParamField>
+
+<ParamField path="forward_only" type="bool" default="False">
+If True, skip backward pass
+</ParamField>
+
+<ParamField path="defer_fp32_logits" type="Optional[bool]" default="False">
+Whether to skip the conversion of logits to fp32
+</ParamField>
+
+<ParamField path="global_valid_seqs" type="Optional[torch.Tensor]" default="None">
+Global valid sequence count for loss normalization
+</ParamField>
+
+<ParamField path="global_valid_toks" type="Optional[torch.Tensor]" default="None">
+Global valid token count for loss normalization
+</ParamField>
+
+<ParamField path="straggler_timer" type="Optional[StragglerDetector]" default="None">
+Straggler detector for profiling the forward pass
+</ParamField>
+
+**Returns:** `Any`
+
+Results from the forward/backward execution
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-train-model_forward">
+
+<CodeBlock links={{"nemo_rl.distributed.batched_data_dict.BatchedDataDict":"/nemo-rl/nemo_rl/distributed/batched_data_dict#nemo_rl-distributed-batched_data_dict-BatchedDataDict","nemo_rl.models.policy.PolicyConfig":"/nemo-rl/nemo_rl/models/policy#nemo_rl-models-policy-PolicyConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.train.model_forward(
+    model: megatron.core.models.gpt.GPTModel,
+    data_dict: nemo_rl.distributed.batched_data_dict.BatchedDataDict[typing.Any],
+    cfg: nemo_rl.models.policy.PolicyConfig,
+    input_ids_cp_sharded: torch.Tensor,
+    position_ids: torch.Tensor,
+    attention_mask: torch.Tensor,
+    packed_seq_params: typing.Optional[megatron.core.packed_seq_params.PackedSeqParams] = None,
+    defer_fp32_logits: typing.Optional[bool] = False,
+    straggler_timer: typing.Optional[megatron.core.utils.StragglerDetector] = None
+) -> torch.Tensor
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Perform a single forward pass through the model.
+
+**Parameters:**
+
+<ParamField path="model" type="GPTModel">
+The model to run forward pass on
+</ParamField>
+
+<ParamField path="data_dict" type="BatchedDataDict[Any]">
+Dictionary containing batch data
+</ParamField>
+
+<ParamField path="cfg" type="PolicyConfig">
+Policy configuration dictionary
+</ParamField>
+
+<ParamField path="input_ids_cp_sharded" type="torch.Tensor">
+Context-parallel sharded input token IDs
+</ParamField>
+
+<ParamField path="position_ids" type="torch.Tensor">
+Position IDs for tokens
+</ParamField>
+
+<ParamField path="attention_mask" type="torch.Tensor">
+Attention mask for the sequence
+</ParamField>
+
+<ParamField path="packed_seq_params" type="Optional[PackedSeqParams]" default="None">
+Parameters for packed sequences (optional)
+</ParamField>
+
+<ParamField path="defer_fp32_logits" type="Optional[bool]" default="False">
+Whether to skip the conversion of logits to fp32
+</ParamField>
+
+<ParamField path="straggler_timer" type="Optional[StragglerDetector]" default="None">
+Straggler detector for profiling the forward pass
+</ParamField>
+
+**Returns:** `torch.Tensor`
+
+torch.Tensor: Output tensor from the model (logits)
+
+
+</Indent>
+
+<Anchor id="nemo_rl-models-megatron-train-PostProcessingFunction">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+nemo_rl.models.megatron.train.PostProcessingFunction = Union['LossPostProcessor', 'LogprobsPostProcessor', 'TopkLogitsPostProcessor']
+```
+
+</CodeBlock>
+</Anchor>
+

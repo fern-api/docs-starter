@@ -1,0 +1,296 @@
+---
+title: cub::BlockRunLengthDecode
+description: ""
+---
+
+The BlockRunLengthDecode class supports decoding a run-length encoded array of items. That is, given the two arrays `run_value[N]` and `run_lengths[N]`, `run_value[i]` is repeated `run_lengths[i]` many times in the output array. Due to the nature of the run-length decoding algorithm ("decompression"), the output size of the run-length decoded array is runtime-dependent and potentially without any upper bound. To address this, BlockRunLengthDecode allows retrieving a "window" from the run-length decoded array. The window's offset can be specified and BLOCK_THREADS * DecodedItemsPerThread (i.e., referred to as window_size) decoded items from the specified window will be returned.
+
+.. note::
+
+   Trailing runs of length 0 are supported (i.e., they may only appear at the end of the run_lengths array). A run of length zero may not be followed by a run length that is not zero.
+
+Suppose the set of input `run_values` across the block of threads is `{ [0, 1], [2, 3], [4, 5], [6, 7], ..., [254, 255] }` and `run_lengths` is `{ [1, 2], [3, 4], [5, 1], [2, 3], ..., [5, 1] }`. The corresponding output `decoded_items` in those threads will be `{ [0, 1, 1, 2], [2, 2, 3, 3], [3, 3, 4, 4], [4, 4, 4, 5], ..., [169, 169, 170, 171] }` and `relative_offsets` will be `{ [0, 0, 1, 0], [1, 2, 0, 1], [2, 3, 0, 1], [2, 3, 4, 0], ..., [3, 4, 0, 0] }` during the first iteration of the while loop.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="ItemT" type="typename">
+The data type of the items being run-length decoded
+</ParamField>
+
+<ParamField path="BlockDimX" type="int">
+The thread block length in threads along the X dimension
+</ParamField>
+
+<ParamField path="RunsPerThread" type="int">
+The number of consecutive runs that each thread contributes
+</ParamField>
+
+<ParamField path="DecodedItemsPerThread" type="int">
+The maximum number of decoded items that each thread holds
+</ParamField>
+
+<ParamField path="DecodedOffsetT" type="typename" default="uint32_t">
+Type used to index into the block's decoded items (large enough to hold the sum over all the runs' lengths)
+</ParamField>
+
+<ParamField path="BlockDimY" type="int" default="1">
+The thread block length in threads along the Y dimension
+</ParamField>
+
+<ParamField path="BlockDimZ" type="int" default="1">
+The thread block length in threads along the Z dimension
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### BlockRunLengthDecode <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="With TempStorage">
+
+Constructor specialised for user-provided temporary storage, initializing using the runs' lengths.
+
+<CodeBlock links={{"BlockRunLengthDecode": "/library/api/cub::BlockRunLengthDecode", "TempStorage": "/library/api/cub::BlockRunLengthDecode::TempStorage"}}>
+```cpp showLineNumbers={false}
+template <typename RunLengthT, typename TotalDecodedSizeT>
+cub::BlockRunLengthDecode<ItemT, BlockDimX, RunsPerThread, DecodedItemsPerThread, DecodedOffsetT, BlockDimY, BlockDimZ>::BlockRunLengthDecode(
+    TempStorage &temp_storage,
+    ItemT (&run_values)[RunsPerThread],
+    RunLengthT (&run_lengths)[RunsPerThread],
+    TotalDecodedSizeT &total_decoded_size
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+</Tab>
+<Tab title="With TempStorage">
+
+Constructor specialised for user-provided temporary storage, initializing using the runs' offsets.
+
+<CodeBlock links={{"BlockRunLengthDecode": "/library/api/cub::BlockRunLengthDecode", "TempStorage": "/library/api/cub::BlockRunLengthDecode::TempStorage"}}>
+```cpp showLineNumbers={false}
+template <typename UserRunOffsetT>
+cub::BlockRunLengthDecode<ItemT, BlockDimX, RunsPerThread, DecodedItemsPerThread, DecodedOffsetT, BlockDimY, BlockDimZ>::BlockRunLengthDecode(
+    TempStorage &temp_storage,
+    ItemT (&run_values)[RunsPerThread],
+    UserRunOffsetT (&run_offsets)[RunsPerThread]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+</Tab>
+<Tab title="Overload 3">
+
+Constructor specialised for static temporary storage, initializing using the runs' lengths.
+
+<CodeBlock links={{"BlockRunLengthDecode": "/library/api/cub::BlockRunLengthDecode"}}>
+```cpp showLineNumbers={false}
+template <typename RunLengthT, typename TotalDecodedSizeT>
+cub::BlockRunLengthDecode<ItemT, BlockDimX, RunsPerThread, DecodedItemsPerThread, DecodedOffsetT, BlockDimY, BlockDimZ>::BlockRunLengthDecode(
+    ItemT (&run_values)[RunsPerThread],
+    RunLengthT (&run_lengths)[RunsPerThread],
+    TotalDecodedSizeT &total_decoded_size
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+</Tab>
+<Tab title="Overload 4">
+
+Constructor specialised for static temporary storage, initializing using the runs' offsets.
+
+<CodeBlock links={{"BlockRunLengthDecode": "/library/api/cub::BlockRunLengthDecode"}}>
+```cpp showLineNumbers={false}
+template <typename UserRunOffsetT>
+cub::BlockRunLengthDecode<ItemT, BlockDimX, RunsPerThread, DecodedItemsPerThread, DecodedOffsetT, BlockDimY, BlockDimZ>::BlockRunLengthDecode(
+    ItemT (&run_values)[RunsPerThread],
+    UserRunOffsetT (&run_offsets)[RunsPerThread]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### PrivateStorage <Badge intent="note" minimal>inline</Badge>
+
+Internal storage allocator (used when the user does not provide pre-allocated shared memory).
+
+<CodeBlock links={{"BlockRunLengthDecode": "/library/api/cub::BlockRunLengthDecode"}}>
+```cpp showLineNumbers={false}
+_TempStorage & cub::BlockRunLengthDecode<ItemT, BlockDimX, RunsPerThread, DecodedItemsPerThread, DecodedOffsetT, BlockDimY, BlockDimZ>::PrivateStorage()
+```
+</CodeBlock>
+
+### StaticUpperBound <Badge intent="note" minimal>inline</Badge>
+
+Returns the offset of the first value within `input` which compares greater than `val`.
+
+This version takes `MAX_NUM_ITEMS`, an upper bound of the array size, which will be used to determine the number of binary search iterations at compile time.
+
+<CodeBlock links={{"BlockRunLengthDecode": "/library/api/cub::BlockRunLengthDecode"}}>
+```cpp showLineNumbers={false}
+template <int MAX_NUM_ITEMS, typename InputIteratorT, typename OffsetT, typename T>
+OffsetT cub::BlockRunLengthDecode<ItemT, BlockDimX, RunsPerThread, DecodedItemsPerThread, DecodedOffsetT, BlockDimY, BlockDimZ>::StaticUpperBound(
+    InputIteratorT input,
+    OffsetT num_items,
+    T val
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="input" type="InputIteratorT">
+Input sequence
+</ParamField>
+
+<ParamField path="num_items" type="OffsetT">
+Input sequence length
+</ParamField>
+
+<ParamField path="val" type="T">
+Search key
+</ParamField>
+
+### InitWithRunOffsets <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"BlockRunLengthDecode": "/library/api/cub::BlockRunLengthDecode"}}>
+```cpp showLineNumbers={false}
+template <typename RunOffsetT>
+void cub::BlockRunLengthDecode<ItemT, BlockDimX, RunsPerThread, DecodedItemsPerThread, DecodedOffsetT, BlockDimY, BlockDimZ>::InitWithRunOffsets(
+    ItemT (&run_values)[RunsPerThread],
+    RunOffsetT (&run_offsets)[RunsPerThread]
+)
+```
+</CodeBlock>
+
+### InitWithRunLengths <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"BlockRunLengthDecode": "/library/api/cub::BlockRunLengthDecode"}}>
+```cpp showLineNumbers={false}
+template <typename RunLengthT, typename TotalDecodedSizeT>
+void cub::BlockRunLengthDecode<ItemT, BlockDimX, RunsPerThread, DecodedItemsPerThread, DecodedOffsetT, BlockDimY, BlockDimZ>::InitWithRunLengths(
+    ItemT (&run_values)[RunsPerThread],
+    RunLengthT (&run_lengths)[RunsPerThread],
+    TotalDecodedSizeT &total_decoded_size
+)
+```
+</CodeBlock>
+
+### RunLengthDecode <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Run-length decodes the runs previously passed via a call to Init(...) and returns the run-length decoded items in a blocked arrangement to `decoded_items`.
+
+<CodeBlock links={{"BlockRunLengthDecode": "/library/api/cub::BlockRunLengthDecode"}}>
+```cpp showLineNumbers={false}
+template <typename RelativeOffsetT>
+void cub::BlockRunLengthDecode<ItemT, BlockDimX, RunsPerThread, DecodedItemsPerThread, DecodedOffsetT, BlockDimY, BlockDimZ>::RunLengthDecode(
+    ItemT (&decoded_items)[DecodedItemsPerThread],
+    RelativeOffsetT (&item_offsets)[DecodedItemsPerThread],
+    DecodedOffsetT from_decoded_offset = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Parameters**
+
+<ParamField path="decoded_items" type="ItemT(&)[DecodedItemsPerThread]">
+The run-length decoded items to be returned in a blocked arrangement
+</ParamField>
+
+<ParamField path="item_offsets" type="RelativeOffsetT(&)[DecodedItemsPerThread]">
+The run-length decoded items' relative offset within the run they belong to
+</ParamField>
+
+<ParamField path="from_decoded_offset" type="DecodedOffsetT" default="0">
+If invoked with from_decoded_offset that is larger than total_decoded_size results in undefined behavior.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 2">
+
+Run-length decodes the runs previously passed via a call to Init(...) and returns the run-length decoded items in a blocked arrangement to `decoded_items`.
+
+<CodeBlock links={{"BlockRunLengthDecode": "/library/api/cub::BlockRunLengthDecode"}}>
+```cpp showLineNumbers={false}
+void cub::BlockRunLengthDecode<ItemT, BlockDimX, RunsPerThread, DecodedItemsPerThread, DecodedOffsetT, BlockDimY, BlockDimZ>::RunLengthDecode(
+    ItemT (&decoded_items)[DecodedItemsPerThread],
+    DecodedOffsetT from_decoded_offset = 0
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Parameters**
+
+<ParamField path="decoded_items" type="ItemT(&)[DecodedItemsPerThread]">
+The run-length decoded items to be returned in a blocked arrangement
+</ParamField>
+
+<ParamField path="from_decoded_offset" type="DecodedOffsetT" default="0">
+If invoked with from_decoded_offset that is larger than total_decoded_size results in undefined behavior.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `RunOffsetScanT` | `BlockScan< DecodedOffsetT, BlockDimX, BLOCK_SCAN_RAKING_MEMOIZE, BlockDimY, BlockDimZ >` | [BlockScan](/library/api/cub::_block_scan) used to determine the beginning of each run (i.e., prefix sum over the runs' length). |
+| `RunOffsetT` | `uint32_t` | Type used to index into the block's runs. |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `BLOCK_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | The thread block size in threads. |
+| `BLOCK_RUNS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | The number of runs that the block decodes (out-of-bounds items may be padded with run lengths of '0'). |
+| `temp_storage` | `_TempStorage &` | Shared storage reference. |
+| `linear_tid` | `uint32_t` | Linear thread-id. |
+
+---
+
+## Inner classes
+
+### TempStorage
+
+<CodeBlock links={{"BlockRunLengthDecode": "/library/api/cub::BlockRunLengthDecode"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockRunLengthDecode::TempStorage
+```
+</CodeBlock>
+
+**Inherits from:** `Uninitialized< _TempStorage >` (public)

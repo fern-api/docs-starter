@@ -1,0 +1,43 @@
+---
+title: thrust::mr::pool_options
+description: "A type used for configuring pooling resource adaptors, to fine-tune their behavior and parameters."
+---
+
+A type used for configuring pooling resource adaptors, to fine-tune their behavior and parameters.
+
+```cpp showLineNumbers={false}
+#include <thrust/mr/pool_options.h>
+```
+
+---
+
+## Methods
+
+### validate <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Checks if the options are self-consistent.
+
+/returns true if the options are self-consistent, false otherwise.
+
+<CodeBlock links={{"pool_options": "/library/api/thrust::mr::pool_options"}}>
+```cpp showLineNumbers={false}
+bool thrust::mr::pool_options::validate() const
+```
+</CodeBlock>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `min_blocks_per_chunk` | `std::size_t` | The minimal number of blocks, i.e. |
+| `min_bytes_per_chunk` | `std::size_t` | The minimal number of bytes in a single chunk allocated from upstream. |
+| `max_blocks_per_chunk` | `std::size_t` | The maximal number of blocks, i.e. |
+| `max_bytes_per_chunk` | `std::size_t` | The maximal number of bytes in a single chunk allocated from upstream. |
+| `smallest_block_size` | `std::size_t` | The size of blocks in the smallest pool covered by the pool resource. |
+| `largest_block_size` | `std::size_t` | The size of blocks in the largest pool covered by the pool resource. |
+| `alignment` | `std::size_t` | The alignment of all blocks in internal pools of the pool resource. |
+| `cache_oversized` | `bool` | Decides whether oversized and overaligned blocks are cached for later use, or immediately return it to the upstream resource. |
+| `cached_size_cutoff_factor` | `std::size_t` | The size factor at which a cached allocation is considered too ridiculously oversized to use to fulfill an allocation request. |
+| `cached_alignment_cutoff_factor` | `std::size_t` | The alignment factor at which a cached allocation is considered too ridiculously overaligned to use to fulfill an allocation request. |

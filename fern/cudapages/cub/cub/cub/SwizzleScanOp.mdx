@@ -1,0 +1,57 @@
+---
+title: cub::SwizzleScanOp
+description: "Binary operator wrapper for switching non-commutative scan arguments."
+---
+
+Binary operator wrapper for switching non-commutative scan arguments.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="ScanOp" type="typename">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### SwizzleScanOp <Badge intent="note" minimal>inline</Badge>
+
+Constructor.
+
+<CodeBlock links={{"SwizzleScanOp": "/library/api/cub::SwizzleScanOp"}}>
+```cpp showLineNumbers={false}
+cub::SwizzleScanOp<ScanOp>::SwizzleScanOp(
+    ScanOp scan_op
+)
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### operator() <Badge intent="note" minimal>inline</Badge>
+
+Switch the scan arguments.
+
+<CodeBlock links={{"SwizzleScanOp": "/library/api/cub::SwizzleScanOp"}}>
+```cpp showLineNumbers={false}
+template <typename T>
+T cub::SwizzleScanOp<ScanOp>::operator()(
+    const T &a,
+    const T &b
+)
+```
+</CodeBlock>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `scan_op` | `ScanOp` | Wrapped scan operator. |

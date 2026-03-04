@@ -1,0 +1,25 @@
+---
+title: thrust::proclaim_contiguous_iterator
+description: "Customization point that can be customized to indicate that an iterator type `Iterator` satisfies [ContiguousIterator](https://en.cppreference.com/w/cpp/named_req/ContiguousIterator), aka it points to elements that are contiguous in memory."
+---
+
+Customization point that can be customized to indicate that an iterator type `Iterator` satisfies [ContiguousIterator](https://en.cppreference.com/w/cpp/named_req/ContiguousIterator), aka it points to elements that are contiguous in memory.
+
+```cpp showLineNumbers={false}
+#include <thrust/is_contiguous_iterator.h>
+```
+
+**See also:**
+is_contiguous_iterator,
+THRUST_PROCLAIM_CONTIGUOUS_ITERATOR
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="Iterator" type="typename">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `cuda::std::false_type` (public)

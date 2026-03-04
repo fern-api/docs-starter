@@ -1,0 +1,669 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/prompts/base
+title: langchain_core.prompts.base
+---
+
+Base class for prompt templates.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`BasePromptTemplate`](#langchain_core-prompts-base-BasePromptTemplate) | Base class for all prompt templates, returning a prompt. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_get_document_info`](#langchain_core-prompts-base-_get_document_info) | - |
+| [`aformat_document`](#langchain_core-prompts-base-aformat_document) | Async format a document into a string based on a prompt template. |
+| [`format_document`](#langchain_core-prompts-base-format_document) | Format a document into a string based on a prompt template. |
+
+### Data
+
+[`FormatOutputType`](#langchain_core-prompts-base-FormatOutputType)
+
+### API
+
+<Anchor id="langchain_core-prompts-base-BasePromptTemplate">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.prompts.base.BasePromptTemplate()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+**Bases:** [RunnableSerializable[dict, PromptValue]](/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-RunnableSerializable), `Generic[FormatOutputType]`
+
+Base class for all prompt templates, returning a prompt.
+
+
+<ParamField path="OutputType" type="Any">
+Return the output type of the prompt.
+</ParamField>
+
+<ParamField path="_prompt_type" type="str">
+Return the prompt type key.
+</ParamField>
+
+<ParamField path="_serialized" type="dict[str, Any]">
+</ParamField>
+
+<ParamField path="input_types" type="dict[str, Any] = Field(default_factory=dict, exclude=True)">
+A dictionary of the types of the variables the prompt template expects.
+
+If not provided, all variables are assumed to be strings.
+</ParamField>
+
+<ParamField path="input_variables" type="list[str]">
+A list of the names of the variables whose values are required as inputs to the
+prompt.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None = None">
+Metadata to be used for tracing.
+</ParamField>
+
+<ParamField path="model_config" type="= ConfigDict(arbitrary_types_allowed=True)">
+</ParamField>
+
+<ParamField path="optional_variables" type="list[str] = Field(default=[])">
+A list of the names of the variables for placeholder or `MessagePlaceholder` that
+are optional.
+
+These variables are auto inferred from the prompt and user need not provide them.
+</ParamField>
+
+<ParamField path="output_parser" type="BaseOutputParser | None = None">
+How to parse the output of calling an LLM on this formatted prompt.
+</ParamField>
+
+<ParamField path="partial_variables" type="Mapping[str, Any] = Field(default_factory=dict)">
+A dictionary of the partial variables the prompt template carries.
+
+Partial variables populate the template so that you don't need to pass them in every
+time you call the prompt.
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None = None">
+Tags to be used for tracing.
+</ParamField>
+<Anchor id="langchain_core-prompts-base-BasePromptTemplate-_aformat_prompt_with_error_handling">
+
+<CodeBlock links={{"langchain_core.prompts.base.BasePromptTemplate.dict":"/langchain-core/langchain_core/prompts/base/BasePromptTemplate#langchain_core-prompts-base-BasePromptTemplate-dict","langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.base.BasePromptTemplate._aformat_prompt_with_error_handling(
+    inner_input: langchain_core.prompts.base.BasePromptTemplate.dict
+) -> langchain_core.prompt_values.PromptValue
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-base-BasePromptTemplate-_format_prompt_with_error_handling">
+
+<CodeBlock links={{"langchain_core.prompts.base.BasePromptTemplate.dict":"/langchain-core/langchain_core/prompts/base/BasePromptTemplate#langchain_core-prompts-base-BasePromptTemplate-dict","langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.base.BasePromptTemplate._format_prompt_with_error_handling(
+    inner_input: langchain_core.prompts.base.BasePromptTemplate.dict
+) -> langchain_core.prompt_values.PromptValue
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-base-BasePromptTemplate-_merge_partial_and_user_variables">
+
+<CodeBlock links={{"langchain_core.prompts.base.BasePromptTemplate.dict":"/langchain-core/langchain_core/prompts/base/BasePromptTemplate#langchain_core-prompts-base-BasePromptTemplate-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.base.BasePromptTemplate._merge_partial_and_user_variables(
+    kwargs: typing.Any = {}
+) -> langchain_core.prompts.base.BasePromptTemplate.dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-base-BasePromptTemplate-_validate_input">
+
+<CodeBlock links={{"langchain_core.prompts.base.BasePromptTemplate.dict":"/langchain-core/langchain_core/prompts/base/BasePromptTemplate#langchain_core-prompts-base-BasePromptTemplate-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.base.BasePromptTemplate._validate_input(
+    inner_input: typing.Any
+) -> langchain_core.prompts.base.BasePromptTemplate.dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-base-BasePromptTemplate-aformat">
+
+<CodeBlock links={{"langchain_core.prompts.base.FormatOutputType":"#langchain_core-prompts-base-FormatOutputType"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.base.BasePromptTemplate.aformat(
+    kwargs: typing.Any = {}
+) -> langchain_core.prompts.base.FormatOutputType
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async format the prompt with the inputs.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Any arguments to be passed to the prompt template.
+</ParamField>
+
+**Returns:** `FormatOutputType`
+
+A formatted string.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-base-BasePromptTemplate-aformat_prompt">
+
+<CodeBlock links={{"langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.base.BasePromptTemplate.aformat_prompt(
+    kwargs: typing.Any = {}
+) -> langchain_core.prompt_values.PromptValue
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async create `PromptValue`.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Any arguments to be passed to the prompt template.
+</ParamField>
+
+**Returns:** `PromptValue`
+
+The output of the prompt.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-base-BasePromptTemplate-ainvoke">
+
+<CodeBlock links={{"langchain_core.prompts.base.BasePromptTemplate.dict":"/langchain-core/langchain_core/prompts/base/BasePromptTemplate#langchain_core-prompts-base-BasePromptTemplate-dict","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.base.BasePromptTemplate.ainvoke(
+    input: langchain_core.prompts.base.BasePromptTemplate.dict,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.prompt_values.PromptValue
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async invoke the prompt.
+
+**Parameters:**
+
+<ParamField path="input" type="dict">
+Input to the prompt.
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig | None" default="None">
+Configuration for the prompt.
+</ParamField>
+
+**Returns:** `PromptValue`
+
+The output of the prompt.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-base-BasePromptTemplate-dict">
+
+<CodeBlock links={{"langchain_core.prompts.base.BasePromptTemplate.dict":"/langchain-core/langchain_core/prompts/base/BasePromptTemplate#langchain_core-prompts-base-BasePromptTemplate-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.base.BasePromptTemplate.dict(
+    kwargs: typing.Any = {}
+) -> langchain_core.prompts.base.BasePromptTemplate.dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return dictionary representation of prompt.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Any additional arguments to pass to the dictionary.
+</ParamField>
+
+**Returns:** `dict`
+
+Dictionary representation of the prompt.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-base-BasePromptTemplate-format">
+
+<CodeBlock links={{"langchain_core.prompts.base.FormatOutputType":"#langchain_core-prompts-base-FormatOutputType"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.base.BasePromptTemplate.format(
+    kwargs: typing.Any = {}
+) -> langchain_core.prompts.base.FormatOutputType
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Format the prompt with the inputs.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Any arguments to be passed to the prompt template.
+</ParamField>
+
+**Returns:** `FormatOutputType`
+
+A formatted string.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-base-BasePromptTemplate-format_prompt">
+
+<CodeBlock links={{"langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.base.BasePromptTemplate.format_prompt(
+    kwargs: typing.Any = {}
+) -> langchain_core.prompt_values.PromptValue
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Create `PromptValue`.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Any arguments to be passed to the prompt template.
+</ParamField>
+
+**Returns:** `PromptValue`
+
+The output of the prompt.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-base-BasePromptTemplate-get_input_schema">
+
+<CodeBlock links={{"langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.base.BasePromptTemplate.get_input_schema(
+    config: langchain_core.runnables.RunnableConfig | None = None
+) -> type[pydantic.BaseModel]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get the input schema for the prompt.
+
+**Parameters:**
+
+<ParamField path="config" type="RunnableConfig | None" default="None">
+Configuration for the prompt.
+</ParamField>
+
+**Returns:** `type[BaseModel]`
+
+The input schema for the prompt.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-base-BasePromptTemplate-get_lc_namespace">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.base.BasePromptTemplate.get_lc_namespace() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Get the namespace of the LangChain object.
+
+**Returns:** `list[str]`
+
+`["langchain", "schema", "prompt_template"]`
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-base-BasePromptTemplate-invoke">
+
+<CodeBlock links={{"langchain_core.prompts.base.BasePromptTemplate.dict":"/langchain-core/langchain_core/prompts/base/BasePromptTemplate#langchain_core-prompts-base-BasePromptTemplate-dict","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.prompt_values.PromptValue":"/langchain-core/langchain_core/prompt_values#langchain_core-prompt_values-PromptValue"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.base.BasePromptTemplate.invoke(
+    input: langchain_core.prompts.base.BasePromptTemplate.dict,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.prompt_values.PromptValue
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Invoke the prompt.
+
+**Parameters:**
+
+<ParamField path="input" type="dict">
+Input to the prompt.
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig | None" default="None">
+Configuration for the prompt.
+</ParamField>
+
+**Returns:** `PromptValue`
+
+The output of the prompt.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-base-BasePromptTemplate-is_lc_serializable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.base.BasePromptTemplate.is_lc_serializable() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Return `True` as this class is serializable.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-base-BasePromptTemplate-partial">
+
+<CodeBlock links={{"langchain_core.prompts.base.BasePromptTemplate":"#langchain_core-prompts-base-BasePromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.base.BasePromptTemplate.partial(
+    kwargs: str | collections.abc.Callable[[], str] = {}
+) -> langchain_core.prompts.base.BasePromptTemplate
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return a partial of the prompt template.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="str | Callable[[], str]" default="&#123;&#125;">
+Partial variables to set.
+</ParamField>
+
+**Returns:** `BasePromptTemplate`
+
+A partial of the prompt template.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-base-BasePromptTemplate-save">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.base.BasePromptTemplate.save(
+    file_path: pathlib.Path | str
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Save the prompt.
+
+**Parameters:**
+
+<ParamField path="file_path" type="Path | str">
+Path to directory to save prompt to.
+</ParamField>
+
+**Raises:**
+
+- `ValueError`: If the prompt has partial variables.
+- `ValueError`: If the file path is not json or yaml.
+- `NotImplementedError`: If the prompt type is not implemented.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-base-BasePromptTemplate-validate_variable_names">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.base.BasePromptTemplate.validate_variable_names() -> typing_extensions.Self
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Validate variable names do not include restricted names.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-prompts-base-_get_document_info">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document","langchain_core.prompts.base.BasePromptTemplate":"#langchain_core-prompts-base-BasePromptTemplate","langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.base._get_document_info(
+    doc: langchain_core.documents.Document,
+    prompt: langchain_core.prompts.base.BasePromptTemplate[str]
+) -> langchain_core.prompts.dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-base-aformat_document">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document","langchain_core.prompts.base.BasePromptTemplate":"#langchain_core-prompts-base-BasePromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.base.aformat_document(
+    doc: langchain_core.documents.Document,
+    prompt: langchain_core.prompts.base.BasePromptTemplate[str]
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async format a document into a string based on a prompt template.
+
+First, this pulls information from the document from two sources:
+
+1. `page_content`: This takes the information from the `document.page_content` and
+    assigns it to a variable named `page_content`.
+2. `metadata`: This takes information from `document.metadata` and assigns it to
+    variables of the same name.
+
+Those variables are then passed into the `prompt` to produce a formatted string.
+
+**Parameters:**
+
+<ParamField path="doc" type="Document">
+`Document`, the `page_content` and `metadata` will be used to create the
+final string.
+</ParamField>
+
+<ParamField path="prompt" type="BasePromptTemplate[str]">
+`BasePromptTemplate`, will be used to format the `page_content` and
+`metadata` into the final string.
+</ParamField>
+
+**Returns:** `str`
+
+String of the document formatted.
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-base-format_document">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document","langchain_core.prompts.base.BasePromptTemplate":"#langchain_core-prompts-base-BasePromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.base.format_document(
+    doc: langchain_core.documents.Document,
+    prompt: langchain_core.prompts.base.BasePromptTemplate[str]
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format a document into a string based on a prompt template.
+
+First, this pulls information from the document from two sources:
+
+1. `page_content`: This takes the information from the `document.page_content` and
+    assigns it to a variable named `page_content`.
+2. `metadata`: This takes information from `document.metadata` and assigns it to
+    variables of the same name.
+
+Those variables are then passed into the `prompt` to produce a formatted string.
+
+**Parameters:**
+
+<ParamField path="doc" type="Document">
+`Document`, the `page_content` and `metadata` will be used to create the
+final string.
+</ParamField>
+
+<ParamField path="prompt" type="BasePromptTemplate[str]">
+`BasePromptTemplate`, will be used to format the `page_content` and
+`metadata` into the final string.
+</ParamField>
+
+**Returns:** `str`
+
+String of the document formatted.
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-base-FormatOutputType">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.base.FormatOutputType = TypeVar('FormatOutputType')
+```
+
+</CodeBlock>
+</Anchor>
+

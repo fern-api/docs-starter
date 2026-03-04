@@ -1,0 +1,118 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/document_loaders/langsmith
+title: langchain_core.document_loaders.langsmith
+---
+
+LangSmith document loader.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`LangSmithLoader`](#langchain_core-document_loaders-langsmith-LangSmithLoader) | Load LangSmith Dataset examples as `Document` objects. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_stringify`](#langchain_core-document_loaders-langsmith-_stringify) | - |
+
+### API
+
+<Anchor id="langchain_core-document_loaders-langsmith-LangSmithLoader">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.document_loaders.langsmith.LangSmithLoader(
+    dataset_id: uuid.UUID | str | None = None,
+    dataset_name: str | None = None,
+    example_ids: collections.abc.Sequence[uuid.UUID | str] | None = None,
+    as_of: datetime.datetime | str | None = None,
+    splits: collections.abc.Sequence[str] | None = None,
+    inline_s3_urls: bool = True,
+    offset: int = 0,
+    limit: int | None = None,
+    metadata: dict | None = None,
+    filter: str | None = None,
+    content_key: str = '',
+    format_content: collections.abc.Callable[..., str] | None = None,
+    client: langsmith.Client | None = None,
+    client_kwargs: typing.Any = {}
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseLoader](/langchain-core/langchain_core/document_loaders/base#langchain_core-document_loaders-base-BaseLoader)
+
+Load LangSmith Dataset examples as `Document` objects.
+
+Loads the example inputs as the `Document` page content and places the entire
+example into the `Document` metadata. This allows you to easily create few-shot
+example retrievers from the loaded documents.
+
+??? example "Lazy loading"
+
+    ```python
+    from langchain_core.document_loaders import LangSmithLoader
+
+    loader = LangSmithLoader(dataset_id="...", limit=100)
+    docs = []
+    for doc in loader.lazy_load():
+        docs.append(doc)
+    ```
+
+    ```python
+    # -> [Document("...", metadata={"inputs": {...}, "outputs": {...}, ...}), ...]
+    ```
+
+
+<ParamField path="_client" type="= client or LangSmithClient(**client_kwargs)">
+</ParamField>
+
+<ParamField path="content_key">
+</ParamField>
+
+<ParamField path="format_content" type="= format_content or _stringify">
+</ParamField>
+<Anchor id="langchain_core-document_loaders-langsmith-LangSmithLoader-lazy_load">
+
+<CodeBlock links={{"langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.document_loaders.langsmith.LangSmithLoader.lazy_load() -> collections.abc.Iterator[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-document_loaders-langsmith-_stringify">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.document_loaders.langsmith._stringify(
+    x: str | dict[str, typing.Any]
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>

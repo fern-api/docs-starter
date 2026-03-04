@@ -1,0 +1,24 @@
+---
+title: cub::ArgMin
+description: "Arg min functor (keeps the value and offset of the first occurrence of the smallest item)."
+---
+
+Arg min functor (keeps the value and offset of the first occurrence of the smallest item).
+
+---
+
+## Methods
+
+### operator() <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+Boolean min operator, preferring the item having the smaller offset in case of ties.
+
+<CodeBlock links={{"ArgMin": "/library/api/cub::ArgMin"}}>
+```cpp showLineNumbers={false}
+template <typename T, typename OffsetT>
+KeyValuePair<OffsetT, T> cub::ArgMin::operator()(
+    const KeyValuePair<OffsetT, T> &a,
+    const KeyValuePair<OffsetT, T> &b
+) const
+```
+</CodeBlock>

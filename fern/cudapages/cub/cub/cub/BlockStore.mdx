@@ -1,0 +1,388 @@
+---
+title: cub::BlockStore
+description: ""
+---
+
+The BlockStore class provides collective data movement methods for writing a blocked arrangement of items partitioned across a CUDA thread block to a linear segment of memory.
+
+## Example
+
+The code snippet below illustrates the storing of a "blocked" arrangement of 512 integers across 128 threads (where each thread owns 4 consecutive items) into a linear segment of memory. The store is specialized for `BLOCK_STORE_WARP_TRANSPOSE`, meaning items are locally reordered among threads so that memory references will be efficiently coalesced using a warp-striped access pattern.
+
+`{ [0,1,2,3], [4,5,6,7], ..., [508,509,510,511] }`. The output `d_data` will be `0, 1, 2, 3, 4, 5, ...`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_store.cuh>
+
+__global__ void ExampleKernel(int *d_data, ...)
+{
+    // Specialize BlockStore for a 1D block of 128 threads owning 4 integer items each
+    using BlockStore = cub::BlockStore<int, 128, 4, BLOCK_STORE_WARP_TRANSPOSE>;
+
+    // Allocate shared memory for BlockStore
+    __shared__ typename BlockStore::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_data[4];
+    ...
+
+    // Store items to linear memory
+    BlockStore(temp_storage).Store(d_data, thread_data);
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="T" type="typename">
+The type of data to be written.
+</ParamField>
+
+<ParamField path="BlockDimX" type="int">
+The thread block length in threads along the X dimension
+</ParamField>
+
+<ParamField path="ItemsPerThread" type="int">
+The number of consecutive items partitioned onto each thread.
+</ParamField>
+
+<ParamField path="Algorithm" type="BlockStoreAlgorithm" default="BLOCK_STORE_DIRECT">
+</ParamField>
+
+<ParamField path="BlockDimY" type="int" default="1">
+**[optional]** The thread block length in threads along the Y dimension (default: 1)
+</ParamField>
+
+<ParamField path="BlockDimZ" type="int" default="1">
+**[optional]** The thread block length in threads along the Z dimension (default: 1)
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Collective constructors
+
+### BlockStore <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+Collective constructor using a private static allocation of shared memory as temporary storage.
+
+<CodeBlock links={{"BlockStore": "/library/api/cub::BlockStore"}}>
+```cpp showLineNumbers={false}
+cub::BlockStore<T, BlockDimX, ItemsPerThread, Algorithm, BlockDimY, BlockDimZ>::BlockStore()
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+</Tab>
+<Tab title="With TempStorage">
+
+Collective constructor using the specified memory allocation as temporary storage.
+
+<CodeBlock links={{"BlockStore": "/library/api/cub::BlockStore", "TempStorage": "/library/api/cub::BlockStore::TempStorage"}}>
+```cpp showLineNumbers={false}
+cub::BlockStore<T, BlockDimX, ItemsPerThread, Algorithm, BlockDimY, BlockDimZ>::BlockStore(
+    TempStorage &temp_storage
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+**Parameters**
+
+<ParamField path="temp_storage" type="TempStorage &">
+Reference to memory allocation having layout type [TempStorage](/library/api/cub::BlockStore::TempStorage)
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Data movement
+
+### Store <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Overload 1">
+
+Store items into a linear segment of memory
+
+<CodeBlock links={{"BlockStore": "/library/api/cub::BlockStore"}}>
+```cpp showLineNumbers={false}
+template <typename OutputIteratorT>
+void cub::BlockStore<T, BlockDimX, ItemsPerThread, Algorithm, BlockDimY, BlockDimZ>::Store(
+    OutputIteratorT block_itr,
+    T (&items)[ItemsPerThread]
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Data is in a blocked arrangement across threads.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="block_itr" type="OutputIteratorT">
+The thread block's base output iterator for storing to
+</ParamField>
+
+<ParamField path="items" type="T(&)[ItemsPerThread]">
+Data to store
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the storing of a "blocked" arrangement of 512 integers across 128 threads (where each thread owns 4 consecutive items) into a linear segment of memory. The store is specialized for `BLOCK_STORE_WARP_TRANSPOSE`, meaning items are locally reordered among threads so that memory references will be efficiently coalesced using a warp-striped access pattern.
+
+`{ [0,1,2,3], [4,5,6,7], ..., [508,509,510,511] }`. The output `d_data` will be `0, 1, 2, 3, 4, 5, ...`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_store.cuh>
+
+__global__ void ExampleKernel(int *d_data, ...)
+{
+    // Specialize BlockStore for a 1D block of 128 threads owning 4 integer items each
+    using BlockStore = cub::BlockStore<int, 128, 4, BLOCK_STORE_WARP_TRANSPOSE>;
+
+    // Allocate shared memory for BlockStore
+    __shared__ typename BlockStore::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_data[4];
+    ...
+
+    // Store items to linear memory
+    BlockStore(temp_storage).Store(d_data, thread_data);
+}
+```
+
+</Tab>
+<Tab title="Partial tile">
+
+Store items into a linear segment of memory, guarded by range.
+
+<CodeBlock links={{"BlockStore": "/library/api/cub::BlockStore"}}>
+```cpp showLineNumbers={false}
+template <typename OutputIteratorT>
+void cub::BlockStore<T, BlockDimX, ItemsPerThread, Algorithm, BlockDimY, BlockDimZ>::Store(
+    OutputIteratorT block_itr,
+    T (&items)[ItemsPerThread],
+    int valid_items
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Note>
+Data is in a blocked arrangement across threads.
+</Note>
+
+<Warning>
+The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="block_itr" type="OutputIteratorT">
+The thread block's base output iterator for storing to
+</ParamField>
+
+<ParamField path="items" type="T(&)[ItemsPerThread]">
+Data to store
+</ParamField>
+
+<ParamField path="valid_items" type="int">
+Number of valid items to write
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the guarded storing of a "blocked" arrangement of 512 integers across 128 threads (where each thread owns 4 consecutive items) into a linear segment of memory. The store is specialized for `BLOCK_STORE_WARP_TRANSPOSE`, meaning items are locally reordered among threads so that memory references will be efficiently coalesced using a warp-striped access pattern.
+
+`{ [0,1,2,3], [4,5,6,7], ..., [508,509,510,511] }` and `valid_items` is `5`. The output `d_data` will be `0, 1, 2, 3, 4, ?, ?, ?, ...`, with only the first two threads being unmasked to store portions of valid data.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>   // or equivalently <cub/block/block_store.cuh>
+
+__global__ void ExampleKernel(int *d_data, int valid_items, ...)
+{
+    // Specialize BlockStore for a 1D block of 128 threads owning 4 integer items each
+    using BlockStore = cub::BlockStore<int, 128, 4, BLOCK_STORE_WARP_TRANSPOSE>;
+
+    // Allocate shared memory for BlockStore
+    __shared__ typename BlockStore::TempStorage temp_storage;
+
+    // Obtain a segment of consecutive items that are blocked across threads
+    int thread_data[4];
+    ...
+
+    // Store items to linear memory
+    BlockStore(temp_storage).Store(d_data, thread_data, valid_items);
+}
+```
+
+</Tab>
+</Tabs>
+
+---
+
+## Utility methods
+
+### PrivateStorage <Badge intent="note" minimal>inline</Badge>
+
+Internal storage allocator.
+
+<CodeBlock links={{"BlockStore": "/library/api/cub::BlockStore"}}>
+```cpp showLineNumbers={false}
+_TempStorage & cub::BlockStore<T, BlockDimX, ItemsPerThread, Algorithm, BlockDimY, BlockDimZ>::PrivateStorage()
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `InternalStore` | `StoreInternal< Algorithm, 0 >` | Internal load implementation to use. |
+| `_TempStorage` | `typename InternalStore::TempStorage` | Shared memory storage layout type. |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `BLOCK_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | The thread block size in threads. |
+| `temp_storage` | `_TempStorage &` | Thread reference to shared storage. |
+| `linear_tid` | `int` | Linear thread-id. |
+
+---
+
+## Inner classes
+
+### StoreInternal
+
+<CodeBlock links={{"BlockStore": "/library/api/cub::BlockStore"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockStore::StoreInternal
+```
+</CodeBlock>
+
+Store helper.
+
+### StoreInternal< BLOCK_STORE_DIRECT, DUMMY >
+
+<CodeBlock links={{"BlockStore": "/library/api/cub::BlockStore"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockStore::StoreInternal< BLOCK_STORE_DIRECT, DUMMY >
+```
+</CodeBlock>
+
+| Name | Type | Description |
+|---|---|---|
+| `linear_tid` | `int` | Linear thread-id. |
+
+### StoreInternal< BLOCK_STORE_STRIPED, DUMMY >
+
+<CodeBlock links={{"BlockStore": "/library/api/cub::BlockStore"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockStore::StoreInternal< BLOCK_STORE_STRIPED, DUMMY >
+```
+</CodeBlock>
+
+BLOCK_STORE_STRIPED specialization of store helper.
+
+| Name | Type | Description |
+|---|---|---|
+| `linear_tid` | `int` | Linear thread-id. |
+
+### StoreInternal< BLOCK_STORE_VECTORIZE, DUMMY >
+
+<CodeBlock links={{"BlockStore": "/library/api/cub::BlockStore"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockStore::StoreInternal< BLOCK_STORE_VECTORIZE, DUMMY >
+```
+</CodeBlock>
+
+BLOCK_STORE_VECTORIZE specialization of store helper.
+
+| Name | Type | Description |
+|---|---|---|
+| `linear_tid` | `int` | Linear thread-id. |
+
+### StoreInternal< BLOCK_STORE_TRANSPOSE, DUMMY >
+
+<CodeBlock links={{"BlockStore": "/library/api/cub::BlockStore"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockStore::StoreInternal< BLOCK_STORE_TRANSPOSE, DUMMY >
+```
+</CodeBlock>
+
+BLOCK_STORE_TRANSPOSE specialization of store helper.
+
+| Name | Type | Description |
+|---|---|---|
+| `temp_storage` | `_TempStorage &` | Thread reference to shared storage. |
+| `linear_tid` | `int` | Linear thread-id. |
+
+### StoreInternal< BLOCK_STORE_WARP_TRANSPOSE, DUMMY >
+
+<CodeBlock links={{"BlockStore": "/library/api/cub::BlockStore"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockStore::StoreInternal< BLOCK_STORE_WARP_TRANSPOSE, DUMMY >
+```
+</CodeBlock>
+
+BLOCK_STORE_WARP_TRANSPOSE specialization of store helper.
+
+| Name | Type | Description |
+|---|---|---|
+| `WARP_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `temp_storage` | `_TempStorage &` | Thread reference to shared storage. |
+| `linear_tid` | `int` | Linear thread-id. |
+
+### StoreInternal< BLOCK_STORE_WARP_TRANSPOSE_TIMESLICED, DUMMY >
+
+<CodeBlock links={{"BlockStore": "/library/api/cub::BlockStore"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockStore::StoreInternal< BLOCK_STORE_WARP_TRANSPOSE_TIMESLICED, DUMMY >
+```
+</CodeBlock>
+
+BLOCK_STORE_WARP_TRANSPOSE_TIMESLICED specialization of store helper.
+
+| Name | Type | Description |
+|---|---|---|
+| `WARP_THREADS` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `temp_storage` | `_TempStorage &` | Thread reference to shared storage. |
+| `linear_tid` | `int` | Linear thread-id. |
+
+### TempStorage
+
+<CodeBlock links={{"BlockStore": "/library/api/cub::BlockStore"}}>
+```cpp showLineNumbers={false}
+struct cub::BlockStore::TempStorage
+```
+</CodeBlock>
+
+The operations exposed by `BlockStore` require a temporary memory allocation of this nested type for thread communication. This opaque storage can be allocated directly using the `__shared__` keyword. Alternatively, it can be aliased to externally allocated memory (shared or global) or `union`'d with other storage allocation types to facilitate memory reuse.
+
+**Inherits from:** `Uninitialized< _TempStorage >` (public)

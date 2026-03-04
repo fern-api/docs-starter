@@ -1,0 +1,110 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/output_parsers
+title: langchain_core.output_parsers
+---
+
+`OutputParser` classes parse the output of an LLM call into structured data.
+
+!!! tip "Structured output"
+
+    Output parsers emerged as an early solution to the challenge of obtaining structured
+    output from LLMs.
+
+    Today, most LLMs support [structured output](https://docs.langchain.com/oss/python/langchain/models#structured-outputs)
+    natively. In such cases, using output parsers may be unnecessary, and you should
+    leverage the model's built-in capabilities for structured output. Refer to the
+    [documentation of your chosen model](https://docs.langchain.com/oss/python/integrations/providers/overview)
+    for guidance on how to achieve structured output directly.
+
+    Output parsers remain valuable when working with models that do not support
+    structured output natively, or when you require additional processing or validation
+    of the model's output beyond its inherent capabilities.
+
+## Submodules
+
+- **[`langchain_core.output_parsers.base`](/langchain-core/langchain_core/output_parsers/base)**
+- **[`langchain_core.output_parsers.format_instructions`](/langchain-core/langchain_core/output_parsers/format_instructions)**
+- **[`langchain_core.output_parsers.json`](/langchain-core/langchain_core/output_parsers/json)**
+- **[`langchain_core.output_parsers.list`](/langchain-core/langchain_core/output_parsers/list)**
+- **[`langchain_core.output_parsers.openai_functions`](/langchain-core/langchain_core/output_parsers/openai_functions)**
+- **[`langchain_core.output_parsers.openai_tools`](/langchain-core/langchain_core/output_parsers/openai_tools)**
+- **[`langchain_core.output_parsers.pydantic`](/langchain-core/langchain_core/output_parsers/pydantic)**
+- **[`langchain_core.output_parsers.string`](/langchain-core/langchain_core/output_parsers/string)**
+- **[`langchain_core.output_parsers.transform`](/langchain-core/langchain_core/output_parsers/transform)**
+- **[`langchain_core.output_parsers.xml`](/langchain-core/langchain_core/output_parsers/xml)**
+
+## Package Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`__dir__`](#langchain_core-output_parsers-__dir__) | - |
+| [`__getattr__`](#langchain_core-output_parsers-__getattr__) | - |
+
+### Data
+
+[`__all__`](#langchain_core-output_parsers-__all__)
+
+[`_dynamic_imports`](#langchain_core-output_parsers-_dynamic_imports)
+
+### API
+
+<Anchor id="langchain_core-output_parsers-__dir__">
+
+<CodeBlock links={{"langchain_core.output_parsers.list":"#langchain_core-output_parsers-list"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.__dir__() -> langchain_core.output_parsers.list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-__getattr__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.__getattr__(
+    attr_name: str
+) -> object
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-output_parsers-__all__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers.__all__ = ['BaseCumulativeTransformOutputParser', 'BaseGenerationOutputParser', 'BaseLLMOu...
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-output_parsers-_dynamic_imports">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.output_parsers._dynamic_imports = {'BaseLLMOutputParser': 'base', 'BaseGenerationOutputParser': 'base', 'BaseOutpu...
+```
+
+</CodeBlock>
+</Anchor>
+

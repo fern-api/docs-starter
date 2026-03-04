@@ -1,0 +1,759 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/tracers/log_stream
+title: langchain_core.tracers.log_stream
+---
+
+Tracer that streams run logs to a stream.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`LogEntry`](#langchain_core-tracers-log_stream-LogEntry) | A single entry in the run log. |
+| [`LogStreamCallbackHandler`](#langchain_core-tracers-log_stream-LogStreamCallbackHandler) | Tracer that streams run logs to a stream. |
+| [`RunLog`](#langchain_core-tracers-log_stream-RunLog) | Run log. |
+| [`RunLogPatch`](#langchain_core-tracers-log_stream-RunLogPatch) | Patch to the run log. |
+| [`RunState`](#langchain_core-tracers-log_stream-RunState) | State of the run. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_astream_log_implementation`](#langchain_core-tracers-log_stream-_astream_log_implementation) | Implementation of astream_log for a given runnable. |
+| [`_get_standardized_inputs`](#langchain_core-tracers-log_stream-_get_standardized_inputs) | Extract standardized inputs from a `Run`. |
+| [`_get_standardized_outputs`](#langchain_core-tracers-log_stream-_get_standardized_outputs) | Extract standardized output from a run. |
+
+### Data
+
+[`T`](#langchain_core-tracers-log_stream-T)
+
+### API
+
+<Anchor id="langchain_core-tracers-log_stream-LogEntry">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tracers.log_stream.LogEntry
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+A single entry in the run log.
+
+<ParamField path="end_time" type="str | None">
+ISO-8601 timestamp of when the run ended.
+
+Only available after the run has finished.
+</ParamField>
+
+<ParamField path="final_output" type="Any | None">
+Final output of this run.
+
+Only available after the run has finished successfully.
+</ParamField>
+
+<ParamField path="id" type="str">
+ID of the sub-run.
+</ParamField>
+
+<ParamField path="inputs" type="NotRequired[Any | None]">
+Inputs to this run. Not available currently via `astream_log`.
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any]">
+Key-value pairs of metadata for the run.
+</ParamField>
+
+<ParamField path="name" type="str">
+Name of the object being run.
+</ParamField>
+
+<ParamField path="start_time" type="str">
+ISO-8601 timestamp of when the run started.
+</ParamField>
+
+<ParamField path="streamed_output" type="list[Any]">
+List of output chunks streamed by this run, if available.
+</ParamField>
+
+<ParamField path="streamed_output_str" type="list[str]">
+List of LLM tokens streamed by this run, if applicable.
+</ParamField>
+
+<ParamField path="tags" type="list[str]">
+List of tags for the run.
+</ParamField>
+
+<ParamField path="type" type="str">
+Type of the object being run, eg. prompt, chain, llm, etc.
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-log_stream-LogStreamCallbackHandler">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tracers.log_stream.LogStreamCallbackHandler(
+    auto_close: bool = True,
+    include_names: collections.abc.Sequence[str] | None = None,
+    include_types: collections.abc.Sequence[str] | None = None,
+    include_tags: collections.abc.Sequence[str] | None = None,
+    exclude_names: collections.abc.Sequence[str] | None = None,
+    exclude_types: collections.abc.Sequence[str] | None = None,
+    exclude_tags: collections.abc.Sequence[str] | None = None,
+    _schema_format: typing.Literal['original', 'streaming_events'] = 'streaming_events'
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [BaseTracer](/langchain-core/langchain_core/tracers/base#langchain_core-tracers-base-BaseTracer), [_StreamingCallbackHandler](/langchain-core/langchain_core/tracers/_streaming#langchain_core-tracers-_streaming-_StreamingCallbackHandler)
+
+Tracer that streams run logs to a stream.
+
+
+<ParamField path="_counter_map_by_name" type="dict[str, int] = defaultdict(int)">
+</ParamField>
+
+<ParamField path="_key_map_by_run_id" type="dict[UUID, str] = &#123;&#125;">
+</ParamField>
+
+<ParamField path="lock" type="= threading.Lock()">
+</ParamField>
+
+<ParamField path="receive_stream" type="= memory_stream.get_receive_stream()">
+</ParamField>
+
+<ParamField path="root_id" type="UUID | None = None">
+</ParamField>
+
+<ParamField path="send_stream" type="= memory_stream.get_send_stream()">
+</ParamField>
+<Anchor id="langchain_core-tracers-log_stream-LogStreamCallbackHandler-__aiter__">
+
+<CodeBlock links={{"langchain_core.tracers.log_stream.RunLogPatch":"#langchain_core-tracers-log_stream-RunLogPatch"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.log_stream.LogStreamCallbackHandler.__aiter__() -> collections.abc.AsyncIterator[langchain_core.tracers.log_stream.RunLogPatch]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Iterate over the stream of run logs.
+
+**Returns:** `AsyncIterator[RunLogPatch]`
+
+An async iterator over the run log patches.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-log_stream-LogStreamCallbackHandler-_on_llm_new_token">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.log_stream.LogStreamCallbackHandler._on_llm_new_token(
+    run: langchain_core.tracers.schemas.Run,
+    token: str,
+    chunk: langchain_core.outputs.GenerationChunk | langchain_core.outputs.ChatGenerationChunk | None
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Process new LLM token.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-log_stream-LogStreamCallbackHandler-_on_run_create">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.log_stream.LogStreamCallbackHandler._on_run_create(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Start a run.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-log_stream-LogStreamCallbackHandler-_on_run_update">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.log_stream.LogStreamCallbackHandler._on_run_update(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Finish a `Run`.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-log_stream-LogStreamCallbackHandler-_persist_run">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.log_stream.LogStreamCallbackHandler._persist_run(
+    run: langchain_core.tracers.schemas.Run
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-log_stream-LogStreamCallbackHandler-include_run">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.log_stream.LogStreamCallbackHandler.include_run(
+    run: langchain_core.tracers.schemas.Run
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if a `Run` should be included in the log.
+
+**Parameters:**
+
+<ParamField path="run" type="Run">
+The `Run` to check.
+</ParamField>
+
+**Returns:** `bool`
+
+`True` if the `Run` should be included, `False` otherwise.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-log_stream-LogStreamCallbackHandler-send">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.log_stream.LogStreamCallbackHandler.send(
+    ops: dict[str, typing.Any] = ()
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Send a patch to the stream, return `False` if the stream is closed.
+
+**Parameters:**
+
+<ParamField path="*ops" type="dict[str, Any]" default="()">
+The operations to send to the stream.
+</ParamField>
+
+**Returns:** `bool`
+
+`True` if the patch was sent successfully, `False` if the stream is closed.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-log_stream-LogStreamCallbackHandler-tap_output_aiter">
+
+<CodeBlock links={{"langchain_core.tracers.log_stream.T":"#langchain_core-tracers-log_stream-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.log_stream.LogStreamCallbackHandler.tap_output_aiter(
+    run_id: uuid.UUID,
+    output: collections.abc.AsyncIterator[langchain_core.tracers.log_stream.T]
+) -> collections.abc.AsyncIterator[langchain_core.tracers.log_stream.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Tap an output async iterator to stream its values to the log.
+
+**Parameters:**
+
+<ParamField path="run_id" type="UUID">
+The ID of the run.
+</ParamField>
+
+<ParamField path="output" type="AsyncIterator[T]">
+The output async iterator.
+</ParamField>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-log_stream-LogStreamCallbackHandler-tap_output_iter">
+
+<CodeBlock links={{"langchain_core.tracers.log_stream.T":"#langchain_core-tracers-log_stream-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.log_stream.LogStreamCallbackHandler.tap_output_iter(
+    run_id: uuid.UUID,
+    output: collections.abc.Iterator[langchain_core.tracers.log_stream.T]
+) -> collections.abc.Iterator[langchain_core.tracers.log_stream.T]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Tap an output iterator to stream its values to the log.
+
+**Parameters:**
+
+<ParamField path="run_id" type="UUID">
+The ID of the run.
+</ParamField>
+
+<ParamField path="output" type="Iterator[T]">
+The output iterator.
+</ParamField>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-tracers-log_stream-RunLog">
+
+<CodeBlock links={{"langchain_core.tracers.log_stream.RunState":"#langchain_core-tracers-log_stream-RunState"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tracers.log_stream.RunLog(
+    ops: dict[str, typing.Any] = (),
+    state: langchain_core.tracers.log_stream.RunState
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RunLogPatch](#langchain_core-tracers-log_stream-RunLogPatch)
+
+Run log.
+
+
+<Anchor id="langchain_core-tracers-log_stream-RunLog-__add__">
+
+<CodeBlock links={{"langchain_core.tracers.log_stream.RunLogPatch":"#langchain_core-tracers-log_stream-RunLogPatch","langchain_core.tracers.log_stream.RunLog":"#langchain_core-tracers-log_stream-RunLog"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.log_stream.RunLog.__add__(
+    other: langchain_core.tracers.log_stream.RunLogPatch | typing.Any
+) -> langchain_core.tracers.log_stream.RunLog
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Combine two `RunLog` objects.
+
+**Parameters:**
+
+<ParamField path="other" type="RunLogPatch | Any">
+The other `RunLog` or `RunLogPatch` to combine with.
+</ParamField>
+
+**Returns:** `RunLog`
+
+A new `RunLog` representing the combination of the two.
+
+**Raises:**
+
+- `TypeError`: If the other object is not a `RunLog` or `RunLogPatch`.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-log_stream-RunLog-__eq__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.log_stream.RunLog.__eq__(
+    other: object
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check if two `RunLog`s are equal.
+
+**Parameters:**
+
+<ParamField path="other" type="object">
+The other `RunLog` to compare to.
+</ParamField>
+
+**Returns:** `bool`
+
+`True` if the `RunLog`s are equal, `False` otherwise.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-log_stream-RunLog-__repr__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.log_stream.RunLog.__repr__() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-tracers-log_stream-RunLogPatch">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tracers.log_stream.RunLogPatch(
+    ops: dict[str, typing.Any] = ()
+)
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Patch to the run log.
+
+
+<ParamField path="ops" type="list[dict[str, Any]] = list(ops)">
+List of `JSONPatch` operations, which describe how to create the run state
+from an empty dict.
+
+This is the minimal representation of the log, designed to be serialized as JSON and
+sent over the wire to reconstruct the log on the other side. Reconstruction of the
+state can be done with any JSONPatch-compliant library, see https://jsonpatch.com
+for more information.
+</ParamField>
+<Anchor id="langchain_core-tracers-log_stream-RunLogPatch-__add__">
+
+<CodeBlock links={{"langchain_core.tracers.log_stream.RunLogPatch":"#langchain_core-tracers-log_stream-RunLogPatch","langchain_core.tracers.log_stream.RunLog":"#langchain_core-tracers-log_stream-RunLog"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.log_stream.RunLogPatch.__add__(
+    other: langchain_core.tracers.log_stream.RunLogPatch | typing.Any
+) -> langchain_core.tracers.log_stream.RunLog
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Combine two `RunLogPatch` instances.
+
+**Parameters:**
+
+<ParamField path="other" type="RunLogPatch | Any">
+The other `RunLogPatch` to combine with.
+</ParamField>
+
+**Returns:** `RunLog`
+
+A new `RunLog` representing the combination of the two.
+
+**Raises:**
+
+- `TypeError`: If the other object is not a `RunLogPatch`.
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-log_stream-RunLogPatch-__eq__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.log_stream.RunLogPatch.__eq__(
+    other: object
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-tracers-log_stream-RunLogPatch-__repr__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.log_stream.RunLogPatch.__repr__() -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-tracers-log_stream-RunState">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.tracers.log_stream.RunState
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+State of the run.
+
+<ParamField path="final_output" type="Any | None">
+Final output of the run, usually the result of aggregating (`+`) streamed_output.
+
+Updated throughout the run when supported by the `Runnable`.
+</ParamField>
+
+<ParamField path="id" type="str">
+ID of the run.
+</ParamField>
+
+<ParamField path="logs" type="dict[str, LogEntry]">
+Map of run names to sub-runs.
+
+If filters were supplied, this list will contain only the runs that matched the
+filters.
+</ParamField>
+
+<ParamField path="name" type="str">
+Name of the object being run.
+</ParamField>
+
+<ParamField path="streamed_output" type="list[Any]">
+List of output chunks streamed by `Runnable.stream()`
+</ParamField>
+
+<ParamField path="type" type="str">
+Type of the object being run, e.g. prompt, chain, llm, etc.
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-log_stream-_astream_log_implementation">
+
+<CodeBlock links={{"langchain_core.runnables.Runnable":"/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-Runnable","langchain_core.runnables.utils.Input":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Input","langchain_core.runnables.utils.Output":"/langchain-core/langchain_core/runnables/utils#langchain_core-runnables-utils-Output","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.tracers.log_stream.LogStreamCallbackHandler":"#langchain_core-tracers-log_stream-LogStreamCallbackHandler","langchain_core.tracers.log_stream.RunLogPatch":"#langchain_core-tracers-log_stream-RunLogPatch","langchain_core.tracers.log_stream.RunLog":"#langchain_core-tracers-log_stream-RunLog"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.log_stream._astream_log_implementation(
+    runnable: langchain_core.runnables.Runnable[langchain_core.runnables.utils.Input, langchain_core.runnables.utils.Output],
+    value: typing.Any,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    stream: langchain_core.tracers.log_stream.LogStreamCallbackHandler,
+    diff: bool = True,
+    with_streamed_output_list: bool = True,
+    kwargs: typing.Any = {}
+) -> collections.abc.AsyncIterator[langchain_core.tracers.log_stream.RunLogPatch] | collections.abc.AsyncIterator[langchain_core.tracers.log_stream.RunLog]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Implementation of astream_log for a given runnable.
+
+The implementation has been factored out (at least temporarily) as both
+`astream_log` and `astream_events` rely on it.
+
+**Parameters:**
+
+<ParamField path="runnable" type="Runnable[Input, Output]">
+The runnable to run in streaming mode.
+</ParamField>
+
+<ParamField path="value" type="Any">
+The input to the runnable.
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig | None" default="None">
+The config to pass to the runnable.
+</ParamField>
+
+<ParamField path="stream" type="LogStreamCallbackHandler">
+The stream to send the run logs to.
+</ParamField>
+
+<ParamField path="diff" type="bool" default="True">
+Whether to yield run log patches (`True`) or full run logs (`False`).
+</ParamField>
+
+<ParamField path="with_streamed_output_list" type="bool" default="True">
+Whether to include a list of all streamed outputs in
+each patch. If `False`, only the final output will be included in the
+patches.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional keyword arguments to pass to the `Runnable`.
+</ParamField>
+
+**Raises:**
+
+- `ValueError`: If the callbacks in the config are of an unexpected type.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-log_stream-_get_standardized_inputs">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.log_stream._get_standardized_inputs(
+    run: langchain_core.tracers.schemas.Run,
+    schema_format: typing.Literal['original', 'streaming_events']
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Extract standardized inputs from a `Run`.
+
+Standardizes the inputs based on the type of the runnable used.
+
+**Parameters:**
+
+<ParamField path="run" type="Run">
+`Run` object
+</ParamField>
+
+<ParamField path="schema_format" type="Literal['original', 'streaming_events']">
+The schema format to use.
+</ParamField>
+
+**Returns:** `Any`
+
+Valid inputs are only dict. By conventions, inputs always represented invocation
+using named arguments. `None` means that the input is not yet known!
+
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-log_stream-_get_standardized_outputs">
+
+<CodeBlock links={{"langchain_core.tracers.schemas.Run":"/langchain-core/langchain_core/tracers/schemas#langchain_core-tracers-schemas-Run"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.log_stream._get_standardized_outputs(
+    run: langchain_core.tracers.schemas.Run,
+    schema_format: typing.Literal['original', 'streaming_events', 'original+chat']
+) -> typing.Any | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Extract standardized output from a run.
+
+Standardizes the outputs based on the type of the runnable used.
+
+**Parameters:**
+
+<ParamField path="run" type="Run">
+the run object.
+</ParamField>
+
+<ParamField path="schema_format" type="Literal['original', 'streaming_events', 'original+chat']">
+The schema format to use.
+</ParamField>
+
+**Returns:** `Any | None`
+
+An output if returned, otherwise `None`.
+
+
+</Indent>
+
+<Anchor id="langchain_core-tracers-log_stream-T">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.tracers.log_stream.T = TypeVar('T')
+```
+
+</CodeBlock>
+</Anchor>
+

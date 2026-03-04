@@ -1,0 +1,190 @@
+---
+title: cub::DispatchSegmentedSort
+description: ""
+---
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="Order" type="SortOrder">
+</ParamField>
+
+<ParamField path="KeyT" type="typename">
+</ParamField>
+
+<ParamField path="ValueT" type="typename">
+</ParamField>
+
+<ParamField path="OffsetT" type="typename">
+</ParamField>
+
+<ParamField path="BeginOffsetIteratorT" type="typename">
+</ParamField>
+
+<ParamField path="EndOffsetIteratorT" type="typename">
+</ParamField>
+
+<ParamField path="PolicyHub" type="typename" default="detail::segmented_sort::policy_hub<KeyT, ValueT>">
+</ParamField>
+
+<ParamField path="KernelSource" type="typename" default="detail::segmented_sort::DeviceSegmentedSortKernelSource<    typename PolicyHub::MaxPolicy,    Order,    KeyT,    ValueT,    BeginOffsetIteratorT,    EndOffsetIteratorT,    OffsetT>">
+</ParamField>
+
+<ParamField path="PartitionPolicyHub" type="typename" default="detail::three_way_partition::policy_hub<    cub::detail::it_value_t<THRUST_NS_QUALIFIER::counting_iterator<cub::detail::segmented_sort::local_segment_index_t>>,    detail::three_way_partition::per_partition_offset_t>">
+</ParamField>
+
+<ParamField path="PartitionKernelSource" type="typename" default="detail::three_way_partition::DeviceThreeWayPartitionKernelSource<    typename PartitionPolicyHub::MaxPolicy,    THRUST_NS_QUALIFIER::counting_iterator<cub::detail::segmented_sort::local_segment_index_t>,    cub::detail::segmented_sort::local_segment_index_t*,    cub::detail::segmented_sort::local_segment_index_t*,    ::cuda::std::reverse_iterator<cub::detail::segmented_sort::local_segment_index_t*>,    cub::detail::segmented_sort::local_segment_index_t*,    detail::three_way_partition::ScanTileStateT,    cub::detail::segmented_sort::LargeSegmentsSelectorT<OffsetT, BeginOffsetIteratorT, EndOffsetIteratorT>,    cub::detail::segmented_sort::SmallSegmentsSelectorT<OffsetT, BeginOffsetIteratorT, EndOffsetIteratorT>,    detail::three_way_partition::per_partition_offset_t,    detail::three_way_partition::streaming_context_t<cub::detail::segmented_sort::global_segment_offset_t>,    detail::choose_signed_offset<cub::detail::segmented_sort::global_segment_offset_t>::type>">
+</ParamField>
+
+<ParamField path="KernelLauncherFactory" type="typename" default="CUB_DETAIL_DEFAULT_KERNEL_LAUNCHER_FACTORY">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Methods
+
+### Invoke <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"DispatchSegmentedSort": "/library/api/cub::DispatchSegmentedSort"}}>
+```cpp showLineNumbers={false}
+template <typename ActivePolicyT>
+cudaError_t cub::DispatchSegmentedSort<Order, KeyT, ValueT, OffsetT, BeginOffsetIteratorT, EndOffsetIteratorT, PolicyHub, KernelSource, PartitionPolicyHub, PartitionKernelSource, KernelLauncherFactory>::Invoke(
+    ActivePolicyT policy = {}
+)
+```
+</CodeBlock>
+
+### GetNumPasses <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"DispatchSegmentedSort": "/library/api/cub::DispatchSegmentedSort"}}>
+```cpp showLineNumbers={false}
+int cub::DispatchSegmentedSort<Order, KeyT, ValueT, OffsetT, BeginOffsetIteratorT, EndOffsetIteratorT, PolicyHub, KernelSource, PartitionPolicyHub, PartitionKernelSource, KernelLauncherFactory>::GetNumPasses(
+    int radix_bits
+)
+```
+</CodeBlock>
+
+### GetFinalSelector <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"DispatchSegmentedSort": "/library/api/cub::DispatchSegmentedSort"}}>
+```cpp showLineNumbers={false}
+int cub::DispatchSegmentedSort<Order, KeyT, ValueT, OffsetT, BeginOffsetIteratorT, EndOffsetIteratorT, PolicyHub, KernelSource, PartitionPolicyHub, PartitionKernelSource, KernelLauncherFactory>::GetFinalSelector(
+    int selector,
+    int radix_bits
+)
+```
+</CodeBlock>
+
+### GetFinalOutput <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"DispatchSegmentedSort": "/library/api/cub::DispatchSegmentedSort"}}>
+```cpp showLineNumbers={false}
+template <typename T>
+T * cub::DispatchSegmentedSort<Order, KeyT, ValueT, OffsetT, BeginOffsetIteratorT, EndOffsetIteratorT, PolicyHub, KernelSource, PartitionPolicyHub, PartitionKernelSource, KernelLauncherFactory>::GetFinalOutput(
+    int radix_bits,
+    DoubleBuffer<T> &buffer
+)
+```
+</CodeBlock>
+
+### SortWithPartitioning <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"DispatchSegmentedSort": "/library/api/cub::DispatchSegmentedSort"}}>
+```cpp showLineNumbers={false}
+template <typename WrappedPolicyT, typename LargeKernelT, typename SmallKernelT>
+cudaError_t cub::DispatchSegmentedSort<Order, KeyT, ValueT, OffsetT, BeginOffsetIteratorT, EndOffsetIteratorT, PolicyHub, KernelSource, PartitionPolicyHub, PartitionKernelSource, KernelLauncherFactory>::SortWithPartitioning(
+    LargeKernelT large_kernel,
+    SmallKernelT small_kernel,
+    size_t three_way_partition_temp_storage_bytes,
+    cub::detail::device_double_buffer<KeyT> &d_keys_double_buffer,
+    cub::detail::device_double_buffer<ValueT> &d_values_double_buffer,
+    typename KernelSource::LargeSegmentsSelectorT &large_segments_selector,
+    typename KernelSource::SmallSegmentsSelectorT &small_segments_selector,
+    cub::detail::temporary_storage::alias<uint8_t> &device_partition_temp_storage,
+    cub::detail::temporary_storage::alias<local_segment_index_t> &large_and_medium_segments_indices,
+    cub::detail::temporary_storage::alias<local_segment_index_t> &small_segments_indices,
+    cub::detail::temporary_storage::alias<local_segment_index_t> &group_sizes,
+    WrappedPolicyT wrapped_policy
+)
+```
+</CodeBlock>
+
+### SortWithoutPartitioning <Badge intent="note" minimal>inline</Badge>
+
+<CodeBlock links={{"DispatchSegmentedSort": "/library/api/cub::DispatchSegmentedSort"}}>
+```cpp showLineNumbers={false}
+template <typename WrappedPolicyT, typename FallbackKernelT>
+cudaError_t cub::DispatchSegmentedSort<Order, KeyT, ValueT, OffsetT, BeginOffsetIteratorT, EndOffsetIteratorT, PolicyHub, KernelSource, PartitionPolicyHub, PartitionKernelSource, KernelLauncherFactory>::SortWithoutPartitioning(
+    FallbackKernelT fallback_kernel,
+    cub::detail::device_double_buffer<KeyT> &d_keys_double_buffer,
+    cub::detail::device_double_buffer<ValueT> &d_values_double_buffer,
+    WrappedPolicyT wrapped_policy
+)
+```
+</CodeBlock>
+
+---
+
+## Static methods
+
+### Dispatch <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+<CodeBlock links={{"DispatchSegmentedSort": "/library/api/cub::DispatchSegmentedSort"}}>
+```cpp showLineNumbers={false}
+template <typename MaxPolicyT, typename PartitionMaxPolicyT>
+static cudaError_t cub::DispatchSegmentedSort<Order, KeyT, ValueT, OffsetT, BeginOffsetIteratorT, EndOffsetIteratorT, PolicyHub, KernelSource, PartitionPolicyHub, PartitionKernelSource, KernelLauncherFactory>::Dispatch(
+    void *d_temp_storage,
+    size_t &temp_storage_bytes,
+    DoubleBuffer<KeyT> &d_keys,
+    DoubleBuffer<ValueT> &d_values,
+    ::cuda::std::int64_t num_items,
+    global_segment_offset_t num_segments,
+    BeginOffsetIteratorT d_begin_offsets,
+    EndOffsetIteratorT d_end_offsets,
+    bool is_overwrite_okay,
+    cudaStream_t stream,
+    KernelSource kernel_source = {},
+    PartitionKernelSource partition_kernel_source = {},
+    KernelLauncherFactory launcher_factory = {},
+    MaxPolicyT max_policy = {},
+    PartitionMaxPolicyT partition_max_policy = {}
+)
+```
+</CodeBlock>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `local_segment_index_t` | `detail::segmented_sort::local_segment_index_t` |
+| `global_segment_offset_t` | `detail::segmented_sort::global_segment_offset_t` |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `KEYS_ONLY` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `num_selected_groups` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `size_t` | |
+| `d_temp_storage` | `void *` | Device-accessible allocation of temporary storage. |
+| `temp_storage_bytes` | `size_t &` | Reference to size in bytes of [`d_temp_storage`](/library/api/cub::_dispatch_segmented_sort::d_temp_storage) allocation. |
+| `d_keys` | `DoubleBuffer< KeyT > &` | Double-buffer whose current buffer contains the unsorted input keys and, upon return, is updated to point to the sorted output keys. |
+| `d_values` | `DoubleBuffer< ValueT > &` | Double-buffer whose current buffer contains the unsorted input values and, upon return, is updated to point to the sorted output values. |
+| `num_items` | `::cuda::std::int64_t` | Number of items to sort. |
+| `num_segments` | `global_segment_offset_t` | The number of segments that comprise the sorting data. |
+| `d_begin_offsets` | `BeginOffsetIteratorT` | Random-access input iterator to the sequence of beginning offsets of length [`num_segments`](/library/api/cub::_dispatch_segmented_sort::num_segments), such that [`d_begin_offsets`](/library/api/cub::_dispatch_segmented_sort::d_begin_offsets)`[i]` is the first element of the *i*<sup>th</sup> data segment in `d_keys_*` and `d_values_*`. |
+| `d_end_offsets` | `EndOffsetIteratorT` | Random-access input iterator to the sequence of ending offsets of length [`num_segments`](/library/api/cub::_dispatch_segmented_sort::num_segments), such that [`d_end_offsets`](/library/api/cub::_dispatch_segmented_sort::d_end_offsets)`[i]-1` is the last element of the *i*<sup>th</sup> data segment in `d_keys_*` and `d_values_*`. |
+| `is_overwrite_okay` | `bool` | Whether is okay to overwrite source buffers. |
+| `stream` | `cudaStream_t` | CUDA stream to launch kernels within. |
+| `kernel_source` | `KernelSource` | |
+| `partition_kernel_source` | `PartitionKernelSource` | |
+| `launcher_factory` | `KernelLauncherFactory` | |
+| `partition_max_policy` | `PartitionPolicyHub::MaxPolicy` | |

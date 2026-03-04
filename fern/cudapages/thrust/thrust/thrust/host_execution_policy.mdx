@@ -1,0 +1,72 @@
+---
+title: thrust::host_execution_policy
+description: "[`host_execution_policy`](/library/api/thrust::host_execution_policy) is the base class for all Thrust parallel execution policies which are derived from Thrust's default host backend system configured with the `THRUST_HOST_SYSTEM` macro."
+---
+
+`host_execution_policy` is the base class for all Thrust parallel execution policies which are derived from Thrust's default host backend system configured with the `THRUST_HOST_SYSTEM` macro.
+
+Custom user-defined backends which wish to inherit the functionality of Thrust's host backend system should derive a policy from this type in order to interoperate with Thrust algorithm dispatch.
+
+The following code snippet demonstrates how to derive a standalone custom execution policy from `thrust::host_execution_policy` to implement a backend which specializes `for_each` while inheriting the behavior of every other algorithm from the host system:
+
+```cpp showLineNumbers={false}
+#include <thrust/execution_policy.h>
+```
+
+**See also:**
+execution_policy,
+[device_execution_policy](/library/api/thrust::device_execution_policy)
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <thrust/execution_policy.h>
+#include <iostream>
+
+// define a type derived from thrust::host_execution_policy to distinguish our custom execution policy:
+struct my_policy : thrust::host_execution_policy<my_policy> {};
+
+// overload for_each on my_policy
+template<typename Iterator, typename Function>
+Iterator for_each(my_policy, Iterator first, Iterator last, Function f)
+{
+  std::cout << "Hello, world from for_each(my_policy)!" << std::endl;
+
+  for(; first < last; ++first)
+  {
+    f(*first);
+  }
+
+  return first;
+}
+
+struct ignore_argument
+{
+  void operator()(int) {}
+};
+
+int main()
+{
+  int data[4];
+
+  // dispatch thrust::for_each using our custom policy:
+  my_policy exec;
+  thrust::for_each(exec, data, data + 4, ignore_argument());
+
+  // dispatch thrust::transform whose behavior our policy inherits
+  thrust::transform(exec, data, data, + 4, data, ::cuda::std::identity{});
+
+  return 0;
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="DerivedPolicy" type="typename">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `thrust::system::__THRUST_HOST_SYSTEM_NAMESPACE::execution_policy< DerivedPolicy >` (public)

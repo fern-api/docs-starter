@@ -1,0 +1,223 @@
+---
+title: thrust::counting_iterator
+description: "[`counting_iterator`](/library/api/thrust::counting_iterator) is an iterator which represents a pointer into a range of sequentially changing values."
+---
+
+`counting_iterator` is an iterator which represents a pointer into a range of sequentially changing values.
+
+This iterator is useful for creating a range filled with a sequence without explicitly storing it in memory. Using `counting_iterator` saves memory capacity and bandwidth.
+
+The following code snippet demonstrates how to create a `counting_iterator` whose `value_type` is `int` and which sequentially increments by `1`.
+
+This next example demonstrates how to use a `counting_iterator` with the `thrust::copy_if` function to compute the indices of the non-zero elements of a [`device_vector`](/library/api/thrust::device_vector). In this example, we use the `make_counting_iterator` function to avoid specifying the type of the `counting_iterator`.
+
+```cpp showLineNumbers={false}
+#include <thrust/counting_iterator.h>
+```
+
+**See also:**
+make_counting_iterator
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <thrust/iterator/counting_iterator.h>
+...
+// create iterators
+thrust::counting_iterator<int> first(10);
+thrust::counting_iterator<int> last = first + 3;
+
+first[0]   // returns 10
+first[1]   // returns 11
+first[100] // returns 110
+
+// sum of [first, last)
+thrust::reduce(first, last);   // returns 33 (i.e. 10 + 11 + 12)
+
+// initialize vector to [0,1,2,..]
+thrust::counting_iterator<int> iter(0);
+thrust::device_vector<int> vec(500);
+thrust::copy(iter, iter + vec.size(), vec.begin());
+```
+
+```cpp showLineNumbers={false}
+#include <thrust/iterator/counting_iterator.h>
+#include <thrust/copy.h>
+#include <thrust/functional.h>
+#include <thrust/device_vector.h>
+
+int main()
+{
+ // this example computes indices for all the nonzero values in a sequence
+
+ // sequence of zero and nonzero values
+ thrust::device_vector<int> stencil{0, 1, 1, 0, 0, 1, 0, 1};
+
+ // storage for the nonzero indices
+ thrust::device_vector<int> indices(8);
+
+ // compute indices of nonzero elements
+ using IndexIterator = thrust::device_vector<int>::iterator;
+
+ // use make_counting_iterator to define the sequence [0, 8)
+ IndexIterator indices_end = thrust::copy_if(thrust::make_counting_iterator(0),
+                                             thrust::make_counting_iterator(8),
+                                             stencil.begin(),
+                                             indices.begin(),
+                                             ::cuda::std::identity{});
+ // indices now contains [1,2,5,7]
+
+ return 0;
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="Incrementable" type="typename">
+</ParamField>
+
+<ParamField path="System" type="typename" default="use_default">
+</ParamField>
+
+<ParamField path="Traversal" type="typename" default="use_default">
+</ParamField>
+
+<ParamField path="Difference" type="typename" default="use_default">
+</ParamField>
+
+<ParamField path="StrideHolder" type="typename" default="detail::unit_stride">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+**Inherits from:** `thrust::iterator_adaptor< Derived, Base, Value, System, Traversal, Reference, Difference >` (public), `thrust::__compile_time_value< 1 >` (private)
+
+---
+
+## Constructors
+
+### counting_iterator <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+Default constructor initializes this `counting_iterator``'s` counter to `Incrementable{}`.
+
+<CodeBlock links={{"counting_iterator": "/library/api/thrust::counting_iterator"}}>
+```cpp showLineNumbers={false}
+thrust::counting_iterator<Incrementable, System, Traversal, Difference, StrideHolder>::counting_iterator()
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="From other counting_iterator const type">
+
+Copy constructor copies the value of another `counting_iterator` with related System type.
+
+<CodeBlock links={{"counting_iterator": "/library/api/thrust::counting_iterator"}}>
+```cpp showLineNumbers={false}
+template <class OtherSystem>
+thrust::counting_iterator<Incrementable, System, Traversal, Difference, StrideHolder>::counting_iterator(
+    counting_iterator<Incrementable, OtherSystem, Traversal, Difference, StrideHolder> const &rhs
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="rhs" type="counting_iterator<Incrementable, OtherSystem, Traversal, Difference, StrideHolder> const &">
+The `counting_iterator` to copy.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 3">
+
+<Badge intent="note" minimal>explicit</Badge>
+
+This `explicit` constructor copies the value of an `Incrementable` into a new `counting_iterator``'s` `Incrementable` counter.
+
+<CodeBlock links={{"counting_iterator": "/library/api/thrust::counting_iterator"}}>
+```cpp showLineNumbers={false}
+thrust::counting_iterator<Incrementable, System, Traversal, Difference, StrideHolder>::counting_iterator(
+    Incrementable x
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="x" type="Incrementable">
+The initial value of the new `counting_iterator``'s` `Incrementable` counter.
+</ParamField>
+
+</Tab>
+<Tab title="Overload 4">
+
+<Badge intent="note" minimal>explicit</Badge>
+
+<CodeBlock links={{"counting_iterator": "/library/api/thrust::counting_iterator"}}>
+```cpp showLineNumbers={false}
+thrust::counting_iterator<Incrementable, System, Traversal, Difference, StrideHolder>::counting_iterator(
+    Incrementable x,
+    StrideHolder stride
+)
+```
+</CodeBlock>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### base <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"counting_iterator": "/library/api/thrust::counting_iterator", "iterator_adaptor": "/library/api/thrust::iterator_adaptor", "__compile_time_value": "/library/api/thrust::__compile_time_value"}}>
+```cpp showLineNumbers={false}
+Base const  & thrust::iterator_adaptor<Derived, Base, Value, System, Traversal, Reference, Difference>::base() const
+```
+</CodeBlock>
+
+**Returns:** A `const` reference to the `Base` iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) adapts.
+
+### base_reference <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Mutable">
+
+<CodeBlock links={{"counting_iterator": "/library/api/thrust::counting_iterator", "iterator_adaptor": "/library/api/thrust::iterator_adaptor", "__compile_time_value": "/library/api/thrust::__compile_time_value"}}>
+```cpp showLineNumbers={false}
+Base & thrust::iterator_adaptor<Derived, Base, Value, System, Traversal, Reference, Difference>::base_reference()
+```
+</CodeBlock>
+
+**Returns:** A mutable reference to the `Base` iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) adapts.
+
+</Tab>
+<Tab title="Const">
+
+<Badge intent="note" minimal>const</Badge>
+
+<CodeBlock links={{"counting_iterator": "/library/api/thrust::counting_iterator", "iterator_adaptor": "/library/api/thrust::iterator_adaptor", "__compile_time_value": "/library/api/thrust::__compile_time_value"}}>
+```cpp showLineNumbers={false}
+Base const  & thrust::iterator_adaptor<Derived, Base, Value, System, Traversal, Reference, Difference>::base_reference() const
+```
+</CodeBlock>
+
+**Returns:** A `const` reference to the `Base` iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor) adapts.
+
+</Tab>
+</Tabs>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `base_type` | `Base` | The type of iterator this [`iterator_adaptor`](/library/api/thrust::iterator_adaptor)`'s` `adapts`. |

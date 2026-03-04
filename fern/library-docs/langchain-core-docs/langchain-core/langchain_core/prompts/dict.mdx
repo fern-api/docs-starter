@@ -1,0 +1,240 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/prompts/dict
+title: langchain_core.prompts.dict
+---
+
+Dictionary prompt template.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`DictPromptTemplate`](#langchain_core-prompts-dict-DictPromptTemplate) | Template represented by a dictionary. |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_get_input_variables`](#langchain_core-prompts-dict-_get_input_variables) | - |
+| [`_insert_input_variables`](#langchain_core-prompts-dict-_insert_input_variables) | - |
+
+### API
+
+<Anchor id="langchain_core-prompts-dict-DictPromptTemplate">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.prompts.dict.DictPromptTemplate()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [RunnableSerializable[dict, dict]](/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-RunnableSerializable)
+
+Template represented by a dictionary.
+
+Recognizes variables in f-string or mustache formatted string dict values.
+
+Does NOT recognize variables in dict keys. Applies recursively.
+
+
+<ParamField path="_prompt_type" type="str">
+</ParamField>
+
+<ParamField path="_serialized" type="dict[str, Any]">
+</ParamField>
+
+<ParamField path="input_variables" type="list[str]">
+Template input variables.
+</ParamField>
+
+<ParamField path="template" type="dict[str, Any]">
+</ParamField>
+
+<ParamField path="template_format" type="Literal['f-string', 'mustache']">
+</ParamField>
+<Anchor id="langchain_core-prompts-dict-DictPromptTemplate-aformat">
+
+<CodeBlock links={{"langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.dict.DictPromptTemplate.aformat(
+    kwargs: typing.Any = {}
+) -> langchain_core.prompts.dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Format the prompt with the inputs.
+
+**Returns:** `dict[str, Any]`
+
+A formatted dict.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-dict-DictPromptTemplate-format">
+
+<CodeBlock links={{"langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.dict.DictPromptTemplate.format(
+    kwargs: typing.Any = {}
+) -> langchain_core.prompts.dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format the prompt with the inputs.
+
+**Returns:** `dict[str, Any]`
+
+A formatted dict.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-dict-DictPromptTemplate-get_lc_namespace">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.dict.DictPromptTemplate.get_lc_namespace() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Get the namespace of the LangChain object.
+
+**Returns:** `list[str]`
+
+`["langchain_core", "prompts", "dict"]`
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-dict-DictPromptTemplate-invoke">
+
+<CodeBlock links={{"langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.dict.DictPromptTemplate.invoke(
+    input: langchain_core.prompts.dict,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> langchain_core.prompts.dict
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-dict-DictPromptTemplate-is_lc_serializable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.dict.DictPromptTemplate.is_lc_serializable() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Return `True` as this class is serializable.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-dict-DictPromptTemplate-pretty_repr">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.dict.DictPromptTemplate.pretty_repr(
+    html: bool = False
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Human-readable representation.
+
+**Parameters:**
+
+<ParamField path="html" type="bool" default="False">
+Whether to format as HTML.
+</ParamField>
+
+**Returns:** `str`
+
+Human-readable representation.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-prompts-dict-_get_input_variables">
+
+<CodeBlock links={{"langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.dict._get_input_variables(
+    template: langchain_core.prompts.dict,
+    template_format: typing.Literal['f-string', 'mustache']
+) -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-prompts-dict-_insert_input_variables">
+
+<CodeBlock links={{"langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.dict._insert_input_variables(
+    template: langchain_core.prompts.dict[str, typing.Any],
+    inputs: langchain_core.prompts.dict[str, typing.Any],
+    template_format: typing.Literal['f-string', 'mustache']
+) -> langchain_core.prompts.dict[str, typing.Any]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>

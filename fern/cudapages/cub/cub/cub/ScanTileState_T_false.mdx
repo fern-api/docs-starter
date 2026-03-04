@@ -1,0 +1,180 @@
+---
+title: "cub::ScanTileState< T, false >"
+description: "Tile status interface specialized for scan status and value types that can be combined into one machine word that can be read/written coherently in a single access."
+---
+
+Tile status interface specialized for scan status and value types that can be combined into one machine word that can be read/written coherently in a single access.
+
+Tile status interface specialized for scan status and value types that cannot be combined into one machine word.
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="T" type="typename">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Methods
+
+### ScanTileState <Badge intent="note" minimal>inline</Badge>
+
+Constructor.
+
+<CodeBlock links={{"ScanTileState< T, false >": "/library/api/cub::ScanTileState%3C T, false %3E"}}>
+```cpp showLineNumbers={false}
+cub::ScanTileState<T, false>::ScanTileState()
+```
+</CodeBlock>
+
+### Init <Badge intent="note" minimal>inline</Badge>
+
+Initializer.
+
+<CodeBlock links={{"ScanTileState< T, false >": "/library/api/cub::ScanTileState%3C T, false %3E"}}>
+```cpp showLineNumbers={false}
+cudaError_t cub::ScanTileState<T, false>::Init(
+    int num_tiles,
+    void *d_temp_storage,
+    size_t temp_storage_bytes
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="num_tiles" type="int">
+Number of tiles
+</ParamField>
+
+<ParamField path="d_temp_storage" type="void *">
+Device-accessible allocation of temporary storage. When nullptr, the required allocation size is written to `temp_storage_bytes` and no work is done.
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t">
+Size in bytes of `d_temp_storage` allocation Initializer
+</ParamField>
+
+### InitializeStatus <Badge intent="note" minimal>inline</Badge>
+
+Initialize (from device).
+
+<CodeBlock links={{"ScanTileState< T, false >": "/library/api/cub::ScanTileState%3C T, false %3E"}}>
+```cpp showLineNumbers={false}
+void cub::ScanTileState<T, false>::InitializeStatus(
+    int num_tiles
+)
+```
+</CodeBlock>
+
+### SetInclusive <Badge intent="note" minimal>inline</Badge>
+
+Update the specified tile's inclusive value and corresponding status.
+
+<CodeBlock links={{"ScanTileState< T, false >": "/library/api/cub::ScanTileState%3C T, false %3E"}}>
+```cpp showLineNumbers={false}
+template <MemoryOrder>
+void cub::ScanTileState<T, false>::SetInclusive(
+    int tile_idx,
+    T tile_inclusive
+)
+```
+</CodeBlock>
+
+### SetPartial <Badge intent="note" minimal>inline</Badge>
+
+Update the specified tile's partial value and corresponding status.
+
+<CodeBlock links={{"ScanTileState< T, false >": "/library/api/cub::ScanTileState%3C T, false %3E"}}>
+```cpp showLineNumbers={false}
+template <MemoryOrder>
+void cub::ScanTileState<T, false>::SetPartial(
+    int tile_idx,
+    T tile_partial
+)
+```
+</CodeBlock>
+
+### WaitForValid <Badge intent="note" minimal>inline</Badge>
+
+Wait for the corresponding tile to become non-invalid.
+
+<CodeBlock links={{"ScanTileState< T, false >": "/library/api/cub::ScanTileState%3C T, false %3E"}}>
+```cpp showLineNumbers={false}
+template <class DelayT, MemoryOrder>
+void cub::ScanTileState<T, false>::WaitForValid(
+    int tile_idx,
+    StatusWord &status,
+    T &value,
+    DelayT delay = {}
+)
+```
+</CodeBlock>
+
+### LoadValid <Badge intent="note" minimal>inline</Badge>
+
+Loads and returns the tile's value.
+
+The returned value is undefined if either (a) the tile's status is invalid or (b) there is no memory fence between reading a non-invalid status and the call to LoadValid.
+
+<CodeBlock links={{"ScanTileState< T, false >": "/library/api/cub::ScanTileState%3C T, false %3E"}}>
+```cpp showLineNumbers={false}
+T cub::ScanTileState<T, false>::LoadValid(
+    int tile_idx
+)
+```
+</CodeBlock>
+
+---
+
+## Static methods
+
+### AllocationSize <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge>
+
+Compute device memory needed for tile status.
+
+<CodeBlock links={{"ScanTileState< T, false >": "/library/api/cub::ScanTileState%3C T, false %3E"}}>
+```cpp showLineNumbers={false}
+static constexpr cudaError_t cub::ScanTileState<T, false>::AllocationSize(
+    int num_tiles,
+    size_t &temp_storage_bytes
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="num_tiles" type="int">
+Number of tiles
+</ParamField>
+
+<ParamField path="temp_storage_bytes" type="size_t &">
+Size in bytes of `d_temp_storage` allocation
+</ParamField>
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition |
+|---|---|
+| `StatusValueT` | `T` |
+| `StatusWord` | `unsigned int` |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `TILE_STATUS_PADDING` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `description_bytes_per_tile` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `size_t` | |
+| `payload_bytes_per_tile` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `size_t` | |
+| `d_tile_status` | `StatusWord *` | |
+| `d_tile_partial` | `T *` | |
+| `d_tile_inclusive` | `T *` | |

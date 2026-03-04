@@ -1,0 +1,27 @@
+---
+title: "cuda::mr::synchronous_resource_with"
+description: "The `resource_with` concept verifies that a type Resource satisfies the [`synchronous_resource`](/library/api/cuda::mr::synchronous_resource) concept and also satisfies all the provided Properties."
+---
+
+<Badge intent="info">C++20 concept</Badge>
+
+The `resource_with` concept verifies that a type Resource satisfies the [`synchronous_resource`](/library/api/cuda::mr::synchronous_resource) concept and also satisfies all the provided Properties.
+
+<CodeBlock links={{"synchronous_resource": "/library/api/cuda::mr::synchronous_resource"}}>
+```cpp showLineNumbers={false}
+template <class _Resource, class... _Properties>
+concept synchronous_resource_with = /* see description */;
+```
+</CodeBlock>
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="_Resource" type="class">
+</ParamField>
+
+<ParamField path="_Properties..." type="class...">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>

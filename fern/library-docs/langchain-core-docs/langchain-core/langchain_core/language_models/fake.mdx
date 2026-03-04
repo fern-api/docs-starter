@@ -1,0 +1,199 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/language_models/fake
+title: langchain_core.language_models.fake
+---
+
+Fake LLMs for testing purposes.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`FakeListLLM`](#langchain_core-language_models-fake-FakeListLLM) | Fake LLM for testing purposes. |
+| [`FakeListLLMError`](#langchain_core-language_models-fake-FakeListLLMError) | Fake error for testing purposes. |
+| [`FakeStreamingListLLM`](#langchain_core-language_models-fake-FakeStreamingListLLM) | Fake streaming list LLM for testing purposes. |
+
+### API
+
+<Anchor id="langchain_core-language_models-fake-FakeListLLM">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.language_models.fake.FakeListLLM()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [LLM](/langchain-core/langchain_core/language_models/llms#langchain_core-language_models-llms-LLM)
+
+Fake LLM for testing purposes.
+
+
+<ParamField path="_identifying_params" type="Mapping[str, Any]">
+</ParamField>
+
+<ParamField path="_llm_type" type="str">
+Return type of llm.
+</ParamField>
+
+<ParamField path="i" type="int = 0">
+Internally incremented after every model invocation.
+
+Useful primarily for testing purposes.
+</ParamField>
+
+<ParamField path="responses" type="list[str]">
+List of responses to return in order.
+</ParamField>
+
+<ParamField path="sleep" type="float | None = None">
+Sleep time in seconds between responses.
+
+Ignored by FakeListLLM, but used by sub-classes.
+</ParamField>
+<Anchor id="langchain_core-language_models-fake-FakeListLLM-_acall">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.fake.FakeListLLM._acall(
+    prompt: str,
+    stop: list[str] | None = None,
+    run_manager: langchain_core.callbacks.AsyncCallbackManagerForLLMRun | None = None,
+    kwargs: typing.Any = {}
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Return next response.
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-fake-FakeListLLM-_call">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.fake.FakeListLLM._call(
+    prompt: str,
+    stop: list[str] | None = None,
+    run_manager: langchain_core.callbacks.CallbackManagerForLLMRun | None = None,
+    kwargs: typing.Any = {}
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Return next response.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-language_models-fake-FakeListLLMError">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.language_models.fake.FakeListLLMError()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Exception</Badge>
+
+**Bases:** `Exception`
+
+Fake error for testing purposes.
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-fake-FakeStreamingListLLM">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.language_models.fake.FakeStreamingListLLM()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [FakeListLLM](#langchain_core-language_models-fake-FakeListLLM)
+
+Fake streaming list LLM for testing purposes.
+
+An LLM that will return responses from a list in order.
+
+This model also supports optionally sleeping between successive
+chunks in a streaming implementation.
+
+
+<ParamField path="error_on_chunk_number" type="int | None = None">
+If set, will raise an exception on the specified chunk number.
+</ParamField>
+<Anchor id="langchain_core-language_models-fake-FakeStreamingListLLM-astream">
+
+<CodeBlock links={{"langchain_core.language_models.LanguageModelInput":"/langchain-core/langchain_core/language_models/base#langchain_core-language_models-base-LanguageModelInput","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.fake.FakeStreamingListLLM.astream(
+    input: langchain_core.language_models.LanguageModelInput,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    stop: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> collections.abc.AsyncIterator[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-language_models-fake-FakeStreamingListLLM-stream">
+
+<CodeBlock links={{"langchain_core.language_models.LanguageModelInput":"/langchain-core/langchain_core/language_models/base#langchain_core-language_models-base-LanguageModelInput","langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models.fake.FakeStreamingListLLM.stream(
+    input: langchain_core.language_models.LanguageModelInput,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    stop: list[str] | None = None,
+    kwargs: typing.Any = {}
+) -> collections.abc.Iterator[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+</Indent>

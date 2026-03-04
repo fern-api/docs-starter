@@ -1,0 +1,165 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/example_selectors/base
+title: langchain_core.example_selectors.base
+---
+
+Interface for selecting examples to include in prompts.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`BaseExampleSelector`](#langchain_core-example_selectors-base-BaseExampleSelector) | Interface for selecting examples to include in prompts. |
+
+### API
+
+<Anchor id="langchain_core-example_selectors-base-BaseExampleSelector">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.example_selectors.base.BaseExampleSelector()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+Interface for selecting examples to include in prompts.
+
+
+<Anchor id="langchain_core-example_selectors-base-BaseExampleSelector-aadd_example">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.base.BaseExampleSelector.aadd_example(
+    example: dict[str, str]
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async add new example to store.
+
+**Parameters:**
+
+<ParamField path="example" type="dict[str, str]">
+A dictionary with keys as input variables
+and values as their values.
+</ParamField>
+
+**Returns:** `Any`
+
+Any return value.
+
+
+</Indent>
+<Anchor id="langchain_core-example_selectors-base-BaseExampleSelector-add_example">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.base.BaseExampleSelector.add_example(
+    example: dict[str, str]
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Add new example to store.
+
+**Parameters:**
+
+<ParamField path="example" type="dict[str, str]">
+A dictionary with keys as input variables
+and values as their values.
+</ParamField>
+
+**Returns:** `Any`
+
+Any return value.
+
+
+</Indent>
+<Anchor id="langchain_core-example_selectors-base-BaseExampleSelector-aselect_examples">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.base.BaseExampleSelector.aselect_examples(
+    input_variables: dict[str, str]
+) -> list[dict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async select which examples to use based on the inputs.
+
+**Parameters:**
+
+<ParamField path="input_variables" type="dict[str, str]">
+A dictionary with keys as input variables
+and values as their values.
+</ParamField>
+
+**Returns:** `list[dict]`
+
+A list of examples.
+
+
+</Indent>
+<Anchor id="langchain_core-example_selectors-base-BaseExampleSelector-select_examples">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.example_selectors.base.BaseExampleSelector.select_examples(
+    input_variables: dict[str, str]
+) -> list[dict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Select which examples to use based on the inputs.
+
+**Parameters:**
+
+<ParamField path="input_variables" type="dict[str, str]">
+A dictionary with keys as input variables
+and values as their values.
+</ParamField>
+
+**Returns:** `list[dict]`
+
+A list of examples.
+
+
+</Indent>
+</Indent>

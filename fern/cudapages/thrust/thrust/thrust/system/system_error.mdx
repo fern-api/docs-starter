@@ -1,0 +1,290 @@
+---
+title: thrust::system::system_error
+description: "The class [`system_error`](/library/api/thrust::system::system_error) describes an exception object used to report error conditions that have an associated [`error_code`](/library/api/thrust::system::error_code)."
+---
+
+The class `system_error` describes an exception object used to report error conditions that have an associated [`error_code`](/library/api/thrust::system::error_code).
+
+Such error conditions typically originate from the operating system or other low-level application program interfaces.
+
+Thrust uses `system_error` to report the error codes returned from device backends such as the CUDA runtime.
+
+The following code listing demonstrates how to catch a `system_error` to recover from an error.
+
+```cpp showLineNumbers={false}
+#include <thrust/system/system_error.h>
+```
+
+<Note>
+If an error represents an out-of-memory condition, implementations are encouraged to throw an exception object of type `std::bad_alloc` rather than `system_error`.
+</Note>
+
+## Example
+
+```cpp showLineNumbers={false}
+#include <thrust/device_vector.h>
+#include <thrust/system.h>
+#include <thrust/sort.h>
+
+void terminate_gracefully()
+{
+  // application-specific termination code here
+  ...
+}
+
+int main()
+{
+  try
+  {
+    thrust::device_vector<float> vec;
+    thrust::sort(vec.begin(), vec.end());
+  }
+  catch(thrust::system_error e)
+  {
+    std::cerr << "Error inside sort: " << e.what() << std::endl;
+    terminate_gracefully();
+  }
+
+  return 0;
+}
+```
+
+**Inherits from:** `std::runtime_error` (public)
+
+---
+
+## Constructors
+
+### system_error <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Constructs an object of class `system_error`">
+
+Constructs an object of class `system_error`.
+
+<CodeBlock links={{"system_error": "/library/api/thrust::system::system_error", "error_code": "/library/api/thrust::system::error_code"}}>
+```cpp showLineNumbers={false}
+thrust::system::system_error::system_error(
+    error_code ec,
+    const std::string &what_arg
+)
+```
+</CodeBlock>
+
+<Info title="Postconditions">
+[`code()`](/library/api/thrust::system::system_error::code())` == ec`.
+</Info>
+
+<Info title="Postconditions">
+`std::string(what()).find(what_arg) != string::npos`.
+</Info>
+
+**Parameters**
+
+<ParamField path="ec" type="error_code">
+The value returned by [`code()`](/library/api/thrust::system::system_error::code()).
+</ParamField>
+
+<ParamField path="what_arg" type="const std::string &">
+A string to include in the result returned by [`what()`](/library/api/thrust::system::system_error::what()).
+</ParamField>
+
+</Tab>
+<Tab title="Constructs an object of class `system_error`">
+
+Constructs an object of class `system_error`.
+
+<CodeBlock links={{"system_error": "/library/api/thrust::system::system_error", "error_code": "/library/api/thrust::system::error_code"}}>
+```cpp showLineNumbers={false}
+thrust::system::system_error::system_error(
+    error_code ec,
+    const char *what_arg
+)
+```
+</CodeBlock>
+
+<Info title="Postconditions">
+[`code()`](/library/api/thrust::system::system_error::code())` == ec`.
+</Info>
+
+<Info title="Postconditions">
+`std::string(what()).find(what_arg) != string::npos`.
+</Info>
+
+**Parameters**
+
+<ParamField path="ec" type="error_code">
+The value returned by [`code()`](/library/api/thrust::system::system_error::code()).
+</ParamField>
+
+<ParamField path="what_arg" type="const char *">
+A string to include in the result returned by [`what()`](/library/api/thrust::system::system_error::what()).
+</ParamField>
+
+</Tab>
+<Tab title="Constructs an object of class `system_error`">
+
+Constructs an object of class `system_error`.
+
+<CodeBlock links={{"system_error": "/library/api/thrust::system::system_error", "error_code": "/library/api/thrust::system::error_code"}}>
+```cpp showLineNumbers={false}
+thrust::system::system_error::system_error(
+    error_code ec
+)
+```
+</CodeBlock>
+
+<Info title="Postconditions">
+[`code()`](/library/api/thrust::system::system_error::code())` == ec`.
+</Info>
+
+**Parameters**
+
+<ParamField path="ec" type="error_code">
+The value returned by [`code()`](/library/api/thrust::system::system_error::code()).
+</ParamField>
+
+</Tab>
+<Tab title="Constructs an object of class `system_error`">
+
+Constructs an object of class `system_error`.
+
+<CodeBlock links={{"system_error": "/library/api/thrust::system::system_error", "error_category": "/library/api/thrust::system::error_category"}}>
+```cpp showLineNumbers={false}
+thrust::system::system_error::system_error(
+    int ev,
+    const error_category &ecat,
+    const std::string &what_arg
+)
+```
+</CodeBlock>
+
+<Info title="Postconditions">
+[`code()`](/library/api/thrust::system::system_error::code())` == error_code(ev, ecat)`.
+</Info>
+
+<Info title="Postconditions">
+`std::string(what()).find(what_arg) != string::npos`.
+</Info>
+
+**Parameters**
+
+<ParamField path="ev" type="int">
+The error value used to create an [`error_code`](/library/api/thrust::system::error_code).
+</ParamField>
+
+<ParamField path="ecat" type="const error_category &">
+The [`error_category`](/library/api/thrust::system::error_category) used to create an [`error_code`](/library/api/thrust::system::error_code).
+</ParamField>
+
+<ParamField path="what_arg" type="const std::string &">
+A string to include in the result returned by [`what()`](/library/api/thrust::system::system_error::what()).
+</ParamField>
+
+</Tab>
+<Tab title="Constructs an object of class `system_error`">
+
+Constructs an object of class `system_error`.
+
+<CodeBlock links={{"system_error": "/library/api/thrust::system::system_error", "error_category": "/library/api/thrust::system::error_category"}}>
+```cpp showLineNumbers={false}
+thrust::system::system_error::system_error(
+    int ev,
+    const error_category &ecat,
+    const char *what_arg
+)
+```
+</CodeBlock>
+
+<Info title="Postconditions">
+[`code()`](/library/api/thrust::system::system_error::code())` == error_code(ev, ecat)`.
+</Info>
+
+<Info title="Postconditions">
+`std::string(what()).find(what_arg) != string::npos`.
+</Info>
+
+**Parameters**
+
+<ParamField path="ev" type="int">
+The error value used to create an [`error_code`](/library/api/thrust::system::error_code).
+</ParamField>
+
+<ParamField path="ecat" type="const error_category &">
+The [`error_category`](/library/api/thrust::system::error_category) used to create an [`error_code`](/library/api/thrust::system::error_code).
+</ParamField>
+
+<ParamField path="what_arg" type="const char *">
+A string to include in the result returned by [`what()`](/library/api/thrust::system::system_error::what()).
+</ParamField>
+
+</Tab>
+<Tab title="Constructs an object of class `system_error`">
+
+Constructs an object of class `system_error`.
+
+<CodeBlock links={{"system_error": "/library/api/thrust::system::system_error", "error_category": "/library/api/thrust::system::error_category"}}>
+```cpp showLineNumbers={false}
+thrust::system::system_error::system_error(
+    int ev,
+    const error_category &ecat
+)
+```
+</CodeBlock>
+
+<Info title="Postconditions">
+[`code()`](/library/api/thrust::system::system_error::code())` == error_code(ev, ecat)`.
+</Info>
+
+**Parameters**
+
+<ParamField path="ev" type="int">
+The error value used to create an [`error_code`](/library/api/thrust::system::error_code).
+</ParamField>
+
+<ParamField path="ecat" type="const error_category &">
+The [`error_category`](/library/api/thrust::system::error_category) used to create an [`error_code`](/library/api/thrust::system::error_code).
+</ParamField>
+
+</Tab>
+</Tabs>
+
+### Destructor
+
+### ~system_error <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>noexcept</Badge> <Badge intent="note" minimal>virtual</Badge>
+
+Destructor does not throw.
+
+<CodeBlock links={{"system_error": "/library/api/thrust::system::system_error"}}>
+```cpp showLineNumbers={false}
+virtual thrust::system::system_error::~system_error() noexcept
+```
+</CodeBlock>
+
+---
+
+## Methods
+
+### code <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Returns an object encoding the error.
+
+<CodeBlock links={{"system_error": "/library/api/thrust::system::system_error", "error_code": "/library/api/thrust::system::error_code"}}>
+```cpp showLineNumbers={false}
+const error_code & thrust::system::system_error::code() const noexcept
+```
+</CodeBlock>
+
+**Returns:** `ec` or `error_code(ev, ecat)`, from the constructor, as appropriate.
+
+### what <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>const</Badge> <Badge intent="note" minimal>noexcept</Badge>
+
+Returns a human-readable string indicating the nature of the error.
+
+<CodeBlock links={{"system_error": "/library/api/thrust::system::system_error"}}>
+```cpp showLineNumbers={false}
+const char * thrust::system::system_error::what() const noexcept
+```
+</CodeBlock>
+
+**Returns:** a string incorporating [`code()`](/library/api/thrust::system::system_error::code())`.message()` and the arguments supplied in the constructor.

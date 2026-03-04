@@ -1,0 +1,327 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/language_models/_utils
+title: langchain_core.language_models._utils
+---
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`ParsedDataUri`](#langchain_core-language_models-_utils-ParsedDataUri) | - |
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`_ensure_message_copy`](#langchain_core-language_models-_utils-_ensure_message_copy) | Create a copy of the message if it hasn't been copied yet. |
+| [`_normalize_messages`](#langchain_core-language_models-_utils-_normalize_messages) | Normalize message formats to LangChain v1 standard content blocks. |
+| [`_parse_data_uri`](#langchain_core-language_models-_utils-_parse_data_uri) | Parse a data URI into its components. |
+| [`_update_content_block`](#langchain_core-language_models-_utils-_update_content_block) | Update a content block at the given index, handling type issues. |
+| [`_update_message_content_to_blocks`](#langchain_core-language_models-_utils-_update_message_content_to_blocks) | - |
+| [`is_openai_data_block`](#langchain_core-language_models-_utils-is_openai_data_block) | Check whether a block contains multimodal data in OpenAI Chat Completions format. |
+
+### Data
+
+[`T`](#langchain_core-language_models-_utils-T)
+
+### API
+
+<Anchor id="langchain_core-language_models-_utils-ParsedDataUri">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.language_models._utils.ParsedDataUri
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+<ParamField path="data" type="str">
+
+</ParamField>
+
+<ParamField path="mime_type" type="str">
+
+</ParamField>
+
+<ParamField path="source_type" type="Literal['base64']">
+
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-_utils-_ensure_message_copy">
+
+<CodeBlock links={{"langchain_core.language_models._utils.T":"#langchain_core-language_models-_utils-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models._utils._ensure_message_copy(
+    message: langchain_core.language_models._utils.T,
+    formatted_message: langchain_core.language_models._utils.T
+) -> langchain_core.language_models._utils.T
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Create a copy of the message if it hasn't been copied yet.
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-_utils-_normalize_messages">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models._utils._normalize_messages(
+    messages: collections.abc.Sequence[langchain_core.messages.BaseMessage]
+) -> list[langchain_core.messages.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Normalize message formats to LangChain v1 standard content blocks.
+
+Chat models already implement support for:
+- Images in OpenAI Chat Completions format
+    These will be passed through unchanged
+- LangChain v1 standard content blocks
+
+This function extends support to:
+- `[Audio](https://platform.openai.com/docs/api-reference/chat/create) and
+    `[file](https://platform.openai.com/docs/api-reference/files) data in OpenAI
+    Chat Completions format
+    - Images are technically supported but we expect chat models to handle them
+        directly; this may change in the future
+- LangChain v0 standard content blocks for backward compatibility
+
+!!! warning "Behavior changed in `langchain-core` 1.0.0"
+
+    In previous versions, this function returned messages in LangChain v0 format.
+    Now, it returns messages in LangChain v1 format, which upgraded chat models now
+    expect to receive when passing back in message history. For backward
+    compatibility, this function will convert v0 message content to v1 format.
+
+??? note "v0 Content Block Schemas"
+
+    `URLContentBlock`:
+
+    ```python
+    {
+        mime_type: NotRequired[str]
+        type: Literal['image', 'audio', 'file'],
+        source_type: Literal['url'],
+        url: str,
+    }
+    ```
+
+    `Base64ContentBlock`:
+
+    ```python
+    {
+        mime_type: NotRequired[str]
+        type: Literal['image', 'audio', 'file'],
+        source_type: Literal['base64'],
+        data: str,
+    }
+    ```
+
+    `IDContentBlock`:
+
+    (In practice, this was never used)
+
+    ```python
+    {
+        type: Literal["image", "audio", "file"],
+        source_type: Literal["id"],
+        id: str,
+    }
+    ```
+
+    `PlainTextContentBlock`:
+
+    ```python
+    {
+        mime_type: NotRequired[str]
+        type: Literal['file'],
+        source_type: Literal['text'],
+        url: str,
+    }
+    ```
+
+If a v1 message is passed in, it will be returned as-is, meaning it is safe to
+always pass in v1 messages to this function for assurance.
+
+For posterity, here are the OpenAI Chat Completions schemas we expect:
+
+Chat Completions image. Can be URL-based or base64-encoded. Supports MIME types
+png, jpeg/jpg, webp, static gif:
+&#123;
+    "type": Literal['image_url'],
+    "image_url": &#123;
+        "url": Union["data:$MIME_TYPE;base64,$BASE64_ENCODED_IMAGE", "$IMAGE_URL"],
+        "detail": Literal['low', 'high', 'auto'] = 'auto',  # Supported by OpenAI
+    &#125;
+&#125;
+
+Chat Completions audio:
+&#123;
+    "type": Literal['input_audio'],
+    "input_audio": &#123;
+        "format": Literal['wav', 'mp3'],
+        "data": str = "$BASE64_ENCODED_AUDIO",
+    &#125;,
+&#125;
+
+Chat Completions files: either base64 or pre-uploaded file ID
+&#123;
+    "type": Literal['file'],
+    "file": Union[
+        &#123;
+            "filename": str | None = "$FILENAME",
+            "file_data": str = "$BASE64_ENCODED_FILE",
+        &#125;,
+        &#123;
+            "file_id": str = "$FILE_ID",  # For pre-uploaded files to OpenAI
+        &#125;,
+    ],
+&#125;
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-_utils-_parse_data_uri">
+
+<CodeBlock links={{"langchain_core.language_models._utils.ParsedDataUri":"#langchain_core-language_models-_utils-ParsedDataUri"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models._utils._parse_data_uri(
+    uri: str
+) -> langchain_core.language_models._utils.ParsedDataUri | None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Parse a data URI into its components.
+
+If parsing fails, return `None`. If either MIME type or data is missing, return
+`None`.
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-_utils-_update_content_block">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage","langchain_core.messages.content.ContentBlock":"/langchain-core/langchain_core/messages/content#langchain_core-messages-content-ContentBlock"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models._utils._update_content_block(
+    formatted_message: langchain_core.messages.BaseMessage,
+    idx: int,
+    new_block: langchain_core.messages.content.ContentBlock | dict
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Update a content block at the given index, handling type issues.
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-_utils-_update_message_content_to_blocks">
+
+<CodeBlock links={{"langchain_core.language_models._utils.T":"#langchain_core-language_models-_utils-T"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models._utils._update_message_content_to_blocks(
+    message: langchain_core.language_models._utils.T,
+    output_version: str
+) -> langchain_core.language_models._utils.T
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-_utils-is_openai_data_block">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models._utils.is_openai_data_block(
+    block: dict,
+    filter_: typing.Literal['image', 'audio', 'file'] | None = None
+) -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check whether a block contains multimodal data in OpenAI Chat Completions format.
+
+Supports both data and ID-style blocks (e.g. `'file_data'` and `'file_id'`)
+
+If additional keys are present, they are ignored / will not affect outcome as long
+as the required keys are present and valid.
+
+**Parameters:**
+
+<ParamField path="block" type="dict">
+The content block to check.
+</ParamField>
+
+<ParamField path="filter_" type="Literal['image', 'audio', 'file'] | None" default="None">
+If provided, only return True for blocks matching this specific type.
+- "image": Only match image_url blocks
+- "audio": Only match input_audio blocks
+- "file": Only match file blocks
+If `None`, match any valid OpenAI data block type. Note that this means that
+if the block has a valid OpenAI data type but the filter_ is set to a
+different type, this function will return False.
+</ParamField>
+
+**Returns:** `bool`
+
+`True` if the block is a valid OpenAI data block and matches the filter_
+
+
+</Indent>
+
+<Anchor id="langchain_core-language_models-_utils-T">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.language_models._utils.T = TypeVar('T', bound='BaseMessage')
+```
+
+</CodeBlock>
+</Anchor>
+

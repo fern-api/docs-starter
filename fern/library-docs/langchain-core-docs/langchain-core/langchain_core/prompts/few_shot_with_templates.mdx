@@ -1,0 +1,267 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/prompts/few_shot_with_templates
+title: langchain_core.prompts.few_shot_with_templates
+---
+
+Prompt template that contains few shot examples.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`FewShotPromptWithTemplates`](#langchain_core-prompts-few_shot_with_templates-FewShotPromptWithTemplates) | Prompt template that contains few shot examples. |
+
+### API
+
+<Anchor id="langchain_core-prompts-few_shot_with_templates-FewShotPromptWithTemplates">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.prompts.few_shot_with_templates.FewShotPromptWithTemplates()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** [StringPromptTemplate](/langchain-core/langchain_core/prompts/string#langchain_core-prompts-string-StringPromptTemplate)
+
+Prompt template that contains few shot examples.
+
+
+<ParamField path="_prompt_type" type="str">
+Return the prompt type key.
+</ParamField>
+
+<ParamField path="example_prompt" type="PromptTemplate">
+`PromptTemplate` used to format an individual example.
+</ParamField>
+
+<ParamField path="example_selector" type="BaseExampleSelector | None = None">
+`ExampleSelector` to choose the examples to format into the prompt.
+
+Either this or `examples` should be provided.
+</ParamField>
+
+<ParamField path="example_separator" type="str = '\n\n'">
+String separator used to join the prefix, the examples, and suffix.
+</ParamField>
+
+<ParamField path="examples" type="list[dict] | None = None">
+Examples to format into the prompt.
+
+Either this or `example_selector` should be provided.
+</ParamField>
+
+<ParamField path="model_config">
+</ParamField>
+
+<ParamField path="prefix" type="StringPromptTemplate | None = None">
+A `PromptTemplate` to put before the examples.
+</ParamField>
+
+<ParamField path="suffix" type="StringPromptTemplate">
+A `PromptTemplate` to put after the examples.
+</ParamField>
+
+<ParamField path="template_format" type="PromptTemplateFormat = 'f-string'">
+The format of the prompt template.
+
+Options are: `'f-string'`, `'jinja2'`, `'mustache'`.
+</ParamField>
+
+<ParamField path="validate_template" type="bool = False">
+Whether or not to try validating the template.
+</ParamField>
+<Anchor id="langchain_core-prompts-few_shot_with_templates-FewShotPromptWithTemplates-_aget_examples">
+
+<CodeBlock links={{"langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.few_shot_with_templates.FewShotPromptWithTemplates._aget_examples(
+    kwargs: typing.Any = {}
+) -> list[langchain_core.prompts.dict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-few_shot_with_templates-FewShotPromptWithTemplates-_get_examples">
+
+<CodeBlock links={{"langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.few_shot_with_templates.FewShotPromptWithTemplates._get_examples(
+    kwargs: typing.Any = {}
+) -> list[langchain_core.prompts.dict]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-few_shot_with_templates-FewShotPromptWithTemplates-aformat">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.few_shot_with_templates.FewShotPromptWithTemplates.aformat(
+    kwargs: typing.Any = {}
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async format the prompt with the inputs.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Any arguments to be passed to the prompt template.
+</ParamField>
+
+**Returns:** `str`
+
+A formatted string.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-few_shot_with_templates-FewShotPromptWithTemplates-check_examples_and_selector">
+
+<CodeBlock links={{"langchain_core.prompts.dict":"/langchain-core/langchain_core/prompts#langchain_core-prompts-dict"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.few_shot_with_templates.FewShotPromptWithTemplates.check_examples_and_selector(
+    values: langchain_core.prompts.dict
+) -> typing.Any
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Check that one and only one of examples/example_selector are provided.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-few_shot_with_templates-FewShotPromptWithTemplates-format">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.few_shot_with_templates.FewShotPromptWithTemplates.format(
+    kwargs: typing.Any = {}
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Format the prompt with the inputs.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Any arguments to be passed to the prompt template.
+</ParamField>
+
+**Returns:** `str`
+
+A formatted string.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-few_shot_with_templates-FewShotPromptWithTemplates-get_lc_namespace">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.few_shot_with_templates.FewShotPromptWithTemplates.get_lc_namespace() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Get the namespace of the LangChain object.
+
+**Returns:** `list[str]`
+
+`["langchain", "prompts", "few_shot_with_templates"]`
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-few_shot_with_templates-FewShotPromptWithTemplates-save">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.few_shot_with_templates.FewShotPromptWithTemplates.save(
+    file_path: pathlib.Path | str
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Save the prompt to a file.
+
+**Parameters:**
+
+<ParamField path="file_path" type="Path | str">
+The path to save the prompt to.
+</ParamField>
+
+**Raises:**
+
+- `ValueError`: If `example_selector` is provided.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-few_shot_with_templates-FewShotPromptWithTemplates-template_is_valid">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.few_shot_with_templates.FewShotPromptWithTemplates.template_is_valid() -> typing_extensions.Self
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Check that prefix, suffix, and input variables are consistent.
+
+
+</Indent>
+</Indent>

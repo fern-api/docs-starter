@@ -1,0 +1,179 @@
+---
+title: cub::GridQueue
+description: "[GridQueue](/library/api/cub::_grid_queue) is a descriptor utility for dynamic queue management."
+---
+
+`GridQueue` is a descriptor utility for dynamic queue management.
+
+**Overview**
+
+`GridQueue` descriptors provides abstractions for "filling" or "draining" globally-shared vectors.
+
+A "filling" `GridQueue` works by atomically-adding to a zero-initialized counter, returning a unique offset for the calling thread to write its items. The `GridQueue` maintains the total "fill-size". The fill counter must be reset using [GridQueue::ResetFill](/library/api/cub::_grid_queue::ResetFill) by the host or kernel instance prior to the kernel instance that will be filling.
+
+Similarly, a "draining" `GridQueue` works by atomically-incrementing a zero-initialized counter, returning a unique offset for the calling thread to read its items. Threads can safely drain until the array's logical fill-size is exceeded. The drain counter must be reset using [GridQueue::ResetDrain](/library/api/cub::_grid_queue::ResetDrain) or [GridQueue::FillAndResetDrain](/library/api/cub::_grid_queue::FillAndResetDrain) by the host or kernel instance prior to the kernel instance that will be filling. (For dynamic work distribution of existing data, the corresponding fill-size is simply the number of elements in the array.)
+
+Iterative work management can be implemented simply with a pair of flip-flopping work buffers, each with an associated set of fill and drain `GridQueue` descriptors.
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="OffsetT" type="typename">
+Signed integer type for global offsets
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Constructors
+
+### GridQueue <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Default">
+
+Constructs an invalid `GridQueue` descriptor.
+
+<CodeBlock links={{"GridQueue": "/library/api/cub::GridQueue"}}>
+```cpp showLineNumbers={false}
+cub::GridQueue<OffsetT>::GridQueue()
+```
+</CodeBlock>
+
+</Tab>
+<Tab title="From raw pointer">
+
+Constructs a `GridQueue` descriptor around the device storage allocation.
+
+<CodeBlock links={{"GridQueue": "/library/api/cub::GridQueue"}}>
+```cpp showLineNumbers={false}
+cub::GridQueue<OffsetT>::GridQueue(
+    void *d_storage
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="d_storage" type="void *">
+Device allocation to back the `GridQueue`. Must be at least as big as [`AllocationSize()`](/library/api/cub::_grid_queue::AllocationSize()).
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Methods
+
+### FillAndResetDrain <Badge intent="note" minimal>inline</Badge>
+
+This operation sets the fill-size and resets the drain counter, preparing the `GridQueue` for draining in the next kernel instance.
+
+To be called by the host or by a kernel prior to the one which will be draining.
+
+<CodeBlock links={{"GridQueue": "/library/api/cub::GridQueue"}}>
+```cpp showLineNumbers={false}
+cudaError_t cub::GridQueue<OffsetT>::FillAndResetDrain(
+    OffsetT fill_size,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+### ResetDrain <Badge intent="note" minimal>inline</Badge>
+
+This operation resets the drain so that it may advance to meet the existing fill-size.
+
+To be called by the host or by a kernel prior to the one which will be draining.
+
+<CodeBlock links={{"GridQueue": "/library/api/cub::GridQueue"}}>
+```cpp showLineNumbers={false}
+cudaError_t cub::GridQueue<OffsetT>::ResetDrain(
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+### ResetFill <Badge intent="note" minimal>inline</Badge>
+
+This operation resets the fill counter.
+
+To be called by the host or by a kernel prior to the one which will be filling.
+
+<CodeBlock links={{"GridQueue": "/library/api/cub::GridQueue"}}>
+```cpp showLineNumbers={false}
+cudaError_t cub::GridQueue<OffsetT>::ResetFill(
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+### FillSize <Badge intent="note" minimal>inline</Badge>
+
+Returns the fill-size established by the parent or by the previous kernel.
+
+<CodeBlock links={{"GridQueue": "/library/api/cub::GridQueue"}}>
+```cpp showLineNumbers={false}
+cudaError_t cub::GridQueue<OffsetT>::FillSize(
+    OffsetT &fill_size,
+    cudaStream_t stream = 0
+)
+```
+</CodeBlock>
+
+### Drain <Badge intent="note" minimal>inline</Badge>
+
+Drain `num_items` from the queue.
+
+Returns offset from which to read items. To be called from CUDA kernel.
+
+<CodeBlock links={{"GridQueue": "/library/api/cub::GridQueue"}}>
+```cpp showLineNumbers={false}
+OffsetT cub::GridQueue<OffsetT>::Drain(
+    OffsetT num_items
+)
+```
+</CodeBlock>
+
+### Fill <Badge intent="note" minimal>inline</Badge>
+
+Fill `num_items` into the queue.
+
+Returns offset from which to write items. To be called from CUDA kernel.
+
+<CodeBlock links={{"GridQueue": "/library/api/cub::GridQueue"}}>
+```cpp showLineNumbers={false}
+OffsetT cub::GridQueue<OffsetT>::Fill(
+    OffsetT num_items
+)
+```
+</CodeBlock>
+
+---
+
+## Static methods
+
+### AllocationSize <Badge intent="note" minimal>inline</Badge> <Badge intent="note" minimal>static</Badge>
+
+Returns the device allocation size in bytes needed to construct a `GridQueue` instance.
+
+<CodeBlock links={{"GridQueue": "/library/api/cub::GridQueue"}}>
+```cpp showLineNumbers={false}
+static size_t cub::GridQueue<OffsetT>::AllocationSize()
+```
+</CodeBlock>
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `FILL` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | Counter indices. |
+| `DRAIN` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `int` | |
+| `d_counters` | `OffsetT *` | Pair of counters. |

@@ -1,0 +1,149 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/utils/strings
+title: langchain_core.utils.strings
+---
+
+String utilities.
+
+## Module Contents
+
+### Functions
+
+| Name | Description |
+|------|-------------|
+| [`comma_list`](#langchain_core-utils-strings-comma_list) | Convert an iterable to a comma-separated string. |
+| [`sanitize_for_postgres`](#langchain_core-utils-strings-sanitize_for_postgres) | Sanitize text by removing NUL bytes that are incompatible with PostgreSQL. |
+| [`stringify_dict`](#langchain_core-utils-strings-stringify_dict) | Stringify a dictionary. |
+| [`stringify_value`](#langchain_core-utils-strings-stringify_value) | Stringify a value. |
+
+### API
+
+<Anchor id="langchain_core-utils-strings-comma_list">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.strings.comma_list(
+    items: collections.abc.Iterable[typing.Any]
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Convert an iterable to a comma-separated string.
+
+**Parameters:**
+
+<ParamField path="items" type="Iterable[Any]">
+The iterable to convert.
+</ParamField>
+
+**Returns:** `str`
+
+The comma-separated string.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-strings-sanitize_for_postgres">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.strings.sanitize_for_postgres(
+    text: str,
+    replacement: str = ''
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Sanitize text by removing NUL bytes that are incompatible with PostgreSQL.
+
+PostgreSQL text fields cannot contain `NUL (0x00)` bytes, which can cause
+`psycopg.DataError` when inserting documents. This function removes or replaces
+such characters to ensure compatibility.
+
+**Parameters:**
+
+<ParamField path="text" type="str">
+The text to sanitize.
+</ParamField>
+
+<ParamField path="replacement" type="str" default="''">
+String to replace `NUL` bytes with.
+</ParamField>
+
+**Returns:** `str`
+
+The sanitized text with `NUL` bytes removed or replaced.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-strings-stringify_dict">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.strings.stringify_dict(
+    data: dict
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Stringify a dictionary.
+
+**Parameters:**
+
+<ParamField path="data" type="dict">
+The dictionary to stringify.
+</ParamField>
+
+**Returns:** `str`
+
+The stringified dictionary.
+
+
+</Indent>
+
+<Anchor id="langchain_core-utils-strings-stringify_value">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.utils.strings.stringify_value(
+    val: typing.Any
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Stringify a value.
+
+**Parameters:**
+
+<ParamField path="val" type="Any">
+The value to stringify.
+</ParamField>
+
+**Returns:** `str`
+
+The stringified value.
+
+
+</Indent>

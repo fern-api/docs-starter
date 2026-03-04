@@ -1,0 +1,1184 @@
+---
+title: cub::WarpScan
+description: ""
+---
+
+The WarpScan class provides collective methods for computing a parallel prefix scan of items partitioned across a CUDA thread warp.
+
+![](../../img/warp_scan_logo.png)
+
+## Performance considerations
+
+* Uses special instructions when applicable (e.g., warp `SHFL`)
+* Uses synchronization-free communication between warp lanes when applicable
+* Incurs zero bank conflicts for most types
+* Computation is slightly more efficient (i.e., having lower instruction overhead) for:
+
+  * Summation (**vs.** generic scan)
+  * The architecture's warp size is a whole multiple of `LOGICAL_WARP_THREADS`
+
+## Example
+
+The code snippet below illustrates four concurrent warp prefix sums within a block of 128 threads (one per each of the 32-thread warps).
+
+`{1, 1, 1, 1, ...}`. The corresponding output `thread_data` in each of the four warps of threads will be `0, 1, 2, 3, ..., 31}`.
+
+The code snippet below illustrates a single warp prefix sum within a block of 128 threads.
+
+`{1, 1, 1, 1, ...}`. The corresponding output `thread_data` will be `{0, 1, 2, 3, ..., 31}`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize WarpScan for type int
+    using WarpScan = cub::WarpScan<int>;
+
+    // Allocate WarpScan shared memory for 4 warps
+    __shared__ typename WarpScan::TempStorage temp_storage[4];
+
+    // Obtain one input item per thread
+    int thread_data = ...
+
+    // Compute warp-wide prefix sums
+    int warp_id = threadIdx.x / 32;
+    WarpScan(temp_storage[warp_id]).ExclusiveSum(thread_data, thread_data);
+}
+
+#include <cub/cub.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize WarpScan for type int
+    using WarpScan = cub::WarpScan<int>;
+
+    // Allocate WarpScan shared memory for one warp
+    __shared__ typename WarpScan::TempStorage temp_storage;
+    ...
+
+    // Only the first warp performs a prefix sum
+    if (threadIdx.x < 32)
+    {
+        // Obtain one input item per thread
+        int thread_data = ...
+
+        // Compute warp-wide prefix sums
+        WarpScan(temp_storage).ExclusiveSum(thread_data, thread_data);
+    }
+}
+```
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="T" type="typename">
+The scan input/output element type
+</ParamField>
+
+<ParamField path="LOGICAL_WARP_THREADS" type="int" default="detail::warp_threads">
+**[optional]** The number of threads per "logical" warp (may be less than the number of hardware warp threads). Default is the warp size associated with the CUDA Compute Capability targeted by the compiler (e.g., 32 threads for SM20).
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Collective constructors
+
+### WarpScan <Badge intent="note" minimal>inline</Badge>
+
+Collective constructor using the specified memory allocation as temporary storage.
+
+Logical warp and lane identifiers are constructed from `threadIdx.x`.
+
+<CodeBlock links={{"WarpScan": "/library/api/cub::WarpScan", "TempStorage": "/library/api/cub::WarpScan::TempStorage"}}>
+```cpp showLineNumbers={false}
+cub::WarpScan<T, LOGICAL_WARP_THREADS>::WarpScan(
+    TempStorage &temp_storage
+)
+```
+</CodeBlock>
+
+**Parameters**
+
+<ParamField path="temp_storage" type="TempStorage &">
+Reference to memory allocation having layout type [TempStorage](/library/api/cub::WarpScan::TempStorage)
+</ParamField>
+
+---
+
+## Inclusive prefix sums
+
+### InclusiveSum <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Full warp">
+
+Computes an inclusive prefix sum across the calling warp.
+
+<CodeBlock links={{"WarpScan": "/library/api/cub::WarpScan"}}>
+```cpp showLineNumbers={false}
+void cub::WarpScan<T, LOGICAL_WARP_THREADS>::InclusiveSum(
+    T input,
+    T &inclusive_output
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="input" type="T">
+Calling thread's input item.
+</ParamField>
+
+<ParamField path="inclusive_output" type="T &">
+Calling thread's output item. May be aliased with `input`.
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates four concurrent warp-wide inclusive prefix sums within a block of 128 threads (one per each of the 32-thread warps).
+
+`{1, 1, 1, 1, ...}`. The corresponding output `thread_data` in each of the four warps of threads will be `1, 2, 3, ..., 32}`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize WarpScan for type int
+    using WarpScan = cub::WarpScan<int>;
+
+    // Allocate WarpScan shared memory for 4 warps
+    __shared__ typename WarpScan::TempStorage temp_storage[4];
+
+    // Obtain one input item per thread
+    int thread_data = ...
+
+    // Compute inclusive warp-wide prefix sums
+    int warp_id = threadIdx.x / 32;
+    WarpScan(temp_storage[warp_id]).InclusiveSum(thread_data, thread_data);
+}
+```
+
+</Tab>
+<Tab title="Full warp">
+
+Computes an inclusive prefix sum across the calling warp. Also provides every thread with the warp-wide `warp_aggregate` of all inputs.
+
+<CodeBlock links={{"WarpScan": "/library/api/cub::WarpScan"}}>
+```cpp showLineNumbers={false}
+void cub::WarpScan<T, LOGICAL_WARP_THREADS>::InclusiveSum(
+    T input,
+    T &inclusive_output,
+    T &warp_aggregate
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="input" type="T">
+Calling thread's input item
+</ParamField>
+
+<ParamField path="inclusive_output" type="T &">
+Calling thread's output item. May be aliased with `input`
+</ParamField>
+
+<ParamField path="warp_aggregate" type="T &">
+Warp-wide aggregate reduction of input items
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates four concurrent warp-wide inclusive prefix sums within a block of 128 threads (one per each of the 32-thread warps).
+
+`{1, 1, 1, 1, ...}`. The corresponding output `thread_data` in each of the four warps of threads will be `1, 2, 3, ..., 32}`. Furthermore, `warp_aggregate` for all threads in all warps will be `32`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize WarpScan for type int
+    using WarpScan = cub::WarpScan<int>;
+
+    // Allocate WarpScan shared memory for 4 warps
+    __shared__ typename WarpScan::TempStorage temp_storage[4];
+
+    // Obtain one input item per thread
+    int thread_data = ...
+
+    // Compute inclusive warp-wide prefix sums
+    int warp_aggregate;
+    int warp_id = threadIdx.x / 32;
+    WarpScan(temp_storage[warp_id]).InclusiveSum(thread_data, thread_data, warp_aggregate);
+}
+```
+
+</Tab>
+</Tabs>
+
+---
+
+## Exclusive prefix sums
+
+### ExclusiveSum <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Full warp">
+
+Computes an exclusive prefix sum across the calling warp. The value of 0 is applied as the initial value, and is assigned to `exclusive_output` in *lane*<sub>0</sub>.
+
+<CodeBlock links={{"WarpScan": "/library/api/cub::WarpScan"}}>
+```cpp showLineNumbers={false}
+void cub::WarpScan<T, LOGICAL_WARP_THREADS>::ExclusiveSum(
+    T input,
+    T &exclusive_output
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* Uses the identity element (zero) as the initial value. * The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="input" type="T">
+Calling thread's input item.
+</ParamField>
+
+<ParamField path="exclusive_output" type="T &">
+Calling thread's output item. May be aliased with `input`.
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates four concurrent warp-wide exclusive prefix sums within a block of 128 threads (one per each of the 32-thread warps).
+
+`{1, 1, 1, 1, ...}`. The corresponding output `thread_data` in each of the four warps of threads will be `0, 1, 2, ..., 31}`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize WarpScan for type int
+    using WarpScan = cub::WarpScan<int>;
+
+    // Allocate WarpScan shared memory for 4 warps
+    __shared__ typename WarpScan::TempStorage temp_storage[4];
+
+    // Obtain one input item per thread
+    int thread_data = ...
+
+    // Compute exclusive warp-wide prefix sums
+    int warp_id = threadIdx.x / 32;
+    WarpScan(temp_storage[warp_id]).ExclusiveSum(thread_data, thread_data);
+}
+```
+
+</Tab>
+<Tab title="Full warp">
+
+Computes an exclusive prefix sum across the calling warp. The value of 0 is applied as the initial value, and is assigned to `exclusive_output` in *lane*<sub>0</sub>. Also provides every thread with the warp-wide `warp_aggregate` of all inputs.
+
+<CodeBlock links={{"WarpScan": "/library/api/cub::WarpScan"}}>
+```cpp showLineNumbers={false}
+void cub::WarpScan<T, LOGICAL_WARP_THREADS>::ExclusiveSum(
+    T input,
+    T &exclusive_output,
+    T &warp_aggregate
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* Uses the identity element (zero) as the initial value. * The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="input" type="T">
+Calling thread's input item
+</ParamField>
+
+<ParamField path="exclusive_output" type="T &">
+Calling thread's output item. May be aliased with `input`
+</ParamField>
+
+<ParamField path="warp_aggregate" type="T &">
+Warp-wide aggregate reduction of input items
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates four concurrent warp-wide exclusive prefix sums within a block of 128 threads (one per each of the 32-thread warps).
+
+`{1, 1, 1, 1, ...}`. The corresponding output `thread_data` in each of the four warps of threads will be `0, 1, 2, ..., 31}`. Furthermore, `warp_aggregate` for all threads in all warps will be `32`.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize WarpScan for type int
+    using WarpScan = cub::WarpScan<int>;
+
+    // Allocate WarpScan shared memory for 4 warps
+    __shared__ typename WarpScan::TempStorage temp_storage[4];
+
+    // Obtain one input item per thread
+    int thread_data = ...
+
+    // Compute exclusive warp-wide prefix sums
+    int warp_aggregate;
+    int warp_id = threadIdx.x / 32;
+    WarpScan(temp_storage[warp_id]).ExclusiveSum(thread_data,
+                                                 thread_data,
+                                                 warp_aggregate);
+```
+
+</Tab>
+</Tabs>
+
+---
+
+## Inclusive prefix scans
+
+### InclusiveScan <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Full warp">
+
+Computes an inclusive prefix scan using the specified binary scan functor across the calling warp.
+
+<CodeBlock links={{"WarpScan": "/library/api/cub::WarpScan"}}>
+```cpp showLineNumbers={false}
+template <typename ScanOp>
+void cub::WarpScan<T, LOGICAL_WARP_THREADS>::InclusiveScan(
+    T input,
+    T &inclusive_output,
+    ScanOp scan_op
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="ScanOp" type="typename">
+**[inferred]** Binary scan operator type having member `T operator()(const T &a, const T &b)`
+</ParamField>
+
+**Parameters**
+
+<ParamField path="input" type="T">
+Calling thread's input item
+</ParamField>
+
+<ParamField path="inclusive_output" type="T &">
+Calling thread's output item. May be aliased with `input`
+</ParamField>
+
+<ParamField path="scan_op" type="ScanOp">
+Binary scan operator
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates four concurrent warp-wide inclusive prefix max scans within a block of 128 threads (one per each of the 32-thread warps).
+
+`{0, -1, 2, -3, ..., 126, -127}`. The corresponding output `thread_data` in the first warp would be `0, 0, 2, 2, ..., 30, 30`, the output for the second warp would be `32, 32, 34, 34, ..., 62, 62`, etc.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize WarpScan for type int
+    using WarpScan = cub::WarpScan<int>;
+
+    // Allocate WarpScan shared memory for 4 warps
+    __shared__ typename WarpScan::TempStorage temp_storage[4];
+
+    // Obtain one input item per thread
+    int thread_data = ...
+
+    // Compute inclusive warp-wide prefix max scans
+    int warp_id = threadIdx.x / 32;
+    WarpScan(temp_storage[warp_id]).InclusiveScan(thread_data, thread_data, cuda::maximum<>{});
+```
+
+</Tab>
+<Tab title="Full warp">
+
+Computes an inclusive prefix scan using the specified binary scan functor across the calling warp.
+
+<CodeBlock links={{"WarpScan": "/library/api/cub::WarpScan"}}>
+```cpp showLineNumbers={false}
+template <typename ScanOp>
+void cub::WarpScan<T, LOGICAL_WARP_THREADS>::InclusiveScan(
+    T input,
+    T &inclusive_output,
+    T initial_value,
+    ScanOp scan_op
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="ScanOp" type="typename">
+**[inferred]** Binary scan operator type having member `T operator()(const T &a, const T &b)`
+</ParamField>
+
+**Parameters**
+
+<ParamField path="input" type="T">
+Calling thread's input item
+</ParamField>
+
+<ParamField path="inclusive_output" type="T &">
+Calling thread's output item. May be aliased with `input`
+</ParamField>
+
+<ParamField path="initial_value" type="T">
+Initial value to seed the inclusive scan (uniform across warp)
+</ParamField>
+
+<ParamField path="scan_op" type="ScanOp">
+Binary scan operator
+</ParamField>
+
+</Tab>
+<Tab title="Full warp">
+
+Computes an inclusive prefix scan using the specified binary scan functor across the calling warp. Also provides every thread with the warp-wide `warp_aggregate` of all inputs.
+
+<CodeBlock links={{"WarpScan": "/library/api/cub::WarpScan"}}>
+```cpp showLineNumbers={false}
+template <typename ScanOp>
+void cub::WarpScan<T, LOGICAL_WARP_THREADS>::InclusiveScan(
+    T input,
+    T &inclusive_output,
+    ScanOp scan_op,
+    T &warp_aggregate
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="ScanOp" type="typename">
+**[inferred]** Binary scan operator type having member `T operator()(const T &a, const T &b)`
+</ParamField>
+
+**Parameters**
+
+<ParamField path="input" type="T">
+Calling thread's input item
+</ParamField>
+
+<ParamField path="inclusive_output" type="T &">
+Calling thread's output item. May be aliased with `input`
+</ParamField>
+
+<ParamField path="scan_op" type="ScanOp">
+Binary scan operator
+</ParamField>
+
+<ParamField path="warp_aggregate" type="T &">
+Warp-wide aggregate reduction of input items.
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates four concurrent warp-wide inclusive prefix max scans within a block of 128 threads (one per each of the 32-thread warps).
+
+`{0, -1, 2, -3, ..., 126, -127}`. The corresponding output `thread_data` in the first warp would be `0, 0, 2, 2, ..., 30, 30`, the output for the second warp would be `32, 32, 34, 34, ..., 62, 62`, etc. Furthermore, `warp_aggregate` would be assigned `30` for threads in the first warp, `62` for threads in the second warp, etc.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize WarpScan for type int
+    using WarpScan = cub::WarpScan<int>;
+
+    // Allocate WarpScan shared memory for 4 warps
+    __shared__ typename WarpScan::TempStorage temp_storage[4];
+
+    // Obtain one input item per thread
+    int thread_data = ...
+
+    // Compute inclusive warp-wide prefix max scans
+    int warp_aggregate;
+    int warp_id = threadIdx.x / 32;
+    WarpScan(temp_storage[warp_id]).InclusiveScan(
+        thread_data, thread_data, cuda::maximum<>{}, warp_aggregate);
+```
+
+</Tab>
+<Tab title="Full warp">
+
+Computes an inclusive prefix scan using the specified binary scan functor across the calling warp. Also provides every thread with the warp-wide `warp_aggregate` of all inputs.
+
+<CodeBlock links={{"WarpScan": "/library/api/cub::WarpScan"}}>
+```cpp showLineNumbers={false}
+template <typename ScanOp>
+void cub::WarpScan<T, LOGICAL_WARP_THREADS>::InclusiveScan(
+    T input,
+    T &inclusive_output,
+    T initial_value,
+    ScanOp scan_op,
+    T &warp_aggregate
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="ScanOp" type="typename">
+**[inferred]** Binary scan operator type having member `T operator()(const T &a, const T &b)`
+</ParamField>
+
+**Parameters**
+
+<ParamField path="input" type="T">
+Calling thread's input item
+</ParamField>
+
+<ParamField path="inclusive_output" type="T &">
+Calling thread's output item. May be aliased with `input`
+</ParamField>
+
+<ParamField path="initial_value" type="T">
+Initial value to seed the inclusive scan (uniform across warp). It is not taken into account for warp_aggregate.
+</ParamField>
+
+<ParamField path="scan_op" type="ScanOp">
+Binary scan operator
+</ParamField>
+
+<ParamField path="warp_aggregate" type="T &">
+Warp-wide aggregate reduction of input items.
+</ParamField>
+
+</Tab>
+</Tabs>
+
+---
+
+## Exclusive prefix scans
+
+### ExclusiveScan <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Full warp">
+
+Computes an exclusive prefix scan using the specified binary scan functor across the calling warp. Because no initial value is supplied, the `output` computed for *lane*<sub>0</sub> is undefined.
+
+<CodeBlock links={{"WarpScan": "/library/api/cub::WarpScan"}}>
+```cpp showLineNumbers={false}
+template <typename ScanOp>
+void cub::WarpScan<T, LOGICAL_WARP_THREADS>::ExclusiveScan(
+    T input,
+    T &exclusive_output,
+    ScanOp scan_op
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="ScanOp" type="typename">
+**[inferred]** Binary scan operator type having member `T operator()(const T &a, const T &b)`
+</ParamField>
+
+**Parameters**
+
+<ParamField path="input" type="T">
+Calling thread's input item
+</ParamField>
+
+<ParamField path="exclusive_output" type="T &">
+Calling thread's output item. May be aliased with `input`
+</ParamField>
+
+<ParamField path="scan_op" type="ScanOp">
+Binary scan operator
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates four concurrent warp-wide exclusive prefix max scans within a block of 128 threads (one per each of the 32-thread warps).
+
+`{0, -1, 2, -3, ..., 126, -127}`. The corresponding output `thread_data` in the first warp would be `?, 0, 0, 2, ..., 28, 30`, the output for the second warp would be `?, 32, 32, 34, ..., 60, 62`, etc. (The output `thread_data` in warp *lane*<sub>0</sub> is undefined.)
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize WarpScan for type int
+    using WarpScan = cub::WarpScan<int>;
+
+    // Allocate WarpScan shared memory for 4 warps
+    __shared__ typename WarpScan::TempStorage temp_storage[4];
+
+    // Obtain one input item per thread
+    int thread_data = ...
+
+    // Compute exclusive warp-wide prefix max scans
+    int warp_id = threadIdx.x / 32;
+    WarpScan(temp_storage[warp_id]).ExclusiveScan(thread_data, thread_data, cuda::maximum<>{});
+```
+
+</Tab>
+<Tab title="Full warp">
+
+Computes an exclusive prefix scan using the specified binary scan functor across the calling warp.
+
+<CodeBlock links={{"WarpScan": "/library/api/cub::WarpScan"}}>
+```cpp showLineNumbers={false}
+template <typename ScanOp>
+void cub::WarpScan<T, LOGICAL_WARP_THREADS>::ExclusiveScan(
+    T input,
+    T &exclusive_output,
+    T initial_value,
+    ScanOp scan_op
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="ScanOp" type="typename">
+**[inferred]** Binary scan operator type having member `T operator()(const T &a, const T &b)`
+</ParamField>
+
+**Parameters**
+
+<ParamField path="input" type="T">
+Calling thread's input item
+</ParamField>
+
+<ParamField path="exclusive_output" type="T &">
+Calling thread's output item. May be aliased with `input`
+</ParamField>
+
+<ParamField path="initial_value" type="T">
+Initial value to seed the exclusive scan
+</ParamField>
+
+<ParamField path="scan_op" type="ScanOp">
+Binary scan operator
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates four concurrent warp-wide exclusive prefix max scans within a block of 128 threads (one per each of the 32-thread warps).
+
+`{0, -1, 2, -3, ..., 126, -127}`. The corresponding output `thread_data` in the first warp would be `INT_MIN, 0, 0, 2, ..., 28, 30`, the output for the second warp would be `30, 32, 32, 34, ..., 60, 62`, etc.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize WarpScan for type int
+    using WarpScan = cub::WarpScan<int>;
+
+    // Allocate WarpScan shared memory for 4 warps
+    __shared__ typename WarpScan::TempStorage temp_storage[4];
+
+    // Obtain one input item per thread
+    int thread_data = ...
+
+    // Compute exclusive warp-wide prefix max scans
+    int warp_id = threadIdx.x / 32;
+    WarpScan(temp_storage[warp_id]).ExclusiveScan(thread_data,
+                                                  thread_data,
+                                                  INT_MIN,
+                                                  cuda::maximum<>{});
+```
+
+</Tab>
+<Tab title="Full warp">
+
+Computes an exclusive prefix scan using the specified binary scan functor across the calling warp. Because no initial value is supplied, the `output` computed for *lane*<sub>0</sub> is undefined. Also provides every thread with the warp-wide `warp_aggregate` of all inputs.
+
+<CodeBlock links={{"WarpScan": "/library/api/cub::WarpScan"}}>
+```cpp showLineNumbers={false}
+template <typename ScanOp>
+void cub::WarpScan<T, LOGICAL_WARP_THREADS>::ExclusiveScan(
+    T input,
+    T &exclusive_output,
+    ScanOp scan_op,
+    T &warp_aggregate
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="ScanOp" type="typename">
+**[inferred]** Binary scan operator type having member `T operator()(const T &a, const T &b)`
+</ParamField>
+
+**Parameters**
+
+<ParamField path="input" type="T">
+Calling thread's input item
+</ParamField>
+
+<ParamField path="exclusive_output" type="T &">
+Calling thread's output item. May be aliased with `input`
+</ParamField>
+
+<ParamField path="scan_op" type="ScanOp">
+Binary scan operator
+</ParamField>
+
+<ParamField path="warp_aggregate" type="T &">
+Warp-wide aggregate reduction of input items
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates four concurrent warp-wide exclusive prefix max scans within a block of 128 threads (one per each of the 32-thread warps).
+
+`{0, -1, 2, -3, ..., 126, -127}`. The corresponding output `thread_data` in the first warp would be `?, 0, 0, 2, ..., 28, 30`, the output for the second warp would be `?, 32, 32, 34, ..., 60, 62`, etc. (The output `thread_data` in warp *lane*<sub>0</sub> is undefined). Furthermore, `warp_aggregate` would be assigned `30` for threads in the first warp, \p 62 for threads in the second warp, etc.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize WarpScan for type int
+    using WarpScan = cub::WarpScan<int>;
+
+    // Allocate WarpScan shared memory for 4 warps
+    __shared__ typename WarpScan::TempStorage temp_storage[4];
+
+    // Obtain one input item per thread
+    int thread_data = ...
+
+    // Compute exclusive warp-wide prefix max scans
+    int warp_aggregate;
+    int warp_id = threadIdx.x / 32;
+    WarpScan(temp_storage[warp_id]).ExclusiveScan(thread_data,
+                                                  thread_data,
+                                                  cuda::maximum<>{},
+                                                  warp_aggregate);
+```
+
+</Tab>
+<Tab title="Full warp">
+
+Computes an exclusive prefix scan using the specified binary scan functor across the calling warp. Also provides every thread with the warp-wide `warp_aggregate` of all inputs.
+
+<CodeBlock links={{"WarpScan": "/library/api/cub::WarpScan"}}>
+```cpp showLineNumbers={false}
+template <typename ScanOp>
+void cub::WarpScan<T, LOGICAL_WARP_THREADS>::ExclusiveScan(
+    T input,
+    T &exclusive_output,
+    T initial_value,
+    ScanOp scan_op,
+    T &warp_aggregate
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="ScanOp" type="typename">
+**[inferred]** Binary scan operator type having member `T operator()(const T &a, const T &b)`
+</ParamField>
+
+**Parameters**
+
+<ParamField path="input" type="T">
+Calling thread's input item
+</ParamField>
+
+<ParamField path="exclusive_output" type="T &">
+Calling thread's output item. May be aliased with `input`
+</ParamField>
+
+<ParamField path="initial_value" type="T">
+Initial value to seed the exclusive scan
+</ParamField>
+
+<ParamField path="scan_op" type="ScanOp">
+Binary scan operator
+</ParamField>
+
+<ParamField path="warp_aggregate" type="T &">
+Warp-wide aggregate reduction of input items
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates four concurrent warp-wide exclusive prefix max scans within a block of 128 threads (one per each of the 32-thread warps).
+
+`{0, -1, 2, -3, ..., 126, -127}`. The corresponding output `thread_data` in the first warp would be `INT_MIN, 0, 0, 2, ..., 28, 30`, the output for the second warp would be `INT_MIN, 32, 32, 34, ..., 60, 62`, etc. Furthermore, `warp_aggregate` would be assigned `30` for threads in the first warp, `62` for threads in the second warp, etc.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize WarpScan for type int
+    using WarpScan = cub::WarpScan<int>;
+
+    // Allocate WarpScan shared memory for 4 warps
+    __shared__ typename WarpScan::TempStorage temp_storage[4];
+
+    // Obtain one input item per thread
+    int thread_data = ...
+
+    // Compute exclusive warp-wide prefix max scans
+    int warp_aggregate;
+    int warp_id = threadIdx.x / 32;
+    WarpScan(temp_storage[warp_id]).ExclusiveScan(thread_data,
+                                                  thread_data,
+                                                  INT_MIN,
+                                                  cuda::maximum<>{},
+                                                  warp_aggregate);
+```
+
+</Tab>
+</Tabs>
+
+---
+
+## Combination (inclusive & exclusive) prefix scans
+
+### Scan <Badge intent="note" minimal>inline</Badge>
+
+<Tabs>
+<Tab title="Full warp">
+
+Computes both inclusive and exclusive prefix scans using the specified binary scan functor across the calling warp. Because no initial value is supplied, the `exclusive_output` computed for *lane*<sub>0</sub> is undefined.
+
+<CodeBlock links={{"WarpScan": "/library/api/cub::WarpScan"}}>
+```cpp showLineNumbers={false}
+template <typename ScanOp>
+void cub::WarpScan<T, LOGICAL_WARP_THREADS>::Scan(
+    T input,
+    T &inclusive_output,
+    T &exclusive_output,
+    ScanOp scan_op
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="ScanOp" type="typename">
+**[inferred]** Binary scan operator type having member `T operator()(const T &a, const T &b)`
+</ParamField>
+
+**Parameters**
+
+<ParamField path="input" type="T">
+Calling thread's input item
+</ParamField>
+
+<ParamField path="inclusive_output" type="T &">
+Calling thread's inclusive-scan output item
+</ParamField>
+
+<ParamField path="exclusive_output" type="T &">
+Calling thread's exclusive-scan output item
+</ParamField>
+
+<ParamField path="scan_op" type="ScanOp">
+Binary scan operator
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates four concurrent warp-wide exclusive prefix max scans within a block of 128 threads (one per each of the 32-thread warps).
+
+`{0, -1, 2, -3, ..., 126, -127}`. The corresponding output `inclusive_partial` in the first warp would be `0, 0, 2, 2, ..., 30, 30`, the output for the second warp would be `32, 32, 34, 34, ..., 62, 62`, etc. The corresponding output `exclusive_partial` in the first warp would be `?, 0, 0, 2, ..., 28, 30`, the output for the second warp would be `?, 32, 32, 34, ..., 60, 62`, etc. (The output `thread_data` in warp *lane*<sub>0</sub> is undefined.)
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize WarpScan for type int
+    using WarpScan = cub::WarpScan<int>;
+
+    // Allocate WarpScan shared memory for 4 warps
+    __shared__ typename WarpScan::TempStorage temp_storage[4];
+
+    // Obtain one input item per thread
+    int thread_data = ...
+
+    // Compute exclusive warp-wide prefix max scans
+    int inclusive_partial, exclusive_partial;
+    WarpScan(temp_storage[warp_id]).Scan(thread_data,
+                                         inclusive_partial,
+                                         exclusive_partial,
+                                         cuda::maximum<>{});
+```
+
+</Tab>
+<Tab title="Full warp">
+
+Computes both inclusive and exclusive prefix scans using the specified binary scan functor across the calling warp.
+
+<CodeBlock links={{"WarpScan": "/library/api/cub::WarpScan"}}>
+```cpp showLineNumbers={false}
+template <typename ScanOp>
+void cub::WarpScan<T, LOGICAL_WARP_THREADS>::Scan(
+    T input,
+    T &inclusive_output,
+    T &exclusive_output,
+    T initial_value,
+    ScanOp scan_op
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Template parameters**
+
+<ParamField path="ScanOp" type="typename">
+**[inferred]** Binary scan operator type having member `T operator()(const T &a, const T &b)`
+</ParamField>
+
+**Parameters**
+
+<ParamField path="input" type="T">
+Calling thread's input item
+</ParamField>
+
+<ParamField path="inclusive_output" type="T &">
+Calling thread's inclusive-scan output item
+</ParamField>
+
+<ParamField path="exclusive_output" type="T &">
+Calling thread's exclusive-scan output item
+</ParamField>
+
+<ParamField path="initial_value" type="T">
+Initial value to seed the exclusive scan
+</ParamField>
+
+<ParamField path="scan_op" type="ScanOp">
+Binary scan operator
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates four concurrent warp-wide prefix max scans within a block of 128 threads (one per each of the 32-thread warps).
+
+`{0, -1, 2, -3, ..., 126, -127}`. The corresponding output `inclusive_partial` in the first warp would be `0, 0, 2, 2, ..., 30, 30`, the output for the second warp would be `32, 32, 34, 34, ..., 62, 62`, etc. The corresponding output `exclusive_partial` in the first warp would be `INT_MIN, 0, 0, 2, ..., 28, 30`, the output for the second warp would be `INT_MIN, 32, 32, 34, ..., 60, 62`, etc.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize WarpScan for type int
+    using WarpScan = cub::WarpScan<int>;
+
+    // Allocate WarpScan shared memory for 4 warps
+    __shared__ typename WarpScan::TempStorage temp_storage[4];
+
+    // Obtain one input item per thread
+    int thread_data = ...
+
+    // Compute inclusive warp-wide prefix max scans
+    int warp_id = threadIdx.x / 32;
+    int inclusive_partial, exclusive_partial;
+    WarpScan(temp_storage[warp_id]).Scan(thread_data,
+                                         inclusive_partial,
+                                         exclusive_partial,
+                                         INT_MIN,
+                                         cuda::maximum<>{});
+```
+
+</Tab>
+</Tabs>
+
+---
+
+## Data exchange
+
+### Broadcast <Badge intent="note" minimal>inline</Badge>
+
+Broadcast the value `input` from *lane*<sub>src_lane</sub> to all lanes in the warp
+
+<CodeBlock links={{"WarpScan": "/library/api/cub::WarpScan"}}>
+```cpp showLineNumbers={false}
+T cub::WarpScan<T, LOGICAL_WARP_THREADS>::Broadcast(
+    T input,
+    unsigned int src_lane
+)
+```
+</CodeBlock>
+
+*Added in v2.2.0. First appears in CUDA Toolkit 12.3.*
+
+<Warning>
+* The block-wide aggregate of `temp_storage` is undefined after calling this method and should not be used. To preserve the aggregate, use a separate `TempStorage` for each method call.
+</Warning>
+
+**Parameters**
+
+<ParamField path="input" type="T">
+The value to broadcast
+</ParamField>
+
+<ParamField path="src_lane" type="unsigned int">
+Which warp lane is to do the broadcasting
+</ParamField>
+
+**Example**
+
+The code snippet below illustrates the warp-wide broadcasts of values from *lane*<sub>0</sub> in each of four warps to all other threads in those warps.
+
+`{0, 1, 2, 3, ..., 127}`. The corresponding output `thread_data` will be `{0, 0, ..., 0}` in warp<sub>0</sub>, `{32, 32, ..., 32}` in warp<sub>1</sub>, `{64, 64, ..., 64}` in warp<sub>2</sub>, etc.
+
+```cpp showLineNumbers={false}
+#include <cub/cub.cuh>
+
+__global__ void ExampleKernel(...)
+{
+    // Specialize WarpScan for type int
+    using WarpScan = cub::WarpScan<int>;
+
+    // Allocate WarpScan shared memory for 4 warps
+    __shared__ typename WarpScan::TempStorage temp_storage[4];
+
+    // Obtain one input item per thread
+    int thread_data = ...
+
+    // Broadcast from lane0 in each warp to all other threads in the warp
+    int warp_id = threadIdx.x / 32;
+    thread_data = WarpScan(temp_storage[warp_id]).Broadcast(thread_data, 0);
+```
+
+---
+
+## Types
+
+### Typedefs
+
+| Name | Definition | Description |
+|---|---|---|
+| `InternalWarpScan` | `::cuda::std:: _If< IS_POW_OF_TWO, detail::WarpScanShfl< T, LOGICAL_WARP_THREADS >, detail::WarpScanSmem< T, LOGICAL_WARP_THREADS > >` | Internal specialization. |
+| `_TempStorage` | `typename InternalWarpScan::TempStorage` | Shared memory storage layout type for `WarpScan`. |
+
+---
+
+## Member variables
+
+| Name | Type | Description |
+|---|---|---|
+| `IS_ARCH_WARP` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `bool` | Whether the logical warp size and the PTX warp size coincide. |
+| `IS_POW_OF_TWO` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `bool` | Whether the logical warp size is a power-of-two. |
+| `IS_INTEGER` <Badge intent="note" minimal>static</Badge> <Badge intent="note" minimal>constexpr</Badge> | `bool` | Whether the data type is an integer (which has fully-associative addition). |
+| `temp_storage` | `_TempStorage &` | Shared storage reference. |
+| `lane_id` | `unsigned int` | |
+
+---
+
+## Inner classes
+
+### TempStorage
+
+<CodeBlock links={{"WarpScan": "/library/api/cub::WarpScan"}}>
+```cpp showLineNumbers={false}
+struct cub::WarpScan::TempStorage
+```
+</CodeBlock>
+
+The operations exposed by `WarpScan` require a temporary memory allocation of this nested type for thread communication. This opaque storage can be allocated directly using the `__shared__` keyword. Alternatively, it can be aliased to externally allocated memory (shared or global) or `union`'d with other storage allocation types to facilitate memory reuse.
+
+**Inherits from:** `Uninitialized< _TempStorage >` (public)

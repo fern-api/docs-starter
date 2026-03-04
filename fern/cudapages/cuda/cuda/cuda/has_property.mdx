@@ -1,0 +1,33 @@
+---
+title: "cuda::has_property"
+description: "The `has_property` concept verifies that a Resource satisfies a given Property."
+---
+
+<Badge intent="info">C++20 concept</Badge>
+
+The `has_property` concept verifies that a Resource satisfies a given Property.
+
+<CodeBlock>
+```cpp showLineNumbers={false}
+template <class _Resource, class _Property>
+concept has_property = /* see description */;
+```
+</CodeBlock>
+
+<AccordionGroup>
+<Accordion title="Template parameters">
+
+<ParamField path="_Resource" type="class">
+</ParamField>
+
+<ParamField path="_Property" type="class">
+</ParamField>
+
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Description
+
+For \c has_property we require the following free function to be callable

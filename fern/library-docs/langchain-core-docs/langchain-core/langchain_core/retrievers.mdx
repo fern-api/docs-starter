@@ -1,0 +1,433 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/retrievers
+title: langchain_core.retrievers
+---
+
+**Retriever** class returns `Document` objects given a text **query**.
+
+It is more general than a vector store. A retriever does not need to be able to
+store documents, only to return (or retrieve) it. Vector stores can be used as
+the backbone of a retriever, but there are other types of retrievers as well.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`BaseRetriever`](#langchain_core-retrievers-BaseRetriever) | Abstract base class for a document retrieval system. |
+| [`LangSmithRetrieverParams`](#langchain_core-retrievers-LangSmithRetrieverParams) | LangSmith parameters for tracing. |
+
+### Data
+
+[`RetrieverInput`](#langchain_core-retrievers-RetrieverInput)
+
+[`RetrieverLike`](#langchain_core-retrievers-RetrieverLike)
+
+[`RetrieverOutput`](#langchain_core-retrievers-RetrieverOutput)
+
+[`RetrieverOutputLike`](#langchain_core-retrievers-RetrieverOutputLike)
+
+### API
+
+<Anchor id="langchain_core-retrievers-BaseRetriever">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.retrievers.BaseRetriever()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+**Bases:** [RunnableSerializable[RetrieverInput, RetrieverOutput]](/langchain-core/langchain_core/runnables/base#langchain_core-runnables-base-RunnableSerializable)
+
+Abstract base class for a document retrieval system.
+
+A retrieval system is defined as something that can take string queries and return
+the most 'relevant' documents from some source.
+
+Usage:
+
+A retriever follows the standard `Runnable` interface, and should be used via the
+standard `Runnable` methods of `invoke`, `ainvoke`, `batch`, `abatch`.
+
+Implementation:
+
+When implementing a custom retriever, the class should implement the
+`_get_relevant_documents` method to define the logic for retrieving documents.
+
+Optionally, an async native implementations can be provided by overriding the
+`_aget_relevant_documents` method.
+
+!!! example "Retriever that returns the first 5 documents from a list of documents"
+
+    ```python
+    from langchain_core.documents import Document
+    from langchain_core.retrievers import BaseRetriever
+
+    class SimpleRetriever(BaseRetriever):
+        docs: list[Document]
+        k: int = 5
+
+        def _get_relevant_documents(self, query: str) -> list[Document]:
+            """Return the first k documents from the list of documents"""
+            return self.docs[:self.k]
+
+        async def _aget_relevant_documents(self, query: str) -> list[Document]:
+            """(Optional) async native implementation."""
+            return self.docs[:self.k]
+    ```
+
+!!! example "Simple retriever based on a scikit-learn vectorizer"
+
+    ```python
+    from sklearn.metrics.pairwise import cosine_similarity
+
+
+    class TFIDFRetriever(BaseRetriever, BaseModel):
+        vectorizer: Any
+        docs: list[Document]
+        tfidf_array: Any
+        k: int = 4
+
+        class Config:
+            arbitrary_types_allowed = True
+
+        def _get_relevant_documents(self, query: str) -> list[Document]:
+            # Ip -- (n_docs,x), Op -- (n_docs,n_Feats)
+            query_vec = self.vectorizer.transform([query])
+            # Op -- (n_docs,1) -- Cosine Sim with each doc
+            results = cosine_similarity(self.tfidf_array, query_vec).reshape((-1,))
+            return [self.docs[i] for i in results.argsort()[-self.k :][::-1]]
+    ```
+
+
+<ParamField path="_expects_other_args" type="bool = False">
+</ParamField>
+
+<ParamField path="_new_arg_supported" type="bool = False">
+</ParamField>
+
+<ParamField path="metadata" type="dict[str, Any] | None = None">
+Optional metadata associated with the retriever.
+
+This metadata will be associated with each call to this retriever,
+and passed as arguments to the handlers defined in `callbacks`.
+
+You can use these to eg identify a specific instance of a retriever with its
+use case.
+</ParamField>
+
+<ParamField path="model_config" type="= ConfigDict(arbitrary_types_allowed=True)">
+</ParamField>
+
+<ParamField path="tags" type="list[str] | None = None">
+Optional list of tags associated with the retriever.
+
+These tags will be associated with each call to this retriever,
+and passed as arguments to the handlers defined in `callbacks`.
+
+You can use these to eg identify a specific instance of a retriever with its
+use case.
+</ParamField>
+<Anchor id="langchain_core-retrievers-BaseRetriever-__init_subclass__">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.retrievers.BaseRetriever.__init_subclass__(
+    kwargs: typing.Any = {}
+) -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+
+</Indent>
+<Anchor id="langchain_core-retrievers-BaseRetriever-_aget_relevant_documents">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.AsyncCallbackManagerForRetrieverRun":"/langchain-core/langchain_core/callbacks/manager#langchain_core-callbacks-manager-AsyncCallbackManagerForRetrieverRun","langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.retrievers.BaseRetriever._aget_relevant_documents(
+    query: str,
+    run_manager: langchain_core.callbacks.manager.AsyncCallbackManagerForRetrieverRun
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Asynchronously get documents relevant to a query.
+
+**Parameters:**
+
+<ParamField path="query" type="str">
+String to find relevant documents for
+</ParamField>
+
+<ParamField path="run_manager" type="AsyncCallbackManagerForRetrieverRun">
+The callback handler to use
+</ParamField>
+
+**Returns:** `list[Document]`
+
+List of relevant documents
+
+
+</Indent>
+<Anchor id="langchain_core-retrievers-BaseRetriever-_get_ls_params">
+
+<CodeBlock links={{"langchain_core.retrievers.LangSmithRetrieverParams":"#langchain_core-retrievers-LangSmithRetrieverParams"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.retrievers.BaseRetriever._get_ls_params(
+    _kwargs: typing.Any = {}
+) -> langchain_core.retrievers.LangSmithRetrieverParams
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Get standard params for tracing.
+
+
+</Indent>
+<Anchor id="langchain_core-retrievers-BaseRetriever-_get_relevant_documents">
+
+<CodeBlock links={{"langchain_core.callbacks.manager.CallbackManagerForRetrieverRun":"/langchain-core/langchain_core/callbacks/manager#langchain_core-callbacks-manager-CallbackManagerForRetrieverRun","langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.retrievers.BaseRetriever._get_relevant_documents(
+    query: str,
+    run_manager: langchain_core.callbacks.manager.CallbackManagerForRetrieverRun
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Get documents relevant to a query.
+
+**Parameters:**
+
+<ParamField path="query" type="str">
+String to find relevant documents for.
+</ParamField>
+
+<ParamField path="run_manager" type="CallbackManagerForRetrieverRun">
+The callback handler to use.
+</ParamField>
+
+**Returns:** `list[Document]`
+
+List of relevant documents.
+
+
+</Indent>
+<Anchor id="langchain_core-retrievers-BaseRetriever-ainvoke">
+
+<CodeBlock links={{"langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.retrievers.BaseRetriever.ainvoke(
+    input: str,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Asynchronously invoke the retriever to get relevant documents.
+
+Main entry point for asynchronous retriever invocations.
+
+Examples:
+<CodeBlock showLineNumbers={false}>
+
+```python
+await retriever.ainvoke("query")
+```
+
+</CodeBlock>
+
+**Parameters:**
+
+<ParamField path="input" type="str">
+The query string.
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig | None" default="None">
+Configuration for the retriever.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments to pass to the retriever.
+</ParamField>
+
+**Returns:** `list[Document]`
+
+List of relevant documents.
+
+
+</Indent>
+<Anchor id="langchain_core-retrievers-BaseRetriever-invoke">
+
+<CodeBlock links={{"langchain_core.runnables.RunnableConfig":"/langchain-core/langchain_core/runnables/config#langchain_core-runnables-config-RunnableConfig","langchain_core.documents.Document":"/langchain-core/langchain_core/documents/base#langchain_core-documents-base-Document"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.retrievers.BaseRetriever.invoke(
+    input: str,
+    config: langchain_core.runnables.RunnableConfig | None = None,
+    kwargs: typing.Any = {}
+) -> list[langchain_core.documents.Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Invoke the retriever to get relevant documents.
+
+Main entry point for synchronous retriever invocations.
+
+Examples:
+<CodeBlock showLineNumbers={false}>
+
+```python
+retriever.invoke("query")
+```
+
+</CodeBlock>
+
+**Parameters:**
+
+<ParamField path="input" type="str">
+The query string.
+</ParamField>
+
+<ParamField path="config" type="RunnableConfig | None" default="None">
+Configuration for the retriever.
+</ParamField>
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Additional arguments to pass to the retriever.
+</ParamField>
+
+**Returns:** `list[Document]`
+
+List of relevant documents.
+
+
+</Indent>
+</Indent>
+
+<Anchor id="langchain_core-retrievers-LangSmithRetrieverParams">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.retrievers.LangSmithRetrieverParams
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+**Bases:** `typing.TypedDict`
+
+LangSmith parameters for tracing.
+
+<ParamField path="ls_embedding_model" type="str | None">
+Embedding model.
+</ParamField>
+
+<ParamField path="ls_embedding_provider" type="str | None">
+Embedding provider.
+</ParamField>
+
+<ParamField path="ls_retriever_name" type="str">
+Retriever name.
+</ParamField>
+
+<ParamField path="ls_vector_store_provider" type="str | None">
+Vector store provider.
+</ParamField>
+
+</Indent>
+
+<Anchor id="langchain_core-retrievers-RetrieverInput">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.retrievers.RetrieverInput = str
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-retrievers-RetrieverLike">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.retrievers.RetrieverLike = Runnable[RetrieverInput, RetrieverOutput]
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-retrievers-RetrieverOutput">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.retrievers.RetrieverOutput = list[Document]
+```
+
+</CodeBlock>
+</Anchor>
+
+
+<Anchor id="langchain_core-retrievers-RetrieverOutputLike">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.retrievers.RetrieverOutputLike = Runnable[Any, RetrieverOutput]
+```
+
+</CodeBlock>
+</Anchor>
+

@@ -1,0 +1,223 @@
+---
+layout: overview
+slug: langchain-core/langchain_core/prompts/message
+title: langchain_core.prompts.message
+---
+
+Message prompt templates.
+
+## Module Contents
+
+### Classes
+
+| Name | Description |
+|------|-------------|
+| [`BaseMessagePromptTemplate`](#langchain_core-prompts-message-BaseMessagePromptTemplate) | Base class for message prompt templates. |
+
+### API
+
+<Anchor id="langchain_core-prompts-message-BaseMessagePromptTemplate">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+class langchain_core.prompts.message.BaseMessagePromptTemplate()
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>Abstract</Badge>
+
+**Bases:** [Serializable](/langchain-core/langchain_core/load/serializable#langchain_core-load-serializable-Serializable)
+
+Base class for message prompt templates.
+
+
+<ParamField path="input_variables" type="list[str]">
+Input variables for this prompt template.
+</ParamField>
+<Anchor id="langchain_core-prompts-message-BaseMessagePromptTemplate-__add__">
+
+<CodeBlock links={{"langchain_core.prompts.chat.ChatPromptTemplate":"/langchain-core/langchain_core/prompts/chat#langchain_core-prompts-chat-ChatPromptTemplate"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.message.BaseMessagePromptTemplate.__add__(
+    other: typing.Any
+) -> langchain_core.prompts.chat.ChatPromptTemplate
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Combine two prompt templates.
+
+**Parameters:**
+
+<ParamField path="other" type="Any">
+Another prompt template.
+</ParamField>
+
+**Returns:** `ChatPromptTemplate`
+
+Combined prompt template.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-message-BaseMessagePromptTemplate-aformat_messages">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.message.BaseMessagePromptTemplate.aformat_messages(
+    kwargs: typing.Any = {}
+) -> list[langchain_core.messages.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>async</Badge>
+
+Async format messages from kwargs.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to use for formatting.
+</ParamField>
+
+**Returns:** `list[BaseMessage]`
+
+List of `BaseMessage` objects.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-message-BaseMessagePromptTemplate-format_messages">
+
+<CodeBlock links={{"langchain_core.messages.BaseMessage":"/langchain-core/langchain_core/messages/base#langchain_core-messages-base-BaseMessage"}} showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.message.BaseMessagePromptTemplate.format_messages(
+    kwargs: typing.Any = {}
+) -> list[langchain_core.messages.BaseMessage]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>abstract</Badge>
+
+Format messages from kwargs.
+
+Should return a list of `BaseMessage` objects.
+
+**Parameters:**
+
+<ParamField path="**kwargs" type="Any" default="&#123;&#125;">
+Keyword arguments to use for formatting.
+</ParamField>
+
+**Returns:** `list[BaseMessage]`
+
+List of `BaseMessage` objects.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-message-BaseMessagePromptTemplate-get_lc_namespace">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.message.BaseMessagePromptTemplate.get_lc_namespace() -> list[str]
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Get the namespace of the LangChain object.
+
+**Returns:** `list[str]`
+
+`["langchain", "prompts", "chat"]`
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-message-BaseMessagePromptTemplate-is_lc_serializable">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.message.BaseMessagePromptTemplate.is_lc_serializable() -> bool
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+<Badge>classmethod</Badge>
+
+Return `True` as this class is serializable.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-message-BaseMessagePromptTemplate-pretty_print">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.message.BaseMessagePromptTemplate.pretty_print() -> None
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Print a human-readable representation.
+
+
+</Indent>
+<Anchor id="langchain_core-prompts-message-BaseMessagePromptTemplate-pretty_repr">
+
+<CodeBlock showLineNumbers={false} wordWrap={true}>
+
+```python
+langchain_core.prompts.message.BaseMessagePromptTemplate.pretty_repr(
+    html: bool = False
+) -> str
+```
+
+</CodeBlock>
+</Anchor>
+
+<Indent>
+
+Human-readable representation.
+
+**Parameters:**
+
+<ParamField path="html" type="bool" default="False">
+Whether to format as HTML.
+</ParamField>
+
+**Returns:** `str`
+
+Human-readable representation.
+
+
+</Indent>
+</Indent>
