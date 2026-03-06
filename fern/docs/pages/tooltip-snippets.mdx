@@ -1,0 +1,50 @@
+---
+title: Tooltips with reusable snippets
+subtitle: Share glossary definitions across your docs using tooltips and reusable snippets
+slug: tooltip-snippets
+---
+
+You can combine [tooltips](https://buildwithfern.com/learn/docs/writing-content/components/tooltip) with [reusable snippets](https://buildwithfern.com/learn/docs/writing-content/reusable-snippets) to maintain a single-source glossary. Define each term once in a snippet file, then reference it in tooltips throughout your documentation.
+
+## Set up glossary snippets
+
+Create a `snippets/glossary/` folder with one `.mdx` file per term. Each file contains only the definition text:
+
+<Files>
+  <Folder name="fern" defaultOpen>
+    <Folder name="snippets" defaultOpen>
+      <Folder name="glossary" defaultOpen>
+        <File name="perennial.mdx" />
+        <File name="propagation.mdx" />
+        <File name="hardiness-zone.mdx" />
+      </Folder>
+    </Folder>
+  </Folder>
+</Files>
+
+```mdx title="snippets/glossary/perennial.mdx"
+A plant that lives for more than two years, returning each growing season from its root system.
+```
+
+## Use snippets in tooltips
+
+Reference the snippet in a tooltip's `tip` attribute using the string syntax:
+
+<div className="highlight-frame">
+  <div className="highlight-frame-content">
+    A <Tooltip tip="<Markdown src='/snippets/glossary/perennial.mdx' />">perennial</Tooltip> like lavender is a great choice for low-maintenance gardens. You can grow more plants through <Tooltip tip="<Markdown src='/snippets/glossary/propagation.mdx' />">propagation</Tooltip>, and you should always check your <Tooltip tip="<Markdown src='/snippets/glossary/hardiness-zone.mdx' />">hardiness zone</Tooltip> before planting.
+  </div>
+</div>
+
+````mdx title="Markdown"
+A <Tooltip tip="<Markdown src='/snippets/glossary/perennial.mdx' />">perennial</Tooltip> like
+lavender is a great choice for low-maintenance gardens. You can grow more plants through
+<Tooltip tip="<Markdown src='/snippets/glossary/propagation.mdx' />">propagation</Tooltip>,
+and you should always check your
+<Tooltip tip="<Markdown src='/snippets/glossary/hardiness-zone.mdx' />">hardiness zone</Tooltip>
+before planting.
+````
+
+<Note>
+Snippet content used in tooltips should be **plain text only**. Markdown formatting like bold, links, or headings will not render inside the `tip` string attribute.
+</Note>
