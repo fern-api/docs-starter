@@ -1,91 +1,48 @@
 ---
-title: Welcome to Fern!
-subtitle: Everything you need to build the best developer experience
+title: Welcome to Plant Store
+subtitle: The complete platform for managing your plant inventory
+layout: overview
 slug: welcome
 ---
 
-This repository is a starter template for building documentation with [Fern](https://buildwithfern.com). It includes a sample Plant Store API to demonstrate how Fern generates interactive API reference documentation from an OpenAPI specification.
+<div className="hero-container">
+<div className="hero-content">
 
-Use this template to get started quickly, then replace the sample content with your own API and documentation.
+Plant Store is a platform for managing and tracking your plant inventory. It provides a RESTful API for browsing plants, managing users, and tracking availability. Plants are defined with a rich schema, queried through the API, and monitored in real time via WebSocket events.
 
-## What's included
+<div className="hero-cta-group">
+  <a href="/editing-your-docs" className="cta-primary">Quickstart</a>
+  <a href="/api-reference" className="cta-secondary">Explore the API</a>
+</div>
 
-This starter template contains everything you need to publish documentation:
+</div>
+<div className="hero-image-wrapper">
+<div className="hero-image-box">
+<div className="hero-image-content">
+  <svg viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg" className="hero-illustration">
+    <rect x="30" y="90" width="40" height="50" rx="4" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5"/>
+    <rect x="80" y="70" width="40" height="70" rx="4" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5"/>
+    <rect x="130" y="80" width="40" height="60" rx="4" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5"/>
+    <path d="M50 90 C50 70, 50 50, 45 35 M50 90 C50 75, 55 55, 60 40 M50 90 C50 78, 43 60, 38 45" stroke="#4ade80" strokeWidth="2" fill="none" strokeLinecap="round"/>
+    <circle cx="45" cy="32" r="5" fill="#4ade80" opacity="0.8"/>
+    <circle cx="60" cy="37" r="4" fill="#22c55e" opacity="0.8"/>
+    <circle cx="38" cy="42" r="4" fill="#86efac" opacity="0.8"/>
+    <path d="M100 70 C100 50, 100 35, 95 20 M100 70 C100 55, 105 40, 110 25 M100 70 C100 58, 93 42, 88 30" stroke="#4ade80" strokeWidth="2" fill="none" strokeLinecap="round"/>
+    <circle cx="95" cy="17" r="6" fill="#22c55e" opacity="0.8"/>
+    <circle cx="110" cy="22" r="5" fill="#4ade80" opacity="0.8"/>
+    <circle cx="88" cy="27" r="4" fill="#86efac" opacity="0.8"/>
+    <path d="M150 80 C150 65, 150 50, 145 38 M150 80 C150 68, 155 55, 158 42" stroke="#4ade80" strokeWidth="2" fill="none" strokeLinecap="round"/>
+    <circle cx="145" cy="35" r="5" fill="#4ade80" opacity="0.8"/>
+    <circle cx="158" cy="39" r="4" fill="#22c55e" opacity="0.8"/>
+    <circle cx="170" cy="60" r="10" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5"/>
+    <path d="M167 60 L170 57 L173 60 M170 57 L170 64" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+</div>
+</div>
+</div>
+</div>
 
-<Files>
-  <File name="docs.yml" comment="Configures navigation, theme, and hosting" />
-  <File name="fern.config.json" comment="Sets your organization name and CLI version" />
-  <File name="openapi.yaml" comment="Sample Plant Store API specification" />
-  <Folder name="docs" defaultOpen>
-    <Folder name="pages" comment="Markdown content for your documentation" />
-    <Folder name="assets" comment="Logos, favicon, and other assets" />
-  </Folder>
-</Files>
-
-## Getting started
-
-<Steps>
-<Step title="Clone this repository">
-
-```bash
-git clone <your-template-repo.git>
-cd docs-starter
-```
-
-</Step>
-
-<Step title="Install the Fern CLI">
-
-```bash
-npm install -g fern-api
-```
-
-</Step>
-
-<Step title="Preview locally">
-
-Start a local development server with hot-reloading:
-
-```bash
-fern docs dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) to see your docs.
-
-</Step>
-
-<Step title="Make it yours">
-
-Update `fern.config.json` with your organization name and `docs.yml` with your desired URL. The `version` refers to [the Fern CLI](https://buildwithfern.com/learn/cli-api-reference/cli-reference/overview):
-
-```json title="fern.config.json"
-{
-  "organization": "your-org-name",
-  "version": "0.46.15"
-}
-```
-
-```yaml title="docs.yml"
-instances:
-  - url: your-org.docs.buildwithfern.com
-```
-
-</Step>
-
-<Step title="Publish">
-
-When you're ready to go live:
-
-```bash
-fern generate --docs
-```
-
-</Step>
-</Steps>
-
-## Next steps
-
-Replace the sample Plant Store API with your own OpenAPI specification, update the Markdown pages with your content, and customize the theme to match your brand. For detailed guidance, explore the pages in this documentation or visit the [Fern documentation](https://buildwithfern.com/learn).
+## What you can do
 
 <CardGroup cols={2}>
   <Card
@@ -93,7 +50,14 @@ Replace the sample Plant Store API with your own OpenAPI specification, update t
     icon="duotone pen-to-square"
     href="/editing-your-docs"
   >
-    Learn how to preview and publish changes using the CLI or Fern Editor
+    Preview and publish changes using the CLI or Fern Editor
+  </Card>
+  <Card
+    title="Write content"
+    icon="duotone file-lines"
+    href="/writing-content"
+  >
+    Author documentation pages with Markdown and MDX components
   </Card>
   <Card
     title="Set up navigation"
@@ -109,12 +73,12 @@ Replace the sample Plant Store API with your own OpenAPI specification, update t
   >
     Brand your documentation with colors, logos, and layouts
   </Card>
-  <Card
-    title="API reference"
-    icon="duotone code"
-    href="/api-reference"
-  >
-    See how Fern generates interactive API documentation
-  </Card>
 </CardGroup>
+
+## Concepts
+
+- **Plant Store API** — RESTful API defined in `openapi.yaml` for managing plants and users with full CRUD operations
+- **WebSocket events** — Real-time plant status updates via `asyncapi.yaml`, supporting subscribe and unsubscribe actions
+- **Documentation pages** — Markdown content in `docs/pages/` for guides, tutorials, and reference material
+- **Configuration** — Site navigation, theming, and hosting settings defined in `docs.yml`
 
