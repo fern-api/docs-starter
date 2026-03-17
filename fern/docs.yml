@@ -89,12 +89,12 @@ theme:
   page-actions: toolbar
   footer-nav: minimal
 
-logo:
-  dark: docs/assets/logo-dark.svg
-  light: docs/assets/logo.svg
-  height: 20
-  href: https://buildwithfern.com
+# logo:
+#   dark: docs/assets/logo-dark.svg
+#   light: docs/assets/logo-light.svg
+#   height: 20
+#   href: https://buildwithfern.com
 
-favicon: docs/assets/favicon.svg
+# favicon: docs/assets/favicon.svg
 
 css: styles.css
