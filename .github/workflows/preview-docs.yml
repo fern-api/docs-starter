@@ -26,8 +26,9 @@ jobs:
         id: generate-docs
         env:
           FERN_TOKEN: ${{ secrets.FERN_TOKEN }}
+          HEAD_REF: ${{ github.head_ref }}
         run: |
-          OUTPUT=$(fern generate --docs --preview --id "${{ github.head_ref }}" 2>&1) || true
+          OUTPUT=$(fern generate --docs --preview --id "$HEAD_REF" 2>&1) || true
           echo "$OUTPUT"
           URL=$(echo "$OUTPUT" | grep -oP 'Published docs to \K.*(?= \()')
           echo "preview_url=$URL" >> $GITHUB_OUTPUT
