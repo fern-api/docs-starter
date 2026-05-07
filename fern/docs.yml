@@ -94,3 +94,6 @@ logo:
 favicon: docs/assets/favicon.svg
 
 css: styles.css
+
+metadata:
+  og:dynamic: true
