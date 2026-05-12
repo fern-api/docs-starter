@@ -78,8 +78,26 @@ jobs:
           fi
 
       - name: Post PR comment
-        uses: thollander/actions-comment-pull-request@v2.4.3
-        with:
-          filePath: comment.md
-          comment_tag: preview-docs
-          mode: upsert
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          MARKER="<!-- fern-preview-docs -->"
+          {
+            cat comment.md
+            printf '\n%s\n' "$MARKER"
+          } > comment-with-marker.md
+
+          # Upsert by looking up an existing comment that carries our hidden marker.
+          EXISTING_ID=$(gh api --paginate \
+            "repos/$REPO/issues/$PR_NUMBER/comments" \
+            --jq "[.[] | select(.body | contains(\"$MARKER\"))][0].id // empty")
+
+          jq -Rn --rawfile body comment-with-marker.md '{body: $body}' > payload.json
+
+          if [ -n "$EXISTING_ID" ]; then
+            gh api -X PATCH "repos/$REPO/issues/comments/$EXISTING_ID" --input payload.json
+          else
+            gh api -X POST "repos/$REPO/issues/$PR_NUMBER/comments" --input payload.json
+          fi
