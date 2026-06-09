@@ -27,7 +27,7 @@ Get inspired by API documentation built with Fern: [Webflow](https://developers.
 
 ## Requirements
 
-- **Node.js 18+** (required for `npm install`) _or_ **Homebrew** (macOS/Linux)
+- **Node.js 22+** (required for `npm install`) _or_ **Homebrew** (macOS/Linux)
 - A [GitHub](https://github.com) account
 - A [Fern](https://buildwithfern.com) account (free to start)
 
