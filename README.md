@@ -78,81 +78,47 @@ fern/
 
 ## Getting started
 
+This repository is the official starter template for Fern Docs — the same one used in the [Fern Docs quickstart](https://buildwithfern.com/learn/docs/getting-started/quickstart). The steps below get you publishing; the quickstart walks through the same flow with more narration and screenshots.
+
 > **Prefer a no-code setup?** Use the [guided UI](https://dashboard.buildwithfern.com/get-started) to get started from your browser instead.
 
-### 1. Create your repository
+1. **Create your repository.** Click **"Use this template"** on [GitHub](https://github.com/fern-api/docs-starter) and clone the result, or use the GitHub CLI. To start from an empty project instead, run `fern init --docs`.
 
-Use this template to create a new repository:
+   ```bash
+   gh repo create my-org/my-docs --template fern-api/docs-starter --clone
+   ```
 
-```bash
-# Using the GitHub CLI
-gh repo create my-org/my-docs --template fern-api/docs-starter --private --clone
-cd my-docs
-```
+2. **Configure your organization.** Set your organization name in `fern/fern.config.json` and your docs URL in `fern/docs.yml`:
 
-Or click **"Use this template"** on [GitHub](https://github.com/fern-api/docs-starter) and clone the resulting repository.
+   ```json
+   # fern/fern.config.json
+   { "organization": "your-org-name", "version": "5.35.4" }
+   ```
 
-Alternatively, start from scratch in any directory:
+   ```yaml
+   # fern/docs.yml
+   instances:
+     - url: your-org-name.docs.buildwithfern.com
+   ```
 
-```bash
-fern init --docs
-```
+3. **Validate your configuration.**
 
-> **Note:** `fern init --docs` generates only `docs.yml` and `fern.config.json`. You'll need to add your own pages and API spec afterward.
+   ```bash
+   fern check
+   ```
 
-### 2. Configure your organization
+4. **Preview locally** with hot-reloading at [localhost:3000](http://localhost:3000).
 
-Update `fern/fern.config.json` with your organization name:
+   ```bash
+   fern docs dev
+   ```
 
-```json
-{
-  "organization": "your-org-name",
-  "version": "5.35.4"
-}
-```
+5. **Publish** to go live, or add `--preview` for a shareable preview URL. Run `fern login` once first to authenticate; the credential is cached for future runs.
 
-Update the docs URL in `fern/docs.yml`:
-
-```yaml
-instances:
-  - url: your-org-name.docs.buildwithfern.com
-```
-
-Use only alphanumeric characters, hyphens, and underscores for both values.
-
-### 3. Validate your configuration
-
-Run the linter to catch errors before previewing:
-
-```bash
-fern check
-```
-
-### 4. Preview locally
-
-Start a local development server with hot-reloading:
-
-```bash
-fern docs dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) to see your docs. Changes to MDX files and `docs.yml` will reload automatically.
-
-### 5. Publish
-
-When you're ready to go live:
-
-```bash
-fern generate --docs
-```
-
-This requires a `FERN_TOKEN`. Get yours from the [Fern dashboard](https://dashboard.buildwithfern.com) under **Settings > API keys**.
-
-To generate a shareable preview URL without publishing:
-
-```bash
-fern generate --docs --preview
-```
+   ```bash
+   fern login
+   fern generate --docs
+   ```
 
 ## CI/CD workflows
 
@@ -166,13 +132,13 @@ This template includes three GitHub Actions workflows out of the box:
 
 ### Setting up CI
 
-Add your `FERN_TOKEN` as a repository secret:
+CI/CD runs non-interactively, so it needs a Fern API key (`FERN_TOKEN`) instead of `fern login`. Generate a non-expiring key with `fern token` (or from the [Fern dashboard](https://dashboard.buildwithfern.com) under **API keys**), then add it as a repository secret:
 
 1. Go to **Settings > Secrets and variables > Actions** in your GitHub repository.
 2. Click **New repository secret**.
-3. Name it `FERN_TOKEN` and paste your token value.
+3. Name it `FERN_TOKEN` and paste your value.
 
-The `check.yml` workflow works without a token; only preview and publish require it.
+The `check.yml` workflow works without an API key; only preview and publish require it.
 
 ## Customize your docs
 
@@ -184,23 +150,6 @@ Once you're up and running, tailor your docs to match your brand and product:
 - **[Set up a custom domain](https://buildwithfern.com/learn/docs/preview-publish/setting-up-your-domain)** — Host on your own domain (e.g., `docs.example.com`)
 - **[Configure analytics](https://buildwithfern.com/learn/docs/integrations/overview)** — Integrate with PostHog, Segment, Google Tag Manager, and others
 - **[Customize navigation](https://buildwithfern.com/learn/docs/configuration/navigation)** — Add versioned docs, tabs, nested sections, and multi-product layouts
-
-## Useful commands
-
-| Command | Description |
-|---------|-------------|
-| `fern check` | Validate your Fern configuration and API specs |
-| `fern docs dev` | Start local dev server with hot-reloading |
-| `fern generate --docs` | Publish docs to your configured URL |
-| `fern generate --docs --preview` | Generate a shareable preview URL |
-| `fern upgrade` | Upgrade the CLI version in `fern.config.json` |
-
-## Further reading
-
-- [Docs quickstart](https://buildwithfern.com/learn/docs/getting-started/quickstart)
-- [CLI reference](https://buildwithfern.com/learn/cli-api-reference/cli-reference/overview)
-- [Writing content (Markdown)](https://buildwithfern.com/learn/docs/writing-content/overview)
-- [Configuration reference](https://buildwithfern.com/learn/docs/configuration/overview)
 
 ---
 
