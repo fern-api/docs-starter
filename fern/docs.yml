@@ -85,6 +85,19 @@ theme:
   page-actions: toolbar
   footer-nav: minimal
 
+page-actions:
+  options:
+    skills:
+      title: Install agent skills
+      description: Skills for authoring Fern docs, maintained in our skills repo.
+      learn-more-url: https://buildwithfern.com/learn/docs/ai/agent-skills
+      repository: https://github.com/fern-api/skills
+      install-command: npx skills add fern-api/skills --skill fern-docs
+      skills:
+        - name: fern-docs
+          description: "Author and edit Fern documentation: MDX pages, navigation, docs.yml config, custom components, landing pages, and changelog entries."
+          url: https://github.com/fern-api/skills/tree/main/skills/fern-docs
+
 logo:
   dark: docs/assets/logo-dark.svg
   light: docs/assets/logo.svg
