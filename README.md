@@ -92,7 +92,7 @@ This repository is the official starter template for Fern Docs — the same one 
 
    ```json
    # fern/fern.config.json
-   { "organization": "your-org-name", "version": "5.217.1" }
+   { "organization": "your-org-name", "version": "*" }
    ```
 
    ```yaml
